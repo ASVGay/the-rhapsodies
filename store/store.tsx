@@ -1,9 +1,12 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
 import { createWrapper } from "next-redux-wrapper"
+import CreateSuggestionReducer from "./create-suggestion/slice"
 
 const makeStore = () =>
   configureStore({
-    reducer: {},
+    reducer: {
+      createSuggestion: CreateSuggestionReducer
+    },
     devTools: true,
   })
 
