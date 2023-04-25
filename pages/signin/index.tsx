@@ -45,11 +45,13 @@ const Index = () => {
                 <div className="w-full">
                     <SigninTextfield
                         placeholder={"Email"}
+                        type={"text"}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
                 </div>
                 <div className="w-full">
                     <SigninTextfield
                         placeholder={"Password"}
+                        type={"password"}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
                 </div>
                 {
