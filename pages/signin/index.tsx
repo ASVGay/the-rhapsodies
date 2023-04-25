@@ -24,8 +24,6 @@ const Index = () => {
             await router.push("./")
         }
     }
-
-
     const handleBadLogin = (error: string) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
         setErrorPopup(true)
@@ -57,7 +55,7 @@ const Index = () => {
                 {
                     showErrorPopup && <ErrorPopup closePopup={() => setErrorPopup(false)} text={errorPopupText}/>
                 }
-                <MainButton onClick={signInUser}/>
+                <MainButton onClick={signInUser} text={"Sign in"}/>
             </div>
         </div>
     )

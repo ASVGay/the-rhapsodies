@@ -27,13 +27,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             setUser(user);
             setLoading(false);
         });
-
         return () => unsubscribe();
     }, []);
 
+
     return (
         <AuthContext.Provider value={{ user }}>
-            {loading ? <div>Loading...</div> : children}
+            {loading ? null : children}
         </AuthContext.Provider>
     );
 };
