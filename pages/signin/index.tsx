@@ -29,7 +29,7 @@ const Index = () => {
         setErrorPopup(true)
     }
     return (
-        <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>v
+        <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>
             <div className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
                 <div className={"flex justify-center w-full"}>
                     <Image
