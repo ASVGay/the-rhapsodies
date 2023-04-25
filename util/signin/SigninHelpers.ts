@@ -14,7 +14,7 @@ export const mapAuthErrorCodeToErrorMessage = (errorCode: string): string => {
         case ErrorCodes.INVALID_PASSWORD:
             return "Password is not correct.";
         case ErrorCodes.EMPTY_PASSWORD:
-                return "Retry later, too many attempts."
+                return "Password is missing."
         default:
             return "An unknown error occurred.";
     }

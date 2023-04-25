@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import Image from 'next/image'
-import SigninTextfield from "@/components/textfields/SigninTextfield";
-import signIn from "@/firebase/signin";
+import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import MainButton from "@/components/buttons/main-button/MainButton";
+import {useAuthContext} from "@/context/AuthContext";
+import {AuthError} from "firebase/auth";
 
 
 const Index = () => {
@@ -15,13 +16,15 @@ const Index = () => {
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
 
-    const signInUser = async () => {
-        const {error} = await signIn(email, password);
+    const { signInUser } = useAuthContext();
 
-        if (error) {
-            handleBadLogin(error.code)
-        } else {
-            await router.push("./")
+    const signIn = async () => {
+        try {
+            await signInUser(email, password)
+            await router.push("/")
+        } catch(error) {
+            const authError = error as AuthError;
+            handleBadLogin(authError.code)
         }
     }
     const handleBadLogin = (error: string) => {
@@ -43,13 +46,13 @@ const Index = () => {
                     <span className={"w-fit font-semibold leading-8 text-black"}>Sign in to your account</span>
                 </div>
                 <div className="w-full">
-                    <SigninTextfield
+                    <SignInTextField
                         placeholder={"Email"}
                         type={"text"}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
                 </div>
                 <div className="w-full">
-                    <SigninTextfield
+                    <SignInTextField
                         placeholder={"Password"}
                         type={"password"}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
@@ -57,7 +60,7 @@ const Index = () => {
                 {
                     showErrorPopup && <ErrorPopup closePopup={() => setErrorPopup(false)} text={errorPopupText}/>
                 }
-                <MainButton onClick={signInUser} text={"Sign in"}/>
+                <MainButton onClick={signIn} text={"Sign in"}/>
             </div>
         </div>
     )
