@@ -15,7 +15,6 @@ const Index = () => {
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-
     const { signInUser } = useAuthContext();
 
     const signIn = async () => {
