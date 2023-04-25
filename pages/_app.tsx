@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type {AppProps} from 'next/app'
 import Head from "next/head";
+import {AuthContextProvider} from "@/context/AuthContext";
 
 export default function App({Component, pageProps}: AppProps) {
     return <>
@@ -80,6 +81,8 @@ export default function App({Component, pageProps}: AppProps) {
             <link rel="apple-touch-startup-image" href="/assets/icons/apple-splash-1136-640.jpg"
                   media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"/>
         </Head>
-        <Component {...pageProps} />
+        <AuthContextProvider>
+            <Component {...pageProps} />
+        </AuthContextProvider>
     </>
 }
