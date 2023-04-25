@@ -6,7 +6,6 @@ export const ErrorCodes = {
 };
 
 export const mapAuthErrorCodeToErrorMessage = (errorCode: string): string => {
-    console.log(errorCode)
     switch (errorCode) {
         case ErrorCodes.INVALID_EMAIL:
             return "Please fill in a valid email.";
