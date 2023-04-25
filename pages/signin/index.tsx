@@ -5,6 +5,7 @@ import signIn from "@/firebase/signin";
 import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
+import MainButton from "@/components/buttons/main-button/MainButton";
 
 
 const Index = () => {
@@ -31,8 +32,7 @@ const Index = () => {
     }
     return (
         <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>v
-            <div
-                className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
+            <div className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
                 <div className={"flex justify-center w-full"}>
                     <Image
                         height={150}
@@ -57,9 +57,7 @@ const Index = () => {
                 {
                     showErrorPopup && <ErrorPopup closePopup={() => setErrorPopup(false)} text={errorPopupText}/>
                 }
-                <button className="bg-moon-500 hover:bg-moon-300 text-white font-bold py-2 px-4 rounded"
-                        onClick={signInUser}>Sign in
-                </button>
+                <MainButton onClick={signInUser}/>
             </div>
         </div>
     )
