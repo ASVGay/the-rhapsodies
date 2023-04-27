@@ -8,10 +8,9 @@ import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const { user } = useAuthContext();
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser } = useAuthContext();
+  const { signOutUser , user  } = useAuthContext();
 
   useEffect(() => {
     if(!user) {
