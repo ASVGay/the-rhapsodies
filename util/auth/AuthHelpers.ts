@@ -1,4 +1,4 @@
-import {User, UserCredential} from "firebase/auth";
+import {User} from "firebase/auth";
 import {doc, getDoc} from "@firebase/firestore";
 import {db} from "@/firebase/config";
 import {IAditionalUserData} from "@/interfaces/User";

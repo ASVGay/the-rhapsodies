@@ -5,7 +5,6 @@ import {useRouter} from "next/router";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const { user } = useAuthContext();

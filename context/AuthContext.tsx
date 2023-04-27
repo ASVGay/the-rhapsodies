@@ -9,7 +9,6 @@ import {
 } from 'firebase/auth';
 import firebase_app, {db} from '@/firebase/config';
 import {doc, getDoc, setDoc} from "@firebase/firestore";
-import firebase from "firebase/compat";
 import {getAditionalUserData} from "@/util/auth/AuthHelpers";
 import {IAditionalUserData} from "@/interfaces/User";
 

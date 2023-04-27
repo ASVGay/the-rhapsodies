@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
-import {ErrorCodes, mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
+import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
-import {AuthError, UserCredential} from "firebase/auth";
 import {FirebaseError} from "@firebase/util";
 
 const Index = () => {
