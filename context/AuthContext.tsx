@@ -10,6 +10,10 @@ import {
 } from 'firebase/auth';
 import firebase_app, {db} from '@/firebase/config';
 import {doc, DocumentData, getDoc, setDoc} from "@firebase/firestore";
+import firebase from "firebase/compat";
+import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+import {getAditionalUserData} from "@/util/auth/AuthHelpers";
+import {IAditionalUserData} from "@/interfaces/User";
 
 const auth = getAuth(firebase_app);
 
@@ -20,6 +24,10 @@ interface AuthContextType {
     handleFirstSignInUser: (user: UserCredential) => Promise<void>;
 }
 
+const setFirstLogin = async (user: UserCredential) => {
+    const isLoggedIn = await getAditionalUserData(user);
+}
+
 const signInUser = async (email: string, password: string) => {
     return await signInWithEmailAndPassword(auth, email, password)
 }
@@ -27,8 +35,7 @@ const signInUser = async (email: string, password: string) => {
 const handleFirstSignInUser = async (user: UserCredential) => {
     const userDocRef = doc(db, "users", user.user.uid);
     const userDoc = await getDoc(userDocRef);
-
-    const userData = {
+    const userData: IAditionalUserData = {
         isFirstLogin: true
     }
 
@@ -36,6 +43,7 @@ const handleFirstSignInUser = async (user: UserCredential) => {
         return await setDoc(userDocRef, userData);
     }
 }
+
 
 const signOutUser = async () => {
     return await signOut(auth);
@@ -45,7 +53,7 @@ export const AuthContext = createContext<AuthContextType>({
     user: null,
     signInUser: signInUser,
     signOutUser: signOutUser,
-    handleFirstSignInUser: handleFirstSignInUser
+    handleFirstSignInUser: handleFirstSignInUser,
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -57,6 +65,7 @@ interface AuthContextProviderProps {
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
     const [user, setUser] = useState<User | null>(null);
+    const [isFirstLogin, setIsFirstLogin] = useState<boolean>(true)
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
