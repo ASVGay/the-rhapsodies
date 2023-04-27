@@ -31,6 +31,7 @@ const signInUser = async (email: string, password: string) => {
 const handleFirstSignInUser = async (user: UserCredential) => {
     const userDocRef = doc(db, "users", user.user.uid);
     const userDoc = await getDoc(userDocRef);
+
     const userData: IAditionalUserData = {
         isFirstLogin: true
     }
@@ -60,12 +61,11 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
-
     const [user, setUser] = useState<User | null>(null);
-    const [isFirstLogin, setIsFirstLogin] = useState<boolean>(true)
+    const [isFirstLogin, setIsFirstLogin] = useState<boolean>()
     const [loading, setLoading] = useState<boolean>(true);
 
-    const setFirstLogin = async (user: User | null) : Promise<Promise<void> | null> => {
+    const setFirstLogin = async (user: User | null)  => {
         if (user) {
             const additionalUserData = await getAditionalUserData(user);
             setIsFirstLogin(additionalUserData.isFirstLogin)
