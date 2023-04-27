@@ -12,25 +12,23 @@ const Index = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>();
     const [errorText, setErrorText] = useState<string>("");
     const [showErrorText, setShowErrorText] = useState<boolean>(false);
-    const { changePassword, signOutUser } = useAuthContext();
+    const {changePassword, signOutUser} = useAuthContext();
     const router = useRouter();
     const submitNewPassword = async () => {
-        if(!password) {
+        if (!password) {
             return;
         }
 
-        if(password !== confirmPassword) {
+        if (password !== confirmPassword) {
             setErrorText("Fill in equal passwords.")
             setShowErrorText(true)
             return;
-        }
-
-        if (password === confirmPassword) {
+        } else {
             try {
                 await changePassword(password)
                 await signOutUser()
                 await router.push('/signin')
-            } catch(error) {
+            } catch (error) {
                 const err = error as FirebaseError;
                 handleBadValues(err.code)
                 setShowErrorText(true)
