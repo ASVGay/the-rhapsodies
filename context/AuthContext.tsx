@@ -4,7 +4,7 @@ import {
     getAuth,
     onAuthStateChanged,
     signInWithEmailAndPassword,
-    signOut,
+    signOut, updatePassword,
     User,
     UserCredential
 } from 'firebase/auth';
@@ -15,7 +15,8 @@ const auth = getAuth(firebase_app);
 interface AuthContextType {
     user: User | null,
     signInUser: (email: string, password: string) => Promise<UserCredential>,
-    signOutUser: () => void;
+    signOutUser: () => void,
+    changePassword: (password: string) => Promise<void>
 }
 
 const signInUser = async (email: string, password: string) => {
@@ -26,10 +27,15 @@ const signOutUser = async () => {
     return await signOut(auth);
 }
 
+const changePassword = async (password: string) => {
+    return await updatePassword(auth.currentUser as User, password )
+}
+
 export const AuthContext = createContext<AuthContextType>({
     user: null,
     signInUser: signInUser,
-    signOutUser: signOutUser
+    signOutUser: signOutUser,
+    changePassword: changePassword
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -51,7 +57,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{user, signInUser, signOutUser}}>
+        <AuthContext.Provider value={{user, signInUser, signOutUser, changePassword}}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
