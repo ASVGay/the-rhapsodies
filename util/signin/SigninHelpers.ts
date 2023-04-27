@@ -15,8 +15,6 @@ export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string
             return "Password is not correct.";
         case ErrorCodes.EMPTY_PASSWORD:
                 return "Password is missing."
-        case ErrorCodes.EMPTY_PASSWORD:
-            return "Password is missing."
         default:
             return "An unknown error occurred.";
     }
