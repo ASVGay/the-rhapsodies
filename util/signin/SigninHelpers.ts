@@ -5,7 +5,7 @@ export const ErrorCodes = {
     EMPTY_PASSWORD: "auth/missing-password",
 };
 
-export const mapAuthErrorCodeToErrorMessage = (errorCode: string): string => {
+export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string => {
     switch (errorCode) {
         case ErrorCodes.INVALID_EMAIL:
             return "Please fill in a valid email.";
@@ -15,6 +15,8 @@ export const mapAuthErrorCodeToErrorMessage = (errorCode: string): string => {
             return "Password is not correct.";
         case ErrorCodes.EMPTY_PASSWORD:
                 return "Password is missing."
+        case ErrorCodes.EMPTY_PASSWORD:
+            return "Password is missing."
         default:
             return "An unknown error occurred.";
     }

@@ -3,10 +3,11 @@ import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
-import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
+import {ErrorCodes, mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
-import {AuthError} from "firebase/auth";
+import {AuthError, UserCredential} from "firebase/auth";
+import {FirebaseError} from "@firebase/util";
 
 
 const Index = () => {
@@ -15,18 +16,29 @@ const Index = () => {
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-    const { signInUser } = useAuthContext();
+    const { signInUser , handleFirstSignInUser, signOutUser } = useAuthContext();
 
     const signIn = async () => {
         try {
-            await signInUser(email, password)
-            await router.push("/")
+            const user =  await signInUser(email, password)
+            await handleFirstSignIn(user)
         } catch(error) {
             const authError = error as AuthError;
             handleBadLogin(authError.code)
         }
     }
-    const handleBadLogin = (error: string) => {
+
+    const handleFirstSignIn = async (user: UserCredential) => {
+        try {
+            await handleFirstSignInUser(user);
+            await router.push("/")
+        } catch (error) {
+            const fireBaseError = error as FirebaseError;
+            handleBadLogin(fireBaseError.code)
+            signOutUser()
+        }
+    }
+    const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
         setErrorPopup(true)
     }
