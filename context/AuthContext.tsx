@@ -8,9 +8,8 @@ import {
     UserCredential
 } from 'firebase/auth';
 import firebase_app, {db} from '@/firebase/config';
-import {doc, DocumentData, getDoc, setDoc} from "@firebase/firestore";
+import {doc, getDoc, setDoc} from "@firebase/firestore";
 import firebase from "firebase/compat";
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 import {getAditionalUserData} from "@/util/auth/AuthHelpers";
 import {IAditionalUserData} from "@/interfaces/User";
 
@@ -21,7 +20,7 @@ interface AuthContextType {
     signInUser: (email: string, password: string) => Promise<UserCredential>,
     signOutUser: () => void,
     handleFirstSignInUser: (user: UserCredential) => Promise<void>,
-    isFirstLogin: boolean;
+    isFirstLogin: boolean | undefined;
 }
 
 const signInUser = async (email: string, password: string) => {
@@ -51,7 +50,7 @@ export const AuthContext = createContext<AuthContextType>({
     signInUser: signInUser,
     signOutUser: signOutUser,
     handleFirstSignInUser: handleFirstSignInUser,
-    isFirstLogin: true
+    isFirstLogin: undefined
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -62,7 +61,7 @@ interface AuthContextProviderProps {
 
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isFirstLogin, setIsFirstLogin] = useState<boolean>()
+    const [isFirstLogin, setIsFirstLogin] = useState<boolean | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true);
 
     const setFirstLogin = async (user: User | null)  => {
