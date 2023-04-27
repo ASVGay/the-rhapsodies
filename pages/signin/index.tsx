@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
@@ -10,38 +10,32 @@ import {AuthError, UserCredential} from "firebase/auth";
 import {FirebaseError} from "@firebase/util";
 
 
+class FireBaseError {
+}
+
 const Index = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-    const { signInUser , handleFirstSignInUser, signOutUser } = useAuthContext();
+    const { signInUser , handleFirstSignInUser } = useAuthContext();
 
     const signIn = async () => {
         try {
             const user =  await signInUser(email, password)
-            await handleFirstSignIn(user)
-        } catch(error) {
-            const authError = error as AuthError;
-            handleBadLogin(authError.code)
-        }
-    }
-
-    const handleFirstSignIn = async (user: UserCredential) => {
-        try {
-            await handleFirstSignInUser(user);
+            await handleFirstSignInUser(user)
             await router.push("/")
-        } catch (error) {
-            const fireBaseError = error as FirebaseError;
-            handleBadLogin(fireBaseError.code)
-            signOutUser()
+        } catch(error) {
+            const firebaseError = error as FirebaseError;
+            handleBadLogin(firebaseError.code)
         }
     }
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
         setErrorPopup(true)
     }
+    
     return (
         <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>
             <div className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>

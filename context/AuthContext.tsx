@@ -1,6 +1,5 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import {
-    AuthError,
     getAuth,
     onAuthStateChanged,
     signInWithEmailAndPassword,
@@ -21,11 +20,8 @@ interface AuthContextType {
     user: User | null,
     signInUser: (email: string, password: string) => Promise<UserCredential>,
     signOutUser: () => void,
-    handleFirstSignInUser: (user: UserCredential) => Promise<void>;
-}
-
-const setFirstLogin = async (user: UserCredential) => {
-    const isLoggedIn = await getAditionalUserData(user);
+    handleFirstSignInUser: (user: UserCredential) => Promise<void>,
+    isFirstLogin: boolean;
 }
 
 const signInUser = async (email: string, password: string) => {
@@ -39,7 +35,7 @@ const handleFirstSignInUser = async (user: UserCredential) => {
         isFirstLogin: true
     }
 
-    if(!userDoc.exists()) {
+    if (!userDoc.exists()) {
         return await setDoc(userDocRef, userData);
     }
 }
@@ -54,6 +50,7 @@ export const AuthContext = createContext<AuthContextType>({
     signInUser: signInUser,
     signOutUser: signOutUser,
     handleFirstSignInUser: handleFirstSignInUser,
+    isFirstLogin: true
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -68,16 +65,23 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [isFirstLogin, setIsFirstLogin] = useState<boolean>(true)
     const [loading, setLoading] = useState<boolean>(true);
 
+    const setFirstLogin = async (user: User | null) : Promise<Promise<void> | null> => {
+        if (user) {
+            const additionalUserData = await getAditionalUserData(user);
+            setIsFirstLogin(additionalUserData.isFirstLogin)
+        }
+    }
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
+            setFirstLogin(user)
             setLoading(false);
         });
         return () => unsubscribe();
     }, []);
 
     return (
-        <AuthContext.Provider value={{user, signInUser, signOutUser, handleFirstSignInUser}}>
+        <AuthContext.Provider value={{user, signInUser, signOutUser, handleFirstSignInUser, isFirstLogin}}>
             {loading ? null : children}
         </AuthContext.Provider>
     );

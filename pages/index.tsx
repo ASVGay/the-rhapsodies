@@ -11,12 +11,13 @@ export default function Home() {
   const { user } = useAuthContext();
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser } = useAuthContext();
+  const { signOutUser , isFirstLogin } = useAuthContext();
 
   useEffect(() => {
     if(!user) {
       router.push("./signin")
     }
+
   },)
 
 
