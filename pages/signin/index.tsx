@@ -9,10 +9,6 @@ import {useAuthContext} from "@/context/AuthContext";
 import {AuthError, UserCredential} from "firebase/auth";
 import {FirebaseError} from "@firebase/util";
 
-
-class FireBaseError {
-}
-
 const Index = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
