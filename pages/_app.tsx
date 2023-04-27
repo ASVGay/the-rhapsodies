@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {AuthContextProvider} from "@/context/AuthContext";
+import Layout from "@/components/layout/layout";
 
 export default function App({Component, pageProps}: AppProps) {
     return <>
@@ -82,7 +83,9 @@ export default function App({Component, pageProps}: AppProps) {
                   media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"/>
         </Head>
         <AuthContextProvider>
-            <Component {...pageProps} />
+            <Layout>
+                <Component {...pageProps} />
+            </Layout>
         </AuthContextProvider>
     </>
 }
