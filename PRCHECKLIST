@@ -1,0 +1,8 @@
+--source feat/* +title+ ✅ Definition of Done Checklist
+--source feat/* +task+ Pull request has a meaningful title and description
+--source feat/* +task+ Pull request is linked to one or more issues
+--source feat/* +task+ Acceptance criteria of the linked issues is satisfied
+--source feat/* +task+ Code changes are tested manually if not covered by automated tests
+--source feat/* +task+ Code changes are functional
+--source feat/* +task+ All jobs on pipeline succeed
+--source feat/* +task+ Code review is performed and feedback is addressed
