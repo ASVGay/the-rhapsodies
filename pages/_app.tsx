@@ -3,13 +3,14 @@ import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {AuthContextProvider} from "@/context/AuthContext";
 import {Lexend} from "next/font/google";
+import { wrapper } from "@/store/store"
 
 const lexend = Lexend({
     subsets: ['latin'],
     variable: '--font-lexend'
 })
 
-export default function App({Component, pageProps}: AppProps) {
+const App = ({Component, pageProps}: AppProps) => {
     return <>
         <Head>
             <link rel="manifest" href="/manifest.json"/>
@@ -94,3 +95,5 @@ export default function App({Component, pageProps}: AppProps) {
         </AuthContextProvider>
     </>
 }
+
+export default wrapper.withRedux(App)
