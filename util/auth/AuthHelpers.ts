@@ -4,7 +4,11 @@ import {db} from "@/firebase/config";
 import {IAditionalUserData} from "@/interfaces/User";
 
 export const getAditionalUserData = async (user: User) => {
-    const userDocRef = doc(db, "users", user.uid);
-    const res = await getDoc(userDocRef);
+    const userDocument = getUserDocument(user);
+    const res = await getDoc(userDocument);
     return res.data() as IAditionalUserData;
+}
+
+export const getUserDocument = (user: User) => {
+    return doc(db, "users", user.uid);
 }

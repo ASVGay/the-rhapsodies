@@ -10,15 +10,13 @@ export default function Home() {
   const { user } = useAuthContext();
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser } = useAuthContext();
+  const { signOutUser, isFirstLogin, loading } = useAuthContext();
 
   useEffect(() => {
     if(!user) {
       router.push("./signin")
     }
-
   },)
-
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

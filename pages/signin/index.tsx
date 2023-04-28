@@ -14,12 +14,11 @@ const Index = () => {
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-    const { signInUser , handleFirstSignInUser } = useAuthContext();
+    const { signInUser  } = useAuthContext();
 
     const signIn = async () => {
         try {
-            const user =  await signInUser(email, password)
-            await handleFirstSignInUser(user)
+            await signInUser(email, password)
             await router.push("/")
         } catch(error) {
             const firebaseError = error as FirebaseError;
