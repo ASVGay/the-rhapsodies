@@ -1,7 +1,7 @@
 export interface CreateSuggestionState {
   title: string,
   artists: [],
-  url: string | undefined,
+  url: string,
   motivation: string,
   instruments: []
 }
@@ -9,7 +9,7 @@ export interface CreateSuggestionState {
 export const initialState: CreateSuggestionState = {
   title: "",
   artists: [],
-  url: undefined,
+  url: "",
   motivation: "",
   instruments: []
 }
