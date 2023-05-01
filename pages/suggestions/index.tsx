@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import SuggestionCard from "@/components/cards/SuggestionCard";
-import { Instrument } from "@/data/Instruments";
+import { Instruments } from "@/data/instruments/Instruments";
 
 const Suggestions: FC = () => {
     return <>
@@ -24,12 +24,12 @@ const Suggestions: FC = () => {
                 artists={["Example Artist"]}
                 motivation={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque doloribus est eum excepturi inventore laboriosam magni minima nesciunt, odio quasi."}
                 roles={[
-                    { instrument: Instrument.SINGER, filledBy: undefined },
-                    { instrument: Instrument.PIANO, filledBy: undefined },
-                    { instrument: Instrument.GUITAR, filledBy: undefined },
-                    { instrument: Instrument.BASS_GUITAR, filledBy: undefined },
-                    { instrument: Instrument.BASS_GUITAR, filledBy: undefined },
-                    { instrument: Instrument.DRUMS, filledBy: undefined },
+                    { instrument: Instruments.SINGER, filledBy: undefined },
+                    { instrument: Instruments.ACCORDION, filledBy: undefined },
+                    { instrument: Instruments.SINGER, filledBy: undefined },
+                    { instrument: Instruments.BASS_GUITAR, filledBy: undefined },
+                    { instrument: Instruments.BASS_GUITAR, filledBy: undefined },
+                    { instrument: Instruments.BANJO, filledBy: undefined },
                 ]}
             />
             <SuggestionCard
@@ -37,8 +37,8 @@ const Suggestions: FC = () => {
                 artists={["Example Artist"]}
                 motivation={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos eos magnam nobis tenetur. Asperiores aut autem consequatur culpa delectus dolorem eos hic ipsam magnam natus necessitatibus non numquam odio pariatur qui saepe sed similique vitae, voluptate voluptatibus. Blanditiis culpa, explicabo labore quae quo repellendus soluta! Dignissimos dolorem mollitia nihil tempora."}
                 roles={[
-                    { instrument: Instrument.SINGER, filledBy: undefined },
-                    { instrument: Instrument.PIANO, filledBy: undefined },
+                    { instrument: Instruments.SINGER, filledBy: undefined },
+                    { instrument: Instruments.SINGER, filledBy: undefined },
                 ]}
             />
         </div>
