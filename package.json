@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "cypress": "^12.11.0",
-    "cypress-firebase": "^3.0.1"
+    "cypress-firebase": "^2.2.5"
   }
 }
