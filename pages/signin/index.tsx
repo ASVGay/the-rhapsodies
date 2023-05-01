@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
@@ -6,8 +6,7 @@ import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
-import {AuthError} from "firebase/auth";
-
+import {FirebaseError} from "@firebase/util";
 
 const Index = () => {
     const [email, setEmail] = useState<string>("");
@@ -15,21 +14,22 @@ const Index = () => {
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-    const { signInUser } = useAuthContext();
+    const { signInUser  } = useAuthContext();
 
     const signIn = async () => {
         try {
             await signInUser(email, password)
             await router.push("/")
         } catch(error) {
-            const authError = error as AuthError;
-            handleBadLogin(authError.code)
+            const firebaseError = error as FirebaseError;
+            handleBadLogin(firebaseError.code)
         }
     }
-    const handleBadLogin = (error: string) => {
+    const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
         setErrorPopup(true)
     }
+    
     return (
         <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>
             <div className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>

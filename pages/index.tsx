@@ -5,12 +5,11 @@ import {useRouter} from "next/router";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser , user  } = useAuthContext();
+  const { signOutUser , user, isFirstLogin  } = useAuthContext();
 
   useEffect(() => {
     if(!user) {
@@ -18,6 +17,9 @@ export default function Home() {
     }
   },)
 
+  useEffect(() => {
+    console.log(isFirstLogin);
+  },[isFirstLogin])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
