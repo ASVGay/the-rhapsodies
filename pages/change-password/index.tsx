@@ -6,7 +6,6 @@ import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import {FirebaseError} from "@firebase/util";
-import withAuth from "@/components/protected-route/ProtectedRoute";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 
 const Index = () => {
