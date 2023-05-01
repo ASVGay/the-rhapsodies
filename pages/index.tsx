@@ -1,25 +1,28 @@
-import { Inter } from 'next/font/google'
 import {useAuthContext} from "@/context/AuthContext";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
+import withAuth from "@/components/protected-route/ProtectedRoute";
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 
 
-export default function Home() {
+function Home() {
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
   const { signOutUser , user, isFirstLogin  } = useAuthContext();
 
-  useEffect(() => {
-    if(!user) {
-      router.push("./signin")
-    }
-  },)
-
-  useEffect(() => {
-    console.log(isFirstLogin);
-  },[isFirstLogin])
+  // useEffect(() => {
+  //   if(!user) {
+  //     router.push("./signin")
+  //   }
+  // },)
+  //
+  // useEffect(() => {
+  //   if(isFirstLogin) {
+  //     router.push("./change-password")
+  //   }
+  // },[isFirstLogin, router])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -31,3 +34,6 @@ export default function Home() {
     </main>
   )
 }
+
+
+export default WithProtectedRoute(Home);

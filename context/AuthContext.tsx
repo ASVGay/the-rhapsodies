@@ -14,7 +14,7 @@ import {IAditionalUserData} from "@/interfaces/User";
 
 const auth = getAuth(firebase_app);
 
-interface AuthContextType {
+export interface AuthContextType {
     user: User | null,
     signInUser: (email: string, password: string) => Promise<void>,
     signOutUser: () => void,
@@ -51,7 +51,7 @@ interface AuthContextProviderProps {
 
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isFirstLogin, setIsFirstLogin] = useState<boolean | undefined>(true)
+    const [isFirstLogin, setIsFirstLogin] = useState<boolean | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true);
     const handleFirstSignInUser = async (user: User) => {
         const userDoc = await getDoc(getUserDocument(user));
