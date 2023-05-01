@@ -18,7 +18,7 @@ const Suggestions: FC = () => {
 
         {/*TODO: db-connection*/}
         {/*TODO: responsiveness for desktop*/}
-        <div className={"flex flex-col items-center"}>
+        <div className={"flex flex-col items-center lg:flex-row lg:flex-wrap lg:justify-center space-x-4"}>
             <SuggestionCard
                 title={"Example Song Title 1"}
                 artists={["Example Artist"]}
@@ -30,15 +30,6 @@ const Suggestions: FC = () => {
                     { instrument: Instruments.BASS_GUITAR, filledBy: undefined },
                     { instrument: Instruments.BASS_GUITAR, filledBy: undefined },
                     { instrument: Instruments.BANJO, filledBy: undefined },
-                ]}
-            />
-            <SuggestionCard
-                title={"Example Song Title 2"}
-                artists={["Example Artist"]}
-                motivation={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos eos magnam nobis tenetur. Asperiores aut autem consequatur culpa delectus dolorem eos hic ipsam magnam natus necessitatibus non numquam odio pariatur qui saepe sed similique vitae, voluptate voluptatibus. Blanditiis culpa, explicabo labore quae quo repellendus soluta! Dignissimos dolorem mollitia nihil tempora."}
-                roles={[
-                    { instrument: Instruments.SINGER, filledBy: undefined },
-                    { instrument: Instruments.SINGER, filledBy: undefined },
                 ]}
             />
         </div>
