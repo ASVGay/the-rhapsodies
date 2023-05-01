@@ -10,15 +10,15 @@ const WithProtectedRoute = <P extends object>(
     const Wrapper = (props: P) => {
         const router = useRouter();
         const { user, isFirstLogin } = useAuthContext();
-
+        
         if (!user) {
             router.push("./signin");
-            return null;
         }
 
         if (isFirstLogin) {
-            router.push("./change-password");
-            return null;
+            if(router.pathname !== "/change-password") {
+                router.push("/change-password");
+            }
         }
 
         return !user ? null : <WrappedComponent {...props} />;
