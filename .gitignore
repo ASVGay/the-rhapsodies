@@ -135,3 +135,4 @@ fabric.properties
 **/public/sw.js.map
 **/public/worker-*.js
 **/public/worker-*.js.map
+serviceAccount.json
