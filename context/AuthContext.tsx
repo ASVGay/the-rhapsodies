@@ -54,7 +54,7 @@ interface AuthContextProviderProps {
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [isFirstLogin, setIsFirstLogin] = useState<boolean | undefined>(true)
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const handleFirstSignInUser = async (user: User) => {
         const userDoc = await getDoc(getUserDocument(user));
         const userData: IAditionalUserData = {
