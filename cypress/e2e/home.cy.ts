@@ -7,7 +7,7 @@ describe('Home Page', () => {
         })
 
         it('should stay on the home page if logged in', () => {
-            cy.login('TEST_UID')
+            cy.login()
             cy.visit('/')
             cy.location('pathname').should('equal', '/')
         })
