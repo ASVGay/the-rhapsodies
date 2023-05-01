@@ -6,7 +6,6 @@ import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 
 function Home() {
-  const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
   const { signOutUser , user, isFirstLogin  } = useAuthContext();
 
