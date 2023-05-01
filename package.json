@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --config video=false"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
