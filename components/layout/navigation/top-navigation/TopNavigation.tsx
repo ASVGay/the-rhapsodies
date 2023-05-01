@@ -1,5 +1,5 @@
 export default function TopNavigation() {
     return (
-        <h1>Top Navigation</h1>
+        <div className={"hidden lg:block"}>Top Navigation</div>
     )
 }
