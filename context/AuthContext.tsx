@@ -20,7 +20,6 @@ interface AuthContextType {
     signOutUser: () => void,
     isFirstLogin: boolean | undefined,
     changePassword: (password: string) => Promise<void>,
-    loading: boolean;
 }
 
 const signInUser = async (email: string, password: string) => {
@@ -42,7 +41,6 @@ export const AuthContext = createContext<AuthContextType>({
     signOutUser: signOutUser,
     isFirstLogin: undefined,
     changePassword: changePassword,
-    loading: true
 });
 
 export const useAuthContext = () => useContext(AuthContext);
