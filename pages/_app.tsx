@@ -3,7 +3,8 @@ import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {AuthContextProvider} from "@/context/AuthContext";
 import {Lexend} from "next/font/google";
-import { wrapper } from "@/store/store"
+import {wrapper} from "@/store/store"
+import Layout from "@/components/layout/layout";
 
 const lexend = Lexend({
     subsets: ['latin'],
@@ -90,7 +91,9 @@ const App = ({Component, pageProps}: AppProps) => {
         </Head>
         <AuthContextProvider>
             <main className={`${lexend.variable} font-sans`}>
-                <Component {...pageProps} />
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
             </main>
         </AuthContextProvider>
     </>
