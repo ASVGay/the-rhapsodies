@@ -1,5 +1,6 @@
 import * as React from "react";
 import {CalendarDaysIcon, Cog8ToothIcon, FolderIcon, HomeIcon, LightBulbIcon} from "@heroicons/react/24/solid";
+import {NextRouter} from "next/router";
 
 type HeroIcon = React.ForwardRefExoticComponent<React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & { title?: string, titleId?: string } & React.RefAttributes<SVGSVGElement>>
 
@@ -36,3 +37,7 @@ export const NavigationItems: NavItem[] = [
     //     text: "Settings"
     // },
 ]
+
+export const isActive = (path: string, router: NextRouter): boolean => {
+    return router.pathname == path
+}
