@@ -7,16 +7,19 @@ import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 
 
 export default function Home() {
-  const { user } = useAuthContext();
   const router = useRouter();
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser, isFirstLogin, loading } = useAuthContext();
+  const { signOutUser , user, isFirstLogin  } = useAuthContext();
 
   useEffect(() => {
     if(!user) {
       router.push("./signin")
     }
   },)
+
+  useEffect(() => {
+    console.log(isFirstLogin);
+  },[isFirstLogin])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

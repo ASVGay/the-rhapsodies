@@ -3,6 +3,7 @@ export const ErrorCodes = {
     USER_DELETED: "auth/user-not-found",
     INVALID_PASSWORD: "auth/wrong-password",
     EMPTY_PASSWORD: "auth/missing-password",
+    BAD_PASSWORD: "auth/weak-password",
 };
 
 export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string => {
@@ -14,7 +15,9 @@ export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string
         case ErrorCodes.INVALID_PASSWORD:
             return "Wrong credentials.";
         case ErrorCodes.EMPTY_PASSWORD:
-                return "Password is missing."
+                return "Password is missing.";
+        case ErrorCodes.BAD_PASSWORD:
+            return "Password is too short, has to be at least 6 characters.";
         default:
             return "An unknown error occurred.";
     }
