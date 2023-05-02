@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
@@ -14,25 +14,27 @@ const Index = () => {
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
     const router = useRouter();
-    const { signInUser  } = useAuthContext();
+    const {signInUser} = useAuthContext();
 
     const signIn = async () => {
         try {
             await signInUser(email, password)
             await router.push("/")
-        } catch(error) {
+        } catch (error) {
             const firebaseError = error as FirebaseError;
             handleBadLogin(firebaseError.code)
         }
     }
+
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
         setErrorPopup(true)
     }
-    
+
     return (
         <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>
-            <div className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
+            <div
+                className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
                 <div className={"flex justify-center w-full"}>
                     <Image
                         height={150}
@@ -59,7 +61,7 @@ const Index = () => {
                 {
                     showErrorPopup && <ErrorPopup closePopup={() => setErrorPopup(false)} text={errorPopupText}/>
                 }
-                <MainButton onClick={signIn} text={"Sign in"}/>
+                <MainButton onClick={() => signIn} text={"Sign in"}/>
             </div>
         </div>
     )
