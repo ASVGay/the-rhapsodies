@@ -4,7 +4,7 @@ import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
 import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
-import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
+import {ErrorCodes, mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import {FirebaseError} from "@firebase/util";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 
@@ -28,9 +28,12 @@ const Index = () => {
             try {
                 await changePassword(password)
                 await signOutUser()
-                await router.push('/signin')
+                await router.push('/sign-in')
             } catch (error) {
                 const err = error as FirebaseError;
+                if(err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+                    signOutUser();
+                }
                 handleBadValues(err.code)
                 setShowErrorText(true)
             }
@@ -56,7 +59,8 @@ const Index = () => {
                     </div>
                     {
                         showErrorText &&
-                        <ErrorPopup text={errorText} closePopup={() => setShowErrorText(false)}/>
+                        <ErrorPopup text={errorText} closePopup={() =>
+                            setShowErrorText(false)}/>
                     }
                     <MainButton onClick={submitNewPassword} text={"Submit"}/>
                 </div>

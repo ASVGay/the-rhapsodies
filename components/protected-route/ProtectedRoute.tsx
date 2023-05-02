@@ -12,7 +12,7 @@ const WithProtectedRoute = <P extends object>(
         const { user, isFirstLogin } = useAuthContext();
         
         if (!user) {
-            router.push("./signin");
+            router.push("./sign-in");
         }
 
         if (isFirstLogin) {

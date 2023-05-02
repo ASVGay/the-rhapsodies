@@ -4,6 +4,8 @@ export const ErrorCodes = {
     INVALID_PASSWORD: "auth/wrong-password",
     EMPTY_PASSWORD: "auth/missing-password",
     BAD_PASSWORD: "auth/weak-password",
+    REQUIRE_RECENT_LOGIN: "auth/requires-recent-login"
+
 };
 
 export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string => {
