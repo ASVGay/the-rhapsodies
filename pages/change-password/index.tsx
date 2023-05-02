@@ -13,10 +13,14 @@ const Index = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>();
     const [errorText, setErrorText] = useState<string>("");
     const [showErrorText, setShowErrorText] = useState<boolean>(false);
-    const {changePassword, signOutUser} = useAuthContext();
+    const {changePassword, signOutUser, user} = useAuthContext();
     const router = useRouter();
     const submitNewPassword = async () => {
         if (!password) {
+            return;
+        }
+
+        if(!user) {
             return;
         }
 
@@ -26,7 +30,7 @@ const Index = () => {
             return;
         } else {
             try {
-                await changePassword(password)
+                await changePassword(password, user)
                 await signOutUser()
                 await router.push('/sign-in')
             } catch (error) {

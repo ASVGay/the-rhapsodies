@@ -8,8 +8,8 @@ import {
     UserCredential
 } from 'firebase/auth';
 import firebase_app from '@/firebase/config';
-import { getDoc, setDoc} from "@firebase/firestore";
-import { getUserDocument} from "@/util/auth/AuthHelpers";
+import {getDoc, setDoc, updateDoc} from "@firebase/firestore";
+import {getUserDocument} from "@/util/auth/AuthHelpers";
 import {IAditionalUserData} from "@/interfaces/User";
 
 const auth = getAuth(firebase_app);
@@ -18,8 +18,7 @@ interface AuthContextType {
     user: User | null,
     signInUser: (email: string, password: string) => Promise<void>,
     signOutUser: () => void,
-    isFirstLogin: boolean | undefined,
-    changePassword: (password: string) => Promise<void>,
+    changePassword: (password: string, user: User) => Promise<void>,
 }
 
 const signInUser = async (email: string, password: string) => {
@@ -31,15 +30,16 @@ const signOutUser = async () => {
     return await signOut(auth);
 }
 
-const changePassword = async (password: string) => {
-    return await updatePassword(auth.currentUser as User, password )
+const changePassword = async (password: string, user: User) => {
+    const documentRef = getUserDocument(user);
+    await updateDoc(documentRef, {isFirstLogin: false})
+    return await updatePassword(auth.currentUser as User, password)
 }
 
 export const AuthContext = createContext<AuthContextType>({
     user: null,
     signInUser: signInUser,
     signOutUser: signOutUser,
-    isFirstLogin: undefined,
     changePassword: changePassword,
 });
 
@@ -55,21 +55,12 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const handleFirstSignInUser = async (user: User) => {
         const userDoc = await getDoc(getUserDocument(user));
-        const userData: IAditionalUserData = {
-            isFirstLogin: true
-        }
+        const userData: IAditionalUserData = { isFirstLogin: true }
         if (!userDoc.exists()) {
             return await setDoc(getUserDocument(user), userData);
         }
     }
-    const setFirstLogin = async () => {
-        if (user) {
-            const data = await getDoc(getUserDocument(user));
-            const additionalUserData = data.data() as IAditionalUserData;
-            setIsFirstLogin(additionalUserData.isFirstLogin);
-            setLoading(false);
-        }
-    }
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
@@ -80,15 +71,21 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
 
     useEffect(() => {
-        if(user) {
-            handleFirstSignInUser(user).then(() => {
-                setFirstLogin()
-            })
+        const handleFirstLogin = async () => {
+            if (user) {
+                try {
+                    await handleFirstSignInUser(user);
+                } catch (e) {
+                    console.error(e);
+                    await signOutUser();
+                }
+            }
         }
-    },[user])
+        handleFirstLogin();
+    }, [user])
 
     return (
-        <AuthContext.Provider value={{user, signInUser, signOutUser, isFirstLogin, changePassword}}>
+        <AuthContext.Provider value={{user, signInUser, signOutUser, changePassword}}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
