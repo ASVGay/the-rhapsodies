@@ -1,10 +1,11 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
-import { Instruments } from "@/data/instruments/Instruments";
+import { Instruments } from "@/constants/Instruments";
 import Image from "next/image";
+import { IUser } from "@/interfaces/User";
 
 export interface Role {
     instrument: Instruments,
-    filledBy: undefined //TODO: | user (id?/username)
+    filledBy: IUser | undefined
 }
 
 interface SuggestionCardProps {
@@ -17,8 +18,11 @@ interface SuggestionCardProps {
 const SuggestionCard = (props: SuggestionCardProps) => {
 
     const rolesFilled = () => {
-        return props.roles.filter((role) => role.filledBy != undefined).length
+        return props.roles.filter((role) => role.filledBy?.username != undefined).length
     }
+
+    const progressionFraction = `${rolesFilled()}/${props.roles.length}`
+    const progressionBarWidth = ((rolesFilled() / props.roles.length) * 100) + "%"
 
     return (
         <div className={"mb-8 bg-neutral-50 rounded-md drop-shadow-lg w-352"}>
@@ -37,21 +41,19 @@ const SuggestionCard = (props: SuggestionCardProps) => {
             <div className={"bg-neutral-100 rounded-md p-3"}>
                 <div className={"flex justify-between items-center"}>
                     <div className={"bg-green-200 w-full h-2 rounded-md"}>
-                        {/*TODO: set progression*/}
-                        <div className={`bg-green-400 h-2 rounded-md "w-0"}`}>&nbsp;</div>
+                        <div className={`bg-green-400 h-2 rounded-md`} style={{ width: progressionBarWidth}}/>
                     </div>
-                    <p className={"ml-4 text-gray-400 text-sm font-light"}>{rolesFilled()}/{props.roles.length}</p>
+                    <p className={"ml-4 text-gray-400 text-sm font-light"}>{progressionFraction}</p>
                 </div>
                 <div className={"ml-auto mr-auto pl-8 pr-8"}>
                     <div className={"flex justify-around"}>
-                        {/*TODO make image opacity 100% if position has been filled*/}
                         {props.roles.map((value, index) => {
                             return <Image
                                 src={value.instrument.icon}
                                 alt={value.instrument.toString()}
                                 key={index}
                                 width={24} height={24}
-                                className={"opacity-30"}
+                                className={value.filledBy?.username || "opacity-30"}
                             />
                         })}
                     </div>
