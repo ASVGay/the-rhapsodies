@@ -30,7 +30,7 @@ const Index = () => {
             return;
         } else {
             try {
-                await changePassword(password, user)
+                await changePassword(password, user.user)
                 await signOutUser()
                 await router.push('/sign-in')
             } catch (error) {

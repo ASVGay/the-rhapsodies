@@ -14,13 +14,6 @@ import {IAditionalUserData} from "@/interfaces/User";
 
 const auth = getAuth(firebase_app);
 
-interface AuthContextType {
-    user: User | null,
-    signInUser: (email: string, password: string) => Promise<void>,
-    signOutUser: () => void,
-    changePassword: (password: string, user: User) => Promise<void>,
-}
-
 const signInUser = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
 }
@@ -50,39 +43,44 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [isFirstLogin, setIsFirstLogin] = useState<boolean>()
+    const [user, setUser] = useState<AuthenticatedUser | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const handleFirstSignInUser = async (user: User) => {
-        const userDoc = await getDoc(getUserDocument(user));
-        const userData: IAditionalUserData = { isFirstLogin: true }
+    const handleFirstSignInUser = async (authenticatedUser: User) => {
+        const userDoc = await getDoc(getUserDocument(authenticatedUser));
+        const userData: IAditionalUserData = {isFirstLogin: true}
         if (!userDoc.exists()) {
-            return await setDoc(getUserDocument(user), userData);
+            return await setDoc(getUserDocument(authenticatedUser), userData);
         }
     }
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const getIsFirstLogin = async (user: User) => {
+        const data = await getDoc(getUserDocument(user));
+        return data.data() as IAditionalUserData;
+    }
+
+    const handleUser = async (user: User | null) => {
+        if (!user) {
             setUser(user);
+            return
+        }
+
+        await handleFirstSignInUser(user);
+        const additionalUserData = await getIsFirstLogin(user);
+        const authenticatedUser: AuthenticatedUser = {
+            user,
+            additionalUserData
+        }
+        setUser(authenticatedUser)
+    }
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            await handleUser(user)
             setLoading(false)
         });
         return () => unsubscribe();
     }, []);
 
-
-    useEffect(() => {
-        const handleFirstLogin = async () => {
-            if (user) {
-                try {
-                    await handleFirstSignInUser(user);
-                } catch (e) {
-                    console.error(e);
-                    await signOutUser();
-                }
-            }
-        }
-        handleFirstLogin();
-    }, [user])
 
     return (
         <AuthContext.Provider value={{user, signInUser, signOutUser, changePassword}}>
@@ -92,3 +90,15 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 };
 
 export default AuthContextProvider;
+
+interface AuthContextType {
+    user: AuthenticatedUser | null,
+    signInUser: (email: string, password: string) => Promise<void>,
+    signOutUser: () => void,
+    changePassword: (password: string, user: User) => Promise<void>,
+}
+
+interface AuthenticatedUser {
+    user: User,
+    additionalUserData: IAditionalUserData
+}

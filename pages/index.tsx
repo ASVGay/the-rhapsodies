@@ -7,7 +7,7 @@ import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 
 function Home() {
   const [showError, setShowError] = useState<boolean>(false);
-  const { signOutUser , user, isFirstLogin  } = useAuthContext();
+  const { signOutUser  } = useAuthContext();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

@@ -14,30 +14,20 @@ const WithProtectedRoute = <P extends object>(
     const Wrapper = (props: P) => {
         const router = useRouter();
         const { user, } = useAuthContext();
-        const [isFirstLogin, setIsFirstLogin] = useState<boolean>();
         const [loading, setLoading] = useState<boolean>(true);
 
+        console.log(user)
         if (!user) {
             router.push("./sign-in");
         }
 
         useEffect(() => {
-            if(user) {
-                getIsFirstLogin(user);
+            if(user?.additionalUserData.isFirstLogin) {
+                if(router.pathname !== "/change-password") {
+                    router.push("/change-password");
+                }
             }
         },[])
-
-        const getIsFirstLogin = async (user: User) => {
-            const data = await getDoc(getUserDocument(user));
-            const additionalUserData = data.data() as IAditionalUserData;
-            setIsFirstLogin(additionalUserData.isFirstLogin);
-        }
-
-        if (isFirstLogin) {
-            if(router.pathname !== "/change-password") {
-                router.push("/change-password");
-            }
-        }
 
         return !loading ? null : <WrappedComponent {...props} />;
     };
