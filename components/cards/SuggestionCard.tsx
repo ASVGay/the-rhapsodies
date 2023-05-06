@@ -41,7 +41,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
             <div className={"bg-neutral-100 rounded-md p-3"}>
                 <div className={"flex justify-between items-center"}>
                     <div className={"bg-green-200 w-full h-2 rounded-md"}>
-                        <div className={`bg-green-400 h-2 rounded-md`} style={{ width: progressionBarWidth}}/>
+                        <div className={`bg-green-400 h-2 rounded-md`} style={{ width: progressionBarWidth }}/>
                     </div>
                     <p className={"ml-4 text-gray-400 text-sm font-light"}>{progressionFraction}</p>
                 </div>
