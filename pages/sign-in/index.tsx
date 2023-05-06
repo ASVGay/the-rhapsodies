@@ -13,7 +13,7 @@ const Index = () => {
     const [password, setPassword] = useState<string>("");
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
-    
+
     const router = useRouter();
     const {signInUser, user} = useAuthContext();
 
@@ -30,7 +30,7 @@ const Index = () => {
         if(user !== null) {
             router.push("/")
         }
-    },[user])
+    },[router, user])
 
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))

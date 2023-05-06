@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
@@ -20,7 +20,7 @@ const Index = () => {
             return;
         }
 
-        if(!user) {
+        if (!user) {
             return;
         }
 
@@ -28,19 +28,17 @@ const Index = () => {
             setErrorText("Fill in equal passwords.")
             setShowErrorText(true)
             return;
-        } else {
-            try {
-                await changePassword(password, user.user)
-                await signOutUser()
-                await router.push('/sign-in')
-            } catch (error) {
-                const err = error as FirebaseError;
-                if(err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-                    signOutUser();
-                }
-                handleBadValues(err.code)
-                setShowErrorText(true)
+        }
+
+        try {
+            await changePassword(password, user.user)
+        } catch (error) {
+            const err = error as FirebaseError;
+            if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+                signOutUser();
             }
+            handleBadValues(err.code)
+            setShowErrorText(true)
         }
     }
 
@@ -53,6 +51,13 @@ const Index = () => {
             <div className={"flex justify-center items-center w-screen h-screen bg-moon-50"}>
                 <div
                     className={"w-80 h-fit flex justify-between bg-blend-hard-light bg-zinc-50 rounded-lg p-4 flex-col gap-6"}>
+                    {
+                        user?.additionalUserData.isFirstLogin &&
+                        <div className={"flex justify-center w-full"}>
+                            <span className={"w-fit font-semibold leading-8 text-black"}>In order to access the application you need to change your password.</span>
+                        </div>
+                    }
+
                     <div className="w-full">
                         <SignInTextField placeholder={"Password"} type={"password"}
                                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
