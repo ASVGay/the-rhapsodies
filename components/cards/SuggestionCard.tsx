@@ -32,7 +32,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
                 </div>
                 <span className={"pl-3"}>
                         <p className={"font-bold"}>{props.title}</p>
-                        <p>{props.artists}</p>
+                        <p className={"line-clamp-1"}>{props.artists.join(', ')}</p>
                         <p className={"text-sm leading-4 font-medium text-gray-400 h-12 line-clamp-3"}>
                            {props.motivation}
                         </p>
