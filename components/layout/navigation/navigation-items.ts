@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CalendarDaysIcon, Cog8ToothIcon, FolderIcon, HomeIcon, LightBulbIcon} from "@heroicons/react/24/solid";
+import {HomeIcon, LightBulbIcon} from "@heroicons/react/24/solid";
 import {NextRouter} from "next/router";
 
 type HeroIcon = React.ForwardRefExoticComponent<React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
