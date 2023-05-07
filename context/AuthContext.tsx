@@ -1,16 +1,9 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import {
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signOut, updatePassword,
-    User
-} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, User} from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 import {getDoc, setDoc, updateDoc} from "@firebase/firestore";
 import {getAditionalUserData, getUserDocument} from "@/util/auth/AuthHelpers";
 import {IAditionalUserData} from "@/interfaces/User";
-import {FirebaseError} from "@firebase/util";
 
 const auth = getAuth(firebase_app);
 
@@ -24,13 +17,9 @@ const signOutUser = async () => {
 
 const changePassword = async (password: string, user: User) => {
     const documentRef = getUserDocument(user);
-    try {
-        await updateDoc(documentRef, {isFirstLogin: false})
-        await updatePassword(auth.currentUser as User, password);
-        await signOutUser();
-    } catch(e) {
-        return e as FirebaseError;
-    }
+    await updatePassword(auth.currentUser as User, password);
+    await updateDoc(documentRef, {isFirstLogin: false})
+    await signOutUser();
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -49,6 +38,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const handleFirstSignInUser = async (authenticatedUser: User) => {
         const userDoc = await getDoc(getUserDocument(authenticatedUser));
         const userData: IAditionalUserData = {isFirstLogin: true}
+
         if (!userDoc.exists()) {
             return await setDoc(getUserDocument(authenticatedUser), userData);
         }
@@ -92,7 +82,7 @@ interface AuthContextType {
     user: AuthenticatedUser | null,
     signInUser: (email: string, password: string) => Promise<void>,
     signOutUser: () => void,
-    changePassword: (password: string, user: User) => Promise<FirebaseError | undefined>,
+    changePassword: (password: string, user: User) => Promise<void>,
     loading: boolean
 }
 
