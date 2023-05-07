@@ -20,17 +20,13 @@ const Index = () => {
     const signIn = async () => {
         try {
             await signInUser(email, password)
+            router.push("/")
         } catch (error) {
             const firebaseError = error as FirebaseError;
             handleBadLogin(firebaseError.code)
         }
     }
-
-    useEffect(() => {
-        if(user !== null) {
-            router.push("/")
-        }
-    },[router, user])
+    
 
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
