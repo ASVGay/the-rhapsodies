@@ -34,17 +34,17 @@ const Index = () => {
             await changePassword(password, user.user)
         } catch (error) {
             const err = error as FirebaseError;
+            setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
             if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+                setTimeout(() => {
+                    signOutUser();
+                },5000)
                 signOutUser();
             }
-            handleBadValues(err.code)
             setShowErrorText(true)
         }
     }
 
-    const handleBadValues = (errorCode: string) => {
-        setErrorText(mapAuthErrorCodeToErrorMessage(errorCode));
-    }
 
     return (
         <div>

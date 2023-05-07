@@ -20,6 +20,8 @@ export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string
                 return "Password is missing.";
         case ErrorCodes.BAD_PASSWORD:
             return "Password is too short, has to be at least 6 characters.";
+        case ErrorCodes.REQUIRE_RECENT_LOGIN:
+            return "Before you can change your password, you have to login again. You will be logged out in 5 seconds.";
         default:
             return "An unknown error occurred.";
     }
