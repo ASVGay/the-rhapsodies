@@ -7,10 +7,11 @@ import {NextRouter, useRouter} from "next/router";
 
 export default function TopNavigation() {
     const router: NextRouter = useRouter();
-    const settingsItem: NavItem | undefined = NavigationItems.find(item => item.text == "Settings");
+    const settingsItem: NavItem | undefined = NavigationItems.find(item => item.data == "settings");
 
     return (
-        <div className={"top-navigation hidden lg:flex bg-white h-24 justify-between items-center px-2"}>
+        <div data-cy={'top'}
+             className={"top-navigation hidden lg:flex bg-white h-24 justify-between items-center px-4"}>
             <Link href={"/"}>
                 <Image src={"/images/logo.png"} alt={"Logo of The Rhapsodies"} height={96} width={96}/>
             </Link>
@@ -18,7 +19,7 @@ export default function TopNavigation() {
             <div className={"flex"}>
                 {NavigationItems.map((item, index): React.ReactNode => {
                     if (item.text == "Settings") return
-                    return <Link key={item.path} href={item.path}
+                    return <Link data-cy={item.data} key={item.path} href={item.path}
                                  className={`text-xl px-4 ${isActive(item.path, router) ? "text-moon-400" : "text-zinc-300"}`}>
                         <div className={"relative group "}>
                             <span>{item.text}</span>
@@ -30,7 +31,7 @@ export default function TopNavigation() {
             </div>
 
             {settingsItem == undefined ? <span className={"w-24"}/> :
-                <Link href={settingsItem.path} key={settingsItem.path} className={"w-24"}>
+                <Link data-cy={settingsItem.data} href={settingsItem.path} key={settingsItem.path} className={"w-24"}>
                     <Cog8ToothIcon
                         className={`h-9 float-right hover:text-moon-200 hover:rotate-180 transition duration-500 ease-in-out ${isActive(settingsItem.path, router) ? "text-moon-400" : "text-zinc-300"}`}/>
                 </Link>

@@ -1,49 +1,33 @@
-type NavigationItem = {
-    path: string,
-    text: string
-}
+const topNavigation: string = 'top';
+const bottomNavigation: string = 'bottom';
 
+type NavigationItem = { path: string, data: string }
+
+const pages: NavigationItem[] = [
+    {path: "/", data: "home"},
+    // {path: "/repertoire", data: "repertoire"},
+    {path: "/suggestions", data: "suggestions"},
+    // {path: "/events", data: "events"},
+    // {path: "/settings", data: "settings"},
+]
 describe('navigation components', () => {
-    const topNavigation: string = '.top-navigation';
-    const bottomNavigation: string = '.bottom-navigation';
-    const pages: NavigationItem[] = [
-        {
-            path: "/",
-            text: "Home"
-        },
-        // {
-        //     path: "/repertoire",
-        //     text: "Repertoire"
-        // },
-        {
-            path: "/suggestions",
-            text: "Suggestions"
-        },
-        // {
-        //     path: "/events",
-        //     text: "Events"
-        // },
-        // {
-        //     path: "/settings",
-        //     text: "Settings"
-        // },
-    ]
 
     context('when logged out', () => {
-        it('should not render navigation on devices with a width of >=1024', () => {
-            cy.viewport(1024, 768)
+        before(() => {
             cy.logout()
             cy.visit('/')
-            cy.get(topNavigation).should('not.be.exist')
-            cy.get(bottomNavigation).should('not.be.exist')
+        })
+
+        it('should not render navigation on devices with a width of >=1024', () => {
+            cy.viewport(1024, 768)
+            cy.data(topNavigation).should('not.be.exist')
+            cy.data(bottomNavigation).should('not.be.exist')
         })
 
         it('should not render bottom navigation on devices with a width of <1024', () => {
             cy.viewport(768, 1024)
-            cy.logout()
-            cy.visit('/')
-            cy.get(topNavigation).should('not.be.exist')
-            cy.get(bottomNavigation).should('not.be.exist')
+            cy.data(topNavigation).should('not.be.exist')
+            cy.data(bottomNavigation).should('not.be.exist')
         })
     })
 
@@ -59,15 +43,17 @@ describe('navigation components', () => {
 
             it('should render top navigation', () => {
                 cy.visit('/')
-                cy.get(topNavigation).should('be.visible')
-                cy.get(bottomNavigation).should('not.be.visible')
+                cy.data(topNavigation).should('be.visible')
+                cy.data(bottomNavigation).should('not.be.visible')
             })
 
             it('should be able to navigate to all pages', function () {
                 cy.visit('/')
-                pages.forEach(page => {
-                    cy.get(topNavigation).contains(page.text).click()
-                    cy.location('pathname').should('equal', page.path)
+                cy.data(topNavigation).within(() => {
+                    pages.forEach(page => {
+                        cy.data(page.data).click()
+                        cy.location('pathname').should('equal', page.path)
+                    })
                 })
             });
         })
@@ -79,15 +65,17 @@ describe('navigation components', () => {
 
             it('should render bottom navigation', () => {
                 cy.visit('/')
-                cy.get(topNavigation).should('not.be.visible')
-                cy.get(bottomNavigation).should('be.visible')
+                cy.data(topNavigation).should('not.be.visible')
+                cy.data(bottomNavigation).should('be.visible')
             })
 
             it('should be able to navigate to all pages', function () {
                 cy.visit('/')
-                pages.forEach(page => {
-                    cy.get(bottomNavigation).contains(page.text).click()
-                    cy.location('pathname').should('equal', page.path)
+                cy.data(bottomNavigation).within(() => {
+                    pages.forEach(page => {
+                        cy.data(page.data).click()
+                        cy.location('pathname').should('equal', page.path)
+                    })
                 })
             });
         })
