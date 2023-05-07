@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import Image from 'next/image'
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import {useRouter} from "next/router";
@@ -15,7 +15,7 @@ const Index = () => {
     const [errorPopupText, setErrorPopupText] = useState<string>("");
 
     const router = useRouter();
-    const {signInUser, user} = useAuthContext();
+    const {signInUser } = useAuthContext();
 
     const signIn = async () => {
         try {
@@ -26,7 +26,7 @@ const Index = () => {
             handleBadLogin(firebaseError.code)
         }
     }
-    
+
 
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
