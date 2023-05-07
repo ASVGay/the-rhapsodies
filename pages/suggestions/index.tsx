@@ -2,27 +2,17 @@ import { FC, useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import SuggestionCard from "@/components/cards/SuggestionCard";
 import { Instruments } from "@/constants/Instruments";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/firebase/config";
-
-// TODO: use user ref in db instead of string
+import { useRouter } from "next/router";
 
 const Suggestions: FC = () => {
+    const { basePath } = useRouter()
     const [suggestions, setSuggestions] = useState([])
 
-    //TODO: when should data be fetched?
-    //TODO move to API
-    const fetchData = async () => {
-        const data = []
-        const querySnapshot = await getDocs(collection(db, "suggestions"));
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
-        });
-        setSuggestions(data)
-    }
-
     useEffect(() => {
-        fetchData()
+        (async () => {
+            const res = (await fetch(`${basePath}/api/suggestions`))
+            setSuggestions(await res.json())
+        })()
     }, [])
 
     return <>
@@ -37,7 +27,6 @@ const Suggestions: FC = () => {
             </div>
         </div>
 
-        {/*TODO: db-connection*/}
         <div className={"flex flex-col items-center lg:flex-row lg:flex-wrap lg:justify-center space-x-4"}>
             {suggestions.map((value, index) =>
                 <SuggestionCard
