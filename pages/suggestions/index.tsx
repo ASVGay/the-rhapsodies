@@ -8,11 +8,13 @@ const Suggestions: FC = () => {
     const { basePath } = useRouter()
     const [suggestions, setSuggestions] = useState([])
 
+    const fetchData = async () => {
+        const res = (await fetch(`${basePath}/api/suggestions`))
+        setSuggestions(await res.json())
+    }
+
     useEffect(() => {
-        (async () => {
-            const res = (await fetch(`${basePath}/api/suggestions`))
-            setSuggestions(await res.json())
-        })()
+        fetchData()
     }, [])
 
     return <>
@@ -34,9 +36,11 @@ const Suggestions: FC = () => {
                     title={value.title}
                     artists={value.artists}
                     motivation={value.motivation}
-                    roles={value.roles.map(i => {
-                        return { instrument: Instruments[i.instrument], filledBy: i.filledBy }
-                    })}/>
+                    roles={value.roles.map(i => ({
+                            instrument: Instruments[i.instrument],
+                            filledBy: { username: i.filledBy }
+                        })
+                    )}/>
             )}
         </div>
     </>
