@@ -20,14 +20,14 @@ describe('navigation components', () => {
 
         it('should not render navigation on devices with a width of >=1024', () => {
             cy.viewport(1024, 768)
-            cy.data(topNavigation).should('not.be.exist')
-            cy.data(bottomNavigation).should('not.be.exist')
+            cy.data(topNavigation).should('not.exist')
+            cy.data(bottomNavigation).should('not.exist')
         })
 
         it('should not render bottom navigation on devices with a width of <1024', () => {
             cy.viewport(768, 1024)
-            cy.data(topNavigation).should('not.be.exist')
-            cy.data(bottomNavigation).should('not.be.exist')
+            cy.data(topNavigation).should('not.exist')
+            cy.data(bottomNavigation).should('not.exist')
         })
     })
 
@@ -47,7 +47,7 @@ describe('navigation components', () => {
                 cy.data(bottomNavigation).should('not.be.visible')
             })
 
-            it('should be able to navigate to all pages', function () {
+            it('should be able to navigate to all pages', () => {
                 cy.visit('/')
                 cy.data(topNavigation).within(() => {
                     pages.forEach(page => {
@@ -69,7 +69,7 @@ describe('navigation components', () => {
                 cy.data(bottomNavigation).should('be.visible')
             })
 
-            it('should be able to navigate to all pages', function () {
+            it('should be able to navigate to all pages', () => {
                 cy.visit('/')
                 cy.data(bottomNavigation).within(() => {
                     pages.forEach(page => {
@@ -78,6 +78,11 @@ describe('navigation components', () => {
                     })
                 })
             });
+
+            it('should show 404 page when going to an unknown route', () => {
+                cy.visit('/random-route', {failOnStatusCode: false})
+                cy.data('404-page').should('be.visible');
+            })
         })
     })
 })
