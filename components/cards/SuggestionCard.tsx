@@ -24,11 +24,10 @@ const SuggestionCard = (props: SuggestionCardProps) => {
     const progressionFraction = `${rolesFilled()}/${props.roles.length}`
     const progressionBarWidth = ((rolesFilled() / props.roles.length) * 100) + "%"
 
-    // TODO styling fix when description is shorter than 1 full line
     return (
         <div className={"mb-8 bg-neutral-50 rounded-md drop-shadow-lg w-352"}>
-            <div className={"flex p-3"}>
-                <div className={"flex m-auto"}>
+            <div className={"flex items-start p-3"}>
+                <div className={"flex mt-auto mb-auto"}>
                     <MusicalNoteIcon className={"w-14 h-14 p-2 text-black rounded-md bg-neutral-200"}/>
                 </div>
                 <span className={"pl-3"}>
