@@ -25,7 +25,6 @@ const Index = () => {
             const firebaseError = error as FirebaseError;
             handleBadLogin(firebaseError.code)
         }
-        return undefined;
     }
 
 
@@ -64,7 +63,7 @@ const Index = () => {
                 {
                     showErrorPopup && <ErrorPopup closePopup={() => setErrorPopup(false)} text={errorPopupText}/>
                 }
-                <MainButton onClick={() =>  signIn()} text={"Sign in"}/>
+                <MainButton onClick={signIn} text={"Sign in"}/>
             </div>
         </div>
     )
