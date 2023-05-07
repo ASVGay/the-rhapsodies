@@ -25,6 +25,7 @@ const Index = () => {
             const firebaseError = error as FirebaseError;
             handleBadLogin(firebaseError.code)
         }
+        return undefined;
     }
 
 
