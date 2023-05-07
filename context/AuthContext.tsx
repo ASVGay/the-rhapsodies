@@ -44,7 +44,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
     }
 
-    const handleUser = async (user: User | null) => {
+    const handleSetUser = async (user: User | null) => {
         if (!user) {
             setUser(user);
             return;
@@ -62,7 +62,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            await handleUser(user)
+            await handleSetUser(user)
             setLoading(false)
         });
         return () => unsubscribe();
