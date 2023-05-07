@@ -1,10 +1,6 @@
 import {useAuthContext} from "@/context/AuthContext";
 import {useRouter} from "next/router";
-import {FC, useEffect, useState} from "react";
-import {getDoc} from "@firebase/firestore";
-import {getUserDocument} from "@/util/auth/AuthHelpers";
-import {IAditionalUserData} from "@/interfaces/User";
-import {User} from "firebase/auth";
+import {FC, useEffect} from "react";
 
 
 const WithProtectedRoute = <P extends object>(
