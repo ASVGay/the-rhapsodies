@@ -22,7 +22,7 @@ export default function Home() {
   },[isFirstLogin])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex flex-col items-center justify-between p-24">
       <MainButton text={"Log out"} onClick={signOutUser}/>
           {
             showError &&
