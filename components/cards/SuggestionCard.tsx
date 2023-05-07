@@ -53,7 +53,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
                                 alt={value.instrument.toString()}
                                 key={index}
                                 width={24} height={24}
-                                className={value.filledBy?.username || "opacity-30"}
+                                className={value.filledBy?.username ?? "opacity-30"}
                             />
                         })}
                     </div>
