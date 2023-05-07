@@ -7,7 +7,7 @@ export default function BottomNavigation() {
     const router = useRouter();
 
     return (
-        <div className="flex lg:hidden fixed bottom-0 w-full bg-white pb-safe min-[68px]">
+        <div className="bottom-navigation flex lg:hidden fixed bottom-0 w-full bg-white pb-safe min-[68px]">
             {NavigationItems.map((item, index): React.ReactNode => {
                 const Icon = item.icon
                 return (

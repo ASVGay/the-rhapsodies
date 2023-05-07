@@ -10,7 +10,7 @@ export default function TopNavigation() {
     const settingsItem: NavItem | undefined = NavigationItems.find(item => item.text == "Settings");
 
     return (
-        <div className={"hidden lg:flex bg-white h-24 justify-between items-center px-2"}>
+        <div className={"top-navigation hidden lg:flex bg-white h-24 justify-between items-center px-2"}>
             <Link href={"/"}>
                 <Image src={"/images/logo.png"} alt={"Logo of The Rhapsodies"} height={96} width={96}/>
             </Link>
