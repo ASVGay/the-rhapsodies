@@ -2,15 +2,20 @@ import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 import Image, { StaticImageData } from "next/image";
 import { IUser } from "@/interfaces/User";
 
+export interface Instrument {
+    instrument: string
+    icon: { readonly default: StaticImageData }
+}
+
 export interface Role {
-    instrument: { instrument: string, icon: { readonly default: StaticImageData } },
+    instrument: Instrument
     filledBy: IUser | undefined
 }
 
 interface SuggestionCardProps {
-    title: string,
-    artists: string[],
-    motivation: string,
+    title: string
+    artists: string[]
+    motivation: string
     roles: Role[]
 }
 

@@ -1,9 +1,12 @@
-import { IUser } from "@/interfaces/User";
+interface IRole {
+    filledBy: string
+    instrument: string
+}
 
 export interface ISuggestion {
     artists: string[]
-    instruments: string[]
     motivation: string
+    roles: IRole[]
     title: string
-    user: IUser
+    user: string
 }

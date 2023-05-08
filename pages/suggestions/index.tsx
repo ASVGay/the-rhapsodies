@@ -3,9 +3,10 @@ import { PlusIcon } from "@heroicons/react/24/solid";
 import SuggestionCard from "@/components/cards/SuggestionCard";
 import { Instruments } from "@/constants/Instruments";
 import { getSuggestions } from "@/services/suggestions.service";
+import { ISuggestion } from "@/interfaces/Suggestion";
 
 const Suggestions: FC = () => {
-    const [suggestions, setSuggestions] = useState([])
+    const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
 
     const fetchData = async () => {
         setSuggestions(await getSuggestions())
@@ -34,9 +35,9 @@ const Suggestions: FC = () => {
                     title={value.title}
                     artists={value.artists}
                     motivation={value.motivation}
-                    roles={value.roles.map(i => ({
-                            instrument: Instruments[i.instrument],
-                            filledBy: { username: i.filledBy }
+                    roles={value.roles.map(r => ({
+                            instrument: Instruments[r.instrument],
+                            filledBy: { username: r.filledBy }
                         })
                     )}/>
             )}
