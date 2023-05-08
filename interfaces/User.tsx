@@ -3,5 +3,5 @@ export interface IAdditionalUserData {
 }
 
 export interface IUser {
-    username: string
+  username: string
 }

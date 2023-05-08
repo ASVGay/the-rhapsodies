@@ -8,7 +8,7 @@ export const signInUser = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
 }
 
-export const signOutUser =  () => {
+export const signOutUser = () => {
     return signOut(auth);
 }
 
@@ -25,7 +25,7 @@ export const getAdditionalUserData = async (user: User) => {
     return res.data() as IAdditionalUserData;
 }
 
-export const setAdditionalUserData =  (additionalUserData: IAdditionalUserData, user: User) => {
+export const setAdditionalUserData = (additionalUserData: IAdditionalUserData, user: User) => {
     return setDoc(getUserDocument(user), additionalUserData)
 }
 
