@@ -1,10 +1,9 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
-import { Instruments } from "@/constants/Instruments";
 import Image from "next/image";
 import { IUser } from "@/interfaces/User";
 
 export interface Role {
-    instrument: typeof Instruments,
+    instrument: object,
     filledBy: IUser | undefined
 }
 
