@@ -35,3 +35,7 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('data', (value) => {
+    return cy.get(`[data-cy=${value}]`)
+})
