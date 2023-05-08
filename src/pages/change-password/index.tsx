@@ -3,13 +3,11 @@ import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
 import { useAuthContext } from "@/context/auth-context"
 import ErrorPopup from "@/components/popups/error-popup"
-import {
-  ErrorCodes,
-  mapAuthErrorCodeToErrorMessage,
-} from "@/helpers/sign-in.helper"
+import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { changePassword, signOutUser } from "@/services/authentication.service"
+import { ErrorCodes } from "@/constants/error-codes"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")
