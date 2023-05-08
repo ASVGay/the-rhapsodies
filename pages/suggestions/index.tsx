@@ -13,7 +13,7 @@ const Suggestions: FC = () => {
     }
 
     useEffect(() => {
-        fetchData()
+        (async () => fetchData())()
     }, [])
 
     return <>
