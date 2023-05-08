@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "cy:open": "cypress open",
-    "cy:run": "cypress run --config video=false"
+    "cy:run": "cypress run --config video=false",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
@@ -33,6 +34,11 @@
   },
   "devDependencies": {
     "cypress": "^12.11.0",
-    "cypress-firebase": "^2.2.5"
+    "cypress-firebase": "^2.2.5",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.2.8"
   }
 }
