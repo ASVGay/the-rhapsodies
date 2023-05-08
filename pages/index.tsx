@@ -1,6 +1,4 @@
-import {useAuthContext} from "@/context/AuthContext";
 import { useState} from "react";
-import {useRouter} from "next/router";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
