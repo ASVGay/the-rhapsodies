@@ -14,11 +14,11 @@ const Index = () => {
     const [password, setPassword] = useState<string>("");
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
-    const { user} = useAuthContext();
+    const {user} = useAuthContext();
 
     const router = useRouter();
 
-    const signIn =  () => {
+    const signIn = () => {
         signInUser(email, password)
             .catch((err) => {
                 const firebaseError = err as FirebaseError;
@@ -27,10 +27,10 @@ const Index = () => {
     }
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             router.push("/")
         }
-    },[user])
+    }, [user])
 
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
@@ -71,6 +71,6 @@ const Index = () => {
             </div>
         </div>
     )
-};
+}
 
-export default Index;
+export default Index

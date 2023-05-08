@@ -2,7 +2,6 @@ import React, { useState} from 'react';
 import SignInTextField from "@/components/textfields/SigninTextfield";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
-import {useRouter} from "next/router";
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {ErrorCodes, mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import {FirebaseError} from "@firebase/util";
@@ -15,7 +14,6 @@ const Index = () => {
     const [errorText, setErrorText] = useState<string>("");
     const [showErrorText, setShowErrorText] = useState<boolean>(false);
     const { user} = useAuthContext();
-    const router = useRouter();
     const submitNewPassword = async () => {
         if (!password) {
             return;
@@ -75,7 +73,7 @@ const Index = () => {
                 </div>
             </div>
         </div>
-    );
-};
+  )
+}
 
 export default WithProtectedRoute(Index);
