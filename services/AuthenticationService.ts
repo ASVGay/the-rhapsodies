@@ -1,5 +1,5 @@
 import {getAuth, signInWithEmailAndPassword, signOut, updatePassword, User} from "firebase/auth";
-import {doc, getDoc, updateDoc} from "@firebase/firestore";
+import {doc, getDoc, setDoc, updateDoc} from "@firebase/firestore";
 import firebase_app, {db} from "@/firebase/config";
 import {IAdditionalUserData} from "@/interfaces/User";
 
@@ -23,6 +23,10 @@ export const getAditionalUserData = async (user: User) => {
     const userDocument = getUserDocument(user);
     const res = await getDoc(userDocument);
     return res.data() as IAdditionalUserData;
+}
+
+export const setAdditionalUserData =  (additionalUserData: IAdditionalUserData, user: User) => {
+    return setDoc(getUserDocument(user), additionalUserData)
 }
 
 export const getUserDocument = (user: User) => {
