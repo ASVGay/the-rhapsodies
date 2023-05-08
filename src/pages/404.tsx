@@ -1,6 +1,6 @@
-import MainButton from "@/components/buttons/main-button/MainButton"
+import MainButton from "@/components/buttons/main-button"
 import { useRouter } from "next/router"
-import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
+import WithProtectedRoute from "@/components/protected-route/protected-route"
 
 function Custom404() {
   const router = useRouter()

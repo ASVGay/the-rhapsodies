@@ -1,8 +1,8 @@
 import { useState } from "react"
-import MainButton from "@/components/buttons/main-button/MainButton"
-import ErrorPopup from "@/components/popups/error-popup/ErrorPopup"
-import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
-import { signOutUser } from "@/services/AuthenticationService"
+import MainButton from "@/components/buttons/main-button"
+import ErrorPopup from "@/components/popups/error-popup"
+import WithProtectedRoute from "@/components/protected-route/protected-route"
+import { signOutUser } from "@/services/authentication.service"
 
 function Home() {
   const [showError, setShowError] = useState<boolean>(false)

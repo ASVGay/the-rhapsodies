@@ -1,7 +1,7 @@
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
-import { AuthContextProvider } from "@/context/AuthContext"
+import { AuthContextProvider } from "@/context/auth-context"
 import { Lexend } from "next/font/google"
 import { wrapper } from "@/store/store"
 import Layout from "@/components/layout/layout"

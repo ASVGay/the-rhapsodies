@@ -1,15 +1,15 @@
 import React, { useState } from "react"
-import SignInTextField from "@/components/textfields/SigninTextfield"
-import MainButton from "@/components/buttons/main-button/MainButton"
-import { useAuthContext } from "@/context/AuthContext"
-import ErrorPopup from "@/components/popups/error-popup/ErrorPopup"
+import SignInTextField from "@/components/text-fields/sign-in-text-field"
+import MainButton from "@/components/buttons/main-button"
+import { useAuthContext } from "@/context/auth-context"
+import ErrorPopup from "@/components/popups/error-popup"
 import {
   ErrorCodes,
   mapAuthErrorCodeToErrorMessage,
-} from "@/util/signin/SigninHelpers"
+} from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
-import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
-import { changePassword, signOutUser } from "@/services/AuthenticationService"
+import WithProtectedRoute from "@/components/protected-route/protected-route"
+import { changePassword, signOutUser } from "@/services/authentication.service"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")

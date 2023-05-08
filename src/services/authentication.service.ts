@@ -7,7 +7,7 @@ import {
 } from "firebase/auth"
 import { doc, getDoc, setDoc, updateDoc } from "@firebase/firestore"
 import firebase_app, { db } from "@/firebase/config"
-import { IAdditionalUserData } from "@/interfaces/User"
+import { IAdditionalUserData } from "@/interfaces/user"
 
 const auth = getAuth(firebase_app)
 export const signInUser = (email: string, password: string) => {

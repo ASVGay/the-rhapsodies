@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import SignInTextField from "@/components/textfields/SigninTextfield"
+import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useRouter } from "next/router"
-import ErrorPopup from "@/components/popups/error-popup/ErrorPopup"
-import { mapAuthErrorCodeToErrorMessage } from "@/util/signin/SigninHelpers"
-import MainButton from "@/components/buttons/main-button/MainButton"
-import { useAuthContext } from "@/context/AuthContext"
+import ErrorPopup from "@/components/popups/error-popup"
+import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
+import MainButton from "@/components/buttons/main-button"
+import { useAuthContext } from "@/context/auth-context"
 import { FirebaseError } from "@firebase/util"
-import { signInUser } from "@/services/AuthenticationService"
+import { signInUser } from "@/services/authentication.service"
 
 const Index = () => {
   const [email, setEmail] = useState<string>("")

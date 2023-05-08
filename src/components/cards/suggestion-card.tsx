@@ -1,7 +1,7 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
-import { Instruments } from "@/constants/Instruments.constant"
-import { ISuggestion } from "@/interfaces/Suggestion"
+import { Instruments } from "@/constants/instruments"
+import { ISuggestion } from "@/interfaces/suggestion"
 
 interface SuggestionCardProps {
   suggestion: ISuggestion

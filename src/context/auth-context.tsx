@@ -8,12 +8,12 @@ import {
 import { getAuth, onAuthStateChanged, User } from "firebase/auth"
 import firebase_app from "@/firebase/config"
 import { getDoc, setDoc } from "@firebase/firestore"
-import { IAdditionalUserData } from "@/interfaces/User"
+import { IAdditionalUserData } from "@/interfaces/user"
 import {
   getAdditionalUserData,
   getUserDocument,
   setAdditionalUserData,
-} from "@/services/AuthenticationService"
+} from "@/services/authentication.service"
 
 const auth = getAuth(firebase_app)
 export const AuthContext = createContext<AuthContextType>({

@@ -1,6 +1,6 @@
 import React from "react"
-import TopNavigation from "@/components/layout/navigation/top-navigation/TopNavigation"
-import BottomNavigation from "@/components/layout/navigation/bottom-navigation/BottomNavigation"
+import TopNavigation from "@/components/layout/navigation/top-navigation"
+import BottomNavigation from "@/components/layout/navigation/bottom-navigation"
 import { useRouter } from "next/router"
 
 type LayoutProps = {

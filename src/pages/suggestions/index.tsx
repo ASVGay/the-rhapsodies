@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react"
 import { PlusIcon } from "@heroicons/react/24/solid"
-import SuggestionCard from "@/components/cards/SuggestionCard"
-import { getSuggestions } from "@/services/suggestions.service"
-import { ISuggestion } from "@/interfaces/Suggestion"
-import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
+import SuggestionCard from "@/components/cards/suggestion-card"
+import { getSuggestions } from "@/services/suggestion.service"
+import { ISuggestion } from "@/interfaces/suggestion"
+import WithProtectedRoute from "@/components/protected-route/protected-route"
 
 const Suggestions: FC = () => {
   const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
