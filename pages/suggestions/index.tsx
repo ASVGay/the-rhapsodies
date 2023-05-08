@@ -3,6 +3,7 @@ import { PlusIcon } from "@heroicons/react/24/solid"
 import SuggestionCard from "@/components/cards/SuggestionCard"
 import { getSuggestions } from "@/services/suggestions.service"
 import { ISuggestion } from "@/interfaces/Suggestion"
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
 
 const Suggestions: FC = () => {
   const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
@@ -38,4 +39,4 @@ const Suggestions: FC = () => {
   )
 }
 
-export default Suggestions
+export default WithProtectedRoute(Suggestions)
