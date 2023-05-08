@@ -4,7 +4,7 @@ import Image from "next/image";
 import { IUser } from "@/interfaces/User";
 
 export interface Role {
-    instrument: Instruments,
+    instrument: typeof Instruments,
     filledBy: IUser | undefined
 }
 
