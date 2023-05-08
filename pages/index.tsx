@@ -1,26 +1,14 @@
-import { useAuthContext } from "@/context/AuthContext"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
+import { useState } from "react"
 import MainButton from "@/components/buttons/main-button/MainButton"
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup"
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
+import { signOutUser } from "@/services/AuthenticationService"
 
-export default function Home() {
-  const router = useRouter()
+function Home() {
   const [showError, setShowError] = useState<boolean>(false)
-  const { signOutUser, user, isFirstLogin } = useAuthContext()
-
-  useEffect(() => {
-    if (!user) {
-      router.push("./signin")
-    }
-  })
-
-  useEffect(() => {
-    console.log(isFirstLogin)
-  }, [isFirstLogin])
 
   return (
-    <main className="flex flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <MainButton text={"Log out"} onClick={signOutUser} />
       {showError && (
         <ErrorPopup
@@ -31,3 +19,4 @@ export default function Home() {
     </main>
   )
 }
+export default WithProtectedRoute(Home)
