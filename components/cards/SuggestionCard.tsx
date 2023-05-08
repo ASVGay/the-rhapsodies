@@ -2,6 +2,7 @@ import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { Instruments } from "@/constants/Instruments.constant";
 import { ISuggestion } from "@/interfaces/Suggestion";
+import Link from "next/link";
 
 interface SuggestionCardProps {
     suggestion: ISuggestion
@@ -17,7 +18,9 @@ const SuggestionCard = ({suggestion}: SuggestionCardProps)  => {
     const progressionBarWidth = ((rolesFilled() / suggestion.roles.length) * 100) + "%"
 
     return (
-        <div className={"bg-neutral-50 rounded-md drop-shadow-lg w-[22rem]"}>
+        <Link
+            href={{ pathname: "/suggestion/[suggestion]", query: { suggestion: "example" } }}
+            className={"bg-neutral-50 rounded-md drop-shadow-lg w-[22rem]"}>
             <div className={"flex items-start p-3"}>
                 <div className={"flex mt-auto mb-auto"}>
                     <MusicalNoteIcon className={"w-14 h-14 p-2 text-black rounded-md bg-neutral-200"}/>
@@ -51,7 +54,7 @@ const SuggestionCard = ({suggestion}: SuggestionCardProps)  => {
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 
