@@ -7,13 +7,14 @@ import ErrorPopup from "@/components/popups/error-popup/ErrorPopup";
 import {ErrorCodes, mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import {FirebaseError} from "@firebase/util";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
+import {changePassword, signOutUser} from "@/services/AuthenticationService";
 
 const Index = () => {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>();
     const [errorText, setErrorText] = useState<string>("");
     const [showErrorText, setShowErrorText] = useState<boolean>(false);
-    const {changePassword, signOutUser, user} = useAuthContext();
+    const { user} = useAuthContext();
     const router = useRouter();
     const submitNewPassword = async () => {
         if (!password) {
@@ -39,7 +40,6 @@ const Index = () => {
                 setTimeout(() => {
                     signOutUser();
                 },5000)
-                signOutUser();
             }
             setShowErrorText(true)
         }

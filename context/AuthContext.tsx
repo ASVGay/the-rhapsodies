@@ -1,32 +1,13 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, User} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, User} from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 import {getDoc, setDoc, updateDoc} from "@firebase/firestore";
-import {getAditionalUserData, getUserDocument} from "@/util/auth/AuthHelpers";
-import {IAditionalUserData} from "@/interfaces/User";
+import {IAdditionalUserData} from "@/interfaces/User";
+import {getAditionalUserData, getUserDocument} from "@/services/AuthenticationService";
 
 const auth = getAuth(firebase_app);
-
-const signInUser = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
-}
-
-const signOutUser = async () => {
-    return await signOut(auth);
-}
-
-const changePassword = async (password: string, user: User) => {
-    const documentRef = getUserDocument(user);
-    await updatePassword(auth.currentUser as User, password);
-    await updateDoc(documentRef, {isFirstLogin: false})
-    await signOutUser();
-}
-
 export const AuthContext = createContext<AuthContextType>({
     user: null,
-    signInUser: signInUser,
-    signOutUser: signOutUser,
-    changePassword: changePassword,
     loading: true
 });
 
@@ -35,22 +16,19 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [user, setUser] = useState<AuthenticatedUser | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const handleFirstSignInUser = async (authenticatedUser: User) => {
-        const userDoc = await getDoc(getUserDocument(authenticatedUser));
-        const userData: IAditionalUserData = {isFirstLogin: true}
-
-        if (!userDoc.exists()) {
-            return await setDoc(getUserDocument(authenticatedUser), userData);
-        }
-    }
-
     const handleSetUser = async (user: User | null) => {
         if (!user) {
             setUser(user);
             return;
         }
 
-        await handleFirstSignInUser(user);
+        const userDoc = await getDoc(getUserDocument(user));
+
+        if(!userDoc.exists()) {
+            const userData: IAdditionalUserData = {isFirstLogin: true}
+            return await setDoc(getUserDocument(user), userData);
+        }
+
         const additionalUserData = await getAditionalUserData(user);
         const authenticatedUser: AuthenticatedUser = {
             user,
@@ -70,7 +48,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
 
     return (
-        <AuthContext.Provider value={{user, signInUser, signOutUser, changePassword, loading}}>
+        <AuthContext.Provider value={{user, loading}}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
@@ -80,15 +58,12 @@ export default AuthContextProvider;
 
 interface AuthContextType {
     user: AuthenticatedUser | null,
-    signInUser: (email: string, password: string) => Promise<void>,
-    signOutUser: () => void,
-    changePassword: (password: string, user: User) => Promise<void>,
     loading: boolean
 }
 
 interface AuthenticatedUser {
     user: User,
-    additionalUserData: IAditionalUserData
+    additionalUserData: IAdditionalUserData
 }
 
 interface AuthContextProviderProps {

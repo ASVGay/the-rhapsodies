@@ -7,6 +7,7 @@ import {mapAuthErrorCodeToErrorMessage} from "@/util/signin/SigninHelpers";
 import MainButton from "@/components/buttons/main-button/MainButton";
 import {useAuthContext} from "@/context/AuthContext";
 import {FirebaseError} from "@firebase/util";
+import {signInUser} from "@/services/AuthenticationService";
 
 const Index = () => {
     const [email, setEmail] = useState<string>("");
@@ -15,22 +16,17 @@ const Index = () => {
     const [errorPopupText, setErrorPopupText] = useState<string>("");
 
     const router = useRouter();
-    const {signInUser, user } = useAuthContext();
 
-    const signIn = async () => {
-        try {
-            await signInUser(email, password)
-        } catch (error) {
-            const firebaseError = error as FirebaseError;
-            handleBadLogin(firebaseError.code)
-        }
+    const signIn =  () => {
+        signInUser(email, password)
+            .then(() => {
+                router.push("/")
+            })
+            .catch((err) => {
+                const firebaseError = err as FirebaseError;
+                handleBadLogin(firebaseError.code)
+            })
     }
-
-    useEffect(() => {
-        if(user) {
-            router.push("/")
-        }
-    },[user, router])
 
 
     const handleBadLogin = (error: string | null) => {
