@@ -1,10 +1,9 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import {getAuth, onAuthStateChanged, User} from 'firebase/auth';
 import firebase_app from '@/firebase/config';
-import {getDoc, setDoc, updateDoc} from "@firebase/firestore";
+import {getDoc, setDoc} from "@firebase/firestore";
 import {IAdditionalUserData} from "@/interfaces/User";
 import {getAditionalUserData, getUserDocument} from "@/services/AuthenticationService";
-import {router} from "next/client";
 
 const auth = getAuth(firebase_app);
 export const AuthContext = createContext<AuthContextType>({
