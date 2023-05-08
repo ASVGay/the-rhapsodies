@@ -2,8 +2,16 @@ import '@/styles/globals.css'
 import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {AuthContextProvider} from "@/context/AuthContext";
+import {Lexend} from "next/font/google";
+import {wrapper} from "@/store/store"
+import Layout from "@/components/layout/layout";
 
-export default function App({Component, pageProps}: AppProps) {
+const lexend = Lexend({
+    subsets: ['latin'],
+    variable: '--font-lexend'
+})
+
+const App = ({Component, pageProps}: AppProps) => {
     return <>
         <Head>
             <link rel="manifest" href="/manifest.json"/>
@@ -82,7 +90,13 @@ export default function App({Component, pageProps}: AppProps) {
                   media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"/>
         </Head>
         <AuthContextProvider>
-            <Component {...pageProps} />
+            <main className={`${lexend.variable} font-sans`}>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </main>
         </AuthContextProvider>
     </>
 }
+
+export default wrapper.withRedux(App)
