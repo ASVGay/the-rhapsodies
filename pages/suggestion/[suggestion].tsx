@@ -5,7 +5,6 @@ import ProgressionBar from "@/components/suggestion/progressionBar";
 import Image from "next/image";
 import { Instruments } from "@/constants/Instruments.constant";
 
-//TODO: responsiveness for desktop
 //TODO: replace hardcoded values
 //todo: Highlight current user's name, get curr username
 //TODO instrument onlick -> update suggestion data + UI if role not already filled
@@ -21,7 +20,7 @@ const testDataRoles = [
 
 const Suggestion: FC = () => {
     return <>
-        <div className={"flex flex-col justify-center m-4"}>
+        <div className={"flex flex-col m-4"}>
             <div className={"flex"}>
                 <div className={"w-full"}>
                     <p className={"text-2xl leading-8"}><b>Suggestion</b> by Danny</p>
@@ -30,7 +29,7 @@ const Suggestion: FC = () => {
                 <Link href={"/suggestions"}><XMarkIcon className={"text-zinc-400 h-8 h-8"}/></Link>
             </div>
 
-            <div className={"m-2"}>
+            <div className={"m-2 md:max-w-sm md:ml-auto md:mr-auto"}>
                 <p className={"text-xl leading-7 font-medium text-moon-500 text-center m-4"}>Song information</p>
                 <div className={"flex"}>
                     <MusicalNoteIcon className={"w-14 h-14 p-2 text-black rounded-md bg-neutral-200"}/>
@@ -45,13 +44,13 @@ const Suggestion: FC = () => {
                 </p>
             </div>
 
-            <div>
+            <div className={"md:flex flex-col items-center"}>
                 <p className={"text-xl font-medium text-moon-500 text-center"}>Instruments</p>
-                <div className={"m-4"}>
+                <div className={"m-4 md:w-2/3 lg:w-1/3"}>
                     <ProgressionBar roles={testDataRoles}
                     />
                 </div>
-                <div className={"flex flex-col gap-4"}>
+                <div className={"flex gap-4 flex-col md:flex-row md:flex-wrap md:max-w-lg"}>
                     {testDataRoles.map((role, index) => {
                         const instrument = Instruments[role.instrument]
                         return <div key={index} className={"flex"}>
@@ -62,7 +61,7 @@ const Suggestion: FC = () => {
                             />
                             <div>
                                 <p>{instrument.instrument}</p>
-                                <p className={"text-zinc-400 leading-5"}>plays same line as bass</p>
+                                <p className={"text-zinc-400 leading-5 md:max-w-[12rem]"}>plays same line as bass</p>
                                 {role.filledBy &&
                                   <li className={"text-zinc-400 leading-5 ml-8 font-bold"}>{role.filledBy}</li>
                                 }
