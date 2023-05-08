@@ -1,24 +1,24 @@
-import React from "react";
-import TopNavigation from "@/components/layout/navigation/top-navigation/TopNavigation";
-import BottomNavigation from "@/components/layout/navigation/bottom-navigation/BottomNavigation";
-import {useRouter} from "next/router";
+import React from "react"
+import TopNavigation from "@/components/layout/navigation/top-navigation/TopNavigation"
+import BottomNavigation from "@/components/layout/navigation/bottom-navigation/BottomNavigation"
+import { useRouter } from "next/router"
 
 type LayoutProps = {
-    children: React.ReactNode
+  children: React.ReactNode
 }
 
-export default function Layout({children}: LayoutProps) {
-    const {pathname} = useRouter();
+export default function Layout({ children }: LayoutProps) {
+  const { pathname } = useRouter()
 
-    if (pathname === "/signin") {
-        return <>{children}</>
-    }
+  if (pathname === "/signin") {
+    return <>{children}</>
+  }
 
-    return <>
-        <TopNavigation/>
-        <div className={"max-lg:pb-[68px]"}>
-            {children}
-        </div>
-        <BottomNavigation/>
+  return (
+    <>
+      <TopNavigation />
+      <div className={"max-lg:pb-[68px]"}>{children}</div>
+      <BottomNavigation />
     </>
+  )
 }

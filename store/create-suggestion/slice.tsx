@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { HYDRATE } from "next-redux-wrapper"
-import { AppState } from "@/store/store";
-import { initialState } from "@/store/create-suggestion/data";
+import { AppState } from "@/store/store"
+import { initialState } from "@/store/create-suggestion/data"
 
 export const createSuggestionSlice = createSlice({
   name: "create-suggestion",
@@ -24,6 +24,6 @@ export const createSuggestionSlice = createSlice({
 
 export const { setState } = createSuggestionSlice.actions
 
-export const getState = (state: AppState) => state.createSuggestion;
+export const getState = (state: AppState) => state.createSuggestion
 
 export default createSuggestionSlice.reducer
