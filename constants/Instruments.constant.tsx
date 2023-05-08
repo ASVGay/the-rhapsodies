@@ -1,4 +1,9 @@
-import { Instrument } from "@/components/cards/SuggestionCard";
+import { StaticImageData } from "next/image";
+
+interface Instrument {
+    instrument: string
+    icon: { readonly default: StaticImageData }
+}
 
 export const Instruments: { [key: string]: Instrument }  = {
     SINGER: { instrument: "Singer", icon: require("public/assets/instruments/icons8-micro-50.png") },

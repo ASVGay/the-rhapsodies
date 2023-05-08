@@ -1,32 +1,20 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
-import Image, { StaticImageData } from "next/image";
-import { IUser } from "@/interfaces/User";
-
-export interface Instrument {
-    instrument: string
-    icon: { readonly default: StaticImageData }
-}
-
-export interface Role {
-    instrument: Instrument
-    filledBy: IUser | undefined
-}
+import Image from "next/image";
+import { Instruments } from "@/constants/Instruments.constant";
+import { ISuggestion } from "@/interfaces/Suggestion";
 
 interface SuggestionCardProps {
-    title: string
-    artists: string[]
-    motivation: string
-    roles: Role[]
+    suggestion: ISuggestion
 }
 
-const SuggestionCard = (props: SuggestionCardProps) => {
+const SuggestionCard = ({suggestion}: SuggestionCardProps)  => {
 
     const rolesFilled = () => {
-        return props.roles.filter((role) => role.filledBy?.username != undefined).length
+        return suggestion.roles.filter((role) => role.filledBy != null).length
     }
 
-    const progressionFraction = `${rolesFilled()}/${props.roles.length}`
-    const progressionBarWidth = ((rolesFilled() / props.roles.length) * 100) + "%"
+    const progressionFraction = `${rolesFilled()}/${suggestion.roles.length}`
+    const progressionBarWidth = ((rolesFilled() / suggestion.roles.length) * 100) + "%"
 
     return (
         <div className={"bg-neutral-50 rounded-md drop-shadow-lg w-[22rem]"}>
@@ -35,10 +23,10 @@ const SuggestionCard = (props: SuggestionCardProps) => {
                     <MusicalNoteIcon className={"w-14 h-14 p-2 text-black rounded-md bg-neutral-200"}/>
                 </div>
                 <span className={"pl-3"}>
-                        <p className={"font-bold line-clamp-1"}>{props.title}</p>
-                        <p className={"line-clamp-1"}>{props.artists.join(', ')}</p>
+                        <p className={"font-bold line-clamp-1"}>{suggestion.title}</p>
+                        <p className={"line-clamp-1"}>{suggestion.artists.join(', ')}</p>
                         <p className={"text-sm leading-4 font-medium text-gray-400 h-12 line-clamp-3"}>
-                           {props.motivation}
+                            {suggestion.motivation}
                         </p>
                     </span>
             </div>
@@ -51,13 +39,13 @@ const SuggestionCard = (props: SuggestionCardProps) => {
                 </div>
                 <div className={"ml-auto mr-auto pl-8 pr-8"}>
                     <div className={"flex justify-around"}>
-                        {props.roles.map((value, index) => {
+                        {suggestion.roles.map((value, index) => {
                             return <Image
-                                src={value.instrument.icon}
-                                alt={value.instrument.toString()}
                                 key={index}
+                                src={Instruments[value.instrument].icon}
+                                alt={value.instrument.toString()}
                                 width={24} height={24}
-                                className={value.filledBy?.username ?? "opacity-30"}
+                                className={value.filledBy ?? "opacity-30"}
                             />
                         })}
                     </div>
