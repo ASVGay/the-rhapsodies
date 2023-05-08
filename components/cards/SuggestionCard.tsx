@@ -1,9 +1,9 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { IUser } from "@/interfaces/User";
 
 export interface Role {
-    instrument: object,
+    instrument: { instrument: string, icon: { readonly default: StaticImageData } },
     filledBy: IUser | undefined
 }
 
