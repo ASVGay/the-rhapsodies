@@ -14,6 +14,7 @@ const Index = () => {
     const [password, setPassword] = useState<string>("");
     const [showErrorPopup, setErrorPopup] = useState<boolean>();
     const [errorPopupText, setErrorPopupText] = useState<string>("");
+    const { user} = useAuthContext();
 
     const router = useRouter();
 
@@ -28,6 +29,11 @@ const Index = () => {
             })
     }
 
+    useEffect(() => {
+        if(user) {
+            router.push("/")
+        }
+    },[user])
 
     const handleBadLogin = (error: string | null) => {
         setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
