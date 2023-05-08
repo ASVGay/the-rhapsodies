@@ -3,7 +3,7 @@ import {getAuth, onAuthStateChanged, User} from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 import {getDoc, setDoc} from "@firebase/firestore";
 import {IAdditionalUserData} from "@/interfaces/User";
-import {getAditionalUserData, getUserDocument, setAdditionalUserData} from "@/services/AuthenticationService";
+import {getAdditionalUserData, getUserDocument, setAdditionalUserData} from "@/services/AuthenticationService";
 
 const auth = getAuth(firebase_app);
 export const AuthContext = createContext<AuthContextType>({
@@ -30,7 +30,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             await setDoc(getUserDocument(user), userData);
         }
 
-        const additionalUserData = await getAditionalUserData(user);
+        const additionalUserData = await getAdditionalUserData(user);
         const authenticatedUser: AuthenticatedUser = {
             user,
             additionalUserData

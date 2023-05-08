@@ -19,7 +19,7 @@ export const changePassword = async (password: string, user: User) => {
     await signOutUser();
 }
 
-export const getAditionalUserData = async (user: User) => {
+export const getAdditionalUserData = async (user: User) => {
     const userDocument = getUserDocument(user);
     const res = await getDoc(userDocument);
     return res.data() as IAdditionalUserData;
