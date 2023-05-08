@@ -21,6 +21,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             setUser(user);
             return;
         }
+
         const userDoc = await getDoc(getUserDocument(user));
 
         if(!userDoc.exists()) {
@@ -34,6 +35,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             user,
             additionalUserData
         }
+
         setUser(authenticatedUser)
     }
 

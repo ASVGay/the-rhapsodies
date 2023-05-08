@@ -10,7 +10,6 @@ const WithProtectedRoute = <P extends object>(
         const router = useRouter();
         const {user, loading} = useAuthContext();
 
-
         if (!user) {
             router.push("./sign-in");
         }
