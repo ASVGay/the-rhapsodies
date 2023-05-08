@@ -1,8 +1,8 @@
 import MainButton from "@/components/buttons/main-button/MainButton"
 import { useRouter } from "next/router"
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
 
-export default function Custom404() {
-  // TODO: Make this a protected route
+function Custom404() {
   const router = useRouter()
 
   return (
@@ -24,3 +24,5 @@ export default function Custom404() {
     </div>
   )
 }
+
+export default WithProtectedRoute(Custom404)
