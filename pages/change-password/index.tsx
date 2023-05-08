@@ -22,7 +22,6 @@ const Index = () => {
         if (password !== confirmPassword) {
             setErrorText("Fill in equal passwords.")
             setShowErrorText(true)
-            return;
         } else {
             try {
                 await changePassword(password)
