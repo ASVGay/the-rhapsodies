@@ -1,26 +1,25 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ProgressionBar from "@/components/suggestion/progressionBar";
 import Image from "next/image";
 import { Instruments } from "@/constants/Instruments.constant";
+import { ISuggestion } from "@/interfaces/Suggestion";
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { getSuggestion } from "@/services/suggestions.service";
 
 //TODO: replace hardcoded values
 //todo: Highlight current user's name, get curr username
 //TODO instrument onlick -> update suggestion data + UI if role not already filled
 //TODO: error-handeling
+interface SuggestionProps {
+  suggestion: ISuggestion
+}
 
-const testDataRoles = [
-  { filledBy: "rens", instrument: "SINGER" },
-  { filledBy: null, instrument: "BANJO" },
-  { filledBy: "rens", instrument: "GUITAR" },
-  { filledBy: "rens", instrument: "SINGER" },
-  { filledBy: null, instrument: "BANJO" },
-]
-
-const Suggestion: FC = () => {
+const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
   return <>
-    <div className={"flex flex-col m-4"}>
+    <div className={"flex flex-col m-4 pt-2"}>
       <div className={"flex"}>
         <div className={"w-full"}>
           <p className={"text-2xl leading-8"}><b>Suggestion</b> by Danny</p>
@@ -47,11 +46,11 @@ const Suggestion: FC = () => {
       <div className={"md:flex flex-col items-center"}>
         <p className={"text-xl font-medium text-moon-500 text-center"}>Instruments</p>
         <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-          <ProgressionBar roles={testDataRoles}
+          <ProgressionBar roles={[]}
           />
         </div>
         <div className={"flex gap-4 flex-col md:flex-row md:flex-wrap md:max-w-lg"}>
-          {testDataRoles.map((role, index) => {
+          {[].map((role, index) => {
             const instrument = Instruments[role.instrument]
             return <div key={index} className={"flex"}>
               <Image
@@ -74,4 +73,19 @@ const Suggestion: FC = () => {
   </>
 }
 
-export default Suggestion
+export const getStaticPaths: GetStaticPaths<{ suggestion: string }> = async () => {
+  return {
+    paths: [],
+    fallback: false
+  }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { params } = context
+  const suggestion = await getSuggestion(params.suggestion as string)
+  return {
+    props: {suggestion},
+  };
+};
+
+export default WithProtectedRoute(Suggestion)

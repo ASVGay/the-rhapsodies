@@ -1,6 +1,7 @@
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/firebase/config"
 import { ISuggestion } from "@/interfaces/Suggestion"
+import { doc, getDoc } from "@firebase/firestore";
 
 export const getSuggestions = async (): Promise<ISuggestion[]> => {
   const querySnapshot = await getDocs(collection(db, "suggestions"))
@@ -13,4 +14,9 @@ export const getSuggestions = async (): Promise<ISuggestion[]> => {
   })
 
   return suggestions
+}
+
+export const getSuggestion = async (id: string): Promise<ISuggestion> => {
+  const querySnapshot = await getDoc(doc(db, "suggestions", id))
+  return querySnapshot.data() as ISuggestion
 }

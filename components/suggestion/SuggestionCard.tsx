@@ -12,7 +12,7 @@ interface SuggestionCardProps {
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
   return (
     <Link
-      href={{ pathname: "/suggestion/[suggestion]", query: { suggestion: "example" } }}
+      href={{ pathname: "/suggestion/[suggestion]", query: { suggestion: suggestion.id } }}
       className={"bg-neutral-50 rounded-md drop-shadow-lg w-[22rem]"}>
       <div className={"flex items-start p-3"}>
         <div className={"flex mt-auto mb-auto"}>
