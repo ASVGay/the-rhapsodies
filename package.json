@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "npm run test:jest",
-    "test:jest": "node ./node_modules/jest/bin/jest.js",
+    "test:jest": "node ./node_modules/jest/bin/jest.js --passWithNoTests",
     "cy:open": "cypress open",
     "cy:run": "cypress run --config video=false",
     "prepare": "husky install"
