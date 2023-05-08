@@ -27,7 +27,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
         if(!userDoc.exists()) {
             const userData: IAdditionalUserData = {isFirstLogin: true}
-            return await setDoc(getUserDocument(user), userData);
+            await setDoc(getUserDocument(user), userData);
         }
 
         const additionalUserData = await getAditionalUserData(user);

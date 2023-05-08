@@ -20,9 +20,6 @@ const Index = () => {
 
     const signIn =  () => {
         signInUser(email, password)
-            .then(() => {
-                router.push("/")
-            })
             .catch((err) => {
                 const firebaseError = err as FirebaseError;
                 handleBadLogin(firebaseError.code)
