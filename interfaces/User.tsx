@@ -1,7 +1,7 @@
-export interface IAditionalUserData {
+export interface IAdditionalUserData {
   isFirstLogin: boolean
 }
 
 export interface IUser {
-    username: string
+  username: string
 }

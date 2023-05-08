@@ -10,7 +10,7 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { pathname } = useRouter()
 
-  if (pathname === "/signin") {
+  if (pathname === "/sign-in") {
     return <>{children}</>
   }
 

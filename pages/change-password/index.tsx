@@ -2,41 +2,48 @@ import React, { useState } from "react"
 import SignInTextField from "@/components/textfields/SigninTextfield"
 import MainButton from "@/components/buttons/main-button/MainButton"
 import { useAuthContext } from "@/context/AuthContext"
-import { useRouter } from "next/router"
 import ErrorPopup from "@/components/popups/error-popup/ErrorPopup"
-import { mapAuthErrorCodeToErrorMessage } from "@/util/signin/SigninHelpers"
+import {
+  ErrorCodes,
+  mapAuthErrorCodeToErrorMessage,
+} from "@/util/signin/SigninHelpers"
 import { FirebaseError } from "@firebase/util"
+import WithProtectedRoute from "@/components/protected-route/ProtectedRoute"
+import { changePassword, signOutUser } from "@/services/AuthenticationService"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
-  const { changePassword, signOutUser } = useAuthContext()
-  const router = useRouter()
+  const { user } = useAuthContext()
   const submitNewPassword = async () => {
     if (!password) {
+      return
+    }
+
+    if (!user) {
       return
     }
 
     if (password !== confirmPassword) {
       setErrorText("Fill in equal passwords.")
       setShowErrorText(true)
-    } else {
-      try {
-        await changePassword(password)
-        await signOutUser()
-        await router.push("/signin")
-      } catch (error) {
-        const err = error as FirebaseError
-        handleBadValues(err.code)
-        setShowErrorText(true)
-      }
+      return
     }
-  }
 
-  const handleBadValues = (errorCode: string) => {
-    setErrorText(mapAuthErrorCodeToErrorMessage(errorCode))
+    try {
+      await changePassword(password, user.user)
+    } catch (error) {
+      const err = error as FirebaseError
+      setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
+      if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+        setTimeout(() => {
+          signOutUser()
+        }, 5000)
+      }
+      setShowErrorText(true)
+    }
   }
 
   return (
@@ -51,6 +58,15 @@ const Index = () => {
             "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
           }
         >
+          {user?.additionalUserData.isFirstLogin && (
+            <div className={"flex w-full justify-center"}>
+              <span className={"w-fit font-semibold leading-8 text-black"}>
+                In order to access the application you need to change your
+                password.
+              </span>
+            </div>
+          )}
+
           <div className="w-full">
             <SignInTextField
               placeholder={"Password"}
@@ -82,4 +98,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default WithProtectedRoute(Index)
