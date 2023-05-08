@@ -1,12 +1,13 @@
 interface IRole {
-    filledBy: string
-    instrument: string
+  filledBy: string
+  instrument: string
 }
 
 export interface ISuggestion {
-    artists: string[]
-    motivation: string
-    roles: IRole[]
-    title: string
-    user: string
+  id: string
+  artists: string[]
+  motivation: string
+  roles: IRole[]
+  title: string
+  user: string
 }
