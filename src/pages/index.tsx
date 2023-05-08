@@ -19,4 +19,5 @@ function Home() {
     </main>
   )
 }
+
 export default WithProtectedRoute(Home)
