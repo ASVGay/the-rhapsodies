@@ -1,15 +1,8 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import {
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signOut, updatePassword,
-    User,
-    UserCredential
-} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, User} from 'firebase/auth';
 import firebase_app from '@/firebase/config';
-import { getDoc, setDoc} from "@firebase/firestore";
-import { getUserDocument} from "@/util/auth/AuthHelpers";
+import {getDoc, setDoc} from "@firebase/firestore";
+import {getUserDocument} from "@/util/auth/AuthHelpers";
 import {IAditionalUserData} from "@/interfaces/User";
 
 const auth = getAuth(firebase_app);
@@ -32,7 +25,7 @@ const signOutUser = async () => {
 }
 
 const changePassword = async (password: string) => {
-    return await updatePassword(auth.currentUser as User, password )
+    return await updatePassword(auth.currentUser as User, password)
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -80,12 +73,12 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             handleFirstSignInUser(user).then(() => {
                 setFirstLogin()
             })
         }
-    },[user])
+    }, [user])
 
     return (
         <AuthContext.Provider value={{user, signInUser, signOutUser, isFirstLogin, changePassword}}>
