@@ -1,4 +1,6 @@
-export const Instruments = {
+import { Instrument } from "@/components/cards/SuggestionCard";
+
+export const Instruments: { [key: string]: Instrument }  = {
     SINGER: { instrument: "Singer", icon: require("public/assets/instruments/icons8-micro-50.png") },
     ACCORDION: { instrument: "Accordion", icon: require("public/assets/instruments/icons8-accordion-50.png") },
     BANJO: { instrument: "Banjo", icon: require("public/assets/instruments/icons8-banjo-50.png") },
