@@ -29,12 +29,7 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-lexend)', ...fontFamily.sans]
       },
-      width: {
-        '352': '22rem'
-      },
     },
   },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-  ],
+
 }

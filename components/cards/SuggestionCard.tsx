@@ -25,13 +25,13 @@ const SuggestionCard = (props: SuggestionCardProps) => {
     const progressionBarWidth = ((rolesFilled() / props.roles.length) * 100) + "%"
 
     return (
-        <div className={"mb-8 bg-neutral-50 rounded-md drop-shadow-lg w-352"}>
+        <div className={"bg-neutral-50 rounded-md drop-shadow-lg w-[22rem]"}>
             <div className={"flex items-start p-3"}>
                 <div className={"flex mt-auto mb-auto"}>
                     <MusicalNoteIcon className={"w-14 h-14 p-2 text-black rounded-md bg-neutral-200"}/>
                 </div>
                 <span className={"pl-3"}>
-                        <p className={"font-bold"}>{props.title}</p>
+                        <p className={"font-bold line-clamp-1"}>{props.title}</p>
                         <p className={"line-clamp-1"}>{props.artists.join(', ')}</p>
                         <p className={"text-sm leading-4 font-medium text-gray-400 h-12 line-clamp-3"}>
                            {props.motivation}
