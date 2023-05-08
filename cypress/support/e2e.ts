@@ -14,27 +14,27 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands"
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/database';
-import 'firebase/compat/firestore';
-import { attachCustomCommands } from 'cypress-firebase';
+import firebase from "firebase/compat/app"
+import "firebase/compat/auth"
+import "firebase/compat/database"
+import "firebase/compat/firestore"
+import { attachCustomCommands } from "cypress-firebase"
 
 const firebaseConfig = {
-    apiKey: Cypress.env('NEXT_PUBLIC_FIREBASE_API_KEY'),
-    authDomain: Cypress.env('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN'),
-    projectId: Cypress.env('NEXT_PUBLIC_FIREBASE_PROJECT_ID'),
-    storageBucket: Cypress.env('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET'),
-    messagingSenderId: Cypress.env('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID'),
-    appId: Cypress.env('NEXT_PUBLIC_FIREBASE_APP_ID'),
-    measurementId: Cypress.env('NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID'),
-};
+  apiKey: Cypress.env("NEXT_PUBLIC_FIREBASE_API_KEY"),
+  authDomain: Cypress.env("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"),
+  projectId: Cypress.env("NEXT_PUBLIC_FIREBASE_PROJECT_ID"),
+  storageBucket: Cypress.env("NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: Cypress.env("NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"),
+  appId: Cypress.env("NEXT_PUBLIC_FIREBASE_APP_ID"),
+  measurementId: Cypress.env("NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID"),
+}
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig)
 
-attachCustomCommands({ Cypress, cy, firebase });
+attachCustomCommands({ Cypress, cy, firebase })

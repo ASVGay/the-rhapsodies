@@ -1,3 +1,3 @@
 export interface IAditionalUserData {
-    isFirstLogin: boolean
+  isFirstLogin: boolean
 }
