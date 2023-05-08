@@ -1,3 +1,5 @@
+import NotificationSettings from "@/components/settings/notifications/notification.settings"
+
 export default function Settings() {
   return (
     <div className={"mx-auto px-4 py-6 lg:w-3/5"}>
@@ -8,6 +10,7 @@ export default function Settings() {
       >
         Settings
       </h1>
+      <NotificationSettings />
     </div>
   )
 }
