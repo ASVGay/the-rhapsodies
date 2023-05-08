@@ -5,21 +5,17 @@ import {FC, useEffect} from "react";
 
 const WithProtectedRoute = <P extends object>(
     WrappedComponent: FC<P>
-): FC<P> => {
+): (props: P) => false | JSX.Element => {
     const Wrapper = (props: P) => {
         const router = useRouter();
         const {user, loading} = useAuthContext();
 
         if (!user) {
-            router.push("./sign-in");
+            router.push("/sign-in");
         }
 
         const checkIfFirstLogIn = () => {
-            if (!user?.additionalUserData.isFirstLogin) {
-                return;
-            }
-
-            if (router.pathname !== "/change-password") {
+            if (user?.additionalUserData.isFirstLogin && router.pathname !== "/change-password") {
                 router.push("/change-password");
             }
         }
@@ -28,7 +24,7 @@ const WithProtectedRoute = <P extends object>(
             checkIfFirstLogIn()
         }, [user])
 
-        return loading ? null : <WrappedComponent {...props} />;
+        return !loading && <WrappedComponent {...props} />;
     };
 
     return Wrapper;
