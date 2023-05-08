@@ -1,5 +1,5 @@
-interface IRole {
-    filledBy: string
+export interface IRole {
+    filledBy: string | null
     instrument: string
 }
 

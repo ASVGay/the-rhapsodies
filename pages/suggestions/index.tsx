@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import SuggestionCard from "@/components/cards/SuggestionCard";
+import SuggestionCard from "@/components/suggestion/SuggestionCard";
 import { getSuggestions } from "@/services/suggestions.service";
 import { ISuggestion } from "@/interfaces/Suggestion";
 
