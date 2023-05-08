@@ -1,13 +1,10 @@
-import * as React from "react"
-import { HomeIcon, LightBulbIcon } from "@heroicons/react/24/solid"
+import {
+  Cog8ToothIcon,
+  HomeIcon,
+  LightBulbIcon,
+} from "@heroicons/react/24/solid"
 import { NextRouter } from "next/router"
-
-type HeroIcon = React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
-    title?: string
-    titleId?: string
-  } & React.RefAttributes<SVGSVGElement>
->
+import { HeroIcon } from "@/types/hero-icon"
 
 export type NavItem = {
   icon: HeroIcon
