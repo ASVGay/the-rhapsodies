@@ -15,7 +15,7 @@ const Index = () => {
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
   const { user } = useAuthContext()
-  const submitNewPassword = async () => {
+  const submitNewPassword = () => {
     if (!password) {
       return
     }
@@ -30,18 +30,16 @@ const Index = () => {
       return
     }
 
-    try {
-      await changePassword(password, user.user)
-    } catch (error) {
+    changePassword(password, user.user).catch((error) => {
       const err = error as FirebaseError
       setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
       if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-        setTimeout(() => {
-          signOutUser()
+        setTimeout(async () => {
+          await signOutUser()
         }, 5000)
       }
       setShowErrorText(true)
-    }
+    })
   }
 
   return (
@@ -67,6 +65,7 @@ const Index = () => {
 
           <div className="w-full">
             <SignInTextField
+              dataCy={"change-password-textfield"}
               placeholder={"Password"}
               type={"password"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -76,6 +75,7 @@ const Index = () => {
           </div>
           <div>
             <SignInTextField
+              dataCy={"change-password-confirm-textfield"}
               placeholder={"Confirm Password"}
               type={"password"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -85,11 +85,16 @@ const Index = () => {
           </div>
           {showErrorText && (
             <ErrorPopup
+              dataCy={"error-popup-change-password"}
               text={errorText}
               closePopup={() => setShowErrorText(false)}
             />
           )}
-          <MainButton onClick={submitNewPassword} text={"Submit"} />
+          <MainButton
+            dataCy={"submit-password-btn"}
+            onClick={submitNewPassword}
+            text={"Submit"}
+          />
         </div>
       </div>
     </div>

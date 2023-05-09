@@ -4,6 +4,7 @@ import Image from "next/image"
 interface ErrorPopupProps {
   text: string
   closePopup: () => void
+  dataCy?: string
 }
 const ErrorPopup = (props: ErrorPopupProps) => {
   return (
@@ -11,7 +12,7 @@ const ErrorPopup = (props: ErrorPopupProps) => {
       className="relative flex justify-between rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
       role="alert"
     >
-      <strong className="font-bold">{props.text}</strong>
+      <strong className="font-bold" data-cy={props.dataCy} >{props.text}</strong>
       <Image
         onClick={props.closePopup}
         width={16}

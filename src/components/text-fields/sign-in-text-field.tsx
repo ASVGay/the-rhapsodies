@@ -3,6 +3,7 @@ import React from "react"
 interface SignInTextFieldProps {
   placeholder: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  dataCy?: string
   type: string
 }
 
@@ -13,6 +14,7 @@ const SignInTextField = (props: SignInTextFieldProps) => {
       type={props.type}
       placeholder={props.placeholder}
       onChange={props.onChange}
+      data-cy={props.dataCy}
     />
   )
 }
