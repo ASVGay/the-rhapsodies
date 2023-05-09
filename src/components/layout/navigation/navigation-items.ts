@@ -1,8 +1,4 @@
-import {
-  Cog8ToothIcon,
-  HomeIcon,
-  LightBulbIcon,
-} from "@heroicons/react/24/solid"
+import { Cog8ToothIcon, HomeIcon, LightBulbIcon } from "@heroicons/react/24/solid"
 import { NextRouter } from "next/router"
 import { HeroIcon } from "@/types/hero-icon"
 
@@ -37,5 +33,5 @@ export const NavigationItems: NavItem[] = [
 ]
 
 export const isActive = (path: string, router: NextRouter): boolean => {
-  return router.pathname == path
+  return path === "/" ? router.pathname === "/" : new RegExp(`${path}.*`).test(router.pathname)
 }

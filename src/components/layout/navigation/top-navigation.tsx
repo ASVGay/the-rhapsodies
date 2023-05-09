@@ -1,8 +1,4 @@
-import {
-  isActive,
-  NavigationItems,
-  NavItem,
-} from "@/components/layout/navigation/navigation-items"
+import { isActive, NavigationItems, NavItem } from "@/components/layout/navigation/navigation-items"
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -11,24 +7,15 @@ import { NextRouter, useRouter } from "next/router"
 
 export default function TopNavigation() {
   const router: NextRouter = useRouter()
-  const settingsItem: NavItem | undefined = NavigationItems.find(
-    (item) => item.data == "settings"
-  )
+  const settingsItem: NavItem | undefined = NavigationItems.find((item) => item.data == "settings")
 
   return (
     <div
       data-cy={"top"}
-      className={
-        "top-navigation hidden h-24 items-center justify-between bg-white px-4 lg:flex"
-      }
+      className={"top-navigation hidden h-24 items-center justify-between bg-white px-4 lg:flex"}
     >
       <Link href={"/"}>
-        <Image
-          src={"/images/logo.png"}
-          alt={"Logo of The Rhapsodies"}
-          height={96}
-          width={96}
-        />
+        <Image src={"/images/logo.png"} alt={"Logo of The Rhapsodies"} height={96} width={96} />
       </Link>
 
       <div className={"flex"}>
@@ -40,7 +27,7 @@ export default function TopNavigation() {
               key={item.path}
               href={item.path}
               className={`px-4 text-xl ${
-                isActive(item.path, router) ? "text-moon-400" : "text-zinc-300"
+                isActive(item.path, router) ? "font-semibold text-moon-400" : "text-zinc-300"
               }`}
             >
               <div className={"group relative "}>
@@ -63,9 +50,7 @@ export default function TopNavigation() {
         >
           <Cog8ToothIcon
             className={`float-right h-9 transition duration-500 ease-in-out hover:rotate-180 hover:text-moon-200 ${
-              isActive(settingsItem.path, router)
-                ? "text-moon-400"
-                : "text-zinc-300"
+              isActive(settingsItem.path, router) ? "text-moon-400" : "text-zinc-300"
             }`}
           />
         </Link>
