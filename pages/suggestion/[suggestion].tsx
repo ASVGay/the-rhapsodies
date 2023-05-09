@@ -9,6 +9,7 @@ import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getSuggestion, updateSuggestion } from "@/services/suggestions.service";
 import Custom404 from "@/pages/404";
+import { useAuthContext } from "@/context/AuthContext";
 
 //TODO: replace hardcoded values
 //todo: Highlight current user's name, get curr username
@@ -19,13 +20,13 @@ interface SuggestionProps {
 }
 
 const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
+  const { user } = useAuthContext()
 
   const selectInstrument = (role: IRole) => {
     //TODO
     //role is null | undefined | empty
-    //role is taken by curr user
     //role is taken by other user
-    updateSuggestion().then()
+    //role is taken by curr user
   }
 
   return <> {suggestion ?
