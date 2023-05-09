@@ -37,6 +37,10 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
       })
   }
 
+  const usernamesTextColor = (usernames: string[]) => {
+    return usernames?.includes(username) ? "text-moon-500" : "text-zinc-400"
+  }
+
   return <> {suggestion &&
     <div className={"flex flex-col m-4 pt-2"}>
       <div className={"flex"}>
@@ -80,7 +84,10 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
                 <p>{instrument.instrument}</p>
                 <p className={"text-zinc-400 leading-5 md:max-w-[12rem]"}>{role.note}</p>
                 {role.filledBy?.length! > 0 &&
-                  <li className={"text-zinc-400 leading-5 ml-8 font-bold"}>{role.filledBy?.join(", ")}</li>
+                  <li
+                    className={`${usernamesTextColor(role.filledBy!)} leading-5 ml-8 font-bold`}>
+                    {role.filledBy?.join(", ")}
+                  </li>
                 }
               </div>
             </div>
@@ -89,7 +96,6 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
       </div>
     </div>
   }
-    {/*todo implement 404 page?*/}
   </>
 }
 
