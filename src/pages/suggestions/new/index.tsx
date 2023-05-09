@@ -1,6 +1,6 @@
 import React from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import ProgressBar from "@/components/new-suggestion/progress-bar"
+import ProgressBar from "@/components/new-suggestion/progress-bar/progress-bar"
 import { useRouter } from "next/router"
 
 const NewSuggestion = () => {

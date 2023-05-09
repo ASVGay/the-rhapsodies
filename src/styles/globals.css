@@ -29,4 +29,8 @@
     .page-header {
         @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl
     }
+
+    .progress-bar-icon {
+        @apply relative flex cursor-pointer hover:text-moon-500
+    }
 }
