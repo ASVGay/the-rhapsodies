@@ -3,34 +3,38 @@
 @tailwind utilities;
 
 @layer base {
-    html {
-        -webkit-tap-highlight-color: transparent;
-        min-height: calc(100% + env(safe-area-inset-top));
-        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    min-height: calc(100% + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
+  }
 }
 
 @layer utilities {
-    .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
-
 @layer components {
-    .settings-wrapper p {
-        @apply py-2 text-base
-    }
+  .settings-wrapper p {
+    @apply py-2 text-base;
+  }
 
-    .page-wrapper {
-        @apply mx-auto px-4 pt-6
-    }
+  .page-wrapper {
+    @apply mx-auto px-4 pt-6;
+  }
 
-    .page-header {
-        @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl
-    }
+  .page-header {
+    @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
+  }
 
-    .progress-bar-icon {
-        @apply relative flex cursor-pointer hover:text-moon-500
-    }
+  .progress-bar-icon {
+    @apply relative flex cursor-pointer hover:text-moon-500;
+  }
+
+  .area-header {
+    @apply py-2 text-xl text-moon-500;
+  }
 }

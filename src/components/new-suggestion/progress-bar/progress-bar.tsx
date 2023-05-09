@@ -1,23 +1,21 @@
-import React, { useState } from "react"
+import React from "react"
 import { DocumentTextIcon, ListBulletIcon, MusicalNoteIcon } from "@heroicons/react/24/outline"
 import ProgressBarCheckBox from "@/components/new-suggestion/progress-bar/progress-bar-check-box"
+import { Area } from "@/constants/area"
 
-export enum Area {
-  SongInformation = "song-information",
-  Instruments = "instruments",
-  Review = "review",
+interface ProgressBarProps {
+  setActiveArea: (value: ((prevState: Area) => Area) | Area) => void
+  activeArea: Area
 }
 
-const ProgressBar = () => {
-  const [activeArea, setActiveArea] = useState(Area.SongInformation)
-
+const ProgressBar = ({ setActiveArea, activeArea }: ProgressBarProps) => {
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
   }
 
   return (
     <div className={"flex justify-center px-2 py-4"}>
-      <div className="w-full after:mt-7 after:block after:h-0.5 after:bg-zinc-300 lg:w-2/4">
+      <div className="w-full after:mt-7 after:block after:h-0.5 after:bg-zinc-300">
         <ol className="grid grid-cols-3 font-medium text-zinc-300 ">
           <li
             className={`progress-bar-icon group justify-start ${colorArea(Area.SongInformation)}`}
