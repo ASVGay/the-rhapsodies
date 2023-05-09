@@ -8,7 +8,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "autoApprove": true
+      "autoApprove": true,
       "automerge": true
     }
   ]
