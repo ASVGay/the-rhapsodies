@@ -65,6 +65,7 @@ const Index = () => {
           <SignInTextField
             placeholder={"Email"}
             type={"text"}
+            dataCy={"sign-in-email"}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)
             }
@@ -74,6 +75,7 @@ const Index = () => {
           <SignInTextField
             placeholder={"Password"}
             type={"password"}
+            dataCy={"sign-in-password"}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPassword(e.target.value)
             }
@@ -83,9 +85,14 @@ const Index = () => {
           <ErrorPopup
             closePopup={() => setErrorPopup(false)}
             text={errorPopupText}
+            dataCy={"error-popup-sign-in"}
           />
         )}
-        <MainButton onClick={signIn} text={"Sign in"} />
+        <MainButton
+            onClick={signIn}
+            text={"Sign in"}
+            dataCy={"sign-in-submit-btn"}
+        />
       </div>
     </div>
   )
