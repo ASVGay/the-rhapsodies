@@ -1,5 +1,6 @@
 import React from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import ProgressBar from "@/components/new-suggestion/progress-bar"
 import { useRouter } from "next/router"
 
 const NewSuggestion = () => {
@@ -14,6 +15,8 @@ const NewSuggestion = () => {
           onClick={() => router.push("/suggestions")}
         />
       </div>
+
+      <ProgressBar />
     </div>
   )
 }
