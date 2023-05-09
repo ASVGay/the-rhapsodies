@@ -22,20 +22,19 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const username = user?.additionalUserData.username as string
 
   const selectInstrument = (index: number) => {
-    // if (suggestion.roles.at(index)?.filledBy?.includes(username)) {
-    //   //TODO remove
-    // } else {
-    //   suggestion.roles.at(index)?.filledBy?.push(username)
-    // }
+    if (suggestion.roles.at(index)?.filledBy?.includes(username)) {
+      //TODO find a better way of doing this?
+      suggestion.roles.at(index)?.filledBy?.splice(suggestion.roles.at(index)?.filledBy?.indexOf(username) as number, 1)
+    } else {
+      suggestion.roles.at(index)?.filledBy?.push(username)
+    }
 
-
-
-    // updateSuggestion(suggestion).then(() => console.log(true))
-    //   // .then((data) => setSuggestion(data))
-    //   // .catch((error) => {
-    //   //   // TODO Implement proper error handling
-    //   //   console.error(error)
-    //   // })
+    updateSuggestion(suggestion)
+      .then((data) => setSuggestion(data))
+      .catch((error) => {
+        // TODO Implement proper error handling
+        console.error(error)
+      })
   }
 
   return <> {suggestion &&
@@ -75,7 +74,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               <Image
                 src={instrument.icon}
                 alt={role.instrument.toString()}
-                className={`${role.filledBy ?? "opacity-30"} h-10 w-10 mr-4`}
+                className={`${role.filledBy?.length ? "" : "opacity-30"} h-10 w-10 mr-4`}
               />
               <div>
                 <p>{instrument.instrument}</p>
@@ -104,7 +103,6 @@ export const getStaticPaths: GetStaticPaths<{ suggestion: string }> = async () =
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context
   let suggestion = await getSuggestion(params?.suggestion as string)
-  console.log(suggestion)
   return {
     props: { props: suggestion },
   };

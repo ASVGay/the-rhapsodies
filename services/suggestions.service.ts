@@ -18,23 +18,22 @@ export const getSuggestions = async (): Promise<ISuggestion[]> => {
 
 export const getSuggestion = async (id: string): Promise<ISuggestion> => {
   const querySnapshot = await getDoc(doc(db, "suggestions", id))
-  return querySnapshot.data() as ISuggestion
+  const data = querySnapshot.data() as ISuggestion
+  data.id = querySnapshot.id
+  return data
 }
 
 export const updateSuggestion = async (suggestion: ISuggestion) => {
-  // return {
-  //   id: suggestion.id,
-  //   artists: suggestion.artists,
-  //   motivation: suggestion.motivation,
-  //   roles: suggestion.roles,
-  //   title: suggestion.title,
-  //   user: suggestion.user
-  // }
+  await updateDoc(doc(db, "suggestions", suggestion.id), {
+    roles: suggestion.roles,
+  });
 
-  // console.log(suggestion.id)
-  // const washingtonRef = doc(db, "suggestions", suggestion.id);
-  //
-  // await updateDoc(washingtonRef, {
-  //   roles: suggestion.roles,
-  // });
+  return {
+    id: suggestion.id,
+    artists: suggestion.artists,
+    motivation: suggestion.motivation,
+    roles: suggestion.roles,
+    title: suggestion.title,
+    user: suggestion.user
+  }
 }
