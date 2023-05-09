@@ -1,6 +1,7 @@
 export interface IRole {
   filledBy: string | null
   instrument: string
+  note: string | null
 }
 
 export interface ISuggestion {

@@ -20,3 +20,7 @@ export const getSuggestion = async (id: string): Promise<ISuggestion> => {
   const querySnapshot = await getDoc(doc(db, "suggestions", id))
   return querySnapshot.data() as ISuggestion
 }
+
+export const updateSuggestion = async () => {
+  //TODO implement
+}
