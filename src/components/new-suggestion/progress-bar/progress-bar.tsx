@@ -4,11 +4,11 @@ import ProgressBarCheckBox from "@/components/new-suggestion/progress-bar/progre
 import { Area } from "@/constants/area"
 
 interface ProgressBarProps {
-  setActiveArea: (value: ((prevState: Area) => Area) | Area) => void
   activeArea: Area
+  setActiveArea: (value: ((prevState: Area) => Area) | Area) => void
 }
 
-const ProgressBar = ({ setActiveArea, activeArea }: ProgressBarProps) => {
+const ProgressBar = ({ activeArea, setActiveArea }: ProgressBarProps) => {
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
   }
