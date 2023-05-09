@@ -2,23 +2,35 @@ const emailTextField = "sign-in-email"
 const passwordTextField = "sign-in-password"
 const signInSubmitBtn = "sign-in-submit-btn"
 const errorPopupTxt = "error-popup-sign-in"
-const validPassword = "test123"
+const validTestPassword = "test12345"
 const invalidInput = "test"
 const emailInCorrectFormat = "test@test.nl"
 const unusedEmail = "nosuchemail123455678@email.com"
 const wrongCredentials = "Wrong credentials."
-const validEmail = Cypress.env("test_email")
-const validEmailPassword = Cypress.env("test_password")
+const validEmail = Cypress.env("user_email")
+const validEmailFirstTimeUser = Cypress.env("user_first_time_email")
+const validPassword = Cypress.env("user_password")
+const validPasswordFirstTimeUser = Cypress.env("user_first_time_password")
 
 describe("Sign-in", () => {
-  context("Succesfull login", () => {
-    it("Should navigate to home when login is succesfull", () => {
-      cy.logout()
-      cy.visit("/sign-in")
+  beforeEach(() => {
+    cy.logout()
+    cy.visit("/sign-in")
+  })
+
+  context("on succesfull login and when not first time user", () => {
+    it("Should navigate to home", () => {
       cy.data(emailTextField).type(validEmail)
-      cy.data(passwordTextField).type(validEmailPassword)
+      cy.data(passwordTextField).type(validPassword)
       cy.data(signInSubmitBtn).click()
       cy.location("pathname").should("equal", "/")
+    })
+
+    it("on succesfull login and when first time user", () => {
+      cy.data(emailTextField).type(validEmailFirstTimeUser)
+      cy.data(passwordTextField).type(validPasswordFirstTimeUser)
+      cy.data(signInSubmitBtn).click()
+      cy.location("pathname").should("equal", "/change-password")
     })
   })
 

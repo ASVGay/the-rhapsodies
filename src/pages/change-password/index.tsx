@@ -67,6 +67,7 @@ const Index = () => {
 
           <div className="w-full">
             <SignInTextField
+              dataCy={"change-password-textfield"}
               placeholder={"Password"}
               type={"password"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -76,6 +77,7 @@ const Index = () => {
           </div>
           <div>
             <SignInTextField
+              dataCy={"change-password-confirm-textfield"}
               placeholder={"Confirm Password"}
               type={"password"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -85,11 +87,16 @@ const Index = () => {
           </div>
           {showErrorText && (
             <ErrorPopup
+              dataCy={"error-popup-change-password"}
               text={errorText}
               closePopup={() => setShowErrorText(false)}
             />
           )}
-          <MainButton onClick={submitNewPassword} text={"Submit"} />
+          <MainButton
+            dataCy={"submit-password-btn"}
+            onClick={submitNewPassword}
+            text={"Submit"}
+          />
         </div>
       </div>
     </div>
