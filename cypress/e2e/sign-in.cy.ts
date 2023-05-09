@@ -35,7 +35,6 @@ describe("Sign-in", () => {
   })
 
   context("Error handling sign-in", () => {
-
     it('Should return "Please fill in a valid email." when email is not valid', () => {
       cy.data(emailTextField).type(invalidInput)
       cy.data(passwordTextField).type(validPassword)
