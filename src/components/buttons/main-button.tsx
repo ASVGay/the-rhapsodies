@@ -3,7 +3,7 @@ import React from "react"
 interface MainButtonProps {
   onClick: () => void
   text: string
-  dataCy: string
+  dataCy?: string
 }
 
 const MainButton = (props: MainButtonProps) => {
