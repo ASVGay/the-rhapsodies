@@ -23,7 +23,6 @@ const EnableNotificationsToggle = () => {
   const changeNotificationSetting = () => {
     Notification.requestPermission()
       .then((result) => {
-        console.log(result)
         // If permission is same as before, refer user to settings to change permission
         if (result === permission) showPermissionInstructions(result)
         setPermissionChecked(result === "granted")
