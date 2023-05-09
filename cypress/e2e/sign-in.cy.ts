@@ -25,7 +25,7 @@ describe("Sign-in", () => {
       )
     })
 
-    it(`Should return \"Wrong credentials.\" when signing in with non existing email`, () => {
+    it(`Should return "Wrong credentials." when signing in with non existing email`, () => {
       cy.data(emailTextField).type(unusedEmail)
       cy.data(passwordTextField).type(validPassword)
       cy.data(signInSubmitBtn).click()
