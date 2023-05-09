@@ -34,33 +34,32 @@ describe("<NotificationSettings />", () => {
       })
     })
 
+    function checkToggleStateBasedOnPermission(
+      permission: NotificationPermission,
+      toggleState: "be.checked" | "not.be.checked"
+    ) {
+      cy.stub(window.Notification, "requestPermission").resolves(permission)
+      cy.mount(<NotificationSettings />)
+      cy.data(toggle).get("input").should("not.be.checked")
+      cy.data(toggle).get("label").click()
+      cy.data(toggle).get("input").should(toggleState)
+    }
+
     context("and permission needs to be asked", () => {
       beforeEach(() => {
         cy.stub(window.Notification, "permission", "default" as unknown as () => {})
       })
 
       it("should check the checkbox when permission is granted", function () {
-        cy.stub(window.Notification, "requestPermission").resolves("granted")
-        cy.mount(<NotificationSettings />)
-        cy.data(toggle).get("input").should("not.be.checked")
-        cy.data(toggle).get("label").click()
-        cy.data(toggle).get("input").should("be.checked")
+        checkToggleStateBasedOnPermission("granted", "be.checked")
       })
 
       it("should not check the checkbox when permission is not given", function () {
-        cy.stub(window.Notification, "requestPermission").resolves("default")
-        cy.mount(<NotificationSettings />)
-        cy.data(toggle).get("input").should("not.be.checked")
-        cy.data(toggle).get("label").click()
-        cy.data(toggle).get("input").should("not.be.checked")
+        checkToggleStateBasedOnPermission("default", "not.be.checked")
       })
 
       it("should not check the checkbox when permission is denied", function () {
-        cy.stub(window.Notification, "requestPermission").resolves("denied")
-        cy.mount(<NotificationSettings />)
-        cy.data(toggle).get("input").should("not.be.checked")
-        cy.data(toggle).get("label").click()
-        cy.data(toggle).get("input").should("not.be.checked")
+        checkToggleStateBasedOnPermission("denied", "not.be.checked")
       })
     })
   })
