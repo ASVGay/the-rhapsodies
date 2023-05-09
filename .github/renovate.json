@@ -4,6 +4,12 @@
     "config:base",
     ":dependencyDashboard"
   ],
-  "autoApprove": true,
-  "baseBranches": ["dev"]
+  "baseBranches": ["dev"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "autoApprove": true
+      "automerge": true
+    }
+  ]
 }
