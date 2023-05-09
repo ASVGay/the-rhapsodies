@@ -18,15 +18,15 @@ describe("Sign-in", () => {
     cy.visit("/sign-in")
   })
 
-  context("on succesfull login and when not first time user", () => {
-    it("Should navigate to home", () => {
+  context("on succesfull login", () => {
+    it("Should navigate to home when not first time user", () => {
       cy.data(emailTextField).type(validEmail)
       cy.data(passwordTextField).type(validPassword)
       cy.data(signInSubmitBtn).click()
       cy.location("pathname").should("equal", "/")
     })
 
-    it("on succesfull login and when first time user", () => {
+    it("should navigate to change password when first time user", () => {
       cy.data(emailTextField).type(validEmailFirstTimeUser)
       cy.data(passwordTextField).type(validPasswordFirstTimeUser)
       cy.data(signInSubmitBtn).click()
