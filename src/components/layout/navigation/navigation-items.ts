@@ -1,13 +1,10 @@
-import * as React from "react"
-import { HomeIcon, LightBulbIcon } from "@heroicons/react/24/solid"
+import {
+  Cog8ToothIcon,
+  HomeIcon,
+  LightBulbIcon,
+} from "@heroicons/react/24/solid"
 import { NextRouter } from "next/router"
-
-type HeroIcon = React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
-    title?: string
-    titleId?: string
-  } & React.RefAttributes<SVGSVGElement>
->
+import { HeroIcon } from "@/types/hero-icon"
 
 export type NavItem = {
   icon: HeroIcon
@@ -17,7 +14,12 @@ export type NavItem = {
 }
 
 export const NavigationItems: NavItem[] = [
-  { icon: HomeIcon, path: "/", text: "Home", data: "home" },
+  {
+    icon: HomeIcon,
+    path: "/",
+    text: "Home",
+    data: "home",
+  },
   // {icon: FolderIcon, path: "/repertoire", text: "Repertoire", data: "repertoire"},
   {
     icon: LightBulbIcon,
@@ -26,7 +28,12 @@ export const NavigationItems: NavItem[] = [
     data: "suggestions",
   },
   // {icon: CalendarDaysIcon, path: "/events", text: "Events", data: "events"},
-  // {icon: Cog8ToothIcon, path: "/settings", text: "Settings", data: "settings"},
+  {
+    icon: Cog8ToothIcon,
+    path: "/settings",
+    text: "Settings",
+    data: "settings",
+  },
 ]
 
 export const isActive = (path: string, router: NextRouter): boolean => {
