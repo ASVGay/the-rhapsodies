@@ -25,4 +25,11 @@ export default defineConfig({
       }) as PluginConfigOptions
     },
   },
+
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
+    },
+  },
 })
