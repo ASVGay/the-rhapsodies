@@ -1,40 +1,48 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ProgressionBar from "@/components/suggestion/progressionBar";
 import Image from "next/image";
 import { Instruments } from "@/constants/Instruments.constant";
-import { IRole, ISuggestion } from "@/interfaces/Suggestion";
+import { ISuggestion } from "@/interfaces/Suggestion";
 import WithProtectedRoute from "@/components/protected-route/ProtectedRoute";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getSuggestion, updateSuggestion } from "@/services/suggestions.service";
-import Custom404 from "@/pages/404";
 import { useAuthContext } from "@/context/AuthContext";
 
-//TODO: replace hardcoded values
+//TODO: replace hardcoded value: time
 //todo: Highlight current user's name, get curr username
-//TODO instrument onlick -> update suggestion data + UI if role not already filled
-//TODO: error-handeling
 interface SuggestionProps {
-  suggestion: ISuggestion
+  props: ISuggestion
 }
 
-const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
+const Suggestion: FC<SuggestionProps> = ({ props }) => {
+  const [suggestion, setSuggestion] = useState<ISuggestion>(props)
   const { user } = useAuthContext()
+  const username = user?.additionalUserData.username as string
 
-  const selectInstrument = (role: IRole) => {
-    //TODO
-    //role is null | undefined | empty
-    //role is taken by other user
-    //role is taken by curr user
+  const selectInstrument = (index: number) => {
+    // if (suggestion.roles.at(index)?.filledBy?.includes(username)) {
+    //   //TODO remove
+    // } else {
+    //   suggestion.roles.at(index)?.filledBy?.push(username)
+    // }
+
+
+
+    // updateSuggestion(suggestion).then(() => console.log(true))
+    //   // .then((data) => setSuggestion(data))
+    //   // .catch((error) => {
+    //   //   // TODO Implement proper error handling
+    //   //   console.error(error)
+    //   // })
   }
 
-  return <> {suggestion ?
+  return <> {suggestion &&
     <div className={"flex flex-col m-4 pt-2"}>
       <div className={"flex"}>
         <div className={"w-full"}>
           <p className={"text-2xl leading-8"}><b>Suggestion</b> by {suggestion.user}</p>
-          {/*TODO date*/}
           <p className={"text-sm leading-4 font-medium text-zinc-200"}>Posted on April 25th</p>
         </div>
         <Link href={"/suggestions"}><XMarkIcon className={"text-zinc-400 h-8 h-8"}/></Link>
@@ -63,7 +71,7 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
         <div className={"flex gap-6 flex-col md:flex-row md:flex-wrap md:max-w-lg"}>
           {suggestion.roles.map((role, index) => {
             const instrument = Instruments[role.instrument]
-            return <div key={index} className={"flex cursor-pointer"} onClick={() => selectInstrument(role)}>
+            return <div key={index} className={"flex cursor-pointer"} onClick={() => selectInstrument(index)}>
               <Image
                 src={instrument.icon}
                 alt={role.instrument.toString()}
@@ -72,8 +80,8 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
               <div>
                 <p>{instrument.instrument}</p>
                 <p className={"text-zinc-400 leading-5 md:max-w-[12rem]"}>{role.note}</p>
-                {role.filledBy &&
-                  <li className={"text-zinc-400 leading-5 ml-8 font-bold"}>{role.filledBy}</li>
+                {role.filledBy?.length! > 0 &&
+                  <li className={"text-zinc-400 leading-5 ml-8 font-bold"}>{role.filledBy?.join(", ")}</li>
                 }
               </div>
             </div>
@@ -81,7 +89,8 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion }) => {
         </div>
       </div>
     </div>
-    : <Custom404/>}
+  }
+    {/*todo implement 404 page?*/}
   </>
 }
 
@@ -94,9 +103,10 @@ export const getStaticPaths: GetStaticPaths<{ suggestion: string }> = async () =
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context
-  let suggestion = await getSuggestion(params.suggestion as string)
+  let suggestion = await getSuggestion(params?.suggestion as string)
+  console.log(suggestion)
   return {
-    props: { suggestion: suggestion },
+    props: { props: suggestion },
   };
 };
 

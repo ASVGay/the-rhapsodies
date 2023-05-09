@@ -8,7 +8,7 @@ interface ProgressionBarProps {
 const ProgressionBar = ({ roles }: ProgressionBarProps) => {
 
   const rolesFilled = () => {
-    return roles.filter((role) => role.filledBy != null).length
+    return roles.filter((role) => role.filledBy?.length > 0).length
   }
 
   const progressionFraction = () => `${rolesFilled()}/${roles.length}`

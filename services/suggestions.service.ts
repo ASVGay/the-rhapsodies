@@ -1,7 +1,7 @@
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/firebase/config"
 import { ISuggestion } from "@/interfaces/Suggestion"
-import { doc, getDoc } from "@firebase/firestore";
+import { doc, getDoc, updateDoc } from "@firebase/firestore";
 
 export const getSuggestions = async (): Promise<ISuggestion[]> => {
   const querySnapshot = await getDocs(collection(db, "suggestions"))
@@ -21,6 +21,20 @@ export const getSuggestion = async (id: string): Promise<ISuggestion> => {
   return querySnapshot.data() as ISuggestion
 }
 
-export const updateSuggestion = async () => {
-  //TODO implement
+export const updateSuggestion = async (suggestion: ISuggestion) => {
+  // return {
+  //   id: suggestion.id,
+  //   artists: suggestion.artists,
+  //   motivation: suggestion.motivation,
+  //   roles: suggestion.roles,
+  //   title: suggestion.title,
+  //   user: suggestion.user
+  // }
+
+  // console.log(suggestion.id)
+  // const washingtonRef = doc(db, "suggestions", suggestion.id);
+  //
+  // await updateDoc(washingtonRef, {
+  //   roles: suggestion.roles,
+  // });
 }

@@ -1,5 +1,5 @@
 export interface IRole {
-  filledBy: string | null
+  filledBy: string[] | null
   instrument: string
   note: string | null
 }
