@@ -4,8 +4,10 @@ import SuggestionCard from "@/components/cards/suggestion-card"
 import { getSuggestions } from "@/services/suggestion.service"
 import { ISuggestion } from "@/interfaces/suggestion"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
+import { useRouter } from "next/router"
 
 const Suggestions: FC = () => {
+  const router = useRouter()
   const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
 
   useEffect(() => {
@@ -22,8 +24,8 @@ const Suggestions: FC = () => {
       <div className={"flex justify-between"}>
         <div className={"page-header"}>Suggestions</div>
         <PlusIcon
-          className={"h-8 w-8 cursor-pointer text-black hover:text-moon-500"}
-          onClick={() => {}}
+          className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+          onClick={() => router.push("/suggestions/new")}
         />
       </div>
 
