@@ -18,7 +18,7 @@
 
 
 @layer components {
-    .settings p {
+    .settings-wrapper p {
         @apply py-2 text-base
     }
 }

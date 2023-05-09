@@ -3,7 +3,7 @@ import NotificationSettings from "@/components/settings/notifications/notificati
 
 const React = require("React")
 
-describe("<EnableNotificationsToggle />", () => {
+describe("<NotificationSettings />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-react
     cy.mount(<NotificationSettings />)
