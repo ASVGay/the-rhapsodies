@@ -137,3 +137,4 @@ fabric.properties
 serviceAccount.json
 
 .idea
+cypress.env.json
