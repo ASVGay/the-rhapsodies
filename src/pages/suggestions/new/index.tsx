@@ -1,8 +1,10 @@
 import React from "react"
-import { router } from "next/client"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/router"
 
 const NewSuggestion = () => {
+  const router = useRouter()
+
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"}>
