@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ProgressionBar from "@/components/suggestion/progressionBar";
@@ -10,8 +10,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { getSuggestion, updateSuggestion } from "@/services/suggestions.service";
 import { useAuthContext } from "@/context/AuthContext";
 
-//TODO: replace hardcoded value: time
-//todo: Highlight current user's name, get curr username
 interface SuggestionProps {
   props: ISuggestion
 }
@@ -46,7 +44,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
       <div className={"flex"}>
         <div className={"w-full"}>
           <p className={"text-2xl leading-8"}><b>Suggestion</b> by {suggestion.user}</p>
-          <p className={"text-sm leading-4 font-medium text-zinc-200"}>Posted on April 25th</p>
+          <p className={"text-sm leading-4 font-medium text-zinc-200"}>Posted on {suggestion.date}</p>
         </div>
         <Link href={"/suggestions"}><XMarkIcon className={"text-zinc-400 h-8 h-8"}/></Link>
       </div>

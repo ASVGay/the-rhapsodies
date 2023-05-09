@@ -31,6 +31,7 @@ export const updateSuggestion = async (suggestion: ISuggestion) => {
   return {
     id: suggestion.id,
     artists: suggestion.artists,
+    date: suggestion.date,
     motivation: suggestion.motivation,
     roles: suggestion.roles,
     title: suggestion.title,
