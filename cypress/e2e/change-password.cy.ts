@@ -12,6 +12,7 @@ describe("Change password", () => {
       cy.login()
       cy.visit("/change-password")
     })
+
     it("should logout when changing password", () => {
       cy.data(passwordTextfield).type(newPassword)
       cy.data(confirmPasswordTextfield).type(newPassword)
@@ -30,7 +31,7 @@ describe("Change password", () => {
       cy.data(passwordTextfield).type(shortPassword)
       cy.data(confirmPasswordTextfield).type(shortPassword)
       cy.data(submitPasswordBtn).click()
-      cy.data(errorPopup).should("contain.text", "Fill in equal passwords.")
+      cy.data(errorPopup).should("contain.text", "Password is too short, has to be at least 6 characters.")
     })
   })
 })
