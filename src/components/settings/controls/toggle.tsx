@@ -5,17 +5,20 @@ interface ToggleProps {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   checked: boolean
   disabled: boolean
+  dataCy: string
 }
 
-const Toggle = ({ text, handleChange, checked, disabled }: ToggleProps) => {
+const Toggle = ({ text, handleChange, checked, disabled, dataCy }: ToggleProps) => {
   return (
     <div
+      data-cy={dataCy}
       className={`inline-flex w-full items-center justify-between 
       ${disabled && "pointer-events-none select-none opacity-20"}`}
     >
       <p>{text}</p>
       <label htmlFor="AcceptConditions" className="blcok relative h-8 w-14 cursor-pointer">
         <input
+          disabled={disabled}
           type="checkbox"
           id="AcceptConditions"
           className="peer sr-only"

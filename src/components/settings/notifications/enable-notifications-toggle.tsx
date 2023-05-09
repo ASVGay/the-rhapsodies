@@ -20,19 +20,23 @@ const EnableNotificationsToggle = () => {
     notificationsAreSupported() ? Notification.permission : "default"
   )
 
-  const changeNotificationSetting = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const changeNotificationSetting = () => {
     Notification.requestPermission()
       .then((result) => {
+        console.log(result)
         // If permission is same as before, refer user to settings to change permission
         if (result === permission) showPermissionInstructions(result)
         setPermissionChecked(result === "granted")
       })
       .catch((error) => alert(error))
-      .finally(() => setPermission(Notification.permission))
+      .finally(() => {
+        setPermission(Notification.permission)
+      })
   }
 
   return (
     <Toggle
+      dataCy={"enable-notifications-toggle"}
       text={"Enable notifications"}
       checked={permissionChecked}
       handleChange={changeNotificationSetting}

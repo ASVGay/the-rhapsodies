@@ -9,7 +9,10 @@ const NotificationSettings = () => {
     <SettingsWrapper category={"Notifications"} icon={BellIcon}>
       <EnableNotificationsToggle />
       {!notificationsAreSupported() && (
-        <small className={"block italic text-zinc-300"}>
+        <small
+          className={"block text-xs italic text-zinc-300"}
+          data-cy={"info-notifications-not-supported"}
+        >
           You need to add this application to your home screen if you want to enable notifications.
         </small>
       )}
