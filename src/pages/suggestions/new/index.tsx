@@ -16,6 +16,7 @@ const NewSuggestion = () => {
       <div className={"flex justify-between"}>
         <div className={"page-header"}>New Suggestion</div>
         <XMarkIcon
+          data-cy={"new-suggestion-discard"}
           className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
           onClick={() => router.push("/suggestions")}
         />

@@ -14,10 +14,11 @@ const ProgressBar = ({ activeArea, setActiveArea }: ProgressBarProps) => {
   }
 
   return (
-    <div className={"flex justify-center px-2 py-4"}>
+    <div className={"flex justify-center px-2 py-4"} data-active-area={activeArea}>
       <div className="w-full after:mt-7 after:block after:h-0.5 after:bg-zinc-300">
         <ol className="grid grid-cols-3 font-medium text-zinc-300 ">
           <li
+            data-cy={"new-suggestion-progress-bar-song-information"}
             className={`progress-bar-icon group justify-start ${colorArea(Area.SongInformation)}`}
             onClick={() => setActiveArea(Area.SongInformation)}
           >
@@ -26,6 +27,7 @@ const ProgressBar = ({ activeArea, setActiveArea }: ProgressBarProps) => {
           </li>
 
           <li
+            data-cy={"new-suggestion-progress-bar-instruments"}
             className={`progress-bar-icon group justify-center ${colorArea(Area.Instruments)}`}
             onClick={() => setActiveArea(Area.Instruments)}
           >
@@ -34,6 +36,7 @@ const ProgressBar = ({ activeArea, setActiveArea }: ProgressBarProps) => {
           </li>
 
           <li
+            data-cy={"new-suggestion-progress-bar-review"}
             className={`progress-bar-icon group justify-end ${colorArea(Area.Review)}`}
             onClick={() => setActiveArea(Area.Review)}
           >

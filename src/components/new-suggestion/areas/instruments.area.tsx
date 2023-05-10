@@ -6,7 +6,7 @@ interface InstrumentsAreaProps {
 
 const InstrumentsArea = ({ show }: InstrumentsAreaProps) => {
   return (
-    <div className={`${!show && "hidden"}`}>
+    <div data-cy="area-instruments" className={`${!show && "hidden"}`}>
       <h2 className={"area-header"}>Instruments</h2>
     </div>
   )

@@ -6,7 +6,7 @@ interface SongInformationAreaProps {
 
 const SongInformationArea = ({ show }: SongInformationAreaProps) => {
   return (
-    <div className={`${!show && "hidden"}`}>
+    <div data-cy="area-song-information" className={`${!show && "hidden"}`}>
       <h2 className={"area-header"}>Song information</h2>
     </div>
   )
