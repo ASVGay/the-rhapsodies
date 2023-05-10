@@ -12,6 +12,10 @@ export const signOutUser = () => {
   return signOut(auth)
 }
 
+export const updateName = async (name: string, user: User) => {
+  await updateDoc(getUserDocument(user), { username: name})
+}
+
 export const changePassword = async (password: string, user: User) => {
   const documentRef = getUserDocument(user)
   await updatePassword(auth.currentUser as User, password)
