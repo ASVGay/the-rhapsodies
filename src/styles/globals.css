@@ -3,24 +3,23 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    -webkit-tap-highlight-color: transparent;
-    min-height: calc(100% + env(safe-area-inset-top));
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-      env(safe-area-inset-left);
-  }
+    html {
+        -webkit-tap-highlight-color: transparent;
+        min-height: calc(100% + env(safe-area-inset-top));
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
 }
 
 @layer utilities {
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
 }
 
 @layer components {
-  .settings-wrapper p {
-    @apply py-2 text-base;
-  }
+    .settings-wrapper p {
+        @apply py-2 text-base;
+    }
 
   .btn {
      @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300
@@ -30,15 +29,36 @@
     @apply mx-auto px-4 pt-6;
   }
 
-  .page-header {
-    @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
-  }
+    .page-header {
+        @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
+    }
 
-  .progress-bar-icon {
-    @apply relative flex cursor-pointer hover:text-moon-500;
-  }
+    .progress-bar-icon {
+        @apply relative flex cursor-pointer hover:text-moon-500;
+    }
 
-  .area-header {
-    @apply py-2 text-xl text-moon-500;
-  }
+    .area-header {
+        @apply pt-2 pb-6 text-xl text-moon-500;
+    }
+
+
+    .input {
+        @apply relative mb-6
+    }
+
+    .input input {
+        @apply w-full rounded-lg border border-gray-200 p-4 pe-12 text-base shadow-sm
+    }
+
+    .input span {
+        @apply absolute inset-y-0 end-0 grid place-content-center px-4
+    }
+
+    .input svg {
+        @apply h-6 w-6 text-gray-400
+    }
+
+    .btn {
+        @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300
+    }
 }
