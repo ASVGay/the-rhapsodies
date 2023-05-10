@@ -8,7 +8,6 @@ import { FirebaseError } from "@firebase/util"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import {
   changePassword,
-  setAdditionalUserData,
   signOutUser,
   updateUserName,
 } from "@/services/authentication.service"

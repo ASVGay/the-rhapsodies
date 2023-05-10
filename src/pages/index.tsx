@@ -3,7 +3,6 @@ import MainButton from "@/components/buttons/main-button"
 import ErrorPopup from "@/components/popups/error-popup"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { signOutUser } from "@/services/authentication.service"
-import {useAuthContext} from "@/context/auth-context";
 
 function Home() {
   const [showError, setShowError] = useState<boolean>(false)
