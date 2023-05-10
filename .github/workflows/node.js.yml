@@ -28,6 +28,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: create-firebase-json
+      id: create-firebase-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "serviceAccount.json"
+        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    - name: create-cypress-config-json
+      id: create-cypress-config-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "cypress.env.json"
+        json: ${{ secrets.CYPRESS_ENV_JSON }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
