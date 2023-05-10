@@ -9,13 +9,13 @@ import WithProtectedRoute from "@/components/protected-route/protected-route"
 import {
   changePassword,
   signOutUser,
-  updateUserName,
+  updateName,
 } from "@/services/authentication.service"
 import { ErrorCodes } from "@/constants/error-codes"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")
-  const [userName, setUserName] = useState<string>("")
+  const [name, setName] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
@@ -50,13 +50,13 @@ const Index = () => {
       return
     }
 
-    if (userName.length < 1) {
-      setError("Please fill in a username.")
+    if (name.length < 1) {
+      setError("Please fill in a name.")
     }
 
     changePassword(password, user.user)
       .then(() => {
-        updateUserName(userName, user.user).catch((error) => {
+        updateName(name, user.user).catch((error) => {
           const err = error as FirebaseError
           handleFireBaseError(err)
         })
@@ -85,8 +85,8 @@ const Index = () => {
               <SignInTextField
                 dataCy={"set-name-textfield"}
                 placeholder={"Username"}
-                type={"input"}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}
+                type={"text"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
               />
             </div>
           )}
