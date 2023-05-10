@@ -37,11 +37,7 @@ const Index = () => {
   }
 
   return (
-    <div
-      className={
-        "flex h-screen w-screen items-center justify-center bg-moon-50"
-      }
-    >
+    <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
       <div
         className={
           "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
@@ -66,9 +62,7 @@ const Index = () => {
             placeholder={"Email"}
             type={"text"}
             dataCy={"sign-in-email"}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           />
         </div>
         <div className="w-full">
@@ -76,9 +70,7 @@ const Index = () => {
             placeholder={"Password"}
             type={"password"}
             dataCy={"sign-in-password"}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
         </div>
         {showErrorPopup && (
@@ -88,11 +80,7 @@ const Index = () => {
             dataCy={"error-popup-sign-in"}
           />
         )}
-        <MainButton
-            onClick={signIn}
-            text={"Sign in"}
-            dataCy={"sign-in-submit-btn"}
-        />
+        <MainButton onClick={signIn} text={"Sign in"} dataCy={"sign-in-submit-btn"} />
       </div>
     </div>
   )

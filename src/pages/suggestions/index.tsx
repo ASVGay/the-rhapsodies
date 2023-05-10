@@ -27,9 +27,7 @@ const Suggestions: FC = () => {
       </div>
 
       <div
-        className={
-          "flex flex-col items-center gap-6 lg:flex-row lg:flex-wrap lg:justify-center"
-        }
+        className={"flex flex-col items-center gap-6 lg:flex-row lg:flex-wrap lg:justify-center"}
       >
         {suggestions.map((suggestion) => (
           <SuggestionCard key={suggestion.id} suggestion={suggestion} />

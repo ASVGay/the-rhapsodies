@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import { getAuth, onAuthStateChanged, User } from "firebase/auth"
 import firebase_app from "@/firebase/config"
 import { getDoc, setDoc } from "@firebase/firestore"
@@ -58,9 +52,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {!loading && children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading }}>{!loading && children}</AuthContext.Provider>
   )
 }
 
