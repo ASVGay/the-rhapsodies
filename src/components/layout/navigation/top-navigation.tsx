@@ -24,6 +24,7 @@ export default function TopNavigation() {
           return (
             <Link
               data-cy={item.data}
+              data-active={isActive(item.path, router)}
               key={item.path}
               href={item.path}
               className={`px-4 text-xl ${
@@ -44,6 +45,7 @@ export default function TopNavigation() {
       ) : (
         <Link
           data-cy={settingsItem.data}
+          data-active={isActive(settingsItem.path, router)}
           href={settingsItem.path}
           key={settingsItem.path}
           className={"w-24"}
