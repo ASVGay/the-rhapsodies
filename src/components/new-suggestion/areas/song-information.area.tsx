@@ -6,7 +6,7 @@ const SongInformationArea = () => {
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
 
-      <form>
+      <form className={"mx-auto sm:w-4/5 lg:w-full"}>
         <div>
           <label htmlFor="title" className="sr-only">
             Title
