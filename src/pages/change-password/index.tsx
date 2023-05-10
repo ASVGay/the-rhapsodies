@@ -6,17 +6,38 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
-import { changePassword, signOutUser } from "@/services/authentication.service"
+import {
+  changePassword,
+  signOutUser,
+  updateName,
+} from "@/services/authentication.service"
 import { ErrorCodes } from "@/constants/error-codes"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")
+  const [name, setName] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
   const { user } = useAuthContext()
+
+  const setError = (errorText: string) => {
+    setErrorText(errorText)
+    setShowErrorText(true)
+  }
+
+  const handleFireBaseError = (err: FirebaseError) => {
+    setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
+    if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+      setTimeout(async () => {
+        await signOutUser()
+      }, 5000)
+    }
+    setShowErrorText(true)
+  }
   const submitNewPassword = () => {
     if (!password) {
+      setError("Please enter a password.")
       return
     }
 
@@ -25,41 +46,48 @@ const Index = () => {
     }
 
     if (password !== confirmPassword) {
-      setErrorText("Fill in equal passwords.")
-      setShowErrorText(true)
+      setError("Fill in equal passwords.")
       return
     }
 
-    changePassword(password, user.user).catch((error) => {
-      const err = error as FirebaseError
-      setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
-      if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-        setTimeout(async () => {
-          await signOutUser()
-        }, 5000)
-      }
-      setShowErrorText(true)
-    })
+    if (name.length < 1) {
+      setError("Please fill in a name.")
+    }
+
+    changePassword(password, user.user)
+      .then(() => {
+        updateName(name, user.user).catch((error) => {
+          const err = error as FirebaseError
+          handleFireBaseError(err)
+        })
+      })
+      .catch((error) => {
+        const err = error as FirebaseError
+        handleFireBaseError(err)
+      })
   }
 
   return (
     <div>
-      <div
-        className={
-          "flex h-screen w-screen items-center justify-center bg-moon-50"
-        }
-      >
+      <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
         <div
           className={
             "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
           }
         >
           {user?.additionalUserData.isFirstLogin && (
-            <div className={"flex w-full justify-center"}>
+            <div className={"flex w-full flex-col justify-center gap-6"}>
               <span className={"w-fit font-semibold leading-8 text-black"}>
-                In order to access the application you need to change your
-                password.
+                In order to access the application you need to change your password and set your
+                username.
               </span>
+
+              <SignInTextField
+                dataCy={"set-name-textfield"}
+                placeholder={"Username"}
+                type={"text"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+              />
             </div>
           )}
 
@@ -68,9 +96,7 @@ const Index = () => {
               dataCy={"change-password-textfield"}
               placeholder={"Password"}
               type={"password"}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             />
           </div>
           <div>
@@ -90,11 +116,7 @@ const Index = () => {
               closePopup={() => setShowErrorText(false)}
             />
           )}
-          <MainButton
-            dataCy={"submit-password-btn"}
-            onClick={submitNewPassword}
-            text={"Submit"}
-          />
+          <MainButton dataCy={"submit-password-btn"} onClick={submitNewPassword} text={"Submit"} />
         </div>
       </div>
     </div>

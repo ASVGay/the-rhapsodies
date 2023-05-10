@@ -14,10 +14,7 @@ const WithProtectedRoute = <P extends object>(
     }
 
     const checkIfFirstLogIn = () => {
-      if (
-        user?.additionalUserData.isFirstLogin &&
-        router.pathname !== "/change-password"
-      ) {
+      if (user?.additionalUserData.isFirstLogin && router.pathname !== "/change-password") {
         router.push("/change-password")
       }
     }
