@@ -137,3 +137,5 @@ fabric.properties
 serviceAccount.json
 
 .idea
+cypress.env.json
+cypress/videos

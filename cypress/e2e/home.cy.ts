@@ -3,7 +3,7 @@ describe("Home Page", () => {
     it("should redirect to sign in if logged out", () => {
       cy.logout()
       cy.visit("/")
-      cy.location("pathname").should("equal", "/signin")
+      cy.location("pathname").should("equal", "/sign-in")
     })
 
     it("should stay on the home page if logged in", () => {
