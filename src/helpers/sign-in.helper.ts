@@ -1,8 +1,6 @@
 import { ErrorCodes } from "@/constants/error-codes"
 
-export const mapAuthErrorCodeToErrorMessage = (
-  errorCode: string | null
-): string => {
+export const mapAuthErrorCodeToErrorMessage = (errorCode: string | null): string => {
   switch (errorCode) {
     case ErrorCodes.INVALID_EMAIL:
       return "Please fill in a valid email."

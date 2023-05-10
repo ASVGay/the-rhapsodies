@@ -1,8 +1,5 @@
 import * as React from "react"
-import {
-  isActive,
-  NavigationItems,
-} from "@/components/layout/navigation/navigation-items"
+import { isActive, NavigationItems } from "@/components/layout/navigation/navigation-items"
 import { useRouter } from "next/router"
 import Link from "next/link"
 

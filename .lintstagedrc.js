@@ -13,6 +13,5 @@ module.exports = {
   ],
 
   // This will format MarkDown and JSON
-  "**/*.(md|json)": (filenames) =>
-    `npx prettier --write ${filenames.join(" ")}`,
+  "**/*.(md|json)": (filenames) => `npx prettier --write ${filenames.join(" ")}`,
 }

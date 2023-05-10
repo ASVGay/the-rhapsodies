@@ -17,10 +17,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <Head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="application-name" content="The Rhapsodies" />
-        <meta
-          name="apple-mobile-web-app-status-bar-style"
-          content="black-translucent"
-        />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="The Rhapsodies" />
         <meta
           name="description"
@@ -32,12 +29,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="196x196"
-          href="/assets/icons/favicon-196.png"
-        />
+        <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
         <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
 
