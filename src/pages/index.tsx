@@ -11,10 +11,7 @@ function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <MainButton text={"Log out"} onClick={signOutUser} />
       {showError && (
-        <ErrorPopup
-          text={"Can't log out right now."}
-          closePopup={() => setShowError(false)}
-        />
+        <ErrorPopup text={"Can't log out right now."} closePopup={() => setShowError(false)} />
       )}
     </main>
   )

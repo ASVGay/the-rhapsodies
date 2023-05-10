@@ -30,8 +30,6 @@ describe("Change password", () => {
     cy.data(passwordTextfield).type(shortPassword)
     cy.data(confirmPasswordTextfield).type(shortPassword)
     cy.data(submitPasswordBtn).click()
-    cy.data(errorPopup).contains(
-      "Password is too short, has to be at least 6 characters."
-    )
+    cy.data(errorPopup).contains("Password is too short, has to be at least 6 characters.")
   })
 })

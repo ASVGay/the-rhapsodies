@@ -44,11 +44,7 @@ const Index = () => {
 
   return (
     <div>
-      <div
-        className={
-          "flex h-screen w-screen items-center justify-center bg-moon-50"
-        }
-      >
+      <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
         <div
           className={
             "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
@@ -57,8 +53,7 @@ const Index = () => {
           {user?.additionalUserData.isFirstLogin && (
             <div className={"flex w-full justify-center"}>
               <span className={"w-fit font-semibold leading-8 text-black"}>
-                In order to access the application you need to change your
-                password.
+                In order to access the application you need to change your password.
               </span>
             </div>
           )}
@@ -68,9 +63,7 @@ const Index = () => {
               dataCy={"change-password-textfield"}
               placeholder={"Password"}
               type={"password"}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             />
           </div>
           <div>
@@ -90,11 +83,7 @@ const Index = () => {
               closePopup={() => setShowErrorText(false)}
             />
           )}
-          <MainButton
-            dataCy={"submit-password-btn"}
-            onClick={submitNewPassword}
-            text={"Submit"}
-          />
+          <MainButton dataCy={"submit-password-btn"} onClick={submitNewPassword} text={"Submit"} />
         </div>
       </div>
     </div>

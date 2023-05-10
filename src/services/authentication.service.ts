@@ -1,10 +1,4 @@
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-  updatePassword,
-  User,
-} from "firebase/auth"
+import { getAuth, signInWithEmailAndPassword, signOut, updatePassword, User } from "firebase/auth"
 import { doc, getDoc, setDoc, updateDoc } from "@firebase/firestore"
 import firebase_app, { db } from "@/firebase/config"
 import { IAdditionalUserData } from "@/interfaces/user"
@@ -31,10 +25,7 @@ export const getAdditionalUserData = async (user: User) => {
   return res.data() as IAdditionalUserData
 }
 
-export const setAdditionalUserData = (
-  additionalUserData: IAdditionalUserData,
-  user: User
-) => {
+export const setAdditionalUserData = (additionalUserData: IAdditionalUserData, user: User) => {
   return setDoc(getUserDocument(user), additionalUserData)
 }
 
