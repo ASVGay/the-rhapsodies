@@ -55,7 +55,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               </p>
             </div>
             <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 h-8 text-zinc-400"} />
+              <XMarkIcon className={"h-8 h-8 text-zinc-400"}/>
             </Link>
           </div>
 
@@ -64,15 +64,13 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               Song information
             </p>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"}/>
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artists.join(", ")}</p>
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
+            <p className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}>
               {suggestion.motivation}
             </p>
           </div>
@@ -80,15 +78,15 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
           <div className={"flex-col items-center md:flex"}>
             <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar roles={suggestion.roles} />
+              <ProgressionBar roles={suggestion.roles}/>
             </div>
-            <div className={"flex flex-col gap-6 md:max-w-lg md:flex-row md:flex-wrap"}>
+            <div className={"grid gap-6"}>
               {suggestion.roles.map((role, index) => {
                 const instrument = Instruments[role.instrument]
                 return (
                   <div
                     key={index}
-                    className={"flex cursor-pointer"}
+                    className={"flex cursor-pointer "}
                     onClick={() => selectInstrument(index)}
                   >
                     <Image
