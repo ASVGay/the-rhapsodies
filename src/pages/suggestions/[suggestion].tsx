@@ -21,7 +21,6 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
 
   const selectInstrument = (index: number) => {
     if (suggestion.roles.at(index)?.filledBy?.includes(username)) {
-      //TODO find a better way of doing this?
       suggestion.roles
         .at(index)
         ?.filledBy?.splice(suggestion.roles.at(index)?.filledBy?.indexOf(username) as number, 1)
