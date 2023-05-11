@@ -24,18 +24,8 @@ export const getSuggestion = async (id: string): Promise<ISuggestion> => {
   return data
 }
 
-export const updateSuggestion = async (suggestion: ISuggestion) => {
-  await updateDoc(doc(db, "suggestions", suggestion.id), {
+export const updateSuggestion = (suggestion: ISuggestion) => {
+  return updateDoc(doc(db, "suggestions", suggestion.id), {
     roles: suggestion.roles,
   })
-
-  return {
-    id: suggestion.id,
-    artists: suggestion.artists,
-    date: suggestion.date,
-    motivation: suggestion.motivation,
-    roles: suggestion.roles,
-    title: suggestion.title,
-    user: suggestion.user,
-  }
 }

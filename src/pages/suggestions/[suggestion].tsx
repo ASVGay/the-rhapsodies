@@ -30,7 +30,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
     }
 
     updateSuggestion(suggestion)
-      .then((data) => setSuggestion(data))
+      .then(() => setSuggestion({ ...suggestion }))
       .catch((error) => {
         // TODO Implement proper error handling
         console.error(error)
