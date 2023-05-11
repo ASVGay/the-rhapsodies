@@ -6,10 +6,6 @@ interface Instrument {
 }
 
 export const Instruments: { [key: string]: Instrument } = {
-  SINGER: {
-    instrument: "Singer",
-    icon: require("public/assets/instruments/icons8-micro-50.png"),
-  },
   ACCORDION: {
     instrument: "Accordion",
     icon: require("public/assets/instruments/icons8-accordion-50.png"),
@@ -38,10 +34,6 @@ export const Instruments: { [key: string]: Instrument } = {
     instrument: "Drums",
     icon: require("public/assets/instruments/icons8-drum-set-50.png"),
   },
-  ELECTRIC_GUITAR: {
-    instrument: "Electric guitar",
-    icon: require("public/assets/instruments/icons8-rock-music-50.png"),
-  },
   FRENCH_HORN: {
     instrument: "French horn",
     icon: require("public/assets/instruments/icons8-french-horn-50.png"),
@@ -54,13 +46,25 @@ export const Instruments: { [key: string]: Instrument } = {
     instrument: "Keyboard",
     icon: require("public/assets/instruments/icons8-piano-50.png"),
   },
+  LEAD_GUITAR: {
+    instrument: "Lead guitar",
+    icon: require("public/assets/instruments/icons8-rock-music-50.png"),
+  },
   PIANO: {
     instrument: "Piano",
     icon: require("public/assets/instruments/icons8-piano-50.png"),
   },
+  RHYTHM_GUITAR: {
+    instrument: "Rhythm guitar",
+    icon: require("public/assets/instruments/icons8-rock-music-50.png"),
+  },
   SAXOPHONE: {
     instrument: "Saxophone",
     icon: require("public/assets/instruments/icons8-saxophone-50.png"),
+  },
+  SINGER: {
+    instrument: "Vocals",
+    icon: require("public/assets/instruments/icons8-micro-50.png"),
   },
   TRUMPET: {
     instrument: "Trumpet",
