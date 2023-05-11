@@ -18,22 +18,20 @@ const Suggestions: FC = () => {
   }, [])
 
   return (
-    <>
-      <div className={"flex justify-between p-4 pb-6 pt-6"}>
+    <div className={"py mx-auto px-4 pt-6"}>
+      <div className={"flex justify-between pb-6"}>
         <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
         <div>
           <PlusIcon className={"h-8 w-8 text-black"} onClick={() => {}} />
         </div>
       </div>
 
-      <div
-        className={"flex flex-col items-center gap-6 lg:flex-row lg:flex-wrap lg:justify-center"}
-      >
+      <div className={"flex flex-wrap justify-center gap-6"}>
         {suggestions.map((suggestion) => (
           <SuggestionCard key={suggestion.id} suggestion={suggestion} />
         ))}
       </div>
-    </>
+    </div>
   )
 }
 
