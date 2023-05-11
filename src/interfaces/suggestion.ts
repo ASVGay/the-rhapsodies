@@ -1,5 +1,10 @@
+export interface IUser {
+  id: string
+  name: string
+}
+
 export interface IRole {
-  filledBy: string[] | null
+  filledBy: IUser[] | null
   instrument: string
   note: string | null
 }
@@ -11,5 +16,5 @@ export interface ISuggestion {
   motivation: string
   roles: IRole[]
   title: string
-  user: string
+  user: IUser
 }

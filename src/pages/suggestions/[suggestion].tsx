@@ -4,7 +4,7 @@ import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { Instruments } from "@/constants/instruments"
-import { ISuggestion } from "@/interfaces/suggestion"
+import { ISuggestion, IUser } from "@/interfaces/suggestion"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
@@ -18,15 +18,19 @@ interface SuggestionProps {
 const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const [suggestion, setSuggestion] = useState<ISuggestion>(props)
   const { user } = useAuthContext()
-  const username = user?.additionalUserData.username as string
+  const uid = user?.user.uid as string
+  const name = user?.additionalUserData.username as string
 
   const selectInstrument = (index: number) => {
-    if (suggestion.roles.at(index)?.filledBy?.includes(username)) {
+    if (suggestion.roles.at(index)?.filledBy?.find((user) => user.id === uid)) {
       suggestion.roles
         .at(index)
-        ?.filledBy?.splice(suggestion.roles.at(index)?.filledBy?.indexOf(username) as number, 1)
+        ?.filledBy?.splice(
+          suggestion.roles.at(index)?.filledBy?.findIndex((user) => user.id === uid) as number,
+          1
+        )
     } else {
-      suggestion.roles.at(index)?.filledBy?.push(username)
+      suggestion.roles.at(index)?.filledBy?.push({ id: uid, name: name })
     }
 
     updateSuggestion(suggestion)
@@ -37,8 +41,8 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
       })
   }
 
-  const usernamesTextColor = (usernames: string[]) => {
-    return usernames?.includes(username) ? "text-moon-500" : "text-zinc-400"
+  const usernamesTextColor = (users: IUser[]) => {
+    return users.find((user) => user.id === uid) ? "text-moon-500" : "text-zinc-400"
   }
 
   return (
@@ -48,7 +52,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
-                <b>Suggestion</b> by {suggestion.user}
+                <b>Suggestion</b> by {suggestion.user.name}
               </p>
               <p className={"text-sm font-medium leading-4 text-zinc-200"}>
                 Posted {formatDistanceToNow(suggestion.date)} ago
@@ -100,13 +104,9 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
                       <p>{instrument.instrument}</p>
                       <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{role.note}</p>
                       {role.filledBy?.length! > 0 && (
-                        <li
-                          className={`${usernamesTextColor(
-                            role.filledBy!
-                          )} ml-8 font-bold leading-5`}
-                        >
-                          {role.filledBy?.join(", ")}
-                        </li>
+                        <div className={`${usernamesTextColor(role.filledBy!)} font-bold`}>
+                          {role.filledBy?.map((user) => user.name).join(", ")}
+                        </div>
                       )}
                     </div>
                   </div>
