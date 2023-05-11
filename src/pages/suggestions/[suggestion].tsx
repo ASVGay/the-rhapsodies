@@ -43,7 +43,6 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
 
   return (
     <>
-      {" "}
       {suggestion && (
         <div className={"m-4 flex flex-col pt-2"}>
           <div className={"flex"}>

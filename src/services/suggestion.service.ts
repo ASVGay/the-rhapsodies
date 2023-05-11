@@ -18,10 +18,11 @@ export const getSuggestions = async (): Promise<ISuggestion[]> => {
 
 export const getSuggestion = async (id: string): Promise<ISuggestion> => {
   const querySnapshot = await getDoc(doc(db, "suggestions", id))
-  const data = querySnapshot.data() as ISuggestion
-  data.id = querySnapshot.id
-  data.date = querySnapshot.data()?.date.toDate()
-  return data
+  return {
+    ...querySnapshot.data(),
+    id: querySnapshot.id,
+    date: querySnapshot.data()?.date.toDate(),
+  } as ISuggestion
 }
 
 export const updateSuggestion = (suggestion: ISuggestion) => {
