@@ -7,7 +7,7 @@ export interface IRole {
 export interface ISuggestion {
   id: string
   artists: string[]
-  date: string
+  date: Date
   motivation: string
   roles: IRole[]
   title: string
