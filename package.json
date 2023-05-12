@@ -27,7 +27,6 @@
     "dotenv": "^16.0.3",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
-    "firebase": "^9.20.0",
     "next": "13.4.1",
     "next-pwa": "^5.6.0",
     "next-redux-wrapper": "^8.1.0",
