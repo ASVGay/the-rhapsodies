@@ -1,7 +1,6 @@
 import { useState } from "react"
 import MainButton from "@/components/buttons/main-button"
 import ErrorPopup from "@/components/popups/error-popup"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { signOutUser } from "@/services/authentication.service"
 
 function Home() {
@@ -17,4 +16,4 @@ function Home() {
   )
 }
 
-export default WithProtectedRoute(Home)
+export default Home

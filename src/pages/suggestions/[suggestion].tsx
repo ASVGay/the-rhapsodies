@@ -5,7 +5,6 @@ import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { Instruments } from "@/constants/instruments"
 import { ISuggestion, IUser } from "@/interfaces/suggestion"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
 import { useAuthContext } from "@/context/auth-context"
@@ -135,4 +134,4 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-export default WithProtectedRoute(Suggestion)
+export default Suggestion

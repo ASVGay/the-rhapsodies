@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from "react"
 import { ISuggestion } from "@/interfaces/suggestion"
 import { getSuggestions } from "@/services/suggestion.service"
 import SuggestionCard from "@/components/suggestion/suggestion-card"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { PlusIcon } from "@heroicons/react/24/solid"
 
 const Suggestions: FC = () => {
@@ -35,4 +34,4 @@ const Suggestions: FC = () => {
   )
 }
 
-export default WithProtectedRoute(Suggestions)
+export default Suggestions

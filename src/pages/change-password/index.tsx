@@ -5,7 +5,6 @@ import { useAuthContext } from "@/context/auth-context"
 import ErrorPopup from "@/components/popups/error-popup"
 import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { changePassword, signOutUser, updateName } from "@/services/authentication.service"
 import { ErrorCodes } from "@/constants/error-codes"
 
@@ -119,4 +118,4 @@ const Index = () => {
   )
 }
 
-export default WithProtectedRoute(Index)
+export default Index
