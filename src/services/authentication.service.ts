@@ -1,38 +1,46 @@
-import { getAuth, signInWithEmailAndPassword, signOut, updatePassword, User } from "firebase/auth"
+import { signOut, updatePassword, User } from "firebase/auth"
 import { doc, getDoc, setDoc, updateDoc } from "@firebase/firestore"
-import firebase_app, { db } from "@/firebase/config"
+import { db } from "@/firebase/config"
 import { IAdditionalUserData } from "@/interfaces/user"
 
-const auth = getAuth(firebase_app)
 export const signInUser = (email: string, password: string) => {
-  return signInWithEmailAndPassword(auth, email, password)
+  // TODO Enter logic to sign in user
+  return Promise.reject("Some Error Message")
 }
 
 export const signOutUser = () => {
-  return signOut(auth)
+  // TODO Enter logic to sign user out
+  return Promise.reject("Some Error Message")
 }
 
 export const updateName = async (name: string, user: User) => {
-  await updateDoc(getUserDocument(user), { username: name })
+  // TODO Enter logic to  update display name
+  return Promise.reject("Some Error Message")
 }
 
 export const changePassword = async (password: string, user: User) => {
-  const documentRef = getUserDocument(user)
-  await updatePassword(auth.currentUser as User, password)
-  await updateDoc(documentRef, { isFirstLogin: false })
-  await signOutUser()
+  // TODO Enter logic to change password
+  // const documentRef = getUserDocument(user)
+  // await updatePassword(auth.currentUser as User, password)
+  // await updateDoc(documentRef, {isFirstLogin: false})
+  // await signOutUser()
 }
 
 export const getAdditionalUserData = async (user: User) => {
-  const userDocument = getUserDocument(user)
-  const res = await getDoc(userDocument)
-  return res.data() as IAdditionalUserData
+  // TODO Enter logic to retrieve additional user data
+  // const userDocument = getUserDocument(user)
+  // const res = await getDoc(userDocument)
+  // return res.data() as IAdditionalUserData
+  return Promise.reject("Some Error Message")
 }
 
 export const setAdditionalUserData = (additionalUserData: IAdditionalUserData, user: User) => {
-  return setDoc(getUserDocument(user), additionalUserData)
+  // TODO Enter logic to set additional user data?
+  // return setDoc(getUserDocument(user), additionalUserData)
+  return Promise.reject("Some Error Message")
 }
 
 export const getUserDocument = (user: User) => {
-  return doc(db, "users", user.uid)
+  // TODO Enter logic to get user document
+  // return doc(db, "users", user.uid)
 }
