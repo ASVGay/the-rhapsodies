@@ -1,6 +1,4 @@
-import { collection, getDocs } from "firebase/firestore"
 import { ISuggestion } from "@/interfaces/suggestion"
-import { doc, getDoc, updateDoc } from "@firebase/firestore"
 
 export const getSuggestions = async (): Promise<ISuggestion[]> => {
   // TODO Enter logic to get suggestions

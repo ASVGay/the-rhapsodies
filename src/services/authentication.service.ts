@@ -1,6 +1,4 @@
-import { signOut, updatePassword, User } from "firebase/auth"
-import { doc, getDoc, setDoc, updateDoc } from "@firebase/firestore"
-import { db } from "@/firebase/config"
+import { User } from "firebase/auth"
 import { IAdditionalUserData } from "@/interfaces/user"
 
 export const signInUser = (email: string, password: string) => {
