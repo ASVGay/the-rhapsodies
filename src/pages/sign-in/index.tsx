@@ -5,7 +5,6 @@ import { useRouter } from "next/router"
 import ErrorPopup from "@/components/popups/error-popup"
 import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import MainButton from "@/components/buttons/main-button"
-import { useAuthContext } from "@/context/auth-context"
 import { FirebaseError } from "@firebase/util"
 import { signInUser } from "@/services/authentication.service"
 
@@ -14,7 +13,6 @@ const Index = () => {
   const [password, setPassword] = useState<string>("")
   const [showErrorPopup, setErrorPopup] = useState<boolean>()
   const [errorPopupText, setErrorPopupText] = useState<string>("")
-  const { user } = useAuthContext()
 
   const router = useRouter()
 
@@ -25,6 +23,8 @@ const Index = () => {
     })
   }
 
+  // TODO If user in session, go to homepage
+  const user = ""
   useEffect(() => {
     if (user) {
       router.push("/")

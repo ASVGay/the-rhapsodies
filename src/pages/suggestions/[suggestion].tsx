@@ -7,7 +7,6 @@ import { Instruments } from "@/constants/instruments"
 import { ISuggestion, IUser } from "@/interfaces/suggestion"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
-import { useAuthContext } from "@/context/auth-context"
 import { formatDistanceToNow } from "date-fns"
 
 interface SuggestionProps {
@@ -16,9 +15,8 @@ interface SuggestionProps {
 
 const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const [suggestion, setSuggestion] = useState<ISuggestion>(props)
-  const { user } = useAuthContext()
-  const uid = user?.user.uid as string
-  const name = user?.additionalUserData.username as string
+  const uid = "" // TODO - GET uid from user
+  const name = "to be deleted"
 
   const selectInstrument = (index: number) => {
     if (suggestion.roles.at(index)?.filledBy?.find((user) => user.id === uid)) {

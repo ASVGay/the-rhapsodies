@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
-import { useAuthContext } from "@/context/auth-context"
 import ErrorPopup from "@/components/popups/error-popup"
 import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
@@ -14,7 +13,6 @@ const Index = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
-  const { user } = useAuthContext()
 
   const setError = (errorText: string) => {
     setErrorText(errorText)
@@ -36,10 +34,6 @@ const Index = () => {
       return
     }
 
-    if (!user) {
-      return
-    }
-
     if (password !== confirmPassword) {
       setError("Fill in equal passwords.")
       return
@@ -48,18 +42,18 @@ const Index = () => {
     if (name.length < 1) {
       setError("Please fill in a name.")
     }
-
-    changePassword(password, user.user)
-      .then(() => {
-        updateName(name, user.user).catch((error) => {
-          const err = error as FirebaseError
-          handleFireBaseError(err)
-        })
-      })
-      .catch((error) => {
-        const err = error as FirebaseError
-        handleFireBaseError(err)
-      })
+    // TODO Use logic to change password and set display name
+    // changePassword(password, user.user)
+    //   .then(() => {
+    //     updateName(name, user.user).catch((error) => {
+    //       const err = error as FirebaseError
+    //       handleFireBaseError(err)
+    //     })
+    //   })
+    //   .catch((error) => {
+    //     const err = error as FirebaseError
+    //     handleFireBaseError(err)
+    //   })
   }
 
   return (
@@ -70,21 +64,19 @@ const Index = () => {
             "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
           }
         >
-          {user?.additionalUserData.isFirstLogin && (
-            <div className={"flex w-full flex-col justify-center gap-6"}>
-              <span className={"w-fit font-semibold leading-8 text-black"}>
-                In order to access the application you need to change your password and set your
-                username.
-              </span>
+          <div className={"flex w-full flex-col justify-center gap-6"}>
+            <span className={"w-fit font-semibold leading-8 text-black"}>
+              In order to access the application you need to change your password and set your
+              username.
+            </span>
 
-              <SignInTextField
-                dataCy={"set-name-textfield"}
-                placeholder={"Username"}
-                type={"text"}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-              />
-            </div>
-          )}
+            <SignInTextField
+              dataCy={"set-name-textfield"}
+              placeholder={"Username"}
+              type={"text"}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            />
+          </div>
 
           <div className="w-full">
             <SignInTextField

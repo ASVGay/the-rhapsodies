@@ -1,7 +1,6 @@
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
-import { AuthContextProvider } from "@/context/auth-context"
 import { Lexend } from "next/font/google"
 import { wrapper } from "@/store/store"
 import Layout from "@/components/layout/layout"
@@ -185,13 +184,11 @@ const App = ({ Component, pageProps }: AppProps) => {
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </Head>
-      <AuthContextProvider>
-        <main className={`${lexend.variable} font-sans`}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </main>
-      </AuthContextProvider>
+      <main className={`${lexend.variable} font-sans`}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </main>
     </>
   )
 }
