@@ -9,7 +9,7 @@ import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
 import { useAuthContext } from "@/context/auth-context"
-import { IUser } from "@/interfaces/user";
+import { IUser } from "@/interfaces/user"
 
 interface SuggestionProps {
   props: ISuggestion
@@ -21,7 +21,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const username = user?.additionalUserData.username as string
 
   const setDate = (): string => {
-    return new Date(suggestion?.date.seconds).toLocaleDateString('en-us', { month: "long", day: "numeric" })
+    return new Date(suggestion?.date.seconds).toLocaleDateString("en-us", { month: "long", day: "numeric" })
   }
 
   const selectInstrument = (index: number) => {
@@ -42,7 +42,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const formatUsernames = (usernames: IUser[]) => {
     return usernames.map((u, index) =>
       <span key={u.id}
-         className={u.name == username ? "text-moon-500" : "text-zinc-400"}>
+            className={u.name == username ? "text-moon-500" : "text-zinc-400"}>
         {u.name}{(index != usernames.length - 1) && ", "}
       </span>
     )
@@ -63,7 +63,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               </p>
             </div>
             <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 h-8 text-zinc-400"}/>
+              <XMarkIcon className={"h-8 h-8 text-zinc-400"} />
             </Link>
           </div>
 
@@ -72,7 +72,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               Song information
             </p>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"}/>
+              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artists.join(", ")}</p>
@@ -87,7 +87,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
 
             <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar roles={suggestion.roles}/>
+              <ProgressionBar roles={suggestion.roles} />
             </div>
 
             <div className={"grid gap-6"}>
@@ -128,15 +128,24 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
 export const getStaticPaths: GetStaticPaths<{ suggestion: string }> = async () => {
   return {
     paths: [],
-    fallback: false,
+    fallback: true
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context
-  let suggestion = await getSuggestion(params?.suggestion as string)
+
+  let suggestion
+  try {
+    suggestion = await getSuggestion(params?.suggestion as string)
+  } catch {
+    return {
+      notFound: true
+    }
+  }
+
   return {
-    props: { props: suggestion },
+    props: { props: suggestion }
   }
 }
 
