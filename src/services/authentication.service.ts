@@ -1,4 +1,3 @@
-import { User } from "firebase/auth"
 import { IAdditionalUserData } from "@/interfaces/user"
 
 export const signInUser = (email: string, password: string) => {
@@ -11,12 +10,12 @@ export const signOutUser = () => {
   return Promise.reject("Some Error Message")
 }
 
-export const updateName = async (name: string, user: User) => {
+export const updateName = async (name: string) => {
   // TODO Enter logic to  update display name
   return Promise.reject("Some Error Message")
 }
 
-export const changePassword = async (password: string, user: User) => {
+export const changePassword = async (password: string) => {
   // TODO Enter logic to change password
   // const documentRef = getUserDocument(user)
   // await updatePassword(auth.currentUser as User, password)
@@ -24,7 +23,7 @@ export const changePassword = async (password: string, user: User) => {
   // await signOutUser()
 }
 
-export const getAdditionalUserData = async (user: User) => {
+export const getAdditionalUserData = async () => {
   // TODO Enter logic to retrieve additional user data
   // const userDocument = getUserDocument(user)
   // const res = await getDoc(userDocument)
@@ -32,13 +31,13 @@ export const getAdditionalUserData = async (user: User) => {
   return Promise.reject("Some Error Message")
 }
 
-export const setAdditionalUserData = (additionalUserData: IAdditionalUserData, user: User) => {
+export const setAdditionalUserData = (additionalUserData: IAdditionalUserData) => {
   // TODO Enter logic to set additional user data?
   // return setDoc(getUserDocument(user), additionalUserData)
   return Promise.reject("Some Error Message")
 }
 
-export const getUserDocument = (user: User) => {
+export const getUserDocument = () => {
   // TODO Enter logic to get user document
   // return doc(db, "users", user.uid)
 }
