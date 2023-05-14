@@ -13,7 +13,7 @@ export const signOutUser = () => {
 }
 
 export const updateName = async (name: string, user: User) => {
-  await updateDoc(getUserDocument(user), { username: name})
+  await updateDoc(getUserDocument(user), { username: name })
 }
 
 export const changePassword = async (password: string, user: User) => {
