@@ -21,6 +21,9 @@ jobs:
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}}
       NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID}}
       NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}}
+      TEST_UID: ${{secrets.TEST_UID}}
+      CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}} 
+      GOOGLE_APPLICATION_CREDENTIALS: ${{vars.GOOGLE_APPLICATION_CREDENTIALS}}
     strategy:
       matrix:
         node-version: [16.x, 18.x]
@@ -28,11 +31,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: create-firebase-json
+      id: create-firebase-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "serviceAccount.json"
+        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    - name: create-cypress-config-json
+      id: create-cypress-config-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "cypress.env.json"
+        json: ${{ secrets.CYPRESS_ENV_JSON }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install
+    - run: npm ci
     - run: npm run build --if-present
-    - run: npm run test
+    - name: Cypress run
+      uses: cypress-io/github-action@v3
+      with:
+        start: npm run start
+        wait-on: ${{ vars.CYPRESS_BASE_URL }}
+        browser: chrome

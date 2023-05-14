@@ -6,17 +6,34 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import { FirebaseError } from "@firebase/util"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
-import { changePassword, signOutUser } from "@/services/authentication.service"
+import { changePassword, signOutUser, updateName } from "@/services/authentication.service"
 import { ErrorCodes } from "@/constants/error-codes"
 
 const Index = () => {
   const [password, setPassword] = useState<string>("")
+  const [name, setName] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
   const { user } = useAuthContext()
+
+  const setError = (errorText: string) => {
+    setErrorText(errorText)
+    setShowErrorText(true)
+  }
+
+  const handleFireBaseError = (err: FirebaseError) => {
+    setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
+    if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
+      setTimeout(async () => {
+        await signOutUser()
+      }, 5000)
+    }
+    setShowErrorText(true)
+  }
   const submitNewPassword = () => {
     if (!password) {
+      setError("Please enter a password.")
       return
     }
 
@@ -25,21 +42,25 @@ const Index = () => {
     }
 
     if (password !== confirmPassword) {
-      setErrorText("Fill in equal passwords.")
-      setShowErrorText(true)
+      setError("Fill in equal passwords.")
       return
     }
 
-    changePassword(password, user.user).catch((error) => {
-      const err = error as FirebaseError
-      setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
-      if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-        setTimeout(async () => {
-          await signOutUser()
-        }, 5000)
-      }
-      setShowErrorText(true)
-    })
+    if (name.length < 1) {
+      setError("Please fill in a name.")
+    }
+
+    changePassword(password, user.user)
+      .then(() => {
+        updateName(name, user.user).catch((error) => {
+          const err = error as FirebaseError
+          handleFireBaseError(err)
+        })
+      })
+      .catch((error) => {
+        const err = error as FirebaseError
+        handleFireBaseError(err)
+      })
   }
 
   return (
@@ -51,10 +72,18 @@ const Index = () => {
           }
         >
           {user?.additionalUserData.isFirstLogin && (
-            <div className={"flex w-full justify-center"}>
+            <div className={"flex w-full flex-col justify-center gap-6"}>
               <span className={"w-fit font-semibold leading-8 text-black"}>
-                In order to access the application you need to change your password.
+                In order to access the application you need to change your password and set your
+                username.
               </span>
+
+              <SignInTextField
+                dataCy={"set-name-textfield"}
+                placeholder={"Username"}
+                type={"text"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+              />
             </div>
           )}
 
