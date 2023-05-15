@@ -1,35 +1,62 @@
-import { ISuggestion } from "@/interfaces/suggestion"
+import { SupabaseClient } from "@supabase/supabase-js"
+import { Database } from "@/types/database"
+import { DivisionDatabaseOperation, Instrument } from "@/types/database-types"
 
-export const getSuggestions = async (): Promise<ISuggestion[]> => {
-  // TODO Enter logic to get suggestions
-  // const querySnapshot = await getDocs(collection(db, "suggestions"))
-  //
-  // const suggestions: ISuggestion[] = []
-  // querySnapshot.forEach((doc) => {
-  //   const suggestion = doc.data() as ISuggestion
-  //   suggestion.id = doc.id
-  //   suggestions.push(suggestion)
-  // })
-  //
-  // return suggestions
-  return Promise.reject("Some Error Message")
+export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
+  return supabase.from("suggestion").select(`
+      *,
+      suggestion_instruments:suggestion_instrument (
+        id,
+        instrument (*),
+        division (*)
+      )
+    `)
 }
 
-export const getSuggestion = async (id: string): Promise<ISuggestion> => {
-  // TODO Enter logic to get a singular suggestion
-  // const querySnapshot = await getDoc(doc(db, "suggestions", id))
-  // return {
-  //   ...querySnapshot.data(),
-  //   id: querySnapshot.id,
-  //   date: querySnapshot.data()?.date.toDate(),
-  // } as ISuggestion
-  return Promise.reject("Some Error Message")
+export const getSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {
+  return supabase
+    .from("suggestion")
+    .select(
+      `*,
+        author (display_name),
+        suggestion_instruments:suggestion_instrument (
+          id,
+          instrument (*),
+          division (
+            *,
+            musician (display_name, id)
+          )
+        )`
+    )
+    .eq("id", id)
+    .limit(1)
+    .single()
 }
 
-export const updateSuggestion = (suggestion: ISuggestion) => {
-  // TODO Enter logic to update a suggestion (or just the division)
-  // return updateDoc(doc(db, "suggestions", suggestion.id), {
-  //   roles: suggestion.roles,
-  // })
-  return Promise.reject("Some Error Message")
+export const getInstrumentImage = <Database>(
+  supabaseClient: SupabaseClient<Database>,
+  instrument: Instrument
+) => {
+  const { data } = supabaseClient.storage
+    .from("instrument-icons")
+    .getPublicUrl(instrument.image_source)
+  return data.publicUrl + ".svg"
+}
+
+export const insertDivision = (
+  supabaseClient: SupabaseClient<Database>,
+  division: DivisionDatabaseOperation
+) => {
+  return supabaseClient.from("division").insert(division)
+}
+
+export const deleteDivision = (
+  supabaseClient: SupabaseClient<Database>,
+  division: DivisionDatabaseOperation
+) => {
+  return supabaseClient
+    .from("division")
+    .delete()
+    .eq("musician", division.musician)
+    .eq("suggestion_instrument_id", division.suggestion_instrument_id)
 }

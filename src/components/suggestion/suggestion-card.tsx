@@ -1,15 +1,18 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
-import { Instruments } from "@/constants/instruments"
-import { ISuggestion } from "@/interfaces/suggestion"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
+import { Suggestion } from "@/types/database-types"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { getInstrumentImage } from "@/services/suggestion.service"
 
 interface SuggestionCardProps {
-  suggestion: ISuggestion
+  suggestion: Suggestion
 }
 
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
+  const supabaseClient = useSupabaseClient<Database>()
   return (
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
@@ -21,28 +24,32 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         </div>
         <span className={"pl-3"}>
           <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-          <p className={"line-clamp-1"}>{suggestion.artists.join(", ")}</p>
+          <p className={"line-clamp-1"}>{suggestion.artist?.join(", ")}</p>
           <p className={"line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}>
             {suggestion.motivation}
           </p>
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        <ProgressionBar roles={suggestion.roles} />
+        {suggestion.suggestion_instruments && (
+          <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
+        )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
-            {suggestion.roles.map((role, index) => {
-              return (
-                <Image
-                  key={index}
-                  src={Instruments[role.instrument].icon}
-                  alt={role.instrument.toString()}
-                  width={24}
-                  height={24}
-                  className={role.filledBy?.length ? "" : "opacity-30"}
-                />
-              )
-            })}
+            {suggestion.suggestion_instruments &&
+              suggestion.suggestion_instruments.map((suggestion_instrument) => {
+                const { instrument, division } = suggestion_instrument
+                return (
+                  <Image
+                    key={suggestion_instrument.id}
+                    src={getInstrumentImage(supabaseClient, instrument)}
+                    alt={instrument.instrument_name}
+                    width={24}
+                    height={24}
+                    className={division.length == 0 ? "opacity-30" : ""}
+                  />
+                )
+              })}
           </div>
         </div>
       </div>
