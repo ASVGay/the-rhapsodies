@@ -7,7 +7,7 @@ import { plugin as cypressFirebasePlugin } from "cypress-firebase"
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 60000 * 5,
+    defaultCommandTimeout: 1000 * parseInt(process.env.CYPRESS_TIMEOUT_SECONDS || "12"),
     baseUrl: process.env.CYPRESS_BASE_URL,
     // NOTE: Add "supportFile" setting if separate location is used
     setupNodeEvents(on, config) {

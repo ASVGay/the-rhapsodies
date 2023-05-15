@@ -25,6 +25,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
       TEST_UID: ${{secrets.TEST_UID}}
       CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}} 
+      CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
       GOOGLE_APPLICATION_CREDENTIALS: ${{vars.GOOGLE_APPLICATION_CREDENTIALS}}
     strategy:
       matrix:
@@ -57,5 +58,4 @@ jobs:
       with:
         start: npm run start
         wait-on: ${{ vars.CYPRESS_BASE_URL }}
-        wait-on-timeout: 180
         browser: chrome
