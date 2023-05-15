@@ -1,39 +1,32 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useRouter } from "next/router"
 import ErrorPopup from "@/components/popups/error-popup"
-import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
 import MainButton from "@/components/buttons/main-button"
-import { FirebaseError } from "@firebase/util"
-import { signInUser } from "@/services/authentication.service"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { AuthResponse } from "@supabase/gotrue-js"
 
 const Index = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [showErrorPopup, setErrorPopup] = useState<boolean>()
   const [errorPopupText, setErrorPopupText] = useState<string>("")
+  const supabase = useSupabaseClient<Database>()
 
   const router = useRouter()
 
   const signIn = () => {
-    signInUser(email, password).catch((err) => {
-      const firebaseError = err as FirebaseError
-      handleBadLogin(firebaseError.code)
+    supabase.auth.signInWithPassword({ email, password }).then((response: AuthResponse) => {
+      const { error } = response
+      if (error) {
+        setErrorPopupText(error.message)
+        setErrorPopup(true)
+      } else {
+        router.push("/")
+      }
     })
-  }
-
-  // TODO If user in session, go to homepage
-  const user = ""
-  useEffect(() => {
-    if (user) {
-      router.push("/")
-    }
-  }, [user])
-
-  const handleBadLogin = (error: string | null) => {
-    setErrorPopupText(mapAuthErrorCodeToErrorMessage(error))
-    setErrorPopup(true)
   }
 
   return (

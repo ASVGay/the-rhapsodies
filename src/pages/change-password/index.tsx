@@ -2,35 +2,35 @@ import React, { useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
 import ErrorPopup from "@/components/popups/error-popup"
-import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
-import { FirebaseError } from "@firebase/util"
-import { changePassword, signOutUser, updateName } from "@/services/authentication.service"
-import { ErrorCodes } from "@/constants/error-codes"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
+import { useRouter } from "next/router"
 
 const Index = () => {
+  // TODO Use react-hook-form for this for cleaner code
+  const supabase = useSupabaseClient<Database>()
+  const user = useUser()
   const [password, setPassword] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
+  const router = useRouter()
 
   const setError = (errorText: string) => {
     setErrorText(errorText)
     setShowErrorText(true)
   }
 
-  const handleFireBaseError = (err: FirebaseError) => {
-    setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
-    if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-      setTimeout(async () => {
-        await signOutUser()
-      }, 5000)
-    }
-    setShowErrorText(true)
-  }
-  const submitNewPassword = () => {
+  const submitNewPassword = async () => {
     if (!password) {
       setError("Please enter a password.")
+      return
+    }
+
+    if (password.length < 6) {
+      setError("Password should at least be 6 characters.")
       return
     }
 
@@ -41,19 +41,24 @@ const Index = () => {
 
     if (name.length < 1) {
       setError("Please fill in a name.")
+      return
     }
-    // TODO Use logic to change password and set display name
-    // changePassword(password, user.user)
-    //   .then(() => {
-    //     updateName(name, user.user).catch((error) => {
-    //       const err = error as FirebaseError
-    //       handleFireBaseError(err)
-    //     })
-    //   })
-    //   .catch((error) => {
-    //     const err = error as FirebaseError
-    //     handleFireBaseError(err)
-    //   })
+
+    if (user) {
+      const { data, error } = await supabase.auth.updateUser({ password })
+      if (error) {
+        // TODO Alert that change password failed, try again
+        setError(error.message)
+      } else if (data) {
+        setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
+          const { error } = response
+          // TODO Error handling
+          if (error) {
+            setError(error.message)
+          } else router.push("/")
+        })
+      }
+    }
   }
 
   return (
