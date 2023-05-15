@@ -17,6 +17,7 @@ import {
   Division,
   DivisionDatabaseOperation,
   Suggestion,
+  SuggestionInstrument,
   SuggestionType,
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
@@ -42,17 +43,14 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
     })
   }
 
-  const selectInstrument = (instrumentId: string) => {
-    const selectedSuggestionInstrument = suggestion.suggestion_instruments.find(
-      ({ instrument }) => instrument.id == instrumentId
-    )
-    if (selectedSuggestionInstrument && uid) {
+  const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
+    if (uid) {
       const division: DivisionDatabaseOperation = {
         musician: uid,
-        suggestion_instrument_id: selectedSuggestionInstrument.id,
+        suggestion_instrument_id: suggestionInstrument.id,
       }
       // TODO implement error handling and loading (so that users cant click when updating division)
-      if (selectedSuggestionInstrument.division.some(({ musician }) => musician.id === uid)) {
+      if (suggestionInstrument.division.some(({ musician }) => musician.id === uid)) {
         deleteDivision(supabase, division).then(({ error }) => {
           if (error) alert(error.message)
           updateSuggestion()
@@ -66,8 +64,13 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
     }
   }
 
-  const usernamesTextColor = (divisions: Division[]) => {
-    return divisions.find(({ musician }) => musician.id === uid) ? "text-moon-500" : "text-zinc-400"
+  const formatUsernames = (divisions: Division[]) => {
+    return divisions.map(({ musician }, index) => (
+      <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
+        {musician.display_name}
+        {index != divisions.length - 1 && ", "}
+      </span>
+    ))
   }
 
   return (
@@ -113,14 +116,15 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
               <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
             </div>
+
             <div className={"grid gap-6"}>
               {suggestion.suggestion_instruments.map((suggestionInstrument) => {
                 const { instrument, division } = suggestionInstrument
                 return (
                   <div
                     key={suggestionInstrument.id}
-                    className={"flex cursor-pointer "}
-                    onClick={() => selectInstrument(instrument.id)}
+                    className={"flex cursor-pointer select-none"}
+                    onClick={() => selectInstrument(suggestionInstrument)}
                   >
                     <Image
                       src={getInstrumentImage(supabase, instrument)}
@@ -128,6 +132,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                       width={64}
                       height={64}
                       className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
+                      draggable={"false"}
                     />
                     <div>
                       <p>{instrument.instrument_name}</p>
@@ -135,9 +140,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                         {suggestionInstrument.description}
                       </p>
                       {division.length > 0 && (
-                        <div className={`${usernamesTextColor(division)} font-bold`}>
-                          {division.map(({ musician }) => musician.display_name).join(", ")}
-                        </div>
+                        <div className={`font-bold`}>{formatUsernames(division)}</div>
                       )}
                     </div>
                   </div>
