@@ -8,4 +8,14 @@ module.exports = withPWA({
   experimental: {
     swcPlugins: [["next-superjson-plugin", {}]],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/^https?:\/\//i, "")}`,
+        port: "",
+        pathname: "/storage/**",
+      },
+    ],
+  },
 })
