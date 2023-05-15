@@ -57,4 +57,5 @@ jobs:
       with:
         start: npm run start
         wait-on: ${{ vars.CYPRESS_BASE_URL }}
+        wait-on-timeout: 180
         browser: chrome
