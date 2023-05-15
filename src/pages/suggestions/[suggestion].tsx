@@ -18,29 +18,31 @@ import {
   DivisionDatabaseOperation,
   Suggestion,
   SuggestionInstrument,
-  SuggestionType,
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 
 interface SuggestionProps {
-  suggestion: SuggestionType
+  suggestion: Suggestion
   error: PostgrestError | null
 }
 
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
-  const [suggestion, setSuggestion] = useState<SuggestionType>(props.suggestion)
+  const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [error, setError] = useState<PostgrestError | null>(props.error)
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
 
   function updateSuggestion() {
-    getSuggestion(supabase, suggestion.id).then((response) => {
-      const { data, error } = response
-      if (error) setError(error)
-      if (data) setSuggestion(data as Suggestion)
-    })
+    // TODO Implement error handling
+    getSuggestion(supabase, suggestion.id)
+      .then((response) => {
+        const { data, error } = response
+        if (error) setError(error)
+        if (data) setSuggestion(data as Suggestion)
+      })
+      .catch((error) => setError(error))
   }
 
   const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
@@ -118,34 +120,36 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map((suggestionInstrument) => {
-                const { instrument, division } = suggestionInstrument
-                return (
-                  <div
-                    key={suggestionInstrument.id}
-                    className={"flex cursor-pointer select-none"}
-                    onClick={() => selectInstrument(suggestionInstrument)}
-                  >
-                    <Image
-                      src={getInstrumentImage(supabase, instrument)}
-                      alt={instrument.instrument_name.toString()}
-                      width={64}
-                      height={64}
-                      className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
-                      draggable={"false"}
-                    />
-                    <div>
-                      <p>{instrument.instrument_name}</p>
-                      <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>
-                        {suggestionInstrument.description}
-                      </p>
-                      {division.length > 0 && (
-                        <div className={`font-bold`}>{formatUsernames(division)}</div>
-                      )}
+              {suggestion.suggestion_instruments.map(
+                (suggestionInstrument: SuggestionInstrument) => {
+                  const { instrument, division } = suggestionInstrument
+                  return (
+                    <div
+                      key={suggestionInstrument.id}
+                      className={"flex cursor-pointer select-none"}
+                      onClick={() => selectInstrument(suggestionInstrument)}
+                    >
+                      <Image
+                        src={getInstrumentImage(supabase, instrument)}
+                        alt={instrument.instrument_name.toString()}
+                        width={64}
+                        height={64}
+                        className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
+                        draggable={"false"}
+                      />
+                      <div>
+                        <p>{instrument.instrument_name}</p>
+                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>
+                          {suggestionInstrument.description}
+                        </p>
+                        {division.length > 0 && (
+                          <div className={`font-bold`}>{formatUsernames(division)}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                }
+              )}
             </div>
           </div>
         </div>

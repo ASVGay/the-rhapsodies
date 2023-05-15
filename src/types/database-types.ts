@@ -22,6 +22,3 @@ export type Suggestion = Database["public"]["Tables"]["suggestion"]["Row"] & {
   suggestion_instruments: SuggestionInstrument[]
   author: string | DisplayName
 }
-
-// Give it an alias since Suggestion is already defined in [suggestion].tsx
-export type SuggestionType = Suggestion

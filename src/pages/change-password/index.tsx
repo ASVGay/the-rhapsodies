@@ -50,13 +50,15 @@ const Index = () => {
         // TODO Alert that change password failed, try again
         setError(error.message)
       } else if (data) {
-        setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
-          const { error } = response
-          // TODO Error handling
-          if (error) {
-            setError(error.message)
-          } else router.push("/")
-        })
+        setNameAndFirstLoginFalse(supabase, user.id, name)
+          .then((response) => {
+            const { error } = response
+            // TODO Error handling
+            if (error) {
+              setError(error.message)
+            } else router.push("/")
+          })
+          .catch((error) => setError(error.message))
       }
     }
   }

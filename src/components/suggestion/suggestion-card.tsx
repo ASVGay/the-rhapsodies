@@ -36,20 +36,19 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
-            {suggestion.suggestion_instruments &&
-              suggestion.suggestion_instruments.map((suggestion_instrument) => {
-                const { instrument, division } = suggestion_instrument
-                return (
-                  <Image
-                    key={suggestion_instrument.id}
-                    src={getInstrumentImage(supabaseClient, instrument)}
-                    alt={instrument.instrument_name}
-                    width={24}
-                    height={24}
-                    className={division.length == 0 ? "opacity-30" : ""}
-                  />
-                )
-              })}
+            {suggestion.suggestion_instruments?.map((suggestion_instrument) => {
+              const { instrument, division } = suggestion_instrument
+              return (
+                <Image
+                  key={suggestion_instrument.id}
+                  src={getInstrumentImage(supabaseClient, instrument)}
+                  alt={instrument.instrument_name}
+                  width={24}
+                  height={24}
+                  className={division.length == 0 ? "opacity-30" : ""}
+                />
+              )
+            })}
           </div>
         </div>
       </div>
