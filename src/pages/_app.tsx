@@ -15,7 +15,15 @@ const lexend = Lexend({
 })
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient<Database>())
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const [supabaseClient] = useState(() =>
+    createBrowserSupabaseClient<Database>({
+      supabaseUrl,
+      supabaseKey,
+    })
+  )
+
   return (
     <>
       <Head>
