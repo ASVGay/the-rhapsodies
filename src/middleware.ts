@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server"
 import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import { isInMemberDatabase } from "@/services/authentication.service"
 
-function goToPath(path: string, req: NextRequest) {
+const goToPath = (path: string, req: NextRequest) => {
   const redirectUrl = req.nextUrl.clone()
   redirectUrl.pathname = path
   return NextResponse.redirect(redirectUrl)
 }
 
-export async function middleware(req: NextRequest) {
+export const middleware = async (req: NextRequest) => {
   // We need to create a response and hand it to the supabase client to be able to modify the response headers
   const res = NextResponse.next()
   // Create authenticated Supabase Client
@@ -17,14 +17,6 @@ export async function middleware(req: NextRequest) {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-
-  // On sign-in page
-  if (req.nextUrl.pathname.startsWith("/sign-in")) {
-    // Stay here if not authorized
-    if (session == undefined || session.user == undefined) {
-      return res
-    }
-  }
 
   // If user is logged in
   if (session?.user) {
@@ -37,9 +29,13 @@ export async function middleware(req: NextRequest) {
       else return goToPath("/change-password", req)
     } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
 
+    // Go to homepage if user is logged in and tries to go to sign-in
+    if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
     return res
   }
 
+  // If user is not logged in and going to sign-in, let them
+  if (req.nextUrl.pathname.startsWith("/sign-in")) return res
   // Else, redirect to sign in page
   const redirectUrl = req.nextUrl.clone()
   redirectUrl.pathname = "/sign-in"
