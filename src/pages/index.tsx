@@ -10,15 +10,17 @@ function Home() {
   const [showError, setShowError] = useState<boolean>(false)
   const supabase = useSupabaseClient<Database>()
 
-  async function signOut() {
-    const { error } = await supabase.auth.signOut()
-    if (error) setShowError(true)
-    else await router.push("/sign-in")
+  function signOut() {
+    ;(async () => {
+      const { error } = await supabase.auth.signOut()
+      if (error) setShowError(true)
+      else await router.push("/sign-in")
+    })()
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <MainButton text={"Log out"} onClick={async () => signOut()} />
+      <MainButton text={"Log out"} onClick={signOut} />
       {showError && (
         <ErrorPopup text={"Can't log out right now."} closePopup={() => setShowError(false)} />
       )}
