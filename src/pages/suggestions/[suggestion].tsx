@@ -122,10 +122,10 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             <div className={"grid gap-6"}>
               {suggestion.suggestion_instruments.map(
                 (suggestionInstrument: SuggestionInstrument) => {
-                  const { instrument, division } = suggestionInstrument
+                  const { instrument, division, id, description } = suggestionInstrument
                   return (
                     <div
-                      key={suggestionInstrument.id}
+                      key={id}
                       className={"flex cursor-pointer select-none"}
                       onClick={() => selectInstrument(suggestionInstrument)}
                     >
@@ -139,9 +139,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                       />
                       <div>
                         <p>{instrument.instrument_name}</p>
-                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>
-                          {suggestionInstrument.description}
-                        </p>
+                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
                         {division.length > 0 && (
                           <div className={`font-bold`}>{formatUsernames(division)}</div>
                         )}
