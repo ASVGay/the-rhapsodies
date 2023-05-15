@@ -34,7 +34,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
 
-  function updateSuggestion() {
+  const updateSuggestion = () => {
     // TODO Implement error handling
     getSuggestion(supabase, suggestion.id)
       .then((response) => {

@@ -1,4 +1,4 @@
-export function notificationsAreSupported() {
+export const notificationsAreSupported = () => {
   if (typeof window == "undefined") return false
   return "Notification" in window && "serviceWorker" in navigator && "PushManager" in window
 }

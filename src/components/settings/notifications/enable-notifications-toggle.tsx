@@ -3,7 +3,7 @@ import { notificationsAreSupported } from "@/helpers/pwa.helper"
 import Toggle from "@/components/settings/controls/toggle"
 import { AlertText } from "@/constants/notifications"
 
-function showPermissionInstructions(result: NotificationPermission) {
+const showPermissionInstructions = (result: NotificationPermission) => {
   if (result === "denied") {
     alert(AlertText.permissionDenied)
   } else if (result === "granted") {
