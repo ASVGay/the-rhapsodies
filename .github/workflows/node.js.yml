@@ -24,38 +24,37 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
       TEST_UID: ${{secrets.TEST_UID}}
-      CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}} 
+      CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}}
       GOOGLE_APPLICATION_CREDENTIALS: ${{vars.GOOGLE_APPLICATION_CREDENTIALS}}
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [ 16.x, 18.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: hmarr/debug-action@v2 
-    - uses: actions/checkout@v3
-    - name: create-firebase-json
-      id: create-firebase-json
-      uses: jsdaniell/create-json@1.1.2
-      with:
-        name: "serviceAccount.json"
-        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-    - name: create-cypress-config-json
-      id: create-cypress-config-json
-      uses: jsdaniell/create-json@1.1.2
-      with:
-        name: "cypress.env.json"
-        json: ${{ secrets.CYPRESS_ENV_JSON }}
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - name: Cypress run
-      uses: cypress-io/github-action@v3
-      with:
-        start: npm run start
-        wait-on: ${{ vars.CYPRESS_BASE_URL }}
-        browser: chrome
+      - uses: actions/checkout@v3
+      - name: create-firebase-json
+        id: create-firebase-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "serviceAccount.json"
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: create-cypress-config-json
+        id: create-cypress-config-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "cypress.env.json"
+          json: ${{ secrets.CYPRESS_ENV_JSON }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: Cypress run
+        uses: cypress-io/github-action@v3
+        with:
+          start: npm run start
+          wait-on: ${{ vars.CYPRESS_BASE_URL }}
+          browser: chrome
