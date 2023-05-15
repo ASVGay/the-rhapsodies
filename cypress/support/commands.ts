@@ -39,3 +39,16 @@
 Cypress.Commands.add("data", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
+
+Cypress.Commands.add("login", (user?) => {
+  if (!user) user = "member"
+  cy.task("getUserSession", {
+    user,
+  }).then((sessionData) => {
+    cy.setCookie("supabase-auth-token", JSON.stringify(sessionData))
+  })
+})
+
+Cypress.Commands.add("logout", () => {
+  cy.setCookie("supabase-auth-token", "")
+})
