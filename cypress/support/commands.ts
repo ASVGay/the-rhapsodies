@@ -60,5 +60,6 @@ Cypress.Commands.add("logout", () => {
 Cypress.Commands.add("deleteNewUser", () => {
   cy.task("deleteNewUser").then((response: PostgrestSingleResponse<null>) => {
     cy.log(JSON.stringify(response))
+    if (response.error) throw new Error(response.error.message)
   })
 })
