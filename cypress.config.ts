@@ -8,12 +8,9 @@ export default defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     // NOTE: Add "supportFile" setting if separate location is used
     setupNodeEvents(on, config) {
-      // config.env = {
-      //   ...process.env,
-      //   ...config.env,
-      // }
       tasks(on, config)
     },
+    experimentalRunAllSpecs: true,
   },
 
   component: {

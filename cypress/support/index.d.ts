@@ -17,12 +17,18 @@ declare global {
       /**
        * Custom command to log in through Supabase
        */
-      login(user?: string)
+      login(useNewUser?: boolean)
 
       /**
        * Custom command to log out through Supabase
        */
       logout()
+
+      /**
+       * Custom command to delete the new user from the member database
+       *
+       */
+      deleteNewUser()
     }
   }
 }

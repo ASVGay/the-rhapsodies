@@ -8,16 +8,20 @@ const supabase = createClient(
 // cache session data for each user name
 const sessions = {}
 
-export async function getUserSession({ user }) {
+export async function getUserSession({ email, password }) {
   // Create a session for the user if it doesn't exist already.
-  if (!sessions[user]) {
+  if (!sessions[email]) {
     const { data } = await supabase.auth.signInWithPassword({
-      email: `${user}@cypress.com`,
-      password: `${user}-password`,
+      email,
+      password,
     })
 
-    sessions[user] = data.session
+    sessions[email] = data.session
   }
 
-  return sessions[user]
+  return sessions[email]
+}
+
+export async function deleteNewUser() {
+  return supabase.from("member").delete().eq("id", "569e7419-5424-4d18-9918-31016f6252d7")
 }
