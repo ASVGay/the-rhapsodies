@@ -54,7 +54,8 @@ export const config = {
      * - assets (images)
      * - icons
      * - images
+     * - sw.js (service worker for pwa)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|manifest.json|assets|icons|images).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|manifest.json|assets|icons|images|sw.js).*)",
   ],
 }
