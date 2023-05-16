@@ -5,8 +5,10 @@ import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { Suggestion } from "@/types/database-types"
+import { useRouter } from "next/router"
 
 const Suggestions: FC = () => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [suggestions, setSuggestions] = useState<Suggestion[]>()
   const supabaseClient = useSupabaseClient<Database>()
@@ -32,12 +34,13 @@ const Suggestions: FC = () => {
   }
 
   return (
-    <div className={"py mx-auto px-4 pt-6"}>
-      <div className={"flex justify-between pb-6"}>
-        <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
-        <div>
-          <PlusIcon className={"h-8 w-8 text-black"} onClick={() => {}} />
-        </div>
+    <div className={"page-wrapper"}>
+      <div className={"flex justify-between"}>
+        <div className={"page-header"}>Suggestions</div>
+        <PlusIcon
+          className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+          onClick={() => router.push("/suggestions/new")}
+        />
       </div>
 
       <div className={"flex flex-wrap justify-center gap-6"}>

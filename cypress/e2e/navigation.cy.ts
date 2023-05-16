@@ -51,13 +51,21 @@ describe("navigation components", () => {
         cy.data(bottomNavigation).should("not.be.visible")
       })
 
-      it("should be able to navigate to all pages", () => {
+      it("should be able to navigate to and highlight all pages", () => {
         cy.visit("/")
         cy.data(topNavigation).within(() => {
           pages.forEach((page) => {
             cy.data(page.data).click()
             cy.location("pathname").should("equal", page.path)
+            cy.get(`[data-cy="${page.data}"][data-active=true]`).should("exist")
           })
+        })
+      })
+
+      it("should highlight navigation item on sub path", function () {
+        cy.visit("/suggestions/new")
+        cy.data(topNavigation).within(() => {
+          cy.get(`[data-cy="suggestions"][data-active=true]`).should("exist")
         })
       })
     })
@@ -73,13 +81,21 @@ describe("navigation components", () => {
         cy.data(bottomNavigation).should("be.visible")
       })
 
-      it("should be able to navigate to all pages", () => {
+      it("should be able to navigate and highlight to all pages", () => {
         cy.visit("/")
         cy.data(bottomNavigation).within(() => {
           pages.forEach((page) => {
             cy.data(page.data).click()
             cy.location("pathname").should("equal", page.path)
+            cy.get(`[data-cy="${page.data}"][data-active=true]`).should("exist")
           })
+        })
+      })
+
+      it("should highlight navigation item on sub path", function () {
+        cy.visit("/suggestions/new")
+        cy.data(bottomNavigation).within(() => {
+          cy.get(`[data-cy="suggestions"][data-active=true]`).should("exist")
         })
       })
     })
