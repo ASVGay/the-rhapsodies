@@ -33,5 +33,5 @@ export const NavigationItems: NavItem[] = [
 ]
 
 export const isActive = (path: string, router: NextRouter): boolean => {
-  return router.pathname == path
+  return path === "/" ? router.pathname === "/" : new RegExp(`${path}.*`).test(router.pathname)
 }

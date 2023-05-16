@@ -1,8 +1,8 @@
-import { Timestamp } from "@firebase/firestore";
-import { IUser } from "@/interfaces/user";
+import { Timestamp } from "@firebase/firestore"
+import { IUser } from "@/interfaces/user"
 
 export interface ITimeStamp {
-  seconds: number,
+  seconds: number
   nanoseconds: number
 }
 

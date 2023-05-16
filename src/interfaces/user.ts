@@ -1,9 +1,9 @@
 export interface IUser {
-  id: string,
+  id: string
   name: string
 }
 
 export interface IAdditionalUserData {
-  isFirstLogin: boolean,
+  isFirstLogin: boolean
   username?: string
 }
