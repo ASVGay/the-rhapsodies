@@ -36,6 +36,8 @@
 //   }
 // }
 
+import { PostgrestSingleResponse } from "@supabase/supabase-js"
+
 Cypress.Commands.add("data", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
@@ -56,5 +58,7 @@ Cypress.Commands.add("logout", () => {
 })
 
 Cypress.Commands.add("deleteNewUser", () => {
-  cy.task("deleteNewUser")
+  cy.task("deleteNewUser").then((response: PostgrestSingleResponse<null>) => {
+    cy.log(JSON.stringify(response))
+  })
 })

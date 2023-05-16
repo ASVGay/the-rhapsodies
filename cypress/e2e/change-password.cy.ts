@@ -21,7 +21,6 @@ describe("Change password", () => {
     cy.data(confirmPasswordTextfield).type(newPassword)
     cy.data(submitPasswordBtn).click()
     cy.location("pathname").should("equal", "/")
-    cy.deleteNewUser()
   })
 
   it("should give error when passwords are not the same", () => {

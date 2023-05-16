@@ -23,5 +23,8 @@ export async function getUserSession({ email, password }) {
 }
 
 export async function deleteNewUser() {
-  return supabase.from("member").delete().eq("id", "569e7419-5424-4d18-9918-31016f6252d7")
+  return supabase
+    .from("member")
+    .delete({ count: "exact" })
+    .eq("id", "569e7419-5424-4d18-9918-31016f6252d7")
 }

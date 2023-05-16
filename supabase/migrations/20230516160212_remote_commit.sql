@@ -20,8 +20,6 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
 
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 SET default_tablespace = '';
@@ -44,8 +42,7 @@ CREATE TABLE "public"."instrument" (
 ALTER TABLE "public"."instrument" OWNER TO "postgres";
 
 CREATE TABLE "public"."member" (
-    "is_first_login" boolean,
-    "display_name" "text",
+    "display_name" "text" NOT NULL,
     "id" "uuid" NOT NULL
 );
 
@@ -56,7 +53,7 @@ CREATE TABLE "public"."suggestion" (
     "title" "text" NOT NULL,
     "artist" "text"[] NOT NULL,
     "motivation" "text" NOT NULL,
-    "created_at" "date" DEFAULT CURRENT_DATE NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "author" "uuid" NOT NULL,
     "link" "text"
 );
@@ -93,20 +90,53 @@ ALTER TABLE ONLY "public"."division"
 ALTER TABLE ONLY "public"."division"
     ADD CONSTRAINT "division_suggestion_instrument_id_fkey" FOREIGN KEY ("suggestion_instrument_id") REFERENCES "public"."suggestion_instrument"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."suggestion"
-    ADD CONSTRAINT "fk_suggestion_author" FOREIGN KEY ("author") REFERENCES "public"."member"("id");
-
-ALTER TABLE ONLY "public"."suggestion_instrument"
-    ADD CONSTRAINT "fk_suggestion_instrument_instrument_id" FOREIGN KEY ("instrument_id") REFERENCES "public"."instrument"("id");
-
 ALTER TABLE ONLY "public"."member"
     ADD CONSTRAINT "member_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."suggestion"
-    ADD CONSTRAINT "suggestion_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."member"("id");
+    ADD CONSTRAINT "suggestion_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."member"("id") ON DELETE CASCADE;
+
+ALTER TABLE ONLY "public"."suggestion_instrument"
+    ADD CONSTRAINT "suggestion_instrument_instrument_id_fkey" FOREIGN KEY ("instrument_id") REFERENCES "public"."instrument"("id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."suggestion_instrument"
     ADD CONSTRAINT "suggestion_instrument_suggestion_id_fkey" FOREIGN KEY ("suggestion_id") REFERENCES "public"."suggestion"("id") ON DELETE CASCADE;
+
+CREATE POLICY "Enable delete for users based on user_id" ON "public"."division" FOR DELETE USING (("auth"."uid"() = "musician"));
+
+CREATE POLICY "Enable delete for users based on user_id" ON "public"."suggestion_instrument" FOR DELETE USING (("auth"."uid"() = "id"));
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."division" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."instrument" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."member" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "id"));
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."suggestion" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."suggestion_instrument" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "id"));
+
+CREATE POLICY "Enable read access for all authenticated users" ON "public"."division" FOR SELECT TO "authenticated" USING (true);
+
+CREATE POLICY "Enable read access for all authenticated users" ON "public"."instrument" FOR SELECT TO "authenticated" USING (true);
+
+CREATE POLICY "Enable read access for all authenticated users" ON "public"."suggestion_instrument" FOR SELECT TO "authenticated" USING (true);
+
+CREATE POLICY "Enable read access for all users" ON "public"."suggestion" FOR SELECT TO "authenticated" USING (true);
+
+CREATE POLICY "Enable select acces for authenticated user" ON "public"."member" FOR SELECT TO "authenticated" USING (true);
+
+CREATE POLICY "Enable update for users based on id" ON "public"."member" FOR UPDATE USING (("auth"."uid"() = "id")) WITH CHECK (("auth"."uid"() = "id"));
+
+ALTER TABLE "public"."division" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."instrument" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."member" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."suggestion" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."suggestion_instrument" ENABLE ROW LEVEL SECURITY;
 
 GRANT USAGE ON SCHEMA "public" TO "postgres";
 GRANT USAGE ON SCHEMA "public" TO "anon";
