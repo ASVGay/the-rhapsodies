@@ -18,7 +18,7 @@ describe("Sign-in", () => {
     cy.visit("/sign-in")
   })
 
-  context("on succesfull login", () => {
+  context("on successful login", () => {
     it("Should navigate to home when not first time user", () => {
       cy.data(emailTextField).type(validEmail)
       cy.data(passwordTextField).type(validPassword)
