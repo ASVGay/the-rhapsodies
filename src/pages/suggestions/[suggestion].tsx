@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import React, { FC, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
@@ -10,6 +10,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
 import { useAuthContext } from "@/context/auth-context"
 import { IUser } from "@/interfaces/user"
+import ErrorPopup from "@/components/popups/error-popup"
 
 interface SuggestionProps {
   props: ISuggestion
@@ -19,8 +20,9 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const [suggestion, setSuggestion] = useState<ISuggestion>(props)
   const { user } = useAuthContext()
   const username = user?.additionalUserData.username as string
+  const [showError, setShowError] = useState<boolean>(false)
 
-  const setDate = (): string => {
+  const formatDate = (): string => {
     return new Date(suggestion?.date.seconds).toLocaleDateString("en-us", { month: "long", day: "numeric" })
   }
 
@@ -34,15 +36,16 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
     updateSuggestion(suggestion)
       .then((data) => setSuggestion(data))
       .catch((error) => {
-        // TODO Implement proper error handling
         console.error(error)
+        setShowError(true)
       })
   }
 
   const formatUsernames = (usernames: IUser[]) => {
     return usernames.map((u, index) =>
       <span key={u.id}
-            className={u.name == username ? "text-moon-500" : "text-zinc-400"}>
+            className={u.name == username ? "text-moon-500" : "text-zinc-400"}
+      >
         {u.name}{(index != usernames.length - 1) && ", "}
       </span>
     )
@@ -51,15 +54,14 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   return (
     <>
       {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"}>
-
+        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
                 <b>Suggestion</b> by {suggestion.user.name}
               </p>
               <p className={"text-sm font-medium leading-4 text-zinc-200"}>
-                Posted on {setDate()}
+                Posted on <span id="suggestion-date">{formatDate()}</span>
               </p>
             </div>
             <Link href={"/suggestions"}>
@@ -95,6 +97,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
                 const instrument = Instruments[role.instrument]
                 return (
                   <div
+                    data-cy="suggestion-instruments"
                     key={index}
                     className={"flex cursor-pointer "}
                     onClick={() => selectInstrument(index)}
@@ -118,6 +121,10 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               })}
             </div>
           </div>
+
+          {showError && <div className={"mt-6"}>
+            <ErrorPopup text={"Failed to add user to instrument."} closePopup={() => setShowError(false)} />
+          </div>}
 
         </div>
       )}
