@@ -7,7 +7,7 @@ import { plugin as cypressFirebasePlugin } from "cypress-firebase"
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:3000",
+    baseUrl: process.env.CYPRESS_BASE_URL,
     // NOTE: Add "supportFile" setting if separate location is used
     setupNodeEvents(on, config) {
       on("file:preprocessor", createBundler())

@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react"
-import { PlusIcon } from "@heroicons/react/24/solid"
-import SuggestionCard from "@/components/cards/suggestion-card"
-import { getSuggestions } from "@/services/suggestion.service"
 import { ISuggestion } from "@/interfaces/suggestion"
+import { getSuggestions } from "@/services/suggestion.service"
+import SuggestionCard from "@/components/suggestion/suggestion-card"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
+import { PlusIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/router"
 
 const Suggestions: FC = () => {
@@ -29,9 +29,7 @@ const Suggestions: FC = () => {
         />
       </div>
 
-      <div
-        className={"flex flex-col items-center gap-6 lg:flex-row lg:flex-wrap lg:justify-center"}
-      >
+      <div className={"flex flex-wrap justify-center gap-6"}>
         {suggestions.map((suggestion) => (
           <SuggestionCard key={suggestion.id} suggestion={suggestion} />
         ))}
