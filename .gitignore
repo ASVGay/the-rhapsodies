@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+dev.env
 .env*.local
 .env
 
@@ -140,3 +141,4 @@ serviceAccount.json
 cypress.env.json
 cypress/videos
 cypress/screenshots
+
