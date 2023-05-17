@@ -1,6 +1,6 @@
 import { useState } from "react"
 import MainButton from "@/components/buttons/main-button"
-import ErrorPopup from "@/components/popups/error-popup"
+import ErrorPopup from "@/components/utils/error-popup"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { signOutUser } from "@/services/authentication.service"
 

@@ -10,7 +10,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
 import { useAuthContext } from "@/context/auth-context"
 import { IUser } from "@/interfaces/user"
-import ErrorPopup from "@/components/popups/error-popup"
+import ErrorPopup from "@/components/utils/error-popup"
 
 interface SuggestionProps {
   props: ISuggestion
@@ -20,7 +20,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   const [suggestion, setSuggestion] = useState<ISuggestion>(props)
   const { user } = useAuthContext()
   const username = user?.additionalUserData.username as string
-  const [showError, setShowError] = useState<boolean>(false)
+  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
 
   const formatDate = (): string => {
     return new Date(suggestion?.date.seconds).toLocaleDateString("en-us", { month: "long", day: "numeric" })
@@ -35,17 +35,14 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
 
     updateSuggestion(suggestion)
       .then((data) => setSuggestion(data))
-      .catch((error) => {
-        console.error(error)
-        setShowError(true)
+      .catch(() => {
+        setShowUpdateError(true)
       })
   }
 
   const formatUsernames = (usernames: IUser[]) => {
     return usernames.map((u, index) =>
-      <span key={u.id}
-            className={u.name == username ? "text-moon-500" : "text-zinc-400"}
-      >
+      <span key={u.id} className={u.name == username ? "text-moon-500" : "text-zinc-400"}>
         {u.name}{(index != usernames.length - 1) && ", "}
       </span>
     )
@@ -122,8 +119,8 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
             </div>
           </div>
 
-          {showError && <div className={"mt-6"}>
-            <ErrorPopup text={"Failed to add user to instrument."} closePopup={() => setShowError(false)} />
+          {showUpdateError && <div className={"mt-6"}>
+            <ErrorPopup text={"Failed to add user to instrument."} closePopup={() => setShowUpdateError(false)} />
           </div>}
 
         </div>

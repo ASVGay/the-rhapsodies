@@ -1,20 +1,25 @@
-import { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { ISuggestion } from "@/interfaces/suggestion"
 import { getSuggestions } from "@/services/suggestion.service"
 import SuggestionCard from "@/components/suggestion/suggestion-card"
 import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { PlusIcon } from "@heroicons/react/24/solid"
+import Spinner from "@/components/utils/spinner"
+import ErrorPopup from "@/components/utils/error-popup"
 
 const Suggestions: FC = () => {
   const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
+  const [showSpinner, setShowSpinner] = useState<boolean>(true)
+  const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
 
   useEffect(() => {
     getSuggestions()
       .then((suggestions) => setSuggestions(suggestions))
-      .catch((error) => {
-        // TODO Implement proper error handling
-        console.error(error)
+      .catch(() => {
+        setShowLoadingError(true)
       })
+
+    setShowSpinner(false)
   }, [])
 
   return (
@@ -22,15 +27,24 @@ const Suggestions: FC = () => {
       <div className={"flex justify-between pb-6"}>
         <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
         <div>
-          <PlusIcon className={"h-8 w-8 text-black"} onClick={() => {}} />
+          <PlusIcon className={"h-8 w-8 text-black"} onClick={() => {
+          }} />
         </div>
       </div>
 
-      <div className={"flex flex-wrap justify-center gap-6"}>
-        {suggestions.map((suggestion) => (
-          <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-        ))}
-      </div>
+      {showSpinner
+        ? <div className="text-center"><Spinner  size={10}/></div>
+        : <div className={"flex flex-wrap justify-center gap-6"}>
+          {suggestions.map((suggestion) => (
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+          ))}
+        </div>
+      }
+
+      {showLoadingError && <div className={"mt-6"}>
+        <ErrorPopup text={"Failed to load suggestions."} closePopup={() => setShowLoadingError(false)} />
+      </div>}
+
     </div>
   )
 }
