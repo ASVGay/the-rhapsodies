@@ -10,6 +10,7 @@ on:
     branches: [ "dev" ]
 
 env:
+  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
   NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
   CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}}
@@ -56,7 +57,7 @@ jobs:
       - name: Stop supabase (in case it is running)
         run: supabase stop
       - name: Start Supabase
-        run: supabase start
+        run: supabase start -x studio,imgproxy,inbucket
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
