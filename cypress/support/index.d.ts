@@ -16,6 +16,7 @@ declare global {
 
       /**
        * Custom command to log in through Supabase
+       * @param useNewUser whether to use a new user for logging in or not
        */
       login(useNewUser?: boolean)
 

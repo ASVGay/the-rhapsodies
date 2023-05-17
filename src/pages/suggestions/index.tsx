@@ -44,6 +44,7 @@ const Suggestions: FC = () => {
       </div>
 
       <div className={"flex flex-wrap justify-center gap-6"}>
+        {/* TODO If no suggestions are found, show that to the user */}
         {suggestions?.map((suggestion) => (
           <SuggestionCard key={suggestion.id} suggestion={suggestion} />
         ))}
