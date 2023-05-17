@@ -33,8 +33,8 @@ const Suggestions: FC = () => {
       </div>
 
       {showSpinner
-        ? <div className="text-center"><Spinner  size={10}/></div>
-        : <div className={"flex flex-wrap justify-center gap-6"}>
+        ? <div className="text-center" data-cy="suggestions-spinner"><Spinner size={10} /></div>
+        : <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
           {suggestions.map((suggestion) => (
             <SuggestionCard key={suggestion.id} suggestion={suggestion} />
           ))}
