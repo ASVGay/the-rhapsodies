@@ -1,5 +1,4 @@
 const suggestionId = Cypress.env("suggestion_id")
-const username = Cypress.env("username")
 
 describe("suggestion detail page", () => {
 
@@ -17,6 +16,13 @@ describe("suggestion detail page", () => {
       cy.get("#suggestion-date").should("exist")
         .invoke("text")
         .should("match", /^[A-Z][a-z]* [0-9]/)
+    })
+
+    it("should call firestore on update role", () => {
+      const spy = cy.spy()
+      cy.intercept('https://firestore.googleapis.com/**', spy)
+      cy.wait(2000)
+        .then(() => expect(spy).to.have.been.called)
     })
 
   })
