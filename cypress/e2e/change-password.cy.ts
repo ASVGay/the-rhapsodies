@@ -1,5 +1,5 @@
-const displayName = Cypress.env("NEW_DISPLAY_NAME")
-const newPassword = Cypress.env("NEW_PASSWORD")
+const displayName = "New"
+const newPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 const errorPopup = "error-popup-change-password"
 const displayNameTextfield = "set-name-textfield"
 const passwordTextfield = "change-password-textfield"

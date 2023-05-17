@@ -6,10 +6,10 @@ const invalidInput = "test"
 const emailInCorrectFormat = "test@test.nl"
 const unusedEmail = "nosuchemail123455678@email.com"
 const wrongCredentials = "Invalid login credentials"
-const oldUserEmail = Cypress.env("OLD_EMAIL")
-const oldUserPassword = Cypress.env("OLD_PASSWORD")
-const newUserEmail = Cypress.env("NEW_EMAIL")
-const newUserPassword = Cypress.env("NEW_PASSWORD")
+const oldUserEmail = Cypress.env("CYPRESS_OLD_EMAIL")
+const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
+const newUserEmail = Cypress.env("CYPRESS_NEW_EMAIL")
+const newUserPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 
 describe("Sign-in", () => {
   beforeEach(() => {

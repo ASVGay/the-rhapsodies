@@ -13,6 +13,10 @@ env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
   NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+  CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
+  CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
+  CYPRESS_NEW_EMAIL: ${{secrets.CYPRESS_NEW_EMAIL}}
+  CYPRESS_NEW_PASSWORD: ${{secrets.CYPRESS_NEW_PASSWORD}}
   CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}}
   CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
 
@@ -26,12 +30,6 @@ jobs:
     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v3
-      - name: create-cypress-config-json
-        id: create-cypress-config-json
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          name: "cypress.env.json"
-          json: ${{ secrets.CYPRESS_ENV_JSON }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:

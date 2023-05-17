@@ -12,7 +12,12 @@ export default defineConfig({
     },
     // NOTE: Add "supportFile" setting if separate location is used
     setupNodeEvents(on, config) {
+      config.env = {
+        ...process.env,
+        ...config.env,
+      }
       tasks(on, config)
+      return config
     },
     experimentalRunAllSpecs: true,
   },

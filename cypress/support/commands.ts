@@ -46,8 +46,8 @@ Cypress.Commands.add("login", (useNewUser: boolean = false) => {
   let user = "OLD"
   if (useNewUser) user = "NEW"
   cy.task("getUserSession", {
-    email: Cypress.env(`${user}_EMAIL`),
-    password: Cypress.env(`${user}_PASSWORD`),
+    email: Cypress.env(`CYPRESS_${user}_EMAIL`),
+    password: Cypress.env(`CYPRESS_${user}_PASSWORD`),
   }).then((sessionData) => {
     cy.setCookie("supabase-auth-token", JSON.stringify(sessionData))
   })
