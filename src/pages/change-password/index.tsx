@@ -101,7 +101,9 @@ const Index = () => {
                 return (
                   <div className="flex w-full flex-col gap-2" key={index}>
                     <SignInTextField
-                      {...register(tag, validationOptions)}
+                      tag={tag}
+                      validationOptions={validationOptions}
+                      register={register}
                       type={type}
                       placeholder={placeholder}
                       data-cy={dataCy}
