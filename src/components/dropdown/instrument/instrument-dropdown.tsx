@@ -1,15 +1,21 @@
 import React, { useState } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
-import { Instruments } from "@/constants/instruments"
+import { Instrument, Instruments } from "@/constants/instruments"
 import InstrumentDropdownItem from "./instrument-dropdown-item"
 
-interface InstrumentDropdownProps {}
+interface InstrumentDropdownProps {
+  onInstrumentSelected(instrument: Instrument): boolean
+}
 
-const InstrumentDropdown = ({}: InstrumentDropdownProps) => {
+const InstrumentDropdown = ({ onInstrumentSelected }: InstrumentDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
+  }
+
+  const onSelected = (instrument: Instrument) => {
+    return onInstrumentSelected(instrument)
   }
 
   return (
@@ -25,7 +31,13 @@ const InstrumentDropdown = ({}: InstrumentDropdownProps) => {
         <div className="absolute z-10 mt-2 w-full rounded-md bg-white shadow-md">
           <ul>
             {Object.keys(Instruments).map((key: string) => {
-              return <InstrumentDropdownItem instrument={Instruments[key]} key={key} />
+              return (
+                <InstrumentDropdownItem
+                  onClick={(instrument) => onSelected(instrument)}
+                  instrument={Instruments[key]}
+                  key={key}
+                />
+              )
             })}
           </ul>
         </div>
