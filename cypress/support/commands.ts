@@ -36,6 +36,30 @@
 //   }
 // }
 
+import { PostgrestSingleResponse } from "@supabase/supabase-js"
+
 Cypress.Commands.add("data", (value) => {
   return cy.get(`[data-cy=${value}]`)
+})
+
+Cypress.Commands.add("login", (useNewUser: boolean = false) => {
+  let user = "OLD"
+  if (useNewUser) user = "NEW"
+  cy.task("getUserSession", {
+    email: Cypress.env(`CYPRESS_${user}_EMAIL`),
+    password: Cypress.env(`CYPRESS_${user}_PASSWORD`),
+  }).then((sessionData) => {
+    cy.setCookie("supabase-auth-token", JSON.stringify(sessionData))
+  })
+})
+
+Cypress.Commands.add("logout", () => {
+  cy.setCookie("supabase-auth-token", "")
+})
+
+Cypress.Commands.add("deleteNewUser", () => {
+  cy.task("deleteNewUser").then((response: PostgrestSingleResponse<null>) => {
+    cy.log(JSON.stringify(response))
+    if (response.error) throw new Error(response.error.message)
+  })
 })

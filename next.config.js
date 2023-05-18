@@ -5,7 +5,14 @@ const withPWA = require("next-pwa")({
 
 module.exports = withPWA({
   reactStrictMode: true,
-  experimental: {
-    swcPlugins: [["next-superjson-plugin", {}]],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/^https?:\/\//i, "")}`,
+        port: "",
+        pathname: "/storage/**",
+      },
+    ],
   },
 })
