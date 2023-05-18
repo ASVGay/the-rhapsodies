@@ -23,6 +23,7 @@ const Index = () => {
   } = useForm()
 
   const password = watch("password")
+  const name = watch("userName")
 
   type Inputs = "userName" | "password" | "confirmPassword"
 
@@ -69,12 +70,14 @@ const Index = () => {
 
     const { data, error } = await supabase.auth.updateUser({ password })
     if (error) {
+      console.log(error)
       setErrorMsg("Change password failed, try again")
       setShowError(true)
     } else if (data) {
       setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
         const { error } = response
         if (error) {
+          console.log(error)
           setErrorMsg("Something went wrong, try again")
           setShowError(true)
         } else router.push("/")
@@ -121,12 +124,12 @@ const Index = () => {
                 <span data-cy={"submit-error"} className={"text-xs text-red-600"}>
                         ⚠ {errorMsg}
                       </span> }
+            <MainButton
+                dataCy={"submit-password-btn"}
+                onClick={handleSubmit(submitNewPassword)}
+                text={"Submit"}
+            />
           </form>
-          <MainButton
-            dataCy={"submit-password-btn"}
-            onClick={handleSubmit(submitNewPassword)}
-            text={"Submit"}
-          />
         </div>
       </div>
     </div>
