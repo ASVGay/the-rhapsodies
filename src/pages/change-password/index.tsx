@@ -72,7 +72,6 @@ const Index = () => {
       setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
         const { error } = response
         if (error) {
-          error.code
           setErrorMsg("Something went wrong, try again")
           setShowError(true)
         } else router.push("/")
