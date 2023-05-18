@@ -95,9 +95,9 @@ const Index = () => {
           </div>
           <form className={"flex flex-col gap-6"}>
             {changePasswordFormData.map(
-              ({ dataCy, placeholder, validationOptions, tag, type }, index) => {
+              ({ dataCy, placeholder, validationOptions, tag, type }) => {
                 return (
-                  <div className="flex w-full flex-col gap-2" key={index}>
+                  <div className="flex w-full flex-col gap-2" key={tag}>
                     <SignInTextField
                       tag={tag}
                       validationOptions={validationOptions}

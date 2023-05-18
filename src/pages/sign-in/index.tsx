@@ -84,9 +84,9 @@ const Index = () => {
             Sign in to your account
           </span>
         </div>
-        {signInFormData.map(({ dataCy, placeholder, validationOptions, tag, type }, index) => {
+        {signInFormData.map(({ dataCy, placeholder, validationOptions, tag, type }) => {
           return (
-            <div className="flex w-full flex-col gap-2" key={index}>
+            <div className="flex w-full flex-col gap-2" key={tag}>
               <SignInTextField
                 tag={tag}
                 validationOptions={validationOptions}
