@@ -93,13 +93,13 @@ const Index = () => {
                 register={register}
                 type={type}
                 placeholder={placeholder}
-                data-cy={dataCy}
+                dataCy={dataCy}
               />
-              {errors[tag] && <ErrorMsg message={errors[tag]?.message?.toString()} />}
+              {errors[tag] && <ErrorMsg dataCy={`${dataCy}-error`} message={errors[tag]?.message?.toString()} />}
             </div>
           )
         })}
-        {showErrorMsg && <ErrorMsg message={errorPopupText} />}
+        {showErrorMsg && <ErrorMsg dataCy={"sign-in-err"} message={errorPopupText} />}
         <MainButton onClick={handleSubmit(signIn)} text={"Sign in"} dataCy={"sign-in-submit-btn"} />
       </div>
     </div>
