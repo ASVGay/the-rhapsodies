@@ -1,4 +1,4 @@
-import InstrumentDropdown from "@/components/dropdown/instrument/instrument-dropdown"
+import MainButton from "@/components/buttons/main-button"
 import InstrumentSearch from "@/components/search/instrument-search"
 import { Instrument } from "@/constants/instruments"
 import React from "react"
@@ -16,8 +16,8 @@ const InstrumentsArea = ({ show }: InstrumentsAreaProps) => {
   return (
     <div data-cy="area-instruments" className={`${!show && "hidden"}`}>
       <h2 className={"area-header"}>Instruments</h2>
-      {/* <InstrumentDropdown onInstrumentSelected={(instrument) => onInstrumentSelected(instrument)} /> */}
       <InstrumentSearch />
+      <MainButton text="To Review" onClick={() => {}} />
     </div>
   )
 }
