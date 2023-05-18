@@ -9,17 +9,20 @@ import { useRouter } from "next/router"
 import { RegisterOptions, useForm } from "react-hook-form"
 
 const Index = () => {
-  // TODO Use react-hook-form for this for cleaner code
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
-
-  const [password, setPassword] = useState<string>("")
-  const [name, setName] = useState<string>("")
-  const [confirmPassword, setConfirmPassword] = useState<string>()
-
-  const [errorText, setErrorText] = useState<string>("")
-  const [showErrorText, setShowErrorText] = useState<boolean>(false)
   const router = useRouter()
+  const [errorMsg, setErrorMsg] = useState("")
+  const [showError, setShowError] = useState(false)
+
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors },
+  } = useForm()
+
+  const password = watch("password")
 
   type Inputs = "userName" | "password" | "confirmPassword"
 
@@ -31,17 +34,7 @@ const Index = () => {
     validationOptions: RegisterOptions
   }
 
-  const setError = (errorText: string) => {
-    setErrorText(errorText)
-    setShowErrorText(true)
-  }
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm()
-
-  const formData: FormDataItem[] = [
+  const changePasswordFormData: FormDataItem[] = [
     {
       tag: "userName",
       type: "text",
@@ -67,38 +60,28 @@ const Index = () => {
       validationOptions: {
         required: "Confirm Password is required",
         minLength: { value: 6, message: "Password should be minimal 6 characters" },
+        validate: (value) => value === password || "Passwords do not match.",
       },
     },
   ]
   const submitNewPassword = async () => {
-      console.log("HI")
-    // if (password !== confirmPassword) {
-    //   setError("Fill in equal passwords.")
-    //   return
-    // }
-    // if (user) {
-    //   const { data, error } = await supabase.auth.updateUser({ password })
-    //   if (error) {
-    //     // TODO Alert that change password failed, try again
-    //     setError(error.message)
-    //   } else if (data) {
-    //     setNameAndFirstLoginFalse(supabase, user.id, name)
-    //       .then((response) => {
-    //         const { error } = response
-    //         // TODO Error handling
-    //         if (error) {
-    //           setError(error.message)
-    //         } else router.push("/")
-    //       })
-    //       .catch((error) => setError(error.message))
-    //   }
-    // }
+    if (!user) return
+
+    const { data, error } = await supabase.auth.updateUser({ password })
+    if (error) {
+      setErrorMsg("Change password failed, try again")
+      setShowError(true)
+    } else if (data) {
+      setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
+        const { error } = response
+        if (error) {
+          setErrorMsg("Something went wrong, try again")
+          setShowError(true)
+        } else router.push("/")
+      })
+    }
   }
 
-  useEffect(() => {
-
-
-  }, [errors])
   return (
     <div>
       <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
@@ -114,27 +97,28 @@ const Index = () => {
             </span>
           </div>
           <form className={"flex flex-col gap-6"}>
-            {formData.map(({ dataCy, placeholder, validationOptions, tag, type }, index) => {
-              return (
-                <div className="w-full gap-6 flex flex-col" key={index}>
-                  <input
-                    className="w-full rounded border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-moon-500 focus:bg-white focus:outline-none"
-                    {...register(tag, validationOptions)}
-                    type={type}
-                    placeholder={placeholder}
-                    data-cy={dataCy}
-                  />
-                  {errors[tag] && (
-                    <ErrorPopup
-                      dataCy={"error-popup-change-password"}
-                      text={errors[tag]?.message?.toString()}
-                      closePopup={() => {}}
+            {changePasswordFormData.map(
+              ({ dataCy, placeholder, validationOptions, tag, type }, index) => {
+                return (
+                  <div className="flex w-full flex-col gap-2" key={index}>
+                    <input
+                      className="w-full rounded border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-moon-500 focus:bg-white focus:outline-none"
+                      {...register(tag, validationOptions)}
+                      type={type}
+                      placeholder={placeholder}
+                      data-cy={dataCy}
                     />
-                  )}
-                </div>
-              )
-            })}
+                    {errors[tag] && (
+                      <span className={"text-xs text-red-600"}>
+                        ⚠ {errors[tag]?.message?.toString()}
+                      </span>
+                    )}
+                  </div>
+                )
+              }
+            )}
           </form>
+
           <MainButton
             dataCy={"submit-password-btn"}
             onClick={handleSubmit(submitNewPassword)}
