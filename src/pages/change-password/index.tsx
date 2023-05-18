@@ -8,9 +8,10 @@ import { useRouter } from "next/router"
 import { RegisterOptions, useForm } from "react-hook-form"
 import ErrorMsg from "@/components/error/error-msg";
 
-type Inputs = "userName" | "password" | "confirmPassword"
-interface FormDataItem {
-  tag: Inputs
+export type SignInInputs = "email" | "password"
+export type ChangePasswordInputs = "userName" | "password" | "confirmPassword"
+export interface FormDataItem {
+  tag: ChangePasswordInputs | SignInInputs
   type: string
   placeholder: string
   dataCy: string
@@ -28,7 +29,6 @@ const Index = () => {
     watch,
     formState: { errors },
   } = useForm()
-
   const password = watch("password")
   const name = watch("userName")
 

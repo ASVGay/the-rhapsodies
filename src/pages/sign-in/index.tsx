@@ -6,23 +6,57 @@ import MainButton from "@/components/buttons/main-button"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { AuthResponse } from "@supabase/gotrue-js"
-import ErrorMsg from "@/components/error/error-msg";
+import ErrorMsg from "@/components/error/error-msg"
+import { FormDataItem } from "@/pages/change-password"
+import { useForm } from "react-hook-form"
 
 const Index = () => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [showErrorPopup, setErrorPopup] = useState<boolean>()
+  const [showErrorMsg, setShowErrorMsg] = useState<boolean>()
   const [errorPopupText, setErrorPopupText] = useState<string>("")
   const supabase = useSupabaseClient<Database>()
-
   const router = useRouter()
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors },
+  } = useForm()
+
+  const email = watch("email")
+  const password = watch("password")
+
+  const signInFormData: FormDataItem[] = [
+    {
+      tag: "email",
+      type: "text",
+      placeholder: "Email",
+      dataCy: "sign-in-email",
+      validationOptions: {
+        required: "Email is required",
+        pattern: {
+          value: /\S+@\S+\.\S+/,
+          message: "Entered value does not match email format",
+        },
+      },
+    },
+    {
+      tag: "password",
+      type: "password",
+      placeholder: "Password",
+      dataCy: "sign-in-password",
+      validationOptions: {
+        required: "Password is required",
+        minLength: { value: 6, message: "Password should at least be 6 characters." },
+      },
+    },
+  ]
 
   const signIn = () => {
     supabase.auth.signInWithPassword({ email, password }).then((response: AuthResponse) => {
       const { error } = response
       if (error) {
         setErrorPopupText(error.message)
-        setErrorPopup(true)
+        setShowErrorMsg(true)
       } else {
         router.push("/")
       }
@@ -50,28 +84,29 @@ const Index = () => {
             Sign in to your account
           </span>
         </div>
-        <div className="w-full">
-          <SignInTextField
-            placeholder={"Email"}
-            type={"text"}
-            dataCy={"sign-in-email"}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="w-full">
-          <SignInTextField
-            placeholder={"Password"}
-            type={"password"}
-            dataCy={"sign-in-password"}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-          />
-        </div>
-        {showErrorPopup && (
-          <ErrorMsg
-            message={errorPopupText}
-          />
-        )}
-        <MainButton onClick={signIn} text={"Sign in"} dataCy={"sign-in-submit-btn"} />
+        {signInFormData.map(({ dataCy, placeholder, validationOptions, tag, type }, index) => {
+          return (
+            <div className="w-full flex flex-col gap-2" key={index}>
+              <SignInTextField
+                tag={tag}
+                validationOptions={validationOptions}
+                register={register}
+                type={type}
+                placeholder={placeholder}
+                data-cy={dataCy}
+              />
+              {errors[tag] && (
+                  <ErrorMsg message={errors[tag]?.message?.toString()}/>
+              )}
+            </div>
+
+          )
+        })}
+        {showErrorMsg && <ErrorMsg message={errorPopupText} />}
+        <MainButton
+            onClick={handleSubmit(signIn)}
+            text={"Sign in"}
+            dataCy={"sign-in-submit-btn"} />
       </div>
     </div>
   )
