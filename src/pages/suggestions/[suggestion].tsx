@@ -117,7 +117,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
                       className={`${role.filledBy?.length ? "" : "opacity-30"} mr-4 h-10 w-10`}
                     />
                     <div>
-                      <p>{instrument.instrument}</p>
+                      <p>{instrument.instrumentName}</p>
                       <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{role.note}</p>
                       {role.filledBy?.length! > 0 && (
                         <li className={`ml-8 font-bold leading-5 text-zinc-400`}>

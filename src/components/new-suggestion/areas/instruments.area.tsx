@@ -1,4 +1,4 @@
-import InstrumentDropdown from "@/components/dropdown/instrument-dropdown"
+import InstrumentDropdown from "@/components/dropdown/instrument/instrument-dropdown"
 import React from "react"
 
 interface InstrumentsAreaProps {
