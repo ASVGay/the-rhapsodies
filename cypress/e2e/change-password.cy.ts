@@ -27,13 +27,13 @@ describe("Change password", () => {
     cy.data(passwordTextfield).type("test12345")
     cy.data(confirmPasswordTextfield).type("test123456")
     cy.data(submitPasswordBtn).click()
-    cy.data(errorPopup).contains("Fill in equal passwords.")
+    cy.data(`${confirmPasswordTextfield}-error`).contains("Passwords do not match")
   })
 
   it("should give error when new password is too short", () => {
     cy.data(passwordTextfield).type(shortPassword)
     cy.data(confirmPasswordTextfield).type(shortPassword)
     cy.data(submitPasswordBtn).click()
-    cy.data(errorPopup).contains("Password should at least be 6 characters.")
+    cy.data(`${passwordTextfield}-error`).contains("Password should at least be 6 characters.")
   })
 })

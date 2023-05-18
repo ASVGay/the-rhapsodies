@@ -49,7 +49,7 @@ const Index = () => {
       dataCy: "change-password-textfield",
       validationOptions: {
         required: "Password is required",
-        minLength: { value: 6, message: "Password should be minimal 6 characters" },
+        minLength: { value: 6, message: "Password should at least be 6 characters." },
       },
     },
     {
@@ -60,7 +60,7 @@ const Index = () => {
       validationOptions: {
         required: "Confirm Password is required",
         minLength: { value: 6, message: "Password should be minimal 6 characters" },
-        validate: (value) => value === password || "Passwords do not match.",
+        validate: (value) => value === password || "Passwords do not match",
       },
     },
   ]
@@ -109,7 +109,7 @@ const Index = () => {
                       data-cy={dataCy}
                     />
                     {errors[tag] && (
-                      <span className={"text-xs text-red-600"}>
+                      <span data-cy={`${dataCy}-error`} className={"text-xs text-red-600"}>
                         ⚠ {errors[tag]?.message?.toString()}
                       </span>
                     )}
@@ -117,8 +117,11 @@ const Index = () => {
                 )
               }
             )}
+            {showError &&
+                <span data-cy={"submit-error"} className={"text-xs text-red-600"}>
+                        ⚠ {errorMsg}
+                      </span> }
           </form>
-
           <MainButton
             dataCy={"submit-password-btn"}
             onClick={handleSubmit(submitNewPassword)}
