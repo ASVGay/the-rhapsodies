@@ -3,9 +3,9 @@ import { XMarkIcon } from "@heroicons/react/24/outline"
 import ProgressBar from "@/components/new-suggestion/progress-bar/progress-bar"
 import { useRouter } from "next/router"
 import SongInformationArea from "@/components/new-suggestion/areas/song-information.area"
-import InstrumentsArea from "@/components/new-suggestion/areas/instruments.area"
 import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
+import InstrumentsArea from "@/components/new-suggestion/areas/instruments/instruments.area"
 
 const NewSuggestion = () => {
   const router = useRouter()
