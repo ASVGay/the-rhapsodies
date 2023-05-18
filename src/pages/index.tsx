@@ -22,7 +22,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <MainButton text={"Log out"} onClick={() => signOut()} />
       {showError && (
-        <ErrorMsg message={"Can't log out right now."} />
+        <ErrorMsg dataCy={"log-out-btn"} message={"Can't log out right now."} />
       )}
     </main>
   )

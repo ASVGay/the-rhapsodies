@@ -43,4 +43,5 @@ describe("Change password", () => {
     cy.data(submitPasswordBtn).click()
     cy.data(`${passwordTextfield}-error`).contains("Password should at least be 6 characters.")
   })
+
 })
