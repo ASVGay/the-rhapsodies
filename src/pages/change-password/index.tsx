@@ -76,6 +76,10 @@ const Index = () => {
           setShowError(true)
         } else router.push("/")
       })
+          .catch(() => {
+            setErrorMsg("Something went wrong, try again")
+            setShowError(true)
+          })
     }
   }
 
