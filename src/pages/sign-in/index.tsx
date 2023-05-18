@@ -2,11 +2,11 @@ import React, { useState } from "react"
 import Image from "next/image"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useRouter } from "next/router"
-import ErrorPopup from "@/components/popups/error-popup"
 import MainButton from "@/components/buttons/main-button"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { AuthResponse } from "@supabase/gotrue-js"
+import ErrorMsg from "@/components/error/error-msg";
 
 const Index = () => {
   const [email, setEmail] = useState<string>("")
@@ -67,10 +67,8 @@ const Index = () => {
           />
         </div>
         {showErrorPopup && (
-          <ErrorPopup
-            closePopup={() => setErrorPopup(false)}
-            text={errorPopupText}
-            dataCy={"error-popup-sign-in"}
+          <ErrorMsg
+            message={errorPopupText}
           />
         )}
         <MainButton onClick={signIn} text={"Sign in"} dataCy={"sign-in-submit-btn"} />

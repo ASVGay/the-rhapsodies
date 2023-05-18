@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
-import ErrorPopup from "@/components/popups/error-popup"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
 import { useRouter } from "next/router"
 import { RegisterOptions, useForm } from "react-hook-form"
+import ErrorMsg from "@/components/error/error-msg";
 
+type Inputs = "userName" | "password" | "confirmPassword"
+interface FormDataItem {
+  tag: Inputs
+  type: string
+  placeholder: string
+  dataCy: string
+  validationOptions: RegisterOptions
+}
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
   const [errorMsg, setErrorMsg] = useState("")
   const [showError, setShowError] = useState(false)
-
   const {
     handleSubmit,
     register,
@@ -24,16 +31,6 @@ const Index = () => {
 
   const password = watch("password")
   const name = watch("userName")
-
-  type Inputs = "userName" | "password" | "confirmPassword"
-
-  interface FormDataItem {
-    tag: Inputs
-    type: string
-    placeholder: string
-    dataCy: string
-    validationOptions: RegisterOptions
-  }
 
   const changePasswordFormData: FormDataItem[] = [
     {
@@ -69,15 +66,14 @@ const Index = () => {
     if (!user) return
 
     const { data, error } = await supabase.auth.updateUser({ password })
+
     if (error) {
-      console.log(error)
       setErrorMsg("Change password failed, try again")
       setShowError(true)
     } else if (data) {
       setNameAndFirstLoginFalse(supabase, user.id, name).then((response) => {
         const { error } = response
         if (error) {
-          console.log(error)
           setErrorMsg("Something went wrong, try again")
           setShowError(true)
         } else router.push("/")
@@ -104,30 +100,26 @@ const Index = () => {
               ({ dataCy, placeholder, validationOptions, tag, type }, index) => {
                 return (
                   <div className="flex w-full flex-col gap-2" key={index}>
-                    <input
-                      className="w-full rounded border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-moon-500 focus:bg-white focus:outline-none"
+                    <SignInTextField
                       {...register(tag, validationOptions)}
                       type={type}
                       placeholder={placeholder}
                       data-cy={dataCy}
                     />
                     {errors[tag] && (
-                      <span data-cy={`${dataCy}-error`} className={"text-xs text-red-600"}>
-                        ⚠ {errors[tag]?.message?.toString()}
-                      </span>
+                        <ErrorMsg message={errors[tag]?.message?.toString()}/>
                     )}
                   </div>
                 )
               }
             )}
-            {showError &&
-                <span data-cy={"submit-error"} className={"text-xs text-red-600"}>
-                        ⚠ {errorMsg}
-                      </span> }
+            {showError && (
+              <ErrorMsg message={errorMsg}/>
+            )}
             <MainButton
-                dataCy={"submit-password-btn"}
-                onClick={handleSubmit(submitNewPassword)}
-                text={"Submit"}
+              dataCy={"submit-password-btn"}
+              onClick={handleSubmit(submitNewPassword)}
+              text={"Submit"}
             />
           </form>
         </div>
