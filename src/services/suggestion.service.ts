@@ -1,16 +1,56 @@
-import { collection, getDocs } from "firebase/firestore"
-import { db } from "@/firebase/config"
-import { ISuggestion } from "@/interfaces/suggestion"
+import { SupabaseClient } from "@supabase/supabase-js"
+import { Database } from "@/types/database"
+import { DivisionDatabaseOperation } from "@/types/database-types"
 
-export const getSuggestions = async (): Promise<ISuggestion[]> => {
-  const querySnapshot = await getDocs(collection(db, "suggestions"))
+export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
+  return supabase.from("suggestion").select(`
+      *,
+      suggestion_instruments:suggestion_instrument (
+        id,
+        instrument (*),
+        division (*)
+      )
+    `)
+}
 
-  const suggestions: ISuggestion[] = []
-  querySnapshot.forEach((doc) => {
-    const suggestion = doc.data() as ISuggestion
-    suggestion.id = doc.id
-    suggestions.push(suggestion)
-  })
+export const getSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {
+  return supabase
+    .from("suggestion")
+    .select(
+      `*,
+        author (display_name),
+        suggestion_instruments:suggestion_instrument (
+          id,
+          instrument (*),
+          division (
+            *,
+            musician (display_name, id)
+          )
+        )`
+    )
+    .eq("id", id)
+    .limit(1)
+    .single()
+}
 
-  return suggestions
+export const getInstrumentImage = (sourceName: string) => {
+  return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1684372007/instrument-icons/${sourceName}.svg`
+}
+
+export const insertDivision = (
+  supabaseClient: SupabaseClient<Database>,
+  division: DivisionDatabaseOperation
+) => {
+  return supabaseClient.from("division").insert(division)
+}
+
+export const deleteDivision = (
+  supabaseClient: SupabaseClient<Database>,
+  division: DivisionDatabaseOperation
+) => {
+  return supabaseClient
+    .from("division")
+    .delete()
+    .eq("musician", division.musician)
+    .eq("suggestion_instrument_id", division.suggestion_instrument_id)
 }

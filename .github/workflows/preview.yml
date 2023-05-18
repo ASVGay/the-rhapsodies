@@ -1,30 +1,52 @@
-name: GitHub Actions Vercel Preview Deployment
+name: Deploy to Staging
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.NEXT_PUBLIC_FIREBASE_API_KEY}}
-  NEXT_PUBLIC_FIREBASE_APP_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_APP_ID}}
-  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}}
-  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID}}
-  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}}
-  NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID}}
-  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+
 on:
   push:
     branches:
       - dev
+  pull_request:
+    branches:
+      - dev
+      - main
+  workflow_dispatch:
+
 jobs:
-  Deploy-Preview:
+  deploy-migrations-staging:
+    runs-on: ubuntu-22.04
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+      - uses: supabase/setup-cli@v1
+      - run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+          supabase db push
+  deploy-vercel-staging:
+    needs: deploy-migrations-staging
     runs-on: ubuntu-latest
-    environment: ENV_FRONTEND_DEV
+    environment: staging
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
-        run: npm install --global vercel@canary
+        run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> $GITHUB_OUTPUT
+        id: deploy
+      - name: Comment Preview URL Preview URL
+        if: github.event_name == 'pull_request' && !failure()
+        uses: thollander/actions-comment-pull-request@v2.3.1
+        with:
+          message: Preview can be found at ${{ steps.deploy.outputs.url }}
+          comment_tag: execution
+          mode: recreate
+
+
