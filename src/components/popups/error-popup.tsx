@@ -2,7 +2,7 @@ import React from "react"
 import Image from "next/image"
 
 interface ErrorPopupProps {
-  text: string
+  text?: string
   closePopup: () => void
   dataCy?: string
 }
