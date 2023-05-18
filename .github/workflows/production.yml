@@ -1,15 +1,29 @@
-name: Vercel Production Deployment
+name: Deploy to Production
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
-  Deploy-Production:
+  deploy-migrations-production:
+    runs-on: ubuntu-22.04
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3
+      - uses: supabase/setup-cli@v1
+      - run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+          supabase db push
+  deploy-vercel-production:
+    needs: deploy-migrations-production
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
