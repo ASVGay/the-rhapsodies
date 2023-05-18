@@ -7,7 +7,7 @@ interface InstrumentDropdownItemProps {
   onClick(key: Instrument): boolean
 }
 
-const InstrumentDropdownItem = ({ textNode, instrument, onClick }: InstrumentDropdownItemProps) => {
+const InstrumentSearchItem = ({ textNode, instrument, onClick }: InstrumentDropdownItemProps) => {
   return (
     <li
       onClick={() => onClick(instrument)}
@@ -24,4 +24,4 @@ const InstrumentDropdownItem = ({ textNode, instrument, onClick }: InstrumentDro
   )
 }
 
-export default InstrumentDropdownItem
+export default InstrumentSearchItem

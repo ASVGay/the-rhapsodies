@@ -1,5 +1,5 @@
 import MainButton from "@/components/buttons/main-button"
-import InstrumentSearch from "@/components/search/instrument-search"
+import InstrumentSearch from "@/components/search/instrument/instrument-search"
 import { Instrument } from "@/constants/instruments"
 import React from "react"
 

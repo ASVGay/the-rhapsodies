@@ -1,7 +1,7 @@
 import { Instrument, Instruments } from "@/constants/instruments"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
-import InstrumentDropdownItem from "../dropdown/instrument/instrument-dropdown-item"
+import InstrumentSearchItem from "./instrument-search-item"
 
 const InstrumentSearch = () => {
   const [searchTerm, setSearchTerm] = useState<string>("")
@@ -20,16 +20,28 @@ const InstrumentSearch = () => {
 
   const clearSearch = () => {
     setSearchTerm("")
+    setSearchResults([])
   }
+
   const onSelected = (instrument: Instrument) => {
     console.log(instrument)
-    setSearchTerm("")
+    clearSearch()
     return true
   }
 
-  const boldenText = (str: string, find: string) => {
+  const boldSpecificTextSections = (str: string, find: string) => {
     var re = new RegExp(find, "g")
-    return str.replace(re, "<b>" + find + "</b>")
+
+    const newString = str.replace(re, "<b>" + find + "</b>")
+
+    //if the first occurrence is the bold tag, Capitalize the letter inside that bold tag.
+    if (newString.charAt(0) === "<")
+      return newString.replace(
+        `<b>${newString.charAt(3)}`,
+        `<b>${newString.charAt(3).toUpperCase()}`
+      )
+
+    return newString
   }
 
   return (
@@ -51,13 +63,13 @@ const InstrumentSearch = () => {
           <ul>
             {searchResults.map((instrumentItem: Instrument) => {
               return (
-                <InstrumentDropdownItem
+                <InstrumentSearchItem
                   onClick={(instrument) => onSelected(instrument)}
                   instrument={instrumentItem}
                   textNode={
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: boldenText(instrumentItem.instrumentName, searchTerm),
+                        __html: boldSpecificTextSections(instrumentItem.instrumentName, searchTerm),
                       }}
                     ></div>
                   }
