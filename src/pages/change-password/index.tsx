@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
@@ -6,10 +6,9 @@ import { Database } from "@/types/database"
 import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
 import { useRouter } from "next/router"
 import { RegisterOptions, useForm } from "react-hook-form"
-import ErrorMsg from "@/components/error/error-msg";
+import ErrorMsg from "@/components/error/error-msg"
+import {ChangePasswordInputs, SignInInputs} from "@/types/form-types";
 
-export type SignInInputs = "email" | "password"
-export type ChangePasswordInputs = "userName" | "password" | "confirmPassword"
 export interface FormDataItem {
   tag: ChangePasswordInputs | SignInInputs
   type: string
@@ -64,7 +63,6 @@ const Index = () => {
   ]
   const submitNewPassword = async () => {
     if (!user) return
-
     const { data, error } = await supabase.auth.updateUser({ password })
 
     if (error) {
@@ -106,18 +104,14 @@ const Index = () => {
                       register={register}
                       type={type}
                       placeholder={placeholder}
-                      data-cy={dataCy}
+                      dataCy={dataCy}
                     />
-                    {errors[tag] && (
-                        <ErrorMsg message={errors[tag]?.message?.toString()}/>
-                    )}
+                    {errors[tag] && <ErrorMsg dataCy={`${dataCy}-error`} message={errors[tag]?.message?.toString()} />}
                   </div>
                 )
               }
             )}
-            {showError && (
-              <ErrorMsg message={errorMsg}/>
-            )}
+            {showError && <ErrorMsg dataCy={"submit-password-err"} message={errorMsg} />}
             <MainButton
               dataCy={"submit-password-btn"}
               onClick={handleSubmit(submitNewPassword)}

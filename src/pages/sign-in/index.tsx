@@ -86,7 +86,7 @@ const Index = () => {
         </div>
         {signInFormData.map(({ dataCy, placeholder, validationOptions, tag, type }, index) => {
           return (
-            <div className="w-full flex flex-col gap-2" key={index}>
+            <div className="flex w-full flex-col gap-2" key={index}>
               <SignInTextField
                 tag={tag}
                 validationOptions={validationOptions}
@@ -95,18 +95,12 @@ const Index = () => {
                 placeholder={placeholder}
                 data-cy={dataCy}
               />
-              {errors[tag] && (
-                  <ErrorMsg message={errors[tag]?.message?.toString()}/>
-              )}
+              {errors[tag] && <ErrorMsg message={errors[tag]?.message?.toString()} />}
             </div>
-
           )
         })}
         {showErrorMsg && <ErrorMsg message={errorPopupText} />}
-        <MainButton
-            onClick={handleSubmit(signIn)}
-            text={"Sign in"}
-            dataCy={"sign-in-submit-btn"} />
+        <MainButton onClick={handleSubmit(signIn)} text={"Sign in"} dataCy={"sign-in-submit-btn"} />
       </div>
     </div>
   )
