@@ -9,9 +9,9 @@ module.exports = withPWA({
     remotePatterns: [
       {
         protocol: "https",
-        hostname: `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/^https?:\/\//i, "")}`,
+        hostname: `res.cloudinary.com`,
         port: "",
-        pathname: "/storage/**",
+        pathname: `/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/**`,
       },
     ],
   },

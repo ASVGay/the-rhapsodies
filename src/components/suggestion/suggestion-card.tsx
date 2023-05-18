@@ -41,7 +41,7 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
               return (
                 <Image
                   key={suggestion_instrument.id}
-                  src={getInstrumentImage(supabaseClient, instrument)}
+                  src={getInstrumentImage(instrument.image_source)}
                   alt={instrument.instrument_name}
                   width={24}
                   height={24}

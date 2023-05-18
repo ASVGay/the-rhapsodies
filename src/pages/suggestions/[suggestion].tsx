@@ -130,7 +130,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                       onClick={() => selectInstrument(suggestionInstrument)}
                     >
                       <Image
-                        src={getInstrumentImage(supabase, instrument)}
+                        src={getInstrumentImage(instrument.image_source)}
                         alt={instrument.instrument_name.toString()}
                         width={64}
                         height={64}
