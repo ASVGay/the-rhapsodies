@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import { DivisionDatabaseOperation, Instrument } from "@/types/database-types"
+import { DivisionDatabaseOperation } from "@/types/database-types"
 
 export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
   return supabase.from("suggestion").select(`
@@ -33,14 +33,8 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .single()
 }
 
-export const getInstrumentImage = <Database>(
-  supabaseClient: SupabaseClient<Database>,
-  instrument: Instrument
-) => {
-  const { data } = supabaseClient.storage
-    .from("instrument-icons")
-    .getPublicUrl(instrument.image_source)
-  return data.publicUrl + ".svg"
+export const getInstrumentImage = (sourceName: string) => {
+  return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1684372007/instrument-icons/${sourceName}.svg`
 }
 
 export const insertDivision = (
