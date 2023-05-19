@@ -23,9 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: supabase/setup-cli@v1
-      - run: |
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
-          supabase db push
+      - name: Link to hosted Supabase
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+      - name: Push local migrations to hosted Supabase
+        run: supabase db push
   deploy-vercel-staging:
     needs: deploy-migrations-staging
     runs-on: ubuntu-latest
