@@ -1,33 +1,42 @@
-import React, { FC, useEffect, useState } from "react"
-import { ISuggestion } from "@/interfaces/suggestion"
+import { FC, useEffect, useState } from "react"
 import { getSuggestions } from "@/services/suggestion.service"
 import SuggestionCard from "@/components/suggestion/suggestion-card"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
 import { PlusIcon } from "@heroicons/react/24/solid"
-import Spinner from "@/components/utils/spinner"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { Suggestion } from "@/types/database-types"
+import { useRouter } from "next/router"
 import ErrorPopup from "@/components/utils/error-popup"
 import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline"
+import Spinner from "@/components/utils/spinner"
 
 const Suggestions: FC = () => {
-  const [suggestions, setSuggestions] = useState<ISuggestion[]>([])
+  const router = useRouter()
+  const supabaseClient = useSupabaseClient<Database>()
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [showSpinner, setShowSpinner] = useState<boolean>(true)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
   const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
 
   useEffect(() => {
-    getSuggestions()
-      .then((suggestions) => setSuggestions(suggestions))
+    getSuggestions(supabaseClient)
+      .then((response) => {
+        response.data
+          ? setSuggestions(response.data as Suggestion[])
+          : setShowLoadingError(true)
+      })
       .catch(() => setShowLoadingError(true))
-      .finally(() => setShowSpinner(false))
-  }, [])
+      .finally(() => {
+        setShowSpinner(false)
+      })
+  }, [supabaseClient])
 
   useEffect(() => {
-    setSuggestions([])
     setNoSuggestionsMade(suggestions.length === 0)
   }, [suggestions])
 
   return (
-    <div className={"py mx-auto px-4 pt-6"}>
+    <div className={"page-wrapper"}>
       <div className={"flex justify-between pb-6"}>
         <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
         <div>
@@ -52,9 +61,8 @@ const Suggestions: FC = () => {
         <div><MagnifyingGlassCircleIcon className={"w-[50px] h-[50px]"} /></div>
         <p>Looks like there are no suggestions made yet! Feel free to start adding them.</p>
       </div>}
-
     </div>
   )
 }
 
-export default WithProtectedRoute(Suggestions)
+export default Suggestions

@@ -1,19 +1,19 @@
-import { IRole } from "@/interfaces/suggestion"
+import { SuggestionInstrument } from "@/types/database-types"
 
 interface ProgressionBarProps {
-  roles: IRole[]
+  suggestionInstruments: SuggestionInstrument[]
 }
 
-const ProgressionBar = ({ roles }: ProgressionBarProps) => {
+const ProgressionBar = ({ suggestionInstruments }: ProgressionBarProps) => {
   const rolesFilled = () => {
-    return roles.filter((role) => role.filledBy?.length! > 0).length
+    return suggestionInstruments.filter(({ division }) => division.length > 0).length
   }
 
-  const progressionFraction = () => `${rolesFilled()}/${roles.length}`
+  const progressionFraction = () => `${rolesFilled()}/${suggestionInstruments.length}`
 
   const progressionBarWidth = () => {
     const amountFilled = rolesFilled()
-    return amountFilled > 0 ? (amountFilled / roles.length) * 100 + "%" : 0
+    return amountFilled > 0 ? (amountFilled / suggestionInstruments.length) * 100 + "%" : 0
   }
 
   return (

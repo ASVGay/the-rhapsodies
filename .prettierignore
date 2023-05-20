@@ -3,3 +3,4 @@
 .gitignore
 .husky
 .prettierignore
+supabase/seed.sql

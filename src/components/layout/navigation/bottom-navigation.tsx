@@ -16,6 +16,7 @@ export default function BottomNavigation() {
         return (
           <Link
             data-cy={item.data}
+            data-active={isActive(item.path, router)}
             key={item.path}
             href={item.path}
             className={`inline-flex grow basis-full flex-col items-center justify-center py-2 transition-colors duration-300 ${

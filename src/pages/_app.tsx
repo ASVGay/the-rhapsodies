@@ -1,10 +1,13 @@
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
-import { AuthContextProvider } from "@/context/auth-context"
 import { Lexend } from "next/font/google"
 import { wrapper } from "@/store/store"
 import Layout from "@/components/layout/layout"
+import { SessionContextProvider } from "@supabase/auth-helpers-react"
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { useState } from "react"
+import { Database } from "@/types/database"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -12,6 +15,15 @@ const lexend = Lexend({
 })
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const [supabaseClient] = useState(() =>
+    createBrowserSupabaseClient<Database>({
+      supabaseUrl,
+      supabaseKey,
+    })
+  )
+
   return (
     <>
       <Head>
@@ -185,13 +197,16 @@ const App = ({ Component, pageProps }: AppProps) => {
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </Head>
-      <AuthContextProvider>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
         <main className={`${lexend.variable} font-sans`}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </main>
-      </AuthContextProvider>
+      </SessionContextProvider>
     </>
   )
 }

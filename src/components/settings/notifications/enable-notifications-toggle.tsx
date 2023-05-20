@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { notificationsAreSupported } from "@/helpers/pwa.helper"
 import Toggle from "@/components/settings/controls/toggle"
 import { AlertText } from "@/constants/notifications"
 
-function showPermissionInstructions(result: NotificationPermission) {
+const showPermissionInstructions = (result: NotificationPermission) => {
   if (result === "denied") {
     alert(AlertText.permissionDenied)
   } else if (result === "granted") {
@@ -12,6 +12,7 @@ function showPermissionInstructions(result: NotificationPermission) {
 }
 
 const EnableNotificationsToggle = () => {
+  const [renderContent, setRenderContent] = useState<boolean>(false)
   const [permissionChecked, setPermissionChecked] = useState<boolean>(
     notificationsAreSupported() ? Notification.permission === "granted" : false
   )
@@ -33,14 +34,23 @@ const EnableNotificationsToggle = () => {
       })
   }
 
+  useEffect(() => {
+    // Only show content once window has been defined (since that is necessary for notificationsAreSupported)
+    setRenderContent(true)
+  }, [])
+
   return (
-    <Toggle
-      dataCy={"enable-notifications-toggle"}
-      text={"Enable notifications"}
-      checked={permissionChecked}
-      handleChange={changeNotificationSetting}
-      disabled={!notificationsAreSupported()}
-    />
+    <>
+      {renderContent && (
+        <Toggle
+          dataCy={"enable-notifications-toggle"}
+          text={"Enable notifications"}
+          checked={permissionChecked}
+          handleChange={changeNotificationSetting}
+          disabled={!notificationsAreSupported()}
+        />
+      )}
+    </>
   )
 }
 

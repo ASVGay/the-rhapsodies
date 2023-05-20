@@ -4,6 +4,7 @@
     "lib": ["es6", "dom"],
     "types": ["cypress", "node"],
     "jsx": "react",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["../src/*"]
     }
