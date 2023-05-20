@@ -9,9 +9,10 @@ export interface InstrumentItem {
 
 interface InstrumentsEditItemProps {
   instrumentItem: InstrumentItem
+  onDeleteClick(): boolean
 }
 
-const InstrumentsEditItem = ({ instrumentItem }: InstrumentsEditItemProps) => {
+const InstrumentsEditItem = ({ instrumentItem, onDeleteClick }: InstrumentsEditItemProps) => {
   return (
     <li className="flex items-center justify-between p-4">
       <div className="flex">
@@ -22,7 +23,7 @@ const InstrumentsEditItem = ({ instrumentItem }: InstrumentsEditItemProps) => {
         />
         {instrumentItem.instrument.instrumentName}
       </div>
-      <button onClick={() => {}} className="h-6 w-6">
+      <button onClick={onDeleteClick} className="h-6 w-6">
         <TrashIcon className="mr-4 h-6 w-6 text-red-500 focus:text-red-900" />
       </button>
     </li>

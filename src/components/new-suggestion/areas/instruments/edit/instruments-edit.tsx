@@ -3,13 +3,20 @@ import InstrumentsEditItem, { InstrumentItem } from "./instruments-edit-item"
 
 interface InstrumentEditProps {
   items: InstrumentItem[]
+  onDeleteClick(item: InstrumentItem): boolean
 }
 
-const InstrumentsEdit = ({ items }: InstrumentEditProps) => {
+const InstrumentsEdit = ({ items, onDeleteClick }: InstrumentEditProps) => {
   return (
     <div>
       {items.map((instrumentItem: InstrumentItem, index) => {
-        return <InstrumentsEditItem instrumentItem={instrumentItem} key={index} />
+        return (
+          <InstrumentsEditItem
+            onDeleteClick={() => onDeleteClick(instrumentItem)}
+            instrumentItem={instrumentItem}
+            key={index}
+          />
+        )
       })}
     </div>
   )

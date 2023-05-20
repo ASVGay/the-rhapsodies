@@ -21,11 +21,18 @@ const InstrumentsArea = ({ show }: InstrumentsAreaProps) => {
     return true
   }
 
+  const onDeleteInstrument = (instrumentItem: InstrumentItem): boolean => {
+    setInstrumentItems(
+      instrumentItems.filter((item) => item.instrument !== instrumentItem.instrument)
+    )
+    return true
+  }
+
   return (
     <div data-cy="area-instruments" className={`${!show && "hidden"}`}>
       <h2 className={"area-header"}>Instruments</h2>
       <InstrumentSearch onInstrumentSelected={(instrument) => onInstrumentSelected(instrument)} />
-      <InstrumentsEdit items={instrumentItems} />
+      <InstrumentsEdit items={instrumentItems} onDeleteClick={onDeleteInstrument} />
       <MainButton text="To Review" onClick={() => {}} />
     </div>
   )
