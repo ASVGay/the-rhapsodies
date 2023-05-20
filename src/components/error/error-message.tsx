@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface ErrorMsgProps {
+interface ErrorMessageProps {
     message?: string;
     dataCy: string
 }
-const ErrorMsg = (props: ErrorMsgProps) => {
+const ErrorMessage = (props: ErrorMessageProps) => {
     return (
         <span data-cy={props.dataCy} className={"text-xs text-red-600"}>
                 ⚠ {props.message}
@@ -12,4 +12,4 @@ const ErrorMsg = (props: ErrorMsgProps) => {
     );
 };
 
-export default ErrorMsg;
+export default ErrorMessage;

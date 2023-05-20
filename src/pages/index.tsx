@@ -3,7 +3,7 @@ import MainButton from "@/components/buttons/main-button"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
-import ErrorMsg from "@/components/error/error-msg";
+import ErrorMessage from "@/components/error/error-message";
 
 export default function Home() {
   const router = useRouter()
@@ -22,7 +22,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <MainButton text={"Log out"} onClick={() => signOut()} />
       {showError && (
-        <ErrorMsg dataCy={"log-out-btn"} message={"Can't log out right now."} />
+        <ErrorMessage dataCy={"log-out-btn"} message={"Can't log out right now."} />
       )}
     </main>
   )

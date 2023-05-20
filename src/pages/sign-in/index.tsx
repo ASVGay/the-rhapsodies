@@ -6,12 +6,11 @@ import MainButton from "@/components/buttons/main-button"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { AuthResponse } from "@supabase/gotrue-js"
-import ErrorMsg from "@/components/error/error-msg"
+import ErrorMessage from "@/components/error/error-message"
 import { FormDataItem } from "@/pages/change-password"
 import { useForm } from "react-hook-form"
 
 const Index = () => {
-  const [showErrorMsg, setShowErrorMsg] = useState<boolean>()
   const [errorPopupText, setErrorPopupText] = useState<string>("")
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
@@ -28,15 +27,11 @@ const Index = () => {
   const signInFormData: FormDataItem[] = [
     {
       tag: "email",
-      type: "text",
+      type: "email",
       placeholder: "Email",
       dataCy: "sign-in-email",
       validationOptions: {
         required: "Email is required",
-        pattern: {
-          value: /\S+@\S+\.\S+/,
-          message: "Entered value does not match email format",
-        },
       },
     },
     {
@@ -46,7 +41,6 @@ const Index = () => {
       dataCy: "sign-in-password",
       validationOptions: {
         required: "Password is required",
-        minLength: { value: 6, message: "Password should at least be 6 characters." },
       },
     },
   ]
@@ -56,7 +50,6 @@ const Index = () => {
       const { error } = response
       if (error) {
         setErrorPopupText(error.message)
-        setShowErrorMsg(true)
       } else {
         router.push("/")
       }
@@ -95,11 +88,11 @@ const Index = () => {
                 placeholder={placeholder}
                 dataCy={dataCy}
               />
-              {errors[tag] && <ErrorMsg dataCy={`${dataCy}-error`} message={errors[tag]?.message?.toString()} />}
+              {errors[tag] && <ErrorMessage dataCy={`${dataCy}-error`} message={errors[tag]?.message?.toString()} />}
             </div>
           )
         })}
-        {showErrorMsg && <ErrorMsg dataCy={"sign-in-err"} message={errorPopupText} />}
+        {errorPopupText !== "" && <ErrorMessage dataCy={"sign-in-err"} message={errorPopupText} />}
         <MainButton onClick={handleSubmit(signIn)} text={"Sign in"} dataCy={"sign-in-submit-btn"} />
       </div>
     </div>

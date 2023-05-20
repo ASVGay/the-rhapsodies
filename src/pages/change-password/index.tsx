@@ -6,7 +6,7 @@ import { Database } from "@/types/database"
 import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
 import { useRouter } from "next/router"
 import { RegisterOptions, useForm } from "react-hook-form"
-import ErrorMsg from "@/components/error/error-msg"
+import ErrorMsg from "@/components/error/error-message"
 import {ChangePasswordInputs, SignInInputs} from "@/types/form-types";
 
 export interface FormDataItem {
