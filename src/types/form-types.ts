@@ -1,3 +1,10 @@
+export type SignInInputs = {
+    email: string,
+    password: string,
+}
 
-export type SignInInputs = "email" | "password"
-export type ChangePasswordInputs = "userName" | "password" | "confirmPassword"
+export type ChangePasswordInputs = {
+    name: string,
+    password: string,
+    confirmPassword: string,
+};

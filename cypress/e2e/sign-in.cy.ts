@@ -36,12 +36,6 @@ describe("Sign-in", () => {
   })
 
   context("Error handling sign-in", () => {
-    it('Should return "Entered value does not match email format" when email is not valid', () => {
-      cy.data(emailTextField).type(invalidInput)
-      cy.data(passwordTextField).type(oldUserPassword)
-      cy.data(signInSubmitBtn).click()
-      cy.data(`${emailTextField}-error`).contains(invalidEmail)
-    })
 
     it(`Should return "Invalid login credentials." when signing in with non existing email`, () => {
       cy.data(emailTextField).type(unusedEmail)

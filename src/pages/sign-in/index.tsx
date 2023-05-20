@@ -7,8 +7,8 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
-import { FormDataItem } from "@/pages/change-password"
 import { useForm } from "react-hook-form"
+import {FormDataItem} from "@/interfaces/formdata";
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -49,6 +49,7 @@ const Index = () => {
     supabase.auth.signInWithPassword({ email, password }).then((response: AuthResponse) => {
       const { error } = response
       if (error) {
+        console.log(error)
         setErrorPopupText(error.message)
       } else {
         router.push("/")
