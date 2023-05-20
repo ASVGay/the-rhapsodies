@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import {setName, setNameAndFirstLoginFalse} from "@/services/authentication.service"
+import {setName} from "@/services/authentication.service"
 import { useRouter } from "next/router"
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form"
 import {FormDataItem} from "@/interfaces/formdata";
