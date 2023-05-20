@@ -15,13 +15,20 @@ interface InstrumentsEditItemProps {
 const InstrumentsEditItem = ({ instrumentItem, onDeleteClick }: InstrumentsEditItemProps) => {
   return (
     <li className="flex items-center justify-between p-4">
-      <div className="flex">
+      <div className="flex items-center">
         <Image
           src={instrumentItem.instrument.icon}
           alt={instrumentItem.instrument.instrumentName.toString()}
           className={"mr-4 h-8 w-8"}
         />
-        {instrumentItem.instrument.instrumentName}
+        <div className="flex flex-col items-start">
+          <p className="pl-2 font-bold">{instrumentItem.instrument.instrumentName}</p>
+          <input
+            className="w-full rounded pl-2 leading-tight text-gray-500 "
+            placeholder={"Set note"}
+          />
+          <div />
+        </div>
       </div>
       <button onClick={onDeleteClick} className="h-6 w-6">
         <TrashIcon className="mr-4 h-6 w-6 text-red-500 focus:text-red-900" />
