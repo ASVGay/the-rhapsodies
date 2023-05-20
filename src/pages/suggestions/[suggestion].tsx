@@ -85,9 +85,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
-            </Link>
+            <Link href={"/suggestions"}><XMarkIcon className={"h-8 w-8 text-zinc-400"} /></Link>
           </div>
 
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
@@ -101,9 +99,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
+            <p className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}>
               {suggestion.motivation}
             </p>
           </div>

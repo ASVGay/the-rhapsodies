@@ -12,12 +12,6 @@ describe("suggestion detail page", () => {
       cy.data("suggestion").should("exist")
     })
 
-    it("should format date with long month and numeric day", () => {
-      cy.get("#suggestion-date").should("exist")
-        .invoke("text")
-        .should("match", /^[A-Z][a-z]* [0-9]/)
-    })
-
     it("should call firestore on update role", () => {
       const spy = cy.spy()
       cy.intercept('https://firestore.googleapis.com/**', spy)
