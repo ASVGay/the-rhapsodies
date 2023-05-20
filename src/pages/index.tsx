@@ -1,9 +1,9 @@
-import { useState } from "react"
-import MainButton from "@/components/buttons/main-button"
+import React, { useState } from "react"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import ErrorMessage from "@/components/error/error-message";
+import { mainButtonStyles} from "@/components/buttons/button-styles";
 
 export default function Home() {
   const router = useRouter()
@@ -20,7 +20,11 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <MainButton text={"Log out"} onClick={() => signOut()} />
+      <button
+          className={mainButtonStyles}
+          onClick={() => signOut()}>
+        Sign out
+      </button>
       {showError && (
         <ErrorMessage dataCy={"log-out-btn"} message={"Can't log out right now."} />
       )}

@@ -1,5 +1,6 @@
-import MainButton from "@/components/buttons/main-button"
 import { useRouter } from "next/router"
+import React from "react";
+import {mainButtonStyles} from "@/components/buttons/button-styles";
 
 export default function Custom404() {
   const router = useRouter()
@@ -16,7 +17,11 @@ export default function Custom404() {
 
         <p className="mb-6 mt-4 text-gray-500">Something went wrong.</p>
 
-        <MainButton text={"Go back home"} onClick={() => router.push("/")} />
+        <button
+            className={mainButtonStyles}
+            onClick={() => router.push("/")}>
+          Go back home
+        </button>
       </div>
     </div>
   )

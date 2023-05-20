@@ -8,6 +8,7 @@ import {AuthResponse} from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form"
 import {FormDataItem} from "@/interfaces/formdata";
+import { mainButtonStyles} from "@/components/buttons/button-styles";
 
 const Index = () => {
     const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -49,7 +50,6 @@ const Index = () => {
         supabase.auth.signInWithPassword({email, password}).then((response: AuthResponse) => {
             const {error} = response
             if (error) {
-                console.log(error)
                 setErrorPopupText(error.message)
             } else {
                 router.push("/")
@@ -99,7 +99,7 @@ const Index = () => {
                         )
                     })}
                     <button
-                        className="rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300"
+                        className={mainButtonStyles}
                         type={"submit"}
                         data-cy={"sign-in-submit-btn"}
                     >

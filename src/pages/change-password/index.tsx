@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form"
 import {FormDataItem} from "@/interfaces/formdata";
 import ErrorMessage from "@/components/error/error-message";
+import {mainButton, mainButtonStyles} from "@/components/buttons/button-styles";
 
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
@@ -105,7 +106,7 @@ const Index = () => {
             }
           )}
           <button
-              className="rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300"
+              className={mainButtonStyles}
               data-cy={"submit-password-btn"}
           >
             Submit
