@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form"
 import {FormDataItem} from "@/interfaces/formdata";
 import ErrorMessage from "@/components/error/error-message";
-import {mainButton, mainButtonStyles} from "@/components/buttons/button-styles";
+import { mainButtonStyles} from "@/components/buttons/button-styles";
 
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
