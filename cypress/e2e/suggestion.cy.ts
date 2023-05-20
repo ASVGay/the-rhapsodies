@@ -1,4 +1,4 @@
-const suggestionId = Cypress.env("suggestion_id")
+const suggestionId = Cypress.env("CYPRESS_SUGGESTION_ID")
 
 describe("suggestion detail page", () => {
 
@@ -12,23 +12,16 @@ describe("suggestion detail page", () => {
       cy.data("suggestion").should("exist")
     })
 
-    it("should call firestore on update role", () => {
-      const spy = cy.spy()
-      cy.intercept('https://firestore.googleapis.com/**', spy)
-      cy.wait(2000)
-        .then(() => expect(spy).to.have.been.called)
-    })
-
   })
 
   context("suggestion doesn't exists", () => {
     before(() => {
       cy.login()
-      cy.visit("/suggestions/non-existing-id")
     })
 
     it("should display 404 page", () => {
-      cy.data("404-page").should("be.visible")
+      cy.request({ url: "/suggestions/non-existing-id", failOnStatusCode: false })
+        .its("status").should("equal", 404)
     })
 
   })

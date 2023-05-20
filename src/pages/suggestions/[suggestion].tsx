@@ -75,7 +75,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   return (
     <>
       {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"}>
+        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
@@ -158,11 +158,13 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createServerSupabaseClient(context)
   const { params } = context
-  let { data, error } = await getSuggestion(supabase, params?.suggestion as string)
-
-  return error
-    ? { notFound: true }
-    : { props: { suggestion: data } }
+  try {
+    let { data} = await getSuggestion(supabase, params?.suggestion as string)
+    if (data == null) return {notFound: true}
+    return { props: { suggestion: data } }
+  } catch {
+    return { notFound: true }
+  }
 }
 
 export default SuggestionPage

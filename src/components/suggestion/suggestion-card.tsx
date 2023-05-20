@@ -12,7 +12,6 @@ interface SuggestionCardProps {
 }
 
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
-  const supabaseClient = useSupabaseClient<Database>()
   return (
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
