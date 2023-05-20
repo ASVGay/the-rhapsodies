@@ -1,6 +1,6 @@
 import { useState } from "react"
 import MainButton from "@/components/buttons/main-button"
-import ErrorPopup from "@/components/popups/error-popup"
+import ErrorPopup from "@/components/utils/error-popup"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
