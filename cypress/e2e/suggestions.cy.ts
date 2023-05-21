@@ -19,8 +19,8 @@ describe("suggestions page", () => {
     })
 
     it("should contain the right id in the url when clicking a suggestion", () => {
-      const t = cy.data("suggestion-card").first()
-      t.invoke("attr", "href")
+      cy.data("suggestion-card").first()
+        .invoke("attr", "href")
         .then(href => {
           const id = href.split("/suggestions/")[1]
           cy.data("suggestion-card").first().click()

@@ -19,6 +19,7 @@ describe("suggestion detail page", () => {
         cy.data("division").first().click().should(`${criteria ? "not." : ""}contain.text`, username)
       })
     })
+
   })
 
   context("suggestion doesn't exists", () => {
