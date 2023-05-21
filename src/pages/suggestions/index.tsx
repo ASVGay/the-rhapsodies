@@ -5,33 +5,39 @@ import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { Suggestion } from "@/types/database-types"
+import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline"
+import Spinner from "@/components/utils/spinner"
+import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 
 const Suggestions: FC = () => {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(true)
-  const [suggestions, setSuggestions] = useState<Suggestion[]>()
   const supabaseClient = useSupabaseClient<Database>()
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
+  const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
 
   useEffect(() => {
-    const fetchSuggestions = async () => {
-      const { data, error } = await getSuggestions(supabaseClient)
-      if (error) throw error
-      if (data) {
-        const dataSuggestions = data as Suggestion[]
-        setSuggestions(dataSuggestions)
-      }
-      setIsLoading(false)
-    }
+    setShowSpinner(true)
+    getSuggestions(supabaseClient)
+      .then((response) => {
+        if (response.error) {
+          setShowLoadingError(true)
+          return
+        }
 
-    // TODO Implement error handling
-    fetchSuggestions().catch(console.error)
+        response.data?.length! > 0
+          ? setSuggestions(response.data as Suggestion[])
+          : setNoSuggestionsMade(true)
+      })
+      .catch(() => {
+        setShowLoadingError(true)
+      })
+      .finally(() => {
+        setShowSpinner(false)
+      })
   }, [supabaseClient])
-
-  // TODO Show loader when loading
-  if (isLoading) {
-    return <p>Loading...</p>
-  }
 
   return (
     <div className={"page-wrapper"}>
@@ -44,12 +50,40 @@ const Suggestions: FC = () => {
         />
       </div>
 
-      <div className={"flex flex-wrap justify-center gap-6"}>
-        {/* TODO If no suggestions are found, show that to the user */}
-        {suggestions?.map((suggestion) => (
-          <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-        ))}
-      </div>
+      {showSpinner && (
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+          <Spinner size={10} />
+        </div>
+      )}
+
+      {suggestions && (
+        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
+          {suggestions.map((suggestion) => (
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+          ))}
+        </div>
+      )}
+
+      {showLoadingError && (
+        <div className={"mt-6"} data-cy="failed-fetching-suggestions">
+          <ErrorPopup
+            text={"Failed to load suggestions."}
+            closePopup={() => setShowLoadingError(false)}
+          />
+        </div>
+      )}
+
+      {noSuggestionsMade && (
+        <div
+          className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
+          data-cy="no-suggestions-made"
+        >
+          <div>
+            <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
+          </div>
+          <p>Looks like there are no suggestions made yet! Feel free to start adding them.</p>
+        </div>
+      )}
     </div>
   )
 }

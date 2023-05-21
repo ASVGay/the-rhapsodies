@@ -113,7 +113,9 @@ const Index = () => {
             <button className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
-            {errorMessage !== "" && <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />}
+            {errorMessage !== "" && (
+              <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
+            )}
           </form>
         </div>
       </div>

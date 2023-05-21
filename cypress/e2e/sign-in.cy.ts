@@ -34,7 +34,6 @@ describe("Sign-in", () => {
   })
 
   context("Error handling sign-in", () => {
-
     it(`Should return "Invalid login credentials." when signing in with non existing email`, () => {
       cy.data(emailTextField).type(unusedEmail)
       cy.data(passwordTextField).type(oldUserPassword)
