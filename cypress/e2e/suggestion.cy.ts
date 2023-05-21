@@ -14,12 +14,14 @@ describe("suggestion detail page", () => {
     })
 
     it("should add or remove username from division", () => {
+      cy.intercept('GET', "/rest/v1/suggestion*").as('updateSuggestion')
       cy.data("division").first().then((division) => {
         const criteria = division.text().includes(username)
-        cy.data("division").first().click()
-        criteria
-          ? cy.data("division").first().should(`not.contain.text`, username)
-          : cy.data("division").first().should(`contain.text`, username)
+        cy.data("division").first().click().wait("@updateSuggestion").then(() => {
+          criteria
+            ? cy.data("division").first().should(`not.contain.text`, username)
+            : cy.data("division").first().should(`contain.text`, username)
+        })
       })
     })
 
