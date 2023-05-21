@@ -21,13 +21,13 @@
         @apply py-2 text-base;
     }
 
-  .btn {
-     @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300
-   }
+    .btn {
+        @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300
+    }
 
-  .page-wrapper {
-    @apply mx-auto px-4 pt-6;
-  }
+    .page-wrapper {
+        @apply mx-auto px-4 pt-6;
+    }
 
     .page-header {
         @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
@@ -42,8 +42,16 @@
     }
 
 
+    .input-container {
+        @apply mb-6 text-left;
+    }
+
+    .input-container span {
+        @apply ml-1
+    }
+
     .input {
-        @apply relative mb-6
+        @apply relative
     }
 
     .input input {

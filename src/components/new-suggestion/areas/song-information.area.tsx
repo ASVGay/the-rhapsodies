@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
+import ErrorMessage from "@/components/error/error-message"
 
 interface Inputs {
   artist: string
@@ -41,7 +42,7 @@ const SongInformationArea = () => {
       <h2 className={"area-header"}>Song information</h2>
 
       <form className={"mx-auto sm:w-4/5 lg:w-full"} onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className={"input-container"}>
           <label htmlFor="title" className="sr-only">
             Title
           </label>
@@ -60,9 +61,15 @@ const SongInformationArea = () => {
               <DocumentTextIcon />
             </span>
           </div>
+          {errors.title && (
+            <ErrorMessage
+              dataCy={"input-title-error"}
+              message={"A title is required for a suggestion."}
+            />
+          )}
         </div>
 
-        <div>
+        <div className={"input-container"}>
           <label htmlFor="artist" className="sr-only">
             Artist(s)
           </label>
@@ -81,9 +88,15 @@ const SongInformationArea = () => {
               <UserIcon />
             </span>
           </div>
+          {errors.artist && (
+            <ErrorMessage
+              dataCy={"input-artist-error"}
+              message={"One or more artists are required for a suggestion."}
+            />
+          )}
         </div>
 
-        <div>
+        <div className={"input-container"}>
           <label htmlFor="link" className="sr-only">
             Link to the song (optional)
           </label>
@@ -96,14 +109,14 @@ const SongInformationArea = () => {
           </div>
         </div>
 
-        <div>
+        <div className={"input-container"}>
           <label htmlFor="link" className="sr-only">
             Explain why you would like to play this song with The Rhapsodies.
           </label>
 
           <div>
             <textarea
-              className="mb-6 w-full rounded-lg border border-gray-200 p-3 shadow-sm"
+              className="w-full rounded-lg border border-gray-200 p-3 shadow-sm"
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies."
               {...register("motivation", {
@@ -113,9 +126,15 @@ const SongInformationArea = () => {
               })}
             />
           </div>
+          {errors.motivation && (
+            <ErrorMessage
+              dataCy={"input-motivation-error"}
+              message={"A motivation for this suggestion is required"}
+            />
+          )}
         </div>
 
-        <button type="submit" className="btn">
+        <button type="submit" className="btn" onClick={() => console.log(errors)}>
           Add instruments
         </button>
       </form>
