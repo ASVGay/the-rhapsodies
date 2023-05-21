@@ -10,7 +10,7 @@ import { useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
-import { ToastContainer } from "react-toastify"
+import { Slide, ToastContainer } from "react-toastify"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -209,7 +209,12 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Layout>
               <Component {...pageProps} />
             </Layout>
-            <ToastContainer />
+            <ToastContainer
+              newestOnTop
+              bodyClassName={`${lexend.variable} font-sans`}
+              toastClassName="rounded-lg"
+              transition={Slide}
+            />
           </main>
         </SessionContextProvider>
       </Provider>

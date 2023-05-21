@@ -5,6 +5,11 @@ import { Area } from "@/constants/area"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
+import { toast } from "react-toastify"
+
+function showSongInformationError() {
+  toast.warn("You need to fill in all the required fields before continuing")
+}
 
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
@@ -28,20 +33,14 @@ const ProgressBar = () => {
 
   function goToInstruments() {
     triggerSongInformationSubmit()
-    if (songInformationIsInvalid()) {
-      alert("You haven't filled in all fields yet!")
-    } else {
-      dispatch(setActiveArea(Area.Instruments))
-    }
+    if (songInformationIsInvalid()) showSongInformationError()
+    else dispatch(setActiveArea(Area.Instruments))
   }
 
   function goToReview() {
     triggerSongInformationSubmit()
-    if (songInformationIsInvalid()) {
-      alert("You haven't filled in all fields yet!")
-    } else {
-      dispatch(setActiveArea(Area.Review))
-    }
+    if (songInformationIsInvalid()) showSongInformationError()
+    else dispatch(setActiveArea(Area.Review))
   }
 
   return (
