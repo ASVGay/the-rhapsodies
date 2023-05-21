@@ -3,7 +3,7 @@ describe("suggestions page", () => {
   context("load suggestions", () => {
     beforeEach(() => {
       cy.login()
-      cy.visit(`/suggestions`)
+      cy.visit("/suggestions")
     })
 
     it("should have suggestions", () => {
@@ -26,6 +26,45 @@ describe("suggestions page", () => {
           cy.data("suggestion-card").first().click()
           cy.location().should((loc) => expect(loc.href).to.contains(id))
         })
+    })
+
+  })
+
+  context("suggestions fetching edge cases", () => {
+    beforeEach(() => {
+      cy.login()
+      cy.visit("/suggestions")
+    })
+
+    it("should display no suggestions message", () => {
+      cy.intercept("/rest/v1/suggestion*", [])
+      cy.data("no-suggestions-made").should("be.visible")
+    })
+
+    it("should display get suggestions error", () => {
+      cy.intercept({ method: "GET", url: "/rest/v1/suggestion*" }, { forceNetworkError: true })
+      cy.data("failed-fetching-suggestions").should("be.visible")
+    })
+
+  })
+
+  context("spinner", () => {
+    beforeEach(() => {
+      cy.login()
+      cy.visit("/suggestions")
+    })
+
+    it("should display spinner", () => {
+      cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
+      cy.wait('@getSuggestions')
+      cy.data("suggestions-spinner").should("exist")
+    })
+
+    it("shouldn't display spinner", () => {
+      cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
+      cy.wait('@getSuggestions').then(() => {
+        cy.data("suggestions-spinner").should("not.exist")
+      })
     })
 
   })

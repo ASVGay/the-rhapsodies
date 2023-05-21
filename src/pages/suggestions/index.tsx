@@ -63,7 +63,7 @@ const Suggestions: FC = () => {
       )}
 
       {showLoadingError && (
-        <div className={"mt-6"}>
+        <div className={"mt-6"} data-cy="failed-fetching-suggestions">
           <ErrorPopup
             text={"Failed to load suggestions."}
             closePopup={() => setShowLoadingError(false)}
@@ -72,7 +72,7 @@ const Suggestions: FC = () => {
       )}
 
       {noSuggestionsMade && (
-        <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}>
+        <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"} data-cy="no-suggestions-made">
           <div><MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} /></div>
           <p>Looks like there are no suggestions made yet! Feel free to start adding them.</p>
         </div>
