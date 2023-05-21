@@ -51,7 +51,7 @@ const Suggestions: FC = () => {
       </div>
 
       {showSpinner && (
-        <div className={"text-center"} data-cy="suggestions-spinner">
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
           <Spinner size={10} />
         </div>
       )}
@@ -74,8 +74,13 @@ const Suggestions: FC = () => {
       )}
 
       {noSuggestionsMade && (
-        <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"} data-cy="no-suggestions-made">
-          <div><MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} /></div>
+        <div
+          className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
+          data-cy="no-suggestions-made"
+        >
+          <div>
+            <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
+          </div>
           <p>Looks like there are no suggestions made yet! Feel free to start adding them.</p>
         </div>
       )}
