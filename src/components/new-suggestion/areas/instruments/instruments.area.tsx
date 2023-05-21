@@ -1,15 +1,12 @@
-import MainButton from "@/components/buttons/main-button"
+import React, { useState } from "react"
+import { InstrumentItem } from "./edit/instruments-edit-item"
+import InstrumentsEdit from "./edit/instruments-edit"
 import InstrumentSearch from "@/components/search/instrument/instrument-search"
 import { Instrument } from "@/constants/instruments"
-import React, { useState } from "react"
-import InstrumentsEdit from "./edit/instruments-edit"
-import { InstrumentItem } from "./edit/instruments-edit-item"
 
-interface InstrumentsAreaProps {
-  show: boolean
-}
+interface InstrumentsAreaProps {}
 
-const InstrumentsArea = ({ show }: InstrumentsAreaProps) => {
+const InstrumentsArea = ({}: InstrumentsAreaProps) => {
   const [instrumentItems, setInstrumentItems] = useState<InstrumentItem[]>([])
 
   const onInstrumentSelected = (instrument: Instrument): boolean => {
@@ -29,11 +26,15 @@ const InstrumentsArea = ({ show }: InstrumentsAreaProps) => {
   }
 
   return (
-    <div data-cy="area-instruments" className={`${!show && "hidden"}`}>
+    <div data-cy="area-instruments">
       <h2 className={"area-header"}>Instruments</h2>
-      <InstrumentSearch onInstrumentSelected={(instrument) => onInstrumentSelected(instrument)} />
+      <InstrumentSearch
+        onInstrumentSelected={(instrument: Instrument) => onInstrumentSelected(instrument)}
+      />
       <InstrumentsEdit items={instrumentItems} onDeleteClick={onDeleteInstrument} />
-      <MainButton text="To Review" onClick={() => {}} />
+      <button className="btn" onClick={() => {}}>
+        To Review
+      </button>
     </div>
   )
 }

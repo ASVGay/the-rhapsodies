@@ -4,10 +4,10 @@ interface SpinnerProps {
 
 const Spinner = ({ size }: SpinnerProps) => {
   return (
-    <div role="status">
+    <div role="status" className={"flex h-full flex-col items-center justify-center"}>
       <svg
         aria-hidden="true"
-        className={`inline w-${size} h-${size} mr-2 animate-spin fill-amber-400 text-gray-200 dark:text-gray-600`}
+        className={`inline w-${size} h-${size} animate-spin fill-amber-400 text-gray-200`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

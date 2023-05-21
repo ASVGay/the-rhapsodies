@@ -20,7 +20,7 @@ import {
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import ErrorPopup from "@/components/utils/error-popup"
+import ErrorPopup from "@/components/popups/error-popup"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -137,7 +137,9 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                         <p>{instrument.instrument_name}</p>
                         <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
                         {division.length > 0 && (
-                          <div className={`font-bold`}>{formatUsernames(division)}</div>
+                          <div className={`font-bold`} data-cy="division">
+                            {formatUsernames(division)}
+                          </div>
                         )}
                       </div>
                     </div>

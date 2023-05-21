@@ -1,4 +1,5 @@
 const suggestionId = Cypress.env("CYPRESS_SUGGESTION_ID")
+const username = Cypress.env("CYPRESS_USERNAME_OLD")
 
 describe("suggestion detail page", () => {
   context("suggestion exists", () => {
@@ -10,9 +11,27 @@ describe("suggestion detail page", () => {
     it("should contain a suggestion", () => {
       cy.data("suggestion").should("exist")
     })
+
+    it("should add or remove username from division", () => {
+      cy.intercept("GET", "/rest/v1/suggestion*").as("updateSuggestion")
+      cy.data("division")
+        .first()
+        .then((division) => {
+          const criteria = division.text().includes(username)
+          cy.data("division")
+            .first()
+            .click()
+            .wait("@updateSuggestion")
+            .then(() => {
+              criteria
+                ? cy.data("division").first().should(`not.contain.text`, username)
+                : cy.data("division").first().should(`contain.text`, username)
+            })
+        })
+    })
   })
 
-  context("suggestion doesn't exists", () => {
+  context("suggestion doesn't exist", () => {
     before(() => {
       cy.login()
     })

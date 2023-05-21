@@ -5,48 +5,58 @@ import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { Suggestion } from "@/types/database-types"
-import { useRouter } from "next/router"
-import ErrorPopup from "@/components/utils/error-popup"
 import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
+import ErrorPopup from "@/components/popups/error-popup"
+import { useRouter } from "next/router"
 
 const Suggestions: FC = () => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-  const [showSpinner, setShowSpinner] = useState<boolean>(true)
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
   const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
 
   useEffect(() => {
+    setShowSpinner(true)
     getSuggestions(supabaseClient)
       .then((response) => {
-        response.data ? setSuggestions(response.data as Suggestion[]) : setShowLoadingError(true)
+        if (response.error) {
+          setShowLoadingError(true)
+          return
+        }
+
+        response.data?.length! > 0
+          ? setSuggestions(response.data as Suggestion[])
+          : setNoSuggestionsMade(true)
       })
-      .catch(() => setShowLoadingError(true))
+      .catch(() => {
+        setShowLoadingError(true)
+      })
       .finally(() => {
         setShowSpinner(false)
       })
   }, [supabaseClient])
 
-  useEffect(() => {
-    setNoSuggestionsMade(suggestions.length === 0)
-  }, [suggestions])
-
   return (
     <div className={"page-wrapper"}>
-      <div className={"flex justify-between pb-6"}>
-        <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
-        <div>
-          <PlusIcon className={"h-8 w-8 text-black"} onClick={() => {}} />
-        </div>
+      <div className={"flex justify-between"}>
+        <div className={"page-header"}>Suggestions</div>
+        <PlusIcon
+          data-cy={"button-new-suggestion"}
+          className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+          onClick={() => router.push("/suggestions/new")}
+        />
       </div>
 
-      {showSpinner ? (
-        <div className={"text-center"} data-cy="suggestions-spinner">
+      {showSpinner && (
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
           <Spinner size={10} />
         </div>
-      ) : (
+      )}
+
+      {suggestions && (
         <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
           {suggestions.map((suggestion) => (
             <SuggestionCard key={suggestion.id} suggestion={suggestion} />
@@ -55,7 +65,7 @@ const Suggestions: FC = () => {
       )}
 
       {showLoadingError && (
-        <div className={"mt-6"}>
+        <div className={"mt-6"} data-cy="failed-fetching-suggestions">
           <ErrorPopup
             text={"Failed to load suggestions."}
             closePopup={() => setShowLoadingError(false)}
@@ -64,7 +74,10 @@ const Suggestions: FC = () => {
       )}
 
       {noSuggestionsMade && (
-        <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}>
+        <div
+          className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
+          data-cy="no-suggestions-made"
+        >
           <div>
             <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
           </div>

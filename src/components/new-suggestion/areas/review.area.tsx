@@ -1,12 +1,8 @@
 import React from "react"
 
-interface ReviewAreaProps {
-  show: boolean
-}
-
-const ReviewArea = ({ show }: ReviewAreaProps) => {
+const ReviewArea = () => {
   return (
-    <div data-cy="area-review" className={`${!show && "hidden"}`}>
+    <div data-cy="area-review">
       <h2 className={"area-header"}>Review</h2>
     </div>
   )
