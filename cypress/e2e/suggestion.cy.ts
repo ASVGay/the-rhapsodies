@@ -16,7 +16,8 @@ describe("suggestion detail page", () => {
     it("should add or remove username from division", () => {
       cy.data("division").first().then((division) => {
         const criteria = division.text().includes(username)
-        cy.data("division").first().click().should(`${criteria ? "not." : ""}contain.text`, username)
+        cy.data("division").first().click()
+        cy.data("division").first().should(`${criteria ? "not." : ""}contain.text`, username)
       })
     })
 
