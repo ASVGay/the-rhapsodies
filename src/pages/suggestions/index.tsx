@@ -41,11 +41,13 @@ const Suggestions: FC = () => {
 
   return (
     <div className={"page-wrapper"}>
-      <div className={"flex justify-between pb-6"}>
-        <div className={"text-2xl font-semibold leading-8"}>Suggestions</div>
-        <div>
-          <PlusIcon className={"h-8 w-8 text-black"} onClick={() => router.push("/suggestions/new")} />
-        </div>
+      <div className={"flex justify-between"}>
+        <div className={"page-header"}>Suggestions</div>
+        <PlusIcon
+          data-cy={"button-new-suggestion"}
+          className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+          onClick={() => router.push("/suggestions/new")}
+        />
       </div>
 
       {showSpinner && (
