@@ -11,5 +11,11 @@ describe("Home Page", () => {
       cy.visit("/")
       cy.location("pathname").should("equal", "/")
     })
+
+    it("should go to /change-password if logged in as new", () => {
+      cy.login(true)
+      cy.visit("/")
+      cy.location("pathname").should("equal", "/change-password")
+    })
   })
 })

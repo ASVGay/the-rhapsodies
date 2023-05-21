@@ -1,12 +1,14 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
-import { Instruments } from "@/constants/instruments"
-import { ISuggestion } from "@/interfaces/suggestion"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
+import { Suggestion } from "@/types/database-types"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { getInstrumentImage } from "@/services/suggestion.service"
 
 interface SuggestionCardProps {
-  suggestion: ISuggestion
+  suggestion: Suggestion
 }
 
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
@@ -14,6 +16,7 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
+      data-cy="suggestion-card"
     >
       <div className={"flex items-start p-3"}>
         <div className={"mb-auto mt-auto flex"}>
@@ -21,25 +24,28 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         </div>
         <span className={"pl-3"}>
           <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-          <p className={"line-clamp-1"}>{suggestion.artists.join(", ")}</p>
+          <p className={"line-clamp-1"}>{suggestion.artist?.join(", ")}</p>
           <p className={"line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}>
             {suggestion.motivation}
           </p>
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        <ProgressionBar roles={suggestion.roles} />
+        {suggestion.suggestion_instruments && (
+          <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
+        )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
-            {suggestion.roles.map((role, index) => {
+            {suggestion.suggestion_instruments?.map((suggestion_instrument) => {
+              const { instrument, division } = suggestion_instrument
               return (
                 <Image
-                  key={index}
-                  src={Instruments[role.instrument].icon}
-                  alt={role.instrument.toString()}
+                  key={suggestion_instrument.id}
+                  src={getInstrumentImage(instrument.image_source)}
+                  alt={instrument.instrument_name}
                   width={24}
                   height={24}
-                  className={role.filledBy?.length ? "" : "opacity-30"}
+                  className={division.length == 0 ? "opacity-30" : ""}
                 />
               )
             })}

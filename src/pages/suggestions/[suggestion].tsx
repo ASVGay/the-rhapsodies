@@ -3,61 +3,72 @@ import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
-import { Instruments } from "@/constants/instruments"
-import { ISuggestion } from "@/interfaces/suggestion"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
-import { GetStaticPaths, GetStaticProps } from "next"
-import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
-import { useAuthContext } from "@/context/auth-context"
-import { IUser } from "@/interfaces/user"
+import { GetServerSideProps } from "next"
+import {
+  deleteDivision,
+  getInstrumentImage,
+  getSuggestion,
+  insertDivision,
+} from "@/services/suggestion.service"
+import { formatDistanceToNow } from "date-fns"
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import {
+  Division,
+  DivisionDatabaseOperation,
+  Suggestion,
+  SuggestionInstrument,
+} from "@/types/database-types"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import ErrorPopup from "@/components/utils/error-popup"
 
 interface SuggestionProps {
-  props: ISuggestion
+  suggestion: Suggestion
 }
 
-const Suggestion: FC<SuggestionProps> = ({ props }) => {
-  const [suggestion, setSuggestion] = useState<ISuggestion>(props)
-  const { user } = useAuthContext()
-  const username = user?.additionalUserData.username as string
+const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
+  const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
+  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const user = useUser()
+  const supabase = useSupabaseClient<Database>()
+  const uid = user?.id
 
-  const setDate = (): string => {
-    return new Date(suggestion?.date.seconds).toLocaleDateString("en-us", {
-      month: "long",
-      day: "numeric",
-    })
+  const updateSuggestion = () => {
+    getSuggestion(supabase, suggestion.id)
+      .then((response) => {
+        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
+      })
+      .catch(() => setShowUpdateError(true))
   }
 
-  const selectInstrument = (index: number) => {
-    if (
-      suggestion.roles
-        .at(index)
-        ?.filledBy?.map((u) => u.name)
-        .includes(username)
-    ) {
-      suggestion.roles.at(index)?.filledBy?.splice(
-        suggestion.roles
-          .at(index)
-          ?.filledBy?.map((u) => u.name)
-          .indexOf(username) as number,
-        1
-      )
-    } else {
-      suggestion.roles.at(index)?.filledBy?.push({ name: username, id: user?.user.uid! })
+  const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
+    if (!uid) return
+
+    const division: DivisionDatabaseOperation = {
+      musician: uid,
+      suggestion_instrument_id: suggestionInstrument.id,
     }
 
-    updateSuggestion(suggestion)
-      .then((data) => setSuggestion(data))
-      .catch((error) => {
-        // TODO Implement proper error handling
-        console.error(error)
+    // TODO implement error handling and loading (so that users cant click when updating division)
+    const exists = suggestionInstrument.division.some(({ musician }) => musician.id === uid)
+    if (exists) {
+      deleteDivision(supabase, division).then(({ error }) => {
+        if (error) alert(error.message)
+        updateSuggestion()
       })
+    } else {
+      insertDivision(supabase, division).then(({ error }) => {
+        if (error) alert(error.message)
+        updateSuggestion()
+      })
+    }
   }
 
-  const formatUsernames = (usernames: IUser[]) => {
-    return usernames.map((u, index) => (
-      <span key={u.id} className={u.name == username ? "text-moon-500" : "text-zinc-400"}>
-        {u.name}
-        {index != usernames.length - 1 && ", "}
+  const formatUsernames = (divisions: Division[]) => {
+    return divisions.map(({ musician }, index) => (
+      <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
+        {musician.display_name}
+        {index != divisions.length - 1 && ", "}
       </span>
     ))
   }
@@ -65,16 +76,18 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
   return (
     <>
       {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"}>
+        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
-                <b>Suggestion</b> by {suggestion.user.name}
+                <b>Suggestion</b> by {(suggestion.author as { display_name: string }).display_name}
               </p>
-              <p className={"text-sm font-medium leading-4 text-zinc-200"}>Posted on {setDate()}</p>
+              <p className={"text-sm font-medium leading-4 text-zinc-200"}>
+                Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
+              </p>
             </div>
             <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 h-8 text-zinc-400"} />
+              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
             </Link>
           </div>
 
@@ -86,7 +99,7 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-                <p className={"line-clamp-1"}>{suggestion.artists.join(", ")}</p>
+                <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
               </div>
             </div>
             <p
@@ -99,56 +112,65 @@ const Suggestion: FC<SuggestionProps> = ({ props }) => {
           <div className={"flex-col items-center md:flex"}>
             <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar roles={suggestion.roles} />
+              <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.roles.map((role, index) => {
-                const instrument = Instruments[role.instrument]
-                return (
-                  <div
-                    key={index}
-                    className={"flex cursor-pointer "}
-                    onClick={() => selectInstrument(index)}
-                  >
-                    <Image
-                      src={instrument.icon}
-                      alt={role.instrument.toString()}
-                      className={`${role.filledBy?.length ? "" : "opacity-30"} mr-4 h-10 w-10`}
-                    />
-                    <div>
-                      <p>{instrument.instrumentName}</p>
-                      <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{role.note}</p>
-                      {role.filledBy?.length! > 0 && (
-                        <li className={`ml-8 font-bold leading-5 text-zinc-400`}>
-                          {formatUsernames(role.filledBy)}
-                        </li>
-                      )}
+              {suggestion.suggestion_instruments.map(
+                (suggestionInstrument: SuggestionInstrument) => {
+                  const { instrument, division, id, description } = suggestionInstrument
+                  return (
+                    <div
+                      key={id}
+                      className={"flex cursor-pointer select-none"}
+                      onClick={() => selectInstrument(suggestionInstrument)}
+                    >
+                      <Image
+                        src={getInstrumentImage(instrument.image_source)}
+                        alt={instrument.instrument_name.toString()}
+                        width={64}
+                        height={64}
+                        className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
+                        draggable={"false"}
+                      />
+                      <div>
+                        <p>{instrument.instrument_name}</p>
+                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
+                        {division.length > 0 && (
+                          <div className={`font-bold`}>{formatUsernames(division)}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                }
+              )}
             </div>
           </div>
+
+          {showUpdateError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to add or remove user to instrument."}
+                closePopup={() => setShowUpdateError(false)}
+              />
+            </div>
+          )}
         </div>
       )}
     </>
   )
 }
 
-export const getStaticPaths: GetStaticPaths<{ suggestion: string }> = async () => {
-  return {
-    paths: [],
-    fallback: false,
-  }
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseClient(context)
   const { params } = context
-  let suggestion = await getSuggestion(params?.suggestion as string)
-  return {
-    props: { props: suggestion },
+  try {
+    let { data } = await getSuggestion(supabase, params?.suggestion as string)
+    if (data == null) return { notFound: true }
+    return { props: { suggestion: data } }
+  } catch {
+    return { notFound: true }
   }
 }
 
-export default WithProtectedRoute(Suggestion)
+export default SuggestionPage

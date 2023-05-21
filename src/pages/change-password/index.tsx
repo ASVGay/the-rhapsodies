@@ -1,43 +1,36 @@
 import React, { useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
-import { useAuthContext } from "@/context/auth-context"
-import ErrorPopup from "@/components/popups/error-popup"
-import { mapAuthErrorCodeToErrorMessage } from "@/helpers/sign-in.helper"
-import { FirebaseError } from "@firebase/util"
-import WithProtectedRoute from "@/components/protected-route/protected-route"
-import { changePassword, signOutUser, updateName } from "@/services/authentication.service"
-import { ErrorCodes } from "@/constants/error-codes"
+import ErrorPopup from "@/components/utils/error-popup"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
+import { useRouter } from "next/router"
 
 const Index = () => {
+  // TODO Use react-hook-form for this for cleaner code
+  const supabase = useSupabaseClient<Database>()
+  const user = useUser()
   const [password, setPassword] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>()
   const [errorText, setErrorText] = useState<string>("")
   const [showErrorText, setShowErrorText] = useState<boolean>(false)
-  const { user } = useAuthContext()
+  const router = useRouter()
 
   const setError = (errorText: string) => {
     setErrorText(errorText)
     setShowErrorText(true)
   }
 
-  const handleFireBaseError = (err: FirebaseError) => {
-    setErrorText(mapAuthErrorCodeToErrorMessage(err.code))
-    if (err.code === ErrorCodes.REQUIRE_RECENT_LOGIN) {
-      setTimeout(async () => {
-        await signOutUser()
-      }, 5000)
-    }
-    setShowErrorText(true)
-  }
-  const submitNewPassword = () => {
+  const submitNewPassword = async () => {
     if (!password) {
       setError("Please enter a password.")
       return
     }
 
-    if (!user) {
+    if (password.length < 6) {
+      setError("Password should at least be 6 characters.")
       return
     }
 
@@ -48,19 +41,26 @@ const Index = () => {
 
     if (name.length < 1) {
       setError("Please fill in a name.")
+      return
     }
 
-    changePassword(password, user.user)
-      .then(() => {
-        updateName(name, user.user).catch((error) => {
-          const err = error as FirebaseError
-          handleFireBaseError(err)
-        })
-      })
-      .catch((error) => {
-        const err = error as FirebaseError
-        handleFireBaseError(err)
-      })
+    if (user) {
+      const { data, error } = await supabase.auth.updateUser({ password })
+      if (error) {
+        // TODO Alert that change password failed, try again
+        setError(error.message)
+      } else if (data) {
+        setNameAndFirstLoginFalse(supabase, user.id, name)
+          .then((response) => {
+            const { error } = response
+            // TODO Error handling
+            if (error) {
+              setError(error.message)
+            } else router.push("/")
+          })
+          .catch((error) => setError(error.message))
+      }
+    }
   }
 
   return (
@@ -71,21 +71,19 @@ const Index = () => {
             "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
           }
         >
-          {user?.additionalUserData.isFirstLogin && (
-            <div className={"flex w-full flex-col justify-center gap-6"}>
-              <span className={"w-fit font-semibold leading-8 text-black"}>
-                In order to access the application you need to change your password and set your
-                username.
-              </span>
+          <div className={"flex w-full flex-col justify-center gap-6"}>
+            <span className={"w-fit font-semibold leading-8 text-black"}>
+              In order to access the application you need to change your password and set your
+              username.
+            </span>
 
-              <SignInTextField
-                dataCy={"set-name-textfield"}
-                placeholder={"Username"}
-                type={"text"}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-              />
-            </div>
-          )}
+            <SignInTextField
+              dataCy={"set-name-textfield"}
+              placeholder={"Username"}
+              type={"text"}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            />
+          </div>
 
           <div className="w-full">
             <SignInTextField
@@ -119,4 +117,4 @@ const Index = () => {
   )
 }
 
-export default WithProtectedRoute(Index)
+export default Index

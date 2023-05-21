@@ -31,7 +31,7 @@ describe("navigation components", () => {
   })
 
   context("when logged in", () => {
-    before(() => {
+    beforeEach(() => {
       cy.login()
     })
 
