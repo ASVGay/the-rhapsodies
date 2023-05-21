@@ -8,7 +8,7 @@ import {
   deleteDivision,
   getInstrumentImage,
   getSuggestion,
-  insertDivision,
+  insertDivision
 } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
@@ -16,7 +16,7 @@ import {
   Division,
   DivisionDatabaseOperation,
   Suggestion,
-  SuggestionInstrument,
+  SuggestionInstrument
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -46,7 +46,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      suggestion_instrument_id: suggestionInstrument.id,
+      suggestion_instrument_id: suggestionInstrument.id
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
@@ -137,7 +137,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                         <p>{instrument.instrument_name}</p>
                         <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
                         {division.length > 0 && (
-                          <div className={`font-bold`}>{formatUsernames(division)}</div>
+                          <div className={`font-bold`} data-cy="division">{formatUsernames(division)}</div>
                         )}
                       </div>
                     </div>
