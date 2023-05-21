@@ -2,12 +2,13 @@ import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { Lexend } from "next/font/google"
-import { wrapper } from "@/store/store"
 import Layout from "@/components/layout/layout"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import { useState } from "react"
 import { Database } from "@/types/database"
+import { Provider } from "react-redux"
+import store from "@/redux/store"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -197,18 +198,20 @@ const App = ({ Component, pageProps }: AppProps) => {
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </Head>
-      <SessionContextProvider
-        supabaseClient={supabaseClient}
-        initialSession={pageProps.initialSession}
-      >
-        <main className={`${lexend.variable} font-sans`}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </main>
-      </SessionContextProvider>
+      <Provider store={store}>
+        <SessionContextProvider
+          supabaseClient={supabaseClient}
+          initialSession={pageProps.initialSession}
+        >
+          <main className={`${lexend.variable} font-sans`}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </main>
+        </SessionContextProvider>
+      </Provider>
     </>
   )
 }
 
-export default wrapper.withRedux(App)
+export default App
