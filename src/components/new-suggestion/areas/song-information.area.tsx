@@ -134,7 +134,7 @@ const SongInformationArea = () => {
           )}
         </div>
 
-        <button type="submit" className="btn" onClick={() => console.log(errors)}>
+        <button type="submit" className="btn mb-4" onClick={() => console.log(errors)}>
           Add instruments
         </button>
       </form>
