@@ -17,13 +17,15 @@ describe("suggestion detail page", () => {
       cy.data("division").first().then((division) => {
         const criteria = division.text().includes(username)
         cy.data("division").first().click()
-        cy.data("division").first().should(`${criteria ? "not." : ""}contain.text`, username)
+        criteria
+          ? cy.data("division").first().should(`not.contain.text`, username)
+          : cy.data("division").first().should(`contain.text`, username)
       })
     })
 
   })
 
-  context("suggestion doesn't exists", () => {
+  context("suggestion doesn't exist", () => {
     before(() => {
       cy.login()
     })

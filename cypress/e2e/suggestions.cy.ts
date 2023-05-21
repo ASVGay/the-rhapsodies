@@ -54,13 +54,13 @@ describe("suggestions page", () => {
       cy.visit("/suggestions")
     })
 
-    it("should display spinner", () => {
+    it("should display spinner when suggestions are still being retrieved", () => {
       cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
       cy.wait('@getSuggestions')
       cy.data("suggestions-spinner").should("exist")
     })
 
-    it("shouldn't display spinner", () => {
+    it("shouldn't display spinner after suggestion have been retrieved", () => {
       cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
       cy.wait('@getSuggestions').then(() => {
         cy.data("suggestions-spinner").should("not.exist")
