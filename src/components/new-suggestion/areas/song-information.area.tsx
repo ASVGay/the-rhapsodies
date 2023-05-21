@@ -1,12 +1,8 @@
 import React from "react"
 
-interface SongInformationAreaProps {
-  show: boolean
-}
-
-const SongInformationArea = ({ show }: SongInformationAreaProps) => {
+const SongInformationArea = () => {
   return (
-    <div data-cy="area-song-information" className={`${!show && "hidden"}`}>
+    <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
     </div>
   )

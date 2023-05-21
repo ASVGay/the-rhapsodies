@@ -1,6 +1,15 @@
+enum Area {
+  SongInformation = "song-information",
+  Instruments = "instruments",
+  Review = "review",
+}
+
+const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
+
 const areaSongInformation = "area-song-information"
 const areaInstruments = "area-instruments"
 const areaReview = "area-review"
+const progressBar = "progress-bar"
 const newSuggestionProgressBarInstruments = "new-suggestion-progress-bar-instruments"
 const newSuggestionProgressBarReview = "new-suggestion-progress-bar-review"
 const newSuggestionProgressBarSongInformation = "new-suggestion-progress-bar-song-information"
@@ -12,50 +21,43 @@ describe("when creating a new suggestion", function () {
   })
 
   it("should go to suggestions on discard", function () {
-    cy.data("new-suggestion-discard").click()
+    cy.data(buttonDiscardNewSuggestion).click()
     cy.location("pathname").should("eq", "/suggestions")
   })
 
   context("the progress bar", () => {
-    it("should render the song information area after visit", () => {
+    it("should render the song-information area on click", () => {
+      cy.data(newSuggestionProgressBarSongInformation).click()
       cy.data(areaSongInformation).should("be.visible")
-      cy.data(areaInstruments).should("not.be.visible")
-      cy.data(areaReview).should("not.be.visible")
-      cy.get(`[data-active-area="song-information"]`).should("exist")
-      cy.get(`[data-active-area="review"]`).should("not.exist")
-      cy.get(`[data-active-area="instruments"]`).should("not.exist")
+      cy.data(areaInstruments).should("not.exist")
+      cy.data(areaReview).should("not.exist")
+      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.SongInformation)
     })
 
     it("should render the instruments area on click", () => {
       cy.data(newSuggestionProgressBarInstruments).click()
-      cy.data(areaSongInformation).should("not.be.visible")
       cy.data(areaInstruments).should("be.visible")
-      cy.data(areaReview).should("not.be.visible")
-      cy.get(`[data-active-area="song-information"]`).should("not.exist")
-      cy.get(`[data-active-area="instruments"]`).should("exist")
-      cy.get(`[data-active-area="review"]`).should("not.exist")
+      cy.data(areaSongInformation).should("not.exist")
+      cy.data(areaReview).should("not.exist")
+      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Instruments)
     })
 
     it("should render the review area on click", () => {
       cy.data(newSuggestionProgressBarReview).click()
-      cy.data(areaSongInformation).should("not.be.visible")
-      cy.data(areaInstruments).should("not.be.visible")
       cy.data(areaReview).should("be.visible")
-      cy.get(`[data-active-area="song-information"]`).should("not.exist")
-      cy.get(`[data-active-area="instruments"]`).should("not.exist")
-      cy.get(`[data-active-area="review"]`).should("exist")
+      cy.data(areaSongInformation).should("not.exist")
+      cy.data(areaInstruments).should("not.exist")
+      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
     })
 
-    it("should render the song-information area on click", () => {
-      // first go to other page to confirm it works as expected
+    it("should render the same active area on change of page", function () {
       cy.data(newSuggestionProgressBarReview).click()
-      cy.data(newSuggestionProgressBarSongInformation).click()
-      cy.data(areaSongInformation).should("be.visible")
-      cy.data(areaInstruments).should("not.be.visible")
-      cy.data(areaReview).should("not.be.visible")
-      cy.get(`[data-active-area="song-information"]`).should("exist")
-      cy.get(`[data-active-area="instruments"]`).should("not.exist")
-      cy.get(`[data-active-area="review"]`).should("not.exist")
+      cy.data(buttonDiscardNewSuggestion).click()
+      cy.data("button-new-suggestion").click()
+      cy.data(areaReview).should("be.visible")
+      cy.data(areaSongInformation).should("not.exist")
+      cy.data(areaInstruments).should("not.exist")
+      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
     })
   })
 })
