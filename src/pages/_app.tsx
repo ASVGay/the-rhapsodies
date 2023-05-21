@@ -1,3 +1,4 @@
+import "react-toastify/dist/ReactToastify.css"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
@@ -9,6 +10,7 @@ import { useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
+import { ToastContainer } from "react-toastify"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -207,6 +209,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Layout>
               <Component {...pageProps} />
             </Layout>
+            <ToastContainer />
           </main>
         </SessionContextProvider>
       </Provider>
