@@ -26,9 +26,9 @@ const NewSuggestion = () => {
 
       <div className={"mx-auto text-center lg:w-2/4"}>
         <ProgressBar />
-        <SongInformationArea show={activeArea == Area.SongInformation} />
-        <InstrumentsArea show={activeArea == Area.Instruments} />
-        <ReviewArea show={activeArea == Area.Review} />
+        {activeArea == Area.SongInformation && <SongInformationArea />}
+        {activeArea == Area.Instruments && <InstrumentsArea />}
+        {activeArea == Area.Review && <ReviewArea />}
       </div>
     </div>
   )
