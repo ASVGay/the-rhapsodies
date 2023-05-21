@@ -11,7 +11,7 @@ import InstrumentsArea from "@/components/new-suggestion/areas/instruments/instr
 import { Database } from "@/types/database"
 import { Instrument } from "@/types/database-types"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
-import { getInstruments } from "@/services/instruments.service"
+import { getInstruments } from "@/services/instrument.service"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
 
@@ -34,10 +34,6 @@ const NewSuggestion = () => {
         } else {
           setInstruments(response.data as Instrument[])
         }
-
-        //   response.data?.length! > 0
-        //     ? setSuggestions(response.data as Suggestion[])
-        //     : setNoSuggestionsMade(true)
       })
       .catch(() => {
         setShowLoadingError(true)

@@ -19,6 +19,8 @@ const InstrumentsEditItem = ({ instrumentItem, onDeleteClick }: InstrumentsEditI
       <div className="flex items-center">
         <Image
           src={getInstrumentImage(instrumentItem.instrument.image_source)}
+          width={64}
+          height={64}
           alt={instrumentItem.instrument.instrument_name.toString()}
           className={"mr-4 h-8 w-8"}
         />
