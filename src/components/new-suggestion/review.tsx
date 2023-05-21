@@ -3,7 +3,7 @@ import { AppState } from "@/redux/store"
 import Image from "next/image"
 import { getInstrumentImage, insertSuggestion } from "@/services/suggestion.service"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import { Instrument } from "@/interfaces/new-suggestion"
+import { NewInstrument } from "@/interfaces/new-suggestion"
 import Button from "@/components/button/button"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -42,8 +42,10 @@ const Review = () => {
   }
 
   const requiredDataIsPresent = () => {
-    //TODO
-    return false
+    return suggestion.artist.length > 0
+      && suggestion.motivation.length > 0
+      && suggestion.title.length > 0
+      && suggestion.instruments.length > 0
   }
 
   return (
@@ -71,14 +73,13 @@ const Review = () => {
         </p>
       </div>
 
-      {/*todo: instrument data*/}
       <p className={"text-center text-lg font-medium text-moon-200 mb-4"}>Instruments</p>
       <div className={"grid gap-6 mb-12 justify-center"}>
-        {suggestion.instruments.map(({ id, name, note }: Instrument) => {
+        {suggestion.instruments.map(({ id, name, image, note }: NewInstrument) => {
             return (
               <div key={id} className={"flex select-none"}>
                 <Image
-                  src={getInstrumentImage("grand-piano")}
+                  src={getInstrumentImage(image)}
                   alt={""}
                   width={64}
                   height={64}

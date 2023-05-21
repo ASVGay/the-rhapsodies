@@ -1,4 +1,4 @@
-export interface Instrument {
+export interface NewInstrument {
   id: string
   name: string
   image: string
@@ -10,5 +10,5 @@ export interface NewSuggestion {
   link: string | null
   motivation: string
   title: string
-  instruments: Instrument[]
+  instruments: NewInstrument[]
 }
