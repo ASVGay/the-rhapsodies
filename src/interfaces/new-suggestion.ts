@@ -1,10 +1,10 @@
 export interface Instrument {
   id: string
   name: string
+  image: string
   note: string
 }
 
-//TODO refine model
 export interface NewSuggestion {
   artist: string[]
   link: string | null

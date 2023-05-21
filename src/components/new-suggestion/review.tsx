@@ -43,10 +43,9 @@ const Review = () => {
 
   const requiredDataIsPresent = () => {
     //TODO
-    return true
+    return false
   }
 
-  //TODO: what to display if not everything has been filled out yet
   return (
     <div>
 
