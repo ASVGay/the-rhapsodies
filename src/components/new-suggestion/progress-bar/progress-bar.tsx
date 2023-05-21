@@ -9,9 +9,30 @@ import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
 
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
+  }
+
+  function songInformationIsInvalid() {
+    return suggestion.title == "" || suggestion.artist.length == 0 || suggestion.motivation == ""
+  }
+
+  function goToInstruments() {
+    if (songInformationIsInvalid()) {
+      alert("You haven't filled in all fields yet!")
+    } else {
+      dispatch(setActiveArea(Area.Instruments))
+    }
+  }
+
+  function goToReview() {
+    if (songInformationIsInvalid()) {
+      alert("You haven't filled in all fields yet!")
+    } else {
+      dispatch(setActiveArea(Area.Review))
+    }
   }
 
   return (
@@ -34,7 +55,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-instruments"}
             className={`progress-bar-icon group justify-center ${colorArea(Area.Instruments)}`}
-            onClick={() => dispatch(setActiveArea(Area.Instruments))}
+            onClick={() => goToInstruments()}
           >
             <ListBulletIcon className="mx-auto h-6 w-6" />
             <ProgressBarCheckBox positioning={"left-1/2 -translate-x-1/2"} />
@@ -43,7 +64,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-review"}
             className={`progress-bar-icon group justify-end ${colorArea(Area.Review)}`}
-            onClick={() => dispatch(setActiveArea(Area.Review))}
+            onClick={() => goToReview()}
           >
             <DocumentTextIcon className={"h-6 w-6"} />
             <ProgressBarCheckBox positioning={"end-0"} />
