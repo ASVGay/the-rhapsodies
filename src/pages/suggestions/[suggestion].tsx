@@ -8,7 +8,7 @@ import {
   deleteDivision,
   getInstrumentImage,
   getSuggestion,
-  insertDivision,
+  insertDivision
 } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
@@ -17,7 +17,7 @@ import {
   Division,
   DivisionDatabaseOperation,
   Suggestion,
-  SuggestionInstrument,
+  SuggestionInstrument
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -49,7 +49,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
     if (uid) {
       const division: DivisionDatabaseOperation = {
         musician: uid,
-        suggestion_instrument_id: suggestionInstrument.id,
+        suggestion_instrument_id: suggestionInstrument.id
       }
       // TODO implement error handling and loading (so that users cant click when updating division)
       if (suggestionInstrument.division.some(({ musician }) => musician.id === uid)) {
@@ -120,8 +120,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map(
-                (suggestionInstrument: SuggestionInstrument) => {
+              {suggestion.suggestion_instruments.map((suggestionInstrument: SuggestionInstrument) => {
                   const { instrument, division, id, description } = suggestionInstrument
                   return (
                     <div
@@ -161,7 +160,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context
   let { data, error } = await getSuggestion(supabase, params?.suggestion as string)
   return {
-    props: { suggestion: data, error },
+    props: { suggestion: data, error }
   }
 }
 

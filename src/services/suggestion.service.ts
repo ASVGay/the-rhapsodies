@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 import { DivisionDatabaseOperation } from "@/types/database-types"
+import { NewSuggestion } from "@/interfaces/new-suggestion"
 
 export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
   return supabase.from("suggestion").select(`
@@ -53,4 +54,22 @@ export const deleteDivision = (
     .delete()
     .eq("musician", division.musician)
     .eq("suggestion_instrument_id", division.suggestion_instrument_id)
+}
+
+
+export const insertSuggestion = async (
+  supabaseClient: SupabaseClient<Database>,
+  { artist, link, motivation, title, instruments }: NewSuggestion
+) => {
+  //TODO save suggestion row AND suggestion_instrument relationships
+  return supabaseClient
+    .from("suggestion")
+    .insert({
+      title: title,
+      artist: artist,
+      motivation: motivation,
+      created_at: undefined,
+      author: "1ce835c1-a708-4e73-a808-334e982dfe3d",
+      link: link
+    })
 }
