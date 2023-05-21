@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import ProgressBar from "@/components/new-suggestion/progress-bar/progress-bar"
 import { useRouter } from "next/router"
@@ -6,10 +6,12 @@ import SongInformationArea from "@/components/new-suggestion/areas/song-informat
 import InstrumentsArea from "@/components/new-suggestion/areas/instruments.area"
 import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
+import { useSelector } from "react-redux"
+import { AppState } from "@/redux/store"
 
 const NewSuggestion = () => {
   const router = useRouter()
-  const [activeArea, setActiveArea] = useState<Area>(Area.SongInformation)
+  const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
 
   return (
     <div className={"page-wrapper"}>
@@ -23,7 +25,7 @@ const NewSuggestion = () => {
       </div>
 
       <div className={"mx-auto text-center lg:w-2/4"}>
-        <ProgressBar activeArea={activeArea} setActiveArea={setActiveArea} />
+        <ProgressBar />
         <SongInformationArea show={activeArea == Area.SongInformation} />
         <InstrumentsArea show={activeArea == Area.Instruments} />
         <ReviewArea show={activeArea == Area.Review} />
