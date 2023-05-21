@@ -8,7 +8,6 @@ import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/formdata"
-import { mainButtonStyles } from "@/components/buttons/button-styles"
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -99,7 +98,7 @@ const Index = () => {
               </div>
             )
           })}
-          <button className={mainButtonStyles} type={"submit"} data-cy={"sign-in-submit-btn"}>
+          <button className={"btn"} type={"submit"} data-cy={"sign-in-submit-btn"}>
             Sign in
           </button>
           {errorPopupText !== "" && (

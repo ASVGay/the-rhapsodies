@@ -7,13 +7,12 @@ import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/formdata"
 import ErrorMessage from "@/components/error/error-message"
-import { mainButtonStyles } from "@/components/buttons/button-styles"
 
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
-  const [errorMsg, setErrorMsg] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const {
     handleSubmit,
     register,
@@ -22,7 +21,7 @@ const Index = () => {
   } = useForm()
 
   useEffect(() => {
-    watch(() => setErrorMsg(""))
+    watch(() => setErrorMessage(""))
   }, [watch])
 
   const password = watch("password")
@@ -61,17 +60,17 @@ const Index = () => {
     const { data, error } = await supabase.auth.updateUser({ password })
 
     if (error) {
-      setErrorMsg("Change password failed, try again")
+      setErrorMessage("Change password failed, try again")
     } else if (data) {
       setName(supabase, user.id, name)
         .then((response) => {
           const { error } = response
           if (error) {
-            setErrorMsg("Something went wrong, try again")
+            setErrorMessage("Something went wrong, try again")
           } else router.push("/")
         })
         .catch(() => {
-          setErrorMsg("Something went wrong, try again")
+          setErrorMessage("Something went wrong, try again")
         })
     }
   }
@@ -111,10 +110,10 @@ const Index = () => {
                 </div>
               )
             })}
-            <button className={mainButtonStyles} data-cy={"submit-password-btn"}>
+            <button className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
-            {errorMsg !== "" && <ErrorMessage dataCy={"submit-password-err"} message={errorMsg} />}
+            {errorMessage !== "" && <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />}
           </form>
         </div>
       </div>

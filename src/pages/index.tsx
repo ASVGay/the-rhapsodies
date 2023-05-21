@@ -3,7 +3,6 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import ErrorMessage from "@/components/error/error-message";
-import { mainButtonStyles} from "@/components/buttons/button-styles";
 
 export default function Home() {
   const router = useRouter()
@@ -21,7 +20,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <button
-          className={mainButtonStyles}
+          className={"btn"}
           onClick={() => signOut()}>
         Sign out
       </button>
