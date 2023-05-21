@@ -8,6 +8,7 @@ import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
 import { useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
+import Review from "@/components/new-suggestion/review"
 
 const NewSuggestion = () => {
   const router = useRouter()
@@ -29,6 +30,8 @@ const NewSuggestion = () => {
         {activeArea == Area.SongInformation && <SongInformationArea />}
         {activeArea == Area.Instruments && <InstrumentsArea />}
         {activeArea == Area.Review && <ReviewArea />}
+
+        {activeArea == Area.Review && <Review />}
       </div>
     </div>
   )
