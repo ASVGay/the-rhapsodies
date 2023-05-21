@@ -15,7 +15,11 @@ const ProgressBar = () => {
   }
 
   return (
-    <div className={"flex justify-center px-2 py-4"} data-active-area={activeArea}>
+    <div
+      className={"flex justify-center px-2 py-4"}
+      data-cy={"progress-bar"}
+      data-active-area={activeArea}
+    >
       <div className="w-full after:mt-7 after:block after:h-0.5 after:bg-zinc-300">
         <ol className="grid grid-cols-3 font-medium text-zinc-300 ">
           <li
