@@ -1,9 +1,8 @@
-import { useState } from "react"
-import MainButton from "@/components/buttons/main-button"
-import ErrorPopup from "@/components/popups/error-popup"
+import React, { useState } from "react"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
+import ErrorMessage from "@/components/error/error-message";
 
 export default function Home() {
   const router = useRouter()
@@ -20,9 +19,13 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <MainButton text={"Log out"} onClick={() => signOut()} />
+      <button
+          className={"btn"}
+          onClick={() => signOut()}>
+        Sign out
+      </button>
       {showError && (
-        <ErrorPopup text={"Can't log out right now."} closePopup={() => setShowError(false)} />
+        <ErrorMessage dataCy={"log-out-btn"} message={"Can't log out right now."} />
       )}
     </main>
   )

@@ -22,6 +22,10 @@
     @apply py-2 text-base;
   }
 
+  .btn {
+     @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300
+   }
+
   .page-wrapper {
     @apply mx-auto px-4 pt-6;
   }
