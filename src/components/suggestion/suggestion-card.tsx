@@ -12,11 +12,11 @@ interface SuggestionCardProps {
 }
 
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
+  const supabaseClient = useSupabaseClient<Database>()
   return (
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
-      data-cy="suggestion-card"
     >
       <div className={"flex items-start p-3"}>
         <div className={"mb-auto mt-auto flex"}>
