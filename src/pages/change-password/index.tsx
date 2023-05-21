@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import MainButton from "@/components/buttons/main-button"
-import ErrorPopup from "@/components/utils/error-popup"
+import ErrorPopup from "@/components/popups/error-popup"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { setNameAndFirstLoginFalse } from "@/services/authentication.service"
