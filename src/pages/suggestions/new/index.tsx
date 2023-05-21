@@ -28,7 +28,7 @@ const NewSuggestion = () => {
     setShowSpinner(true)
     getInstruments(supabaseClient)
       .then((response) => {
-        if (response.error || response.data?.length! > 0) {
+        if (response.error || response.data?.length! === 0) {
           setShowLoadingError(true)
           return
         } else {
@@ -72,7 +72,7 @@ const NewSuggestion = () => {
         <div className={"mx-auto text-center lg:w-2/4"}>
           <ProgressBar />
           {activeArea == Area.SongInformation && <SongInformationArea />}
-          {activeArea == Area.Instruments && <InstrumentsArea />}
+          {activeArea == Area.Instruments && <InstrumentsArea instruments={instruments} />}
           {activeArea == Area.Review && <ReviewArea />}
         </div>
       )}

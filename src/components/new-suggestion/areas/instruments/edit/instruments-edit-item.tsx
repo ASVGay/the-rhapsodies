@@ -1,4 +1,5 @@
-import { Instrument } from "@/constants/instruments"
+import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import { Instrument } from "@/types/database-types"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 
@@ -17,12 +18,12 @@ const InstrumentsEditItem = ({ instrumentItem, onDeleteClick }: InstrumentsEditI
     <li className="flex items-center justify-between p-4">
       <div className="flex items-center">
         <Image
-          src={instrumentItem.instrument.icon}
-          alt={instrumentItem.instrument.instrumentName.toString()}
+          src={getInstrumentImage(instrumentItem.instrument.image_source)}
+          alt={instrumentItem.instrument.instrument_name.toString()}
           className={"mr-4 h-8 w-8"}
         />
         <div className="flex flex-col items-start">
-          <p className="pl-2 font-bold">{instrumentItem.instrument.instrumentName}</p>
+          <p className="pl-2 font-bold">{instrumentItem.instrument.instrument_name}</p>
           <input
             className="w-full rounded pl-2 leading-tight text-gray-500 "
             placeholder={"Set note"}

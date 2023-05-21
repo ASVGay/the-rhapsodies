@@ -1,22 +1,22 @@
-import { Instrument, Instruments } from "@/constants/instruments"
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import InstrumentSearchItem from "./instrument-search-item"
+import { Instrument } from "@/types/database-types"
 
 interface InstrumentSearchProps {
+  instruments: Instrument[]
   onInstrumentSelected(instrument: Instrument): boolean
 }
 
-const InstrumentSearch = ({ onInstrumentSelected }: InstrumentSearchProps) => {
+const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearchProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [searchResults, setSearchResults] = useState<Instrument[]>([])
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
-    const instruments = Object.values(Instruments)
 
-    const searchResults = instruments.filter((instrument) =>
-      instrument.instrumentName.toLowerCase().includes(value.toLowerCase())
+    const searchResults = instruments.filter((instruments) =>
+      instruments.instrument_name.toLowerCase().includes(value.toLowerCase())
     )
 
     setSearchResults(searchResults)
@@ -78,11 +78,14 @@ const InstrumentSearch = ({ onInstrumentSelected }: InstrumentSearchProps) => {
                   textNode={
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: boldSpecificTextSections(instrumentItem.instrumentName, searchTerm),
+                        __html: boldSpecificTextSections(
+                          instrumentItem.instrument_name,
+                          searchTerm
+                        ),
                       }}
                     ></div>
                   }
-                  key={instrumentItem.instrumentName}
+                  key={instrumentItem.instrument_name}
                 />
               )
             })}

@@ -4,12 +4,7 @@ import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { GetServerSideProps } from "next"
-import {
-  deleteDivision,
-  getInstrumentImage,
-  getSuggestion,
-  insertDivision,
-} from "@/services/suggestion.service"
+import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import {
@@ -21,6 +16,7 @@ import {
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
+import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 
 interface SuggestionProps {
   suggestion: Suggestion

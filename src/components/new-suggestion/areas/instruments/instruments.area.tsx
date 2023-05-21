@@ -2,11 +2,13 @@ import React, { useState } from "react"
 import { InstrumentItem } from "./edit/instruments-edit-item"
 import InstrumentsEdit from "./edit/instruments-edit"
 import InstrumentSearch from "@/components/search/instrument/instrument-search"
-import { Instrument } from "@/constants/instruments"
+import { Instrument } from "@/types/database-types"
 
-interface InstrumentsAreaProps {}
+interface InstrumentsAreaProps {
+  instruments: Instrument[]
+}
 
-const InstrumentsArea = ({}: InstrumentsAreaProps) => {
+const InstrumentsArea = ({ instruments }: InstrumentsAreaProps) => {
   const [instrumentItems, setInstrumentItems] = useState<InstrumentItem[]>([])
 
   const onInstrumentSelected = (instrument: Instrument): boolean => {
@@ -29,6 +31,7 @@ const InstrumentsArea = ({}: InstrumentsAreaProps) => {
     <div data-cy="area-instruments">
       <h2 className={"area-header"}>Instruments</h2>
       <InstrumentSearch
+        instruments={instruments}
         onInstrumentSelected={(instrument: Instrument) => onInstrumentSelected(instrument)}
       />
       <InstrumentsEdit items={instrumentItems} onDeleteClick={onDeleteInstrument} />
