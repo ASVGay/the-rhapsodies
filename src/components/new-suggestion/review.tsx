@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
 import Image from "next/image"
-import { getInstrumentImage, insertSuggestion } from "@/services/suggestion.service"
+import { getInstrumentImage, insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { NewInstrument } from "@/interfaces/new-suggestion"
 import Button from "@/components/button/button"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { initialState, setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
@@ -16,29 +16,34 @@ const Review = () => {
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
   const dispatch = useDispatch()
   const router = useRouter()
+  const user = useUser()
 
   const saveSuggestion = () => {
-    if (!requiredDataIsPresent()) {
-      //TODO do error-handeling
-      return
-    }
+    insertSuggestion(supabase, suggestion, user!.id)
+      .then((response) => {
+        if (response.error) {
+          handleError()
+          return
+        }
+      })
+      .catch(() => handleError())
 
-    //else
-    //TODO handle cases
+    insertSuggestionInstruments(supabase, suggestion.instruments, user!.id)
+      .then((response) => {
+        if (response.error) {
+          handleError()
+          return
+        }
 
-    // insertSuggestion(supabase, suggestion)
-    //   .then((response) => {
-    //     if (response.error) {
-    //       //TODO: error-handeling
-    //       return
-    //     }
-    //     dispatch(updateNewSuggestion(initialState.suggestion))
-    //     dispatch(setActiveArea(Area.SongInformation))
-    //
-    //     router.push("/suggestions")
-    //   })
-    //   .catch(() => {
-    //   })
+        dispatch(updateNewSuggestion(initialState.suggestion))
+        dispatch(setActiveArea(Area.SongInformation))
+        router.push("/suggestions")
+      })
+      .catch(() => handleError())
+  }
+
+  const handleError = () => {
+    //TODO: error-handeling
   }
 
   const requiredDataIsPresent = () => {
