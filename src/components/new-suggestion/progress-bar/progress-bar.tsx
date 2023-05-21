@@ -19,7 +19,15 @@ const ProgressBar = () => {
     return suggestion.title == "" || suggestion.artist.length == 0 || suggestion.motivation == ""
   }
 
+  function triggerSongInformationSubmit() {
+    document
+      .querySelector("#song-information")
+      // Those properties are necessary [src: https://stackoverflow.com/a/65667238]
+      ?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
+  }
+
   function goToInstruments() {
+    triggerSongInformationSubmit()
     if (songInformationIsInvalid()) {
       alert("You haven't filled in all fields yet!")
     } else {
@@ -28,6 +36,7 @@ const ProgressBar = () => {
   }
 
   function goToReview() {
+    triggerSongInformationSubmit()
     if (songInformationIsInvalid()) {
       alert("You haven't filled in all fields yet!")
     } else {

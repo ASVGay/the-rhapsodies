@@ -41,7 +41,11 @@ const SongInformationArea = () => {
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
 
-      <form className={"mx-auto sm:w-4/5 lg:w-full"} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id="song-information"
+        className={"mx-auto sm:w-4/5 lg:w-full"}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className={"input-container"}>
           <label htmlFor="title" className="sr-only">
             Title
@@ -64,7 +68,7 @@ const SongInformationArea = () => {
           {errors.title && (
             <ErrorMessage
               dataCy={"input-title-error"}
-              message={"A title is required for a suggestion."}
+              message={"A title is required for a suggestion"}
             />
           )}
         </div>
@@ -91,7 +95,7 @@ const SongInformationArea = () => {
           {errors.artist && (
             <ErrorMessage
               dataCy={"input-artist-error"}
-              message={"One or more artists are required for a suggestion."}
+              message={"One or more artists are required for a suggestion"}
             />
           )}
         </div>
@@ -111,14 +115,14 @@ const SongInformationArea = () => {
 
         <div className={"input-container"}>
           <label htmlFor="link" className="sr-only">
-            Explain why you would like to play this song with The Rhapsodies.
+            Explain why you would like to play this song with The Rhapsodies
           </label>
 
           <div>
             <textarea
               className="w-full rounded-lg border border-gray-200 p-3 shadow-sm"
               rows={4}
-              placeholder="Explain why you would like to play this song with The Rhapsodies."
+              placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
                 validate: (value) => {
                   return !!value.trim()
