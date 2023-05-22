@@ -1,7 +1,7 @@
 const songArtist = "Nirvana"
 const songTitle = "Jessie's Girl"
 const songDescription = "Pretty fun song with a nice guitar solo and fun interlude in it. Vocals are not too high and I think it would sound okay with multiple vocalists as well. All instruments (expect for the lead guitar) are fairly easy as well."
-const songNotFoundText = "Looks like the song you are looking for does not exist yet! Feel free to add the song!"
+const songNotFoundText = "It looks like the song you are looking for has not been suggested yet. Feel free to suggest the song!"
 describe("suggestions page", () => {
   beforeEach(() => {
     cy.login()

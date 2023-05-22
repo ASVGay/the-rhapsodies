@@ -55,21 +55,18 @@ const Suggestions: FC = () => {
   }, [showSearchBar])
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchText: string = e.target.value
-
-    const filteredSuggestions = suggestions.filter((suggestion) => {
-      const { title, motivation, artist } = suggestion
-      const lowerCaseSearchText = searchText.toLowerCase()
+    const input: string = e.target.value.toLowerCase()
+    const filteredSuggestions = suggestions.filter(({ title, motivation, artist }) => {
       return (
-        title.toLowerCase().includes(lowerCaseSearchText) ||
-        motivation.toLowerCase().includes(lowerCaseSearchText) ||
-        artist.some((artist) => artist.toLowerCase().includes(lowerCaseSearchText))
+        title.toLowerCase().includes(input) ||
+        motivation.toLowerCase().includes(input) ||
+        artist.some((artist) => artist.toLowerCase().includes(input))
       )
     })
 
     if (filteredSuggestions.length === 0) {
       setNoSuggestionsText(
-        "Looks like the song you are looking for does not exist yet! Feel free to add the song!"
+        "It looks like the song you are looking for has not been suggested yet. Feel free to suggest the song!"
       )
     } else {
       setNoSuggestionsText("")
