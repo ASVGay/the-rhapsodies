@@ -100,7 +100,6 @@ describe("suggestions page", () => {
       cy.data("suggestions-list").children().should("not.exist")
       cy.data("no-suggestions-text").contains(songNotFoundText)
     })
-
   })
 
 

@@ -32,11 +32,13 @@ const Suggestions: FC = () => {
           return
         }
 
-        response.data?.length! > 0
-          ? (setSuggestions(response.data as Suggestion[]), setNoSuggestionsText(""))
-          : setNoSuggestionsText(
-              "Looks like there are no suggestions made yet! Feel free to start adding them."
-            )
+        if(response.data?.length! > 0) {
+          setSuggestions(response.data as Suggestion[])
+          setNoSuggestionsText("")
+        } else {
+          setNoSuggestionsText(
+              "Looks like there are no suggestions made yet! Feel free to start adding them.")
+        }
       })
       .catch(() => {
         setShowLoadingError(true)
