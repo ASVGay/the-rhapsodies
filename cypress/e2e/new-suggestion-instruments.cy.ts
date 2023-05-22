@@ -6,6 +6,7 @@ const searchInstrumentInput = "search-instrument-input"
 const instrumentSearchList = "instrument-search-list"
 const instrumentEditList = "instrument-edit-list"
 const deleteButton = "delete-button"
+const instrumentSearchCloseButton = "instrument-search-close-button"
 
 const addInstrumentItem = () => {
   cy.data(searchInstrumentInput).type("a")
@@ -37,12 +38,15 @@ describe("when creating new instrument suggestions for a suggestion", function (
   })
 
   context("the search bar", () => {
-    beforeEach(() => {
+    it("should add an item to the edit list", function () {
       addInstrumentItem()
+      cy.data(instrumentEditList).first().should("exist")
     })
 
-    it("should add an item to the edit list", function () {
-      cy.data(instrumentEditList).first().should("exist")
+    it("allow search to be cleared by pressing the clear button", function () {
+      cy.data(searchInstrumentInput).type("a")
+      cy.data(instrumentSearchCloseButton).click()
+      cy.data(instrumentSearchList).should("not.exist")
     })
   })
 
@@ -54,6 +58,26 @@ describe("when creating new instrument suggestions for a suggestion", function (
     it("should be removed when pressing the delete button", function () {
       cy.data(instrumentEditList).first().data(deleteButton).click()
       cy.data(instrumentEditList).should("be.empty")
+    })
+  })
+
+  context("when proceeding to next step, but return to make changes", () => {
+    beforeEach(() => {
+      addInstrumentItem()
+      cy.data(toReviewButton).click()
+      cy.data(toInstrumentsProgressButton).click()
+    })
+
+    it("should populate the list with previously added elements", function () {
+      cy.data(instrumentEditList).first().should("exist")
+    })
+
+    it("should have a clear search bar", function () {
+      cy.data(searchInstrumentInput).should("be.empty")
+    })
+
+    it("should not show any search results", function () {
+      cy.data(instrumentSearchList).should("not.exist")
     })
   })
 })

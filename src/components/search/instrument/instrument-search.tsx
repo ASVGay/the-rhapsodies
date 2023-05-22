@@ -34,6 +34,9 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
     }
   }
 
+  /**
+   * Add click events to register for both Desktop and Mobile devices.
+   */
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside)
     document.addEventListener("touchstart", handleClickOutside)
@@ -67,7 +70,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
 
     const newString = str.replace(re, "<b>" + find + "</b>")
 
-    //if the first occurrence is the bold tag, Capitalize the letter inside that bold tag.
+    // If the first occurrence is the bold tag, Capitalize the letter inside that bold tag.
     if (newString.charAt(0) === "<")
       return newString.replace(
         `<b>${newString.charAt(3)}`,
@@ -94,6 +97,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
         {searchTerm ? (
           <XMarkIcon
             onClick={() => clearSearch()}
+            data-cy={"instrument-search-close-button"}
             className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 cursor-pointer text-gray-500"
           />
         ) : (
