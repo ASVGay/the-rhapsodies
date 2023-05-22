@@ -29,9 +29,29 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
    * Checks if anything other than the search or list items are selected
    * */
   const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-    if (searchRef.current && listRef.current && !listRef.current.contains(event.target as Node)) {
+    if (searchRef.current) return
+    if (listRef.current && !listRef.current.contains(event.target as Node)) {
       setIsSearchFocused(false)
     }
+  }
+
+  const capitalizeFirstLetterOfEachWord = (text: string): string => {
+    const words = text.split(" ")
+    const capitalizedWords = words.map((word) => {
+      let charIndex = 0
+      let firstLetter = ""
+      if (word.charAt(0) === "<") {
+        charIndex = 3
+        firstLetter = "<b>" + word.charAt(charIndex).toUpperCase()
+      } else {
+        firstLetter = word.charAt(charIndex).toUpperCase()
+      }
+
+      const restOfWord = word.slice(charIndex + 1)
+
+      return `${firstLetter}${restOfWord}`
+    })
+    return capitalizedWords.join(" ")
   }
 
   /**
@@ -51,7 +71,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
     // Use setTimeout to allow time for a click event on the list item to be registered
     setTimeout(() => {
       setIsSearchFocused(false)
-    }, 200)
+    }, 100)
   }
 
   const clearSearch = () => {
@@ -68,8 +88,9 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
   const boldSpecificTextSections = (str: string, find: string) => {
     var re = new RegExp(find, "gi")
 
-    const newString = str.replace(re, "<b>" + find + "</b>")
+    let newString = str.replace(re, "<b>" + find.toLowerCase() + "</b>")
 
+    newString = capitalizeFirstLetterOfEachWord(newString)
     // If the first occurrence is the bold tag, Capitalize the letter inside that bold tag.
     if (newString.charAt(0) === "<")
       return newString.replace(
@@ -77,6 +98,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
         `<b>${newString.charAt(3).toUpperCase()}`
       )
 
+    // const words = newString.split(" ");
     return newString
   }
 
