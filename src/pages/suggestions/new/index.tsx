@@ -8,29 +8,38 @@ import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
 import { useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
+import { FormProvider, useForm } from "react-hook-form"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
 
 const NewSuggestion = () => {
   const router = useRouter()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+
+  const methods = useForm<InputsSongInformation>({
+    defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
+  })
 
   return (
-    <div className={"page-wrapper"}>
-      <div className={"flex justify-between"}>
-        <div className={"page-header"}>New Suggestion</div>
-        <XMarkIcon
-          data-cy={"button-discard-new-suggestion"}
-          className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-          onClick={() => router.push("/suggestions")}
-        />
-      </div>
+    <FormProvider {...methods}>
+      <div className={"page-wrapper"}>
+        <div className={"flex justify-between"}>
+          <div className={"page-header"}>New Suggestion</div>
+          <XMarkIcon
+            data-cy={"button-discard-new-suggestion"}
+            className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
+            onClick={() => router.push("/suggestions")}
+          />
+        </div>
 
-      <div className={"mx-auto text-center lg:w-2/4"}>
-        <ProgressBar />
-        {activeArea == Area.SongInformation && <SongInformationArea />}
-        {activeArea == Area.Instruments && <InstrumentsArea />}
-        {activeArea == Area.Review && <ReviewArea />}
+        <div className={"mx-auto text-center lg:w-2/4"}>
+          <ProgressBar />
+          {activeArea == Area.SongInformation && <SongInformationArea />}
+          {activeArea == Area.Instruments && <InstrumentsArea />}
+          {activeArea == Area.Review && <ReviewArea />}
+        </div>
       </div>
-    </div>
+    </FormProvider>
   )
 }
 
