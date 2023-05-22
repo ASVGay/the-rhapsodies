@@ -7,7 +7,10 @@ import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestio
 import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
-import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
+import {
+  isSongInformationInvalid,
+  submitSongInformationForm,
+} from "@/helpers/new-suggestion.helper"
 
 const SongInformationArea = () => {
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -16,6 +19,7 @@ const SongInformationArea = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useFormContext<InputsSongInformation>()
 
   const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
@@ -32,7 +36,7 @@ const SongInformationArea = () => {
 
   function submitAndGoToInstruments() {
     submitSongInformationForm()
-    dispatch(setActiveArea(Area.Instruments))
+    if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
   }
 
   return (

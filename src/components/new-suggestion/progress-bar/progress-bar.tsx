@@ -8,7 +8,10 @@ import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 import { toast } from "react-toastify"
 import { useFormContext } from "react-hook-form"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
-import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
+import {
+  isSongInformationInvalid,
+  submitSongInformationForm,
+} from "@/helpers/new-suggestion.helper"
 
 function showSongInformationError() {
   toast.warn("You need to fill in all the required fields before continuing")
@@ -23,18 +26,14 @@ const ProgressBar = () => {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
   }
 
-  function songInformationIsInvalid() {
-    return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
-  }
-
   function goToInstruments() {
-    if (songInformationIsInvalid()) showSongInformationError()
+    if (isSongInformationInvalid(watch)) showSongInformationError()
     else dispatch(setActiveArea(Area.Instruments))
     submitSongInformationForm()
   }
 
   function goToReview() {
-    if (songInformationIsInvalid()) showSongInformationError()
+    if (isSongInformationInvalid(watch)) showSongInformationError()
     else dispatch(setActiveArea(Area.Review))
     submitSongInformationForm()
   }
