@@ -5,7 +5,6 @@ enum Area {
 }
 
 const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
-
 const areaSongInformation = "area-song-information"
 const areaInstruments = "area-instruments"
 const areaReview = "area-review"
@@ -34,30 +33,56 @@ describe("when creating a new suggestion", function () {
       cy.data(progressBar).invoke("data", "active-area").should("equal", Area.SongInformation)
     })
 
-    it("should render the instruments area on click", () => {
-      cy.data(newSuggestionProgressBarInstruments).click()
-      cy.data(areaInstruments).should("be.visible")
-      cy.data(areaSongInformation).should("not.exist")
-      cy.data(areaReview).should("not.exist")
-      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Instruments)
+    context("with filled in song information", () => {
+      it.only("should render the instruments area on click", () => {
+        cy.data(newSuggestionProgressBarInstruments).click()
+        cy.data(areaInstruments).should("be.visible")
+        cy.data(areaSongInformation).should("not.exist")
+        cy.data(areaReview).should("not.exist")
+        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Instruments)
+      })
+
+      it("should render the review area on click", () => {
+        cy.data(newSuggestionProgressBarReview).click()
+        cy.data(areaReview).should("be.visible")
+        cy.data(areaSongInformation).should("not.exist")
+        cy.data(areaInstruments).should("not.exist")
+        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
+      })
+
+      it("should render the same active area on change of page", function () {
+        // todo update state
+        cy.data(newSuggestionProgressBarReview).click()
+        cy.data(buttonDiscardNewSuggestion).click()
+        cy.data("button-new-suggestion").click()
+        cy.data(areaReview).should("be.visible")
+        cy.data(areaSongInformation).should("not.exist")
+        cy.data(areaInstruments).should("not.exist")
+        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
+      })
     })
 
-    it("should render the review area on click", () => {
-      cy.data(newSuggestionProgressBarReview).click()
-      cy.data(areaReview).should("be.visible")
-      cy.data(areaSongInformation).should("not.exist")
-      cy.data(areaInstruments).should("not.exist")
-      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
-    })
+    context("with no song information", () => {
+      context("when attempting to go to instruments area", () => {
+        it("should show toast", function () {})
 
-    it("should render the same active area on change of page", function () {
-      cy.data(newSuggestionProgressBarReview).click()
-      cy.data(buttonDiscardNewSuggestion).click()
-      cy.data("button-new-suggestion").click()
-      cy.data(areaReview).should("be.visible")
-      cy.data(areaSongInformation).should("not.exist")
-      cy.data(areaInstruments).should("not.exist")
-      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
+        it("should stay on the song information", function () {})
+      })
+
+      context("when attempting to go to review area", () => {
+        it("should show toast", function () {})
+
+        it("should stay on the song information", function () {})
+      })
     })
+  })
+
+  context("in the song information area", function () {
+    it("should fill in nothing when empty state", function () {})
+    it("should fill in default values when filled in state", function () {})
+    it("should show error if no title", function () {})
+    it("should show error if no artist", function () {})
+    it("should show error if no motivation", function () {})
+    it("should show go to instruments area if filled in required fields", function () {})
   })
 })
