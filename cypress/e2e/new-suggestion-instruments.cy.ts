@@ -80,4 +80,30 @@ describe("when creating new instrument suggestions for a suggestion", function (
       cy.data(instrumentSearchList).should("not.exist")
     })
   })
+
+  context("when proceeding to next step", () => {
+    it("should add instruments to redux's newSuggestion's suggestion", function () {
+      addInstrumentItem()
+
+      cy.data(instrumentEditList).first().should("exist")
+      cy.window()
+        .its("store")
+        .invoke("getState")
+        .its("newSuggestion")
+        .its("suggestion")
+        .its("instruments")
+        .should("have.length", 2)
+    })
+
+    it("should reflect the correct description on the instrument in redux", function () {
+      addInstrumentItem()
+      cy.data(instrumentEditList).first().data("description-input").type("test description")
+
+      cy.window()
+        .its("store")
+        .invoke("getState")
+        .its("newSuggestion.suggestion.instruments[0].description")
+        .should("equal", "test description")
+    })
+  })
 })

@@ -44,6 +44,7 @@ const InstrumentsEditItem = ({
           <textarea
             className="w-full resize-none rounded p-1 pl-2 leading-tight text-gray-500 hover:outline-moon-300 focus:outline-moon-300"
             placeholder={"Set note"}
+            data-cy="description-input"
             rows={3}
             value={instrumentItem.description}
             ref={textareaRef}

@@ -25,6 +25,14 @@ const App = ({ Component, pageProps }: AppProps) => {
     })
   )
 
+  if (typeof window !== "undefined") {
+    // @ts-ignore
+    if (window.Cypress) {
+      // @ts-ignore
+      window.store = store
+    }
+  }
+
   return (
     <>
       <Head>
