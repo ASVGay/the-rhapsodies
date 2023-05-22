@@ -20,6 +20,7 @@ const Suggestions: FC = () => {
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
   const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement | null>(null)
+
   useEffect(() => {
     setShowSpinner(true)
     getSuggestions(supabaseClient)
@@ -47,6 +48,7 @@ const Suggestions: FC = () => {
     if (!inputRef.current) return
 
     const searchText: string = inputRef.current.value
+
     const filteredSuggestions = suggestions.filter((suggestion) => {
       const { title, motivation, artist } = suggestion
       const lowerCaseSearchText = searchText.toLowerCase()
@@ -58,7 +60,7 @@ const Suggestions: FC = () => {
       )
     })
 
-    console.log(filteredSuggestions)
+    setSearchedSuggestions(filteredSuggestions)
     inputRef.current.value = ""
   }
 
@@ -93,7 +95,13 @@ const Suggestions: FC = () => {
         </div>
       )}
 
-      {suggestions && (
+      {searchedSuggestions.length != 0 ? (
+        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
+          {searchedSuggestions.map((suggestion) => (
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+          ))}
+        </div>
+      ) : (
         <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
           {suggestions.map((suggestion) => (
             <SuggestionCard key={suggestion.id} suggestion={suggestion} />
