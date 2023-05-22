@@ -12,7 +12,7 @@ const InstrumentSearchItem = ({ textNode, instrument, onClick }: InstrumentDropd
   return (
     <li
       onClick={() => onClick(instrument)}
-      className="flex items-center p-4 hover:bg-moon-300 hover:text-white"
+      className="flex cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"
     >
       <Image
         src={getInstrumentImage(instrument.image_source)}

@@ -29,7 +29,7 @@ const InstrumentsEdit = () => {
     return true
   }
 
-  const onNoteChanged = (index: number, description: string) => {
+  const onDescriptionChanged = (index: number, description: string) => {
     const newItems = [...instrumentItems]
     newItems[index] = { ...newItems[index], description }
 
@@ -50,7 +50,7 @@ const InstrumentsEdit = () => {
           <InstrumentsEditItem
             onDeleteClick={() => onDeleteInstrument(index)}
             instrumentItem={instrumentItem}
-            onNoteChanged={(description) => onNoteChanged(index, description)}
+            onDescriptionChanged={(description) => onDescriptionChanged(index, description)}
             key={index}
           />
         )

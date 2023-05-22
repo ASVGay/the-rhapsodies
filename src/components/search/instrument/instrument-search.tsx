@@ -13,6 +13,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
   const [searchResults, setSearchResults] = useState<Instrument[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
+  const searchRef = useRef(null)
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
@@ -24,8 +25,11 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
     setSearchResults(searchResults)
   }
 
+  /**
+   * Checks if anything other than the search or list items are selected
+   * */
   const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-    if (listRef.current && !listRef.current.contains(event.target as Node)) {
+    if (searchRef.current && listRef.current && !listRef.current.contains(event.target as Node)) {
       setIsSearchFocused(false)
     }
   }
@@ -84,21 +88,22 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
           onChange={(e) => handleSearch(e.target.value)}
           onFocus={() => setIsSearchFocused(true)}
           onBlur={handleSearchBlur}
-          className="flex w-full rounded-lg  px-4 py-2 pr-10 outline outline-1 outline-gray-300  focus:outline-moon-300"
+          ref={searchRef}
+          className="flex w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
         />
         {searchTerm ? (
           <XMarkIcon
             onClick={() => clearSearch()}
-            className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 text-gray-400"
+            className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 cursor-pointer text-gray-500"
           />
         ) : (
-          <MagnifyingGlassIcon className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 text-gray-500" />
         )}
       </div>
-      {isSearchFocused && searchResults.length > 0 && (
+      {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
         <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
           <ul ref={listRef} data-cy="instrument-search-list">
-            {searchResults.map((instrumentItem: Instrument, index: number) => {
+            {searchResults.map((instrumentItem: Instrument) => {
               return (
                 <InstrumentSearchItem
                   onClick={(instrument) => onSelected(instrument)}
