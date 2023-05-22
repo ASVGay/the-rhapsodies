@@ -2,7 +2,7 @@ export interface NewInstrument {
   id: string
   name: string
   image: string
-  note: string
+  note: string | undefined
 }
 
 export interface NewSuggestion {

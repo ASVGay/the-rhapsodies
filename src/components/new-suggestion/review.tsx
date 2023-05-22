@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
 import Image from "next/image"
-import { getInstrumentImage, insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
+import {
+  getInstrumentImage,
+  insertSuggestion,
+  insertSuggestionInstruments
+} from "@/services/suggestion.service"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { NewInstrument } from "@/interfaces/new-suggestion"
 import Button from "@/components/button/button"
@@ -10,6 +14,7 @@ import { Database } from "@/types/database"
 import { initialState, setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import { useRouter } from "next/router"
+import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
 
 const Review = () => {
   const supabase = useSupabaseClient<Database>()
@@ -18,6 +23,8 @@ const Review = () => {
   const router = useRouter()
   const user = useUser()
 
+  //TODO add waiting indicator
+
   const saveSuggestion = () => {
     insertSuggestion(supabase, suggestion, user!.id)
       .then((response) => {
@@ -25,25 +32,34 @@ const Review = () => {
           handleError()
           return
         }
-      })
-      .catch(() => handleError())
 
-    insertSuggestionInstruments(supabase, suggestion.instruments, user!.id)
-      .then((response) => {
-        if (response.error) {
-          handleError()
-          return
-        }
+        const suggestionId = response.data.at(0)!.id
+        insertSuggestionInstruments(supabase, mapInstruments(suggestionId))
+          .then((response) => {
+            if (response.error) {
+              handleError()
+              return
+            }
 
-        dispatch(updateNewSuggestion(initialState.suggestion))
-        dispatch(setActiveArea(Area.SongInformation))
-        router.push("/suggestions")
+            //TODO
+            //dispatch(updateNewSuggestion(initialState.suggestion))
+            //dispatch(setActiveArea(Area.SongInformation))
+
+            router.push("/suggestions")
+          })
+
       })
       .catch(() => handleError())
   }
 
   const handleError = () => {
     //TODO: error-handeling
+  }
+
+  const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
+    return suggestion.instruments.map(({ id, note }) => {
+      return ({ suggestion_id: suggestionId, instrument_id: id, description: note })
+    })
   }
 
   const requiredDataIsPresent = () => {
@@ -80,9 +96,9 @@ const Review = () => {
 
       <p className={"text-center text-lg font-medium text-moon-200 mb-4"}>Instruments</p>
       <div className={"grid gap-6 mb-12 justify-center"}>
-        {suggestion.instruments.map(({ id, name, image, note }: NewInstrument) => {
+        {suggestion.instruments.map(({ id, name, image, note }: NewInstrument, index) => {
             return (
-              <div key={id} className={"flex select-none"}>
+              <div key={index} className={"flex select-none"}>
                 <Image
                   src={getInstrumentImage(image)}
                   alt={""}
