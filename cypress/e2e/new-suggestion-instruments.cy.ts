@@ -22,6 +22,8 @@ describe("when creating new instrument suggestions for a suggestion", function (
   beforeEach(() => {
     cy.login()
     cy.visit("/suggestions/new")
+    // Wait so content can render properly and set up submit events
+    cy.wait(500)
     cy.data(inputTitle).type("Hello")
     cy.data(inputArtist).type("Hello")
     cy.data(inputLink).type("www.hello.com")
@@ -29,21 +31,18 @@ describe("when creating new instrument suggestions for a suggestion", function (
     cy.data(toInstrumentsProgressButton).click()
   })
 
-  context("having no instruments added", () => {
-    it("should prevent the process to proceed further", function () {
-      cy.data(toReviewButton).should("be.disabled")
-    })
+  it("should error if it can't retrieve instruments", function () {
+    //TODO: Add test
   })
 
-  context("having instruments added", () => {
-    beforeEach(() => {
-      addInstrumentItem()
-    })
+  it("should prevent the process to proceed further", function () {
+    cy.data(toReviewButton).should("be.disabled")
+  })
 
-    it("should allow the process to proceed", function () {
-      cy.data(toReviewButton).click()
-      cy.data(instrumentsArea).should("not.exist")
-    })
+  it("adding a instrument should allow the process to proceed", function () {
+    addInstrumentItem()
+    cy.data(toReviewButton).click()
+    cy.data(instrumentsArea).should("not.exist")
   })
 
   context("the search bar", () => {

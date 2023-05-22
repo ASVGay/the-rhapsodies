@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import InstrumentsEdit from "./edit/instruments-edit"
+import React from "react"
+import InstrumentsList from "./edit/instruments-list"
 import InstrumentSearch from "@/components/search/instrument/instrument-search"
 import { Instrument } from "@/types/database-types"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
@@ -7,19 +7,15 @@ import { AppDispatch, AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { Area } from "@/constants/area"
+import { isInstrumentSuggestionInvalid } from "@/helpers/new-suggestion.helper"
 
 interface InstrumentsAreaProps {
-  instruments: Instrument[]
+  instrumentList: Instrument[]
 }
 
-const InstrumentsArea = ({ instruments }: InstrumentsAreaProps) => {
+const InstrumentsArea = ({ instrumentList }: InstrumentsAreaProps) => {
   const dispatch: AppDispatch = useDispatch()
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const [canProceed, setCanProceed] = useState<boolean>(newSuggestion.instruments.length > 0)
-
-  useEffect(() => {
-    setCanProceed(newSuggestion.instruments.length > 0)
-  }, [newSuggestion])
 
   const onInstrumentSelected = (instrument: Instrument): boolean => {
     const newItem: NewSuggestionInstrument = {
@@ -37,6 +33,7 @@ const InstrumentsArea = ({ instruments }: InstrumentsAreaProps) => {
   }
 
   const onSubmit = () => {
+    isInstrumentSuggestionInvalid(newSuggestion.instruments)
     dispatch(setActiveArea(Area.Review))
   }
 
@@ -44,11 +41,16 @@ const InstrumentsArea = ({ instruments }: InstrumentsAreaProps) => {
     <div data-cy="area-instruments">
       <h2 className={"area-header"}>Instruments</h2>
       <InstrumentSearch
-        instruments={instruments}
+        instruments={instrumentList}
         onInstrumentSelected={(instrument: Instrument) => onInstrumentSelected(instrument)}
       />
-      <InstrumentsEdit />
-      <button data-cy="to-review-button" disabled={!canProceed} className="btn" onClick={onSubmit}>
+      <InstrumentsList />
+      <button
+        data-cy="to-review-button"
+        disabled={newSuggestion.instruments.length < 1}
+        className="btn"
+        onClick={onSubmit}
+      >
         To Review
       </button>
     </div>

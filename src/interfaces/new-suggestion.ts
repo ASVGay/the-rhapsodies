@@ -1,4 +1,4 @@
-import { Instrument, SuggestionInstrument } from "@/types/database-types"
+import { Instrument } from "@/types/database-types"
 
 export interface NewSuggestion {
   artist: string[]

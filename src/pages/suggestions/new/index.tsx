@@ -27,7 +27,7 @@ const NewSuggestion = () => {
   })
 
   const supabaseClient = useSupabaseClient<Database>()
-  const [instruments, setInstruments] = useState<Instrument[]>([])
+  const [instrumentList, setInstrumentList] = useState<Instrument[]>([])
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
 
@@ -39,7 +39,7 @@ const NewSuggestion = () => {
           setShowLoadingError(true)
           return
         } else {
-          setInstruments(response.data as Instrument[])
+          setInstrumentList(response.data as Instrument[])
         }
       })
       .catch(() => {
@@ -69,14 +69,18 @@ const NewSuggestion = () => {
         )}
         {showLoadingError && (
           <div className={"mt-6"} data-cy="failed-fetching-suggestions">
-            <ErrorPopup text={"Failed to load suggestions."} closePopup={() => {}} />
+            <ErrorPopup
+              text={`“Something went wrong”
+            You can try again. Contact support if this error persists.`}
+              closePopup={() => {}}
+            />
           </div>
         )}
         {!showLoadingError && (
           <div className={"mx-auto text-center lg:w-2/4"}>
             <ProgressBar />
             {activeArea == Area.SongInformation && <SongInformationArea />}
-            {activeArea == Area.Instruments && <InstrumentsArea instruments={instruments} />}
+            {activeArea == Area.Instruments && <InstrumentsArea instrumentList={instrumentList} />}
             {activeArea == Area.Review && <ReviewArea />}
           </div>
         )}

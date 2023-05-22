@@ -1,23 +1,23 @@
 import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import InstrumentsEditItem from "./instruments-edit-item"
+import InstrumentsListItem from "./instruments-list-item"
 import { AppDispatch, AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 
-const InstrumentsEdit = () => {
+const InstrumentsList = () => {
   const dispatch: AppDispatch = useDispatch()
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const [instrumentItems, setInstrumentItems] = useState<NewSuggestionInstrument[]>(
+  const [instrumentListItems, setInstrumentListItems] = useState<NewSuggestionInstrument[]>(
     newSuggestion.instruments
   )
 
   useEffect(() => {
-    setInstrumentItems(newSuggestion.instruments)
-  }, [instrumentItems, newSuggestion])
+    setInstrumentListItems(newSuggestion.instruments)
+  }, [instrumentListItems, newSuggestion])
 
   const onDeleteInstrument = (index: number): boolean => {
-    const newItems = [...instrumentItems]
+    const newItems = [...instrumentListItems]
     newItems.splice(index, 1)
 
     dispatch(
@@ -30,7 +30,7 @@ const InstrumentsEdit = () => {
   }
 
   const onDescriptionChanged = (index: number, description: string) => {
-    const newItems = [...instrumentItems]
+    const newItems = [...instrumentListItems]
     newItems[index] = { ...newItems[index], description }
 
     dispatch(
@@ -45,9 +45,9 @@ const InstrumentsEdit = () => {
 
   return (
     <ul data-cy="instrument-edit-list">
-      {instrumentItems.map((instrumentItem: NewSuggestionInstrument, index) => {
+      {instrumentListItems.map((instrumentItem: NewSuggestionInstrument, index) => {
         return (
-          <InstrumentsEditItem
+          <InstrumentsListItem
             onDeleteClick={() => onDeleteInstrument(index)}
             instrumentItem={instrumentItem}
             onDescriptionChanged={(description) => onDescriptionChanged(index, description)}
@@ -59,4 +59,4 @@ const InstrumentsEdit = () => {
   )
 }
 
-export default InstrumentsEdit
+export default InstrumentsList

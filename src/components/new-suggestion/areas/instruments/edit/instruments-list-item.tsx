@@ -4,17 +4,17 @@ import { TrashIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useRef } from "react"
 
-interface InstrumentsEditItemProps {
+interface InstrumentsListItemProps {
   instrumentItem: NewSuggestionInstrument
   onDeleteClick(): boolean
   onDescriptionChanged(value: string): boolean
 }
 
-const InstrumentsEditItem = ({
+const InstrumentsListItem = ({
   instrumentItem,
   onDeleteClick,
   onDescriptionChanged,
-}: InstrumentsEditItemProps) => {
+}: InstrumentsListItemProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const maxDescriptionLength = 64
 
@@ -43,7 +43,7 @@ const InstrumentsEditItem = ({
           <p className="pl-2 font-bold">{instrumentItem.instrument.instrument_name}</p>
           <textarea
             className="w-full resize-none rounded p-1 pl-2 leading-tight text-gray-500 hover:outline-moon-300 focus:outline-moon-300"
-            placeholder={"Set note"}
+            placeholder={"Add note"}
             data-cy="description-input"
             rows={3}
             value={instrumentItem.description}
@@ -66,4 +66,4 @@ const InstrumentsEditItem = ({
   )
 }
 
-export default InstrumentsEditItem
+export default InstrumentsListItem
