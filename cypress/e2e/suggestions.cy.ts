@@ -61,6 +61,7 @@ describe("suggestions page", () => {
       cy.login()
       cy.visit("suggestions")
       cy.wait('@mockedRequest');
+      cy.wait(1000)
       cy.data("button-search-suggestions").click()
     })
 
