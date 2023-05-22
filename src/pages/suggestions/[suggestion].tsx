@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import React, { FC, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
@@ -12,7 +12,6 @@ import {
 } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
-import { PostgrestError } from "@supabase/supabase-js"
 import {
   Division,
   DivisionDatabaseOperation,
@@ -21,48 +20,47 @@ import {
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
+import ErrorPopup from "@/components/popups/error-popup"
 
 interface SuggestionProps {
   suggestion: Suggestion
-  error: PostgrestError | null
 }
 
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
-  const [error, setError] = useState<PostgrestError | null>(props.error)
+  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
 
   const updateSuggestion = () => {
-    // TODO Implement error handling
     getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        const { data, error } = response
-        if (error) setError(error)
-        if (data) setSuggestion(data as Suggestion)
+        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
       })
-      .catch((error) => setError(error))
+      .catch(() => setShowUpdateError(true))
   }
 
   const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
-    if (uid) {
-      const division: DivisionDatabaseOperation = {
-        musician: uid,
-        suggestion_instrument_id: suggestionInstrument.id
-      }
-      // TODO implement error handling and loading (so that users cant click when updating division)
-      if (suggestionInstrument.division.some(({ musician }) => musician.id === uid)) {
-        deleteDivision(supabase, division).then(({ error }) => {
-          if (error) alert(error.message)
-          updateSuggestion()
-        })
-      } else {
-        insertDivision(supabase, division).then(({ error }) => {
-          if (error) alert(error.message)
-          updateSuggestion()
-        })
-      }
+    if (!uid) return
+
+    const division: DivisionDatabaseOperation = {
+      musician: uid,
+      suggestion_instrument_id: suggestionInstrument.id
+    }
+
+    // TODO implement error handling and loading (so that users cant click when updating division)
+    const exists = suggestionInstrument.division.some(({ musician }) => musician.id === uid)
+    if (exists) {
+      deleteDivision(supabase, division).then(({ error }) => {
+        if (error) alert(error.message)
+        updateSuggestion()
+      })
+    } else {
+      insertDivision(supabase, division).then(({ error }) => {
+        if (error) alert(error.message)
+        updateSuggestion()
+      })
     }
   }
 
@@ -77,10 +75,8 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   return (
     <>
-      {/*TODO Implement Error handling*/}
-      {error && <p>Something went wrong...</p>}
       {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"}>
+        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
@@ -140,7 +136,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                         <p>{instrument.instrument_name}</p>
                         <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
                         {division.length > 0 && (
-                          <div className={`font-bold`}>{formatUsernames(division)}</div>
+                          <div className={`font-bold`} data-cy="division">{formatUsernames(division)}</div>
                         )}
                       </div>
                     </div>
@@ -149,6 +145,15 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               )}
             </div>
           </div>
+
+          {showUpdateError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to add or remove user to instrument."}
+                closePopup={() => setShowUpdateError(false)}
+              />
+            </div>
+          )}
         </div>
       )}
     </>
@@ -158,9 +163,12 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createServerSupabaseClient(context)
   const { params } = context
-  let { data, error } = await getSuggestion(supabase, params?.suggestion as string)
-  return {
-    props: { suggestion: data, error }
+  try {
+    let { data } = await getSuggestion(supabase, params?.suggestion as string)
+    if (data == null) return { notFound: true }
+    return { props: { suggestion: data } }
+  } catch {
+    return { notFound: true }
   }
 }
 

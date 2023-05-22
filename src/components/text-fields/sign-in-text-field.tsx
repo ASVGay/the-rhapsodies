@@ -1,12 +1,12 @@
 import React from "react"
-import {FieldValues, RegisterOptions, UseFormRegister} from "react-hook-form";
+import { FieldValues, RegisterOptions, UseFormRegister } from "react-hook-form"
 
 interface SignInTextFieldProps {
   placeholder: string
   dataCy: string
   type: string
-  tag: string,
-  validationOptions: RegisterOptions,
+  tag: string
+  validationOptions: RegisterOptions
   register: UseFormRegister<FieldValues>
 }
 

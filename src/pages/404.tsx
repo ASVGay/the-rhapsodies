@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import React from "react";
+import React from "react"
 
 export default function Custom404() {
   const router = useRouter()
@@ -16,9 +16,7 @@ export default function Custom404() {
 
         <p className="mb-6 mt-4 text-gray-500">Something went wrong.</p>
 
-        <button
-            className={"btn"}
-            onClick={() => router.push("/")}>
+        <button className={"btn"} onClick={() => router.push("/")}>
           Go back home
         </button>
       </div>
