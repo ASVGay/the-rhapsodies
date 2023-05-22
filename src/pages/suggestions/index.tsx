@@ -1,4 +1,4 @@
-import { FC, FormEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react"
 import { getSuggestions } from "@/services/suggestion.service"
 import SuggestionCard from "@/components/suggestion/suggestion-card"
 import { PlusIcon } from "@heroicons/react/24/solid"
@@ -17,9 +17,10 @@ const Suggestions: FC = () => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([])
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
-  const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const [noSuggestionsText, setNoSuggestionsText] = useState<string>("")
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setShowSpinner(true)
@@ -31,8 +32,8 @@ const Suggestions: FC = () => {
         }
 
         response.data?.length! > 0
-          ? setSuggestions(response.data as Suggestion[])
-          : setNoSuggestionsMade(true)
+          ? (setSuggestions(response.data as Suggestion[]), setNoSuggestionsText(""))
+          : setNoSuggestionsText("Looks like there are no suggestions made yet! Feel free to start adding them.")
       })
       .catch(() => {
         setShowLoadingError(true)
@@ -42,17 +43,18 @@ const Suggestions: FC = () => {
       })
   }, [supabaseClient])
 
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (showSearchBar && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [showSearchBar])
 
-    if (!inputRef.current) return
-
-    const searchText: string = inputRef.current.value
+  const handleSearch = (e: ChangeEvent<HTMLFormElement>) => {
+    const searchText: string = e.target.value
 
     const filteredSuggestions = suggestions.filter((suggestion) => {
       const { title, motivation, artist } = suggestion
       const lowerCaseSearchText = searchText.toLowerCase()
-
       return (
         title.toLowerCase().includes(lowerCaseSearchText) ||
         motivation.toLowerCase().includes(lowerCaseSearchText) ||
@@ -60,34 +62,74 @@ const Suggestions: FC = () => {
       )
     })
 
+    if(filteredSuggestions.length === 0) {
+      setNoSuggestionsText("Looks like the song you are looking for does not exist yet! Feel free to add the song!")
+    } else {
+      setNoSuggestionsText("")
+    }
+
     setSearchedSuggestions(filteredSuggestions)
-    inputRef.current.value = ""
+  }
+
+  const renderSuggestions = () => {
+    if (searchedSuggestions.length !== 0) {
+      return (
+        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
+          {searchedSuggestions.map((suggestion) => (
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+          ))}
+        </div>
+      )
+    } else if (!showSearchBar) {
+      return (
+        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
+          {suggestions.map((suggestion) => (
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+          ))}
+        </div>
+      )
+    }
+    return null
   }
 
   return (
     <div className={"page-wrapper"}>
-      <div className={"flex justify-between"}>
+      <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
         <div className={"page-header"}>Suggestions</div>
-        <PlusIcon
-          data-cy={"button-new-suggestion"}
-          className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
-          onClick={() => router.push("/suggestions/new")}
-        />
+        <div className={"flex flex-row gap-2"}>
+          <MagnifyingGlassIcon
+            data-cy={"button-search-suggestions"}
+            className="h-8 w-8 cursor-pointer text-black hover:text-zinc-400"
+            onClick={() => setShowSearchBar(true)}
+          />
+          <PlusIcon
+            data-cy={"button-new-suggestion"}
+            className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+            onClick={() => router.push("/suggestions/new")}
+          />
+        </div>
       </div>
 
-      <form className="relative h-12" onSubmit={(e) => handleSearch(e)}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Enter a song..."
-          data-cy="search-suggestion-input"
-          className="flex w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
-        />
-        <MagnifyingGlassIcon
-          className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 cursor-pointer text-gray-500"
-          onClick={(e) => handleSearch(e)}
-        />
-      </form>
+      <div
+        className={"flex items-baseline justify-between gap-4"}
+        style={{ display: showSearchBar ? "flex" : "none" }}
+      >
+        <form className="relative mb-4 h-12 w-full" onChange={handleSearch}>
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Enter a song..."
+            data-cy="search-suggestion-input"
+            className="w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
+          ></input>
+          <MagnifyingGlassIcon className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 cursor-pointer text-gray-500" />
+        </form>
+        <div className={"flex"}>
+          <span className={"cursor-pointer text-moon-300"} onClick={() => setShowSearchBar(false)}>
+            Cancel
+          </span>
+        </div>
+      </div>
 
       {showSpinner && (
         <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
@@ -95,19 +137,7 @@ const Suggestions: FC = () => {
         </div>
       )}
 
-      {searchedSuggestions.length != 0 ? (
-        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-          {searchedSuggestions.map((suggestion) => (
-            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-          ))}
-        </div>
-      ) : (
-        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-          {suggestions.map((suggestion) => (
-            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-          ))}
-        </div>
-      )}
+      {renderSuggestions()}
 
       {showLoadingError && (
         <div className={"mt-6"} data-cy="failed-fetching-suggestions">
@@ -118,7 +148,7 @@ const Suggestions: FC = () => {
         </div>
       )}
 
-      {noSuggestionsMade && (
+      {noSuggestionsText.length !== 0 && (
         <div
           className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
           data-cy="no-suggestions-made"
@@ -126,7 +156,7 @@ const Suggestions: FC = () => {
           <div>
             <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
           </div>
-          <p>Looks like there are no suggestions made yet! Feel free to start adding them.</p>
+          <p>{noSuggestionsText}</p>
         </div>
       )}
     </div>
