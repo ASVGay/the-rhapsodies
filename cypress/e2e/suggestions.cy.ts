@@ -70,7 +70,7 @@ describe("suggestions page", () => {
       cy.data("suggestions-list")
           .children()
           .should("have.length", 1)
-          .contains( songArtist);
+          .and("contain.text", songArtist);
     })
 
 
@@ -80,7 +80,7 @@ describe("suggestions page", () => {
       cy.data("suggestions-list")
           .children()
           .should("have.length", 1)
-          .contains(songDescription);
+          .and("contain.text", songDescription);
     })
 
     it("Should display correct suggestion when searching by title", () => {
@@ -89,11 +89,10 @@ describe("suggestions page", () => {
       cy.data("suggestions-list")
           .children()
           .should("have.length", 1)
-          .contains(songTitle);
+          .and("contain.text", songTitle)
     })
 
     it("Should display correct error message when no songs are found", () => {
-      cy.data("button-search-suggestions").click()
       cy.data("search-suggestion-input").type("There will not be a song with a name, title, or description like this")
       cy.data("suggestions-list").children().should("not.exist")
       cy.data("no-suggestions-text").contains(songNotFoundText)
