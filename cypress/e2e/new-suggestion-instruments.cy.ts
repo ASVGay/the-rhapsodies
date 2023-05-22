@@ -3,9 +3,13 @@ const instrumentsArea = "area-instruments"
 const toReviewButton = "to-review-button"
 const searchInstrumentInput = "search-instrument-input"
 
+const instrumentSearchList = "instrument-search-list"
+const instrumentEditList = "instrument-edit-list"
+const deleteButton = "delete-button"
+
 const addInstrumentItem = () => {
   cy.data(searchInstrumentInput).type("a")
-  cy.data("instrument-search-list").first().click()
+  cy.data(instrumentSearchList).first().click()
 }
 
 describe("when creating new instrument suggestions for a suggestion", function () {
@@ -38,7 +42,7 @@ describe("when creating new instrument suggestions for a suggestion", function (
     })
 
     it("should add an item to the edit list", function () {
-      cy.data("instrument-edit-list").first().should("exist")
+      cy.data(instrumentEditList).first().should("exist")
     })
   })
 
@@ -48,8 +52,8 @@ describe("when creating new instrument suggestions for a suggestion", function (
     })
 
     it("should be removed when pressing the delete button", function () {
-      cy.data("instrument-edit-list").first().data("delete-button").click()
-      cy.data("instrument-edit-list").should("be.empty")
+      cy.data(instrumentEditList).first().data(deleteButton).click()
+      cy.data(instrumentEditList).should("be.empty")
     })
   })
 })
