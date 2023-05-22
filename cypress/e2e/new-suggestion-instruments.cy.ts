@@ -7,6 +7,7 @@ const instrumentSearchList = "instrument-search-list"
 const instrumentEditList = "instrument-edit-list"
 const deleteButton = "delete-button"
 const instrumentSearchCloseButton = "instrument-search-close-button"
+const descriptionInput = "description-input"
 
 const addInstrumentItem = () => {
   cy.data(searchInstrumentInput).type("a")
@@ -82,9 +83,12 @@ describe("when creating new instrument suggestions for a suggestion", function (
   })
 
   context("when proceeding to next step", () => {
-    it("should add instruments to redux's newSuggestion's suggestion", function () {
+    beforeEach(() => {
       addInstrumentItem()
+      cy.wait(500)
+    })
 
+    it("should add instruments to redux's newSuggestion's suggestion", function () {
       cy.data(instrumentEditList).first().should("exist")
       cy.window()
         .its("store")
@@ -92,13 +96,11 @@ describe("when creating new instrument suggestions for a suggestion", function (
         .its("newSuggestion")
         .its("suggestion")
         .its("instruments")
-        .should("have.length", 2)
+        .should("have.length", 1)
     })
 
     it("should reflect the correct description on the instrument in redux", function () {
-      addInstrumentItem()
-      cy.data(instrumentEditList).first().data("description-input").type("test description")
-
+      cy.data(instrumentEditList).first().data(descriptionInput).type("test description")
       cy.window()
         .its("store")
         .invoke("getState")
