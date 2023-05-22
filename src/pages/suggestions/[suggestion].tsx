@@ -87,7 +87,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               </p>
             </div>
             <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
+              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
             </Link>
           </div>
 
