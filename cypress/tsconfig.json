@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": "../",
     "target": "es6",
     "lib": ["es6", "dom"],
     "types": ["cypress", "node"],
     "jsx": "react",
     "moduleResolution": "node",
     "paths": {
-      "@/*": ["../src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "../node_modules/cypress"]

@@ -5,13 +5,37 @@ import { Area } from "@/constants/area"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
+import { toast } from "react-toastify"
+import { useFormContext } from "react-hook-form"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import {
+  isSongInformationInvalid,
+  submitSongInformationForm,
+} from "@/helpers/new-suggestion.helper"
+
+function showSongInformationError() {
+  toast.warn("You need to fill in all the required fields before continuing")
+}
 
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const { watch } = useFormContext<InputsSongInformation>()
 
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
+  }
+
+  function goToInstruments() {
+    if (isSongInformationInvalid(watch)) showSongInformationError()
+    else dispatch(setActiveArea(Area.Instruments))
+    submitSongInformationForm()
+  }
+
+  function goToReview() {
+    if (isSongInformationInvalid(watch)) showSongInformationError()
+    else dispatch(setActiveArea(Area.Review))
+    submitSongInformationForm()
   }
 
   return (
@@ -34,7 +58,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-instruments"}
             className={`progress-bar-icon group justify-center ${colorArea(Area.Instruments)}`}
-            onClick={() => dispatch(setActiveArea(Area.Instruments))}
+            onClick={() => goToInstruments()}
           >
             <ListBulletIcon className="mx-auto h-6 w-6" />
             <ProgressBarCheckBox positioning={"left-1/2 -translate-x-1/2"} />
@@ -43,7 +67,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-review"}
             className={`progress-bar-icon group justify-end ${colorArea(Area.Review)}`}
-            onClick={() => dispatch(setActiveArea(Area.Review))}
+            onClick={() => goToReview()}
           >
             <DocumentTextIcon className={"h-6 w-6"} />
             <ProgressBarCheckBox positioning={"end-0"} />

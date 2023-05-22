@@ -1,15 +1,18 @@
 describe("suggestions page", () => {
-
   context("load suggestions", () => {
     beforeEach(() => {
       cy.login()
       cy.visit("/suggestions")
     })
 
+    it("should go to new suggestion on click of new suggestion", function () {
+      cy.data("button-new-suggestion").click()
+      cy.location("pathname").should("eq", "/suggestions/new")
+    })
+
     it("should have suggestions", () => {
       cy.data("suggestions-list").children().should("exist")
     })
-
   })
 
   context("select specific suggestion", () => {
@@ -19,15 +22,15 @@ describe("suggestions page", () => {
     })
 
     it("should contain the right id in the url when clicking a suggestion", () => {
-      cy.data("suggestion-card").first()
+      cy.data("suggestion-card")
+        .first()
         .invoke("attr", "href")
-        .then(href => {
+        .then((href) => {
           const id = href.split("/suggestions/")[1]
           cy.data("suggestion-card").first().click()
           cy.location().should((loc) => expect(loc.href).to.contains(id))
         })
     })
-
   })
 
   context("suggestions fetching edge cases", () => {
@@ -45,7 +48,6 @@ describe("suggestions page", () => {
       cy.intercept({ method: "GET", url: "/rest/v1/suggestion*" }, { forceNetworkError: true })
       cy.data("failed-fetching-suggestions").should("be.visible")
     })
-
   })
 
   context("spinner", () => {
@@ -55,18 +57,16 @@ describe("suggestions page", () => {
     })
 
     it("should display spinner when suggestions are still being retrieved", () => {
-      cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
-      cy.wait('@getSuggestions')
+      cy.intercept("GET", "/rest/v1/suggestion*").as("getSuggestions")
+      cy.wait("@getSuggestions")
       cy.data("suggestions-spinner").should("exist")
     })
 
     it("shouldn't display spinner after suggestion have been retrieved", () => {
-      cy.intercept('GET', "/rest/v1/suggestion*").as('getSuggestions')
-      cy.wait('@getSuggestions').then(() => {
+      cy.intercept("GET", "/rest/v1/suggestion*").as("getSuggestions")
+      cy.wait("@getSuggestions").then(() => {
         cy.data("suggestions-spinner").should("not.exist")
       })
     })
-
   })
-
 })
