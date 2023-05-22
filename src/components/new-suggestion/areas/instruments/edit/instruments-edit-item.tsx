@@ -1,15 +1,10 @@
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
-import { Instrument } from "@/types/database-types"
+import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 
-export interface InstrumentItem {
-  instrument: Instrument
-  note: string
-}
-
 interface InstrumentsEditItemProps {
-  instrumentItem: InstrumentItem
+  instrumentItem: NewSuggestionInstrument
   onDeleteClick(): boolean
 }
 

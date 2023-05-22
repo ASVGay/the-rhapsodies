@@ -1,15 +1,15 @@
-import { useState } from "react"
-import InstrumentsEditItem, { InstrumentItem } from "./instruments-edit-item"
+import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import InstrumentsEditItem from "./instruments-edit-item"
 
 interface InstrumentEditProps {
-  items: InstrumentItem[]
-  onDeleteClick(item: InstrumentItem): boolean
+  items: NewSuggestionInstrument[]
+  onDeleteClick(item: NewSuggestionInstrument): boolean
 }
 
 const InstrumentsEdit = ({ items, onDeleteClick }: InstrumentEditProps) => {
   return (
     <div>
-      {items.map((instrumentItem: InstrumentItem, index) => {
+      {items.map((instrumentItem: NewSuggestionInstrument, index) => {
         return (
           <InstrumentsEditItem
             onDeleteClick={() => onDeleteClick(instrumentItem)}
