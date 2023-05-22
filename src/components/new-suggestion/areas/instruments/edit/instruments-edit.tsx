@@ -16,17 +16,14 @@ const InstrumentsEdit = () => {
     setInstrumentItems(newSuggestion.instruments)
   }, [instrumentItems, newSuggestion])
 
-  const onDeleteInstrument = (instrumentItem: NewSuggestionInstrument): boolean => {
-    setInstrumentItems(
-      instrumentItems.filter((item) => item.instrument !== instrumentItem.instrument)
-    )
+  const onDeleteInstrument = (index: number): boolean => {
+    const newItems = [...instrumentItems]
+    newItems.splice(index, 1)
 
     dispatch(
       updateNewSuggestion({
         ...newSuggestion,
-        instruments: instrumentItems.filter(
-          (item) => item.instrument !== instrumentItem.instrument
-        ),
+        instruments: newItems,
       })
     )
     return true
@@ -51,7 +48,7 @@ const InstrumentsEdit = () => {
       {instrumentItems.map((instrumentItem: NewSuggestionInstrument, index) => {
         return (
           <InstrumentsEditItem
-            onDeleteClick={() => onDeleteInstrument(instrumentItem)}
+            onDeleteClick={() => onDeleteInstrument(index)}
             instrumentItem={instrumentItem}
             onNoteChanged={(description) => onNoteChanged(index, description)}
             key={index}
