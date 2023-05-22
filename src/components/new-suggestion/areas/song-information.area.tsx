@@ -130,7 +130,7 @@ const SongInformationArea = () => {
           <div>
             <textarea
               data-cy={"input-motivation"}
-              className="w-full rounded-lg border border-gray-200 p-3 shadow-sm"
+              className="w-full rounded-lg p-3 shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {

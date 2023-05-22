@@ -55,7 +55,7 @@
     }
 
     .input input {
-        @apply w-full rounded-lg border border-gray-200 p-4 pe-12 text-base shadow-sm
+        @apply w-full rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm
     }
 
     .input span {
