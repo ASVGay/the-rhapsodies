@@ -61,10 +61,10 @@ describe("suggestions page", () => {
       cy.login()
       cy.visit("suggestions")
       cy.wait('@mockedRequest');
+      cy.data("button-search-suggestions").click()
     })
 
     it("Should display correct suggestion when searching by name", () => {
-      cy.data("button-search-suggestions").click()
       cy.data("search-suggestion-input").type(songArtist)
       cy.data("suggestions-list").children().should("exist")
       cy.data("suggestions-list")
@@ -75,7 +75,6 @@ describe("suggestions page", () => {
 
 
     it("Should display correct suggestion when searching by description", () => {
-      cy.data("button-search-suggestions").click()
       cy.data("search-suggestion-input").type(songDescription)
       cy.data("suggestions-list").children().should("exist")
       cy.data("suggestions-list")
@@ -85,7 +84,6 @@ describe("suggestions page", () => {
     })
 
     it("Should display correct suggestion when searching by title", () => {
-      cy.data("button-search-suggestions").click()
       cy.data("search-suggestion-input").type(songTitle)
       cy.data("suggestions-list").children().should("exist")
       cy.data("suggestions-list")
