@@ -8,7 +8,6 @@ import {
 } from "@/services/suggestion.service"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { NewInstrument } from "@/interfaces/new-suggestion"
-import Button from "@/components/button/button"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { initialState, setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
@@ -41,10 +40,8 @@ const Review = () => {
               return
             }
 
-            //TODO
-            //dispatch(updateNewSuggestion(initialState.suggestion))
-            //dispatch(setActiveArea(Area.SongInformation))
-
+            dispatch(updateNewSuggestion(initialState.suggestion))
+            dispatch(setActiveArea(Area.SongInformation))
             router.push("/suggestions")
           })
 
@@ -68,6 +65,10 @@ const Review = () => {
       && suggestion.title.length > 0
       && suggestion.instruments.length > 0
   }
+
+  const btnCss = () => requiredDataIsPresent()
+    ? "bg-moon-500 cursor-pointer"
+    : "bg-moon-100 cursor-not-allowed"
 
   return (
     <div>
@@ -101,7 +102,7 @@ const Review = () => {
               <div key={index} className={"flex select-none"}>
                 <Image
                   src={getInstrumentImage(image)}
-                  alt={""}
+                  alt={name}
                   width={64}
                   height={64}
                   className={"mr-4 h-10 w-10"}
@@ -123,7 +124,11 @@ const Review = () => {
       </div>
 
       <div className={`flex justify-center`}>
-        <Button text={"Submit Suggestion"} onClick={() => saveSuggestion()} disabled={() => !requiredDataIsPresent()} />
+        <button onClick={() => saveSuggestion()} disabled={!requiredDataIsPresent()}
+                className={`btn ${btnCss()}`}
+        >
+          Submit Suggestion
+        </button>
       </div>
 
     </div>
