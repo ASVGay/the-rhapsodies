@@ -12,3 +12,10 @@ export interface NewSuggestionInstrument {
   description: string
   instrument: Instrument
 }
+
+export interface InputsSongInformation {
+  artist: string
+  link: string
+  motivation: string
+  title: string
+}

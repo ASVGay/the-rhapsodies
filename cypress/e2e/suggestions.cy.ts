@@ -5,6 +5,11 @@ describe("suggestions page", () => {
       cy.visit("/suggestions")
     })
 
+    it("should go to new suggestion on click of new suggestion", function () {
+      cy.data("button-new-suggestion").click()
+      cy.location("pathname").should("eq", "/suggestions/new")
+    })
+
     it("should have suggestions", () => {
       cy.data("suggestions-list").children().should("exist")
     })

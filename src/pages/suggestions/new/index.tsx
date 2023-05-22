@@ -7,6 +7,8 @@ import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
 import { useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
+import { FormProvider, useForm } from "react-hook-form"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import InstrumentsArea from "@/components/new-suggestion/areas/instruments/instruments.area"
 import { Database } from "@/types/database"
 import { Instrument } from "@/types/database-types"
@@ -18,6 +20,11 @@ import ErrorPopup from "@/components/popups/error-popup"
 const NewSuggestion = () => {
   const router = useRouter()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+
+  const methods = useForm<InputsSongInformation>({
+    defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
+  })
 
   const supabaseClient = useSupabaseClient<Database>()
   const [instruments, setInstruments] = useState<Instrument[]>([])
@@ -44,35 +51,37 @@ const NewSuggestion = () => {
   }, [supabaseClient])
 
   return (
-    <div className={"page-wrapper"}>
-      <div className={"flex justify-between"}>
-        <div className={"page-header"}>New Suggestion</div>
-        <XMarkIcon
-          data-cy={"button-discard-new-suggestion"}
-          className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-          onClick={() => router.push("/suggestions")}
-        />
-      </div>
-      {showSpinner && (
-        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
-          <Spinner size={10} />
+    <FormProvider {...methods}>
+      <div className={"page-wrapper"}>
+        <div className={"flex justify-between"}>
+          <div className={"page-header"}>New Suggestion</div>
+          <XMarkIcon
+            data-cy={"button-discard-new-suggestion"}
+            className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
+            onClick={() => router.push("/suggestions")}
+          />
         </div>
-      )}
 
-      {showLoadingError && (
-        <div className={"mt-6"} data-cy="failed-fetching-suggestions">
-          <ErrorPopup text={"Failed to load suggestions."} closePopup={() => {}} />
-        </div>
-      )}
-      {!showLoadingError && (
-        <div className={"mx-auto text-center lg:w-2/4"}>
-          <ProgressBar />
-          {activeArea == Area.SongInformation && <SongInformationArea />}
-          {activeArea == Area.Instruments && <InstrumentsArea instruments={instruments} />}
-          {activeArea == Area.Review && <ReviewArea />}
-        </div>
-      )}
-    </div>
+        {showSpinner && (
+          <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+            <Spinner size={10} />
+          </div>
+        )}
+        {showLoadingError && (
+          <div className={"mt-6"} data-cy="failed-fetching-suggestions">
+            <ErrorPopup text={"Failed to load suggestions."} closePopup={() => {}} />
+          </div>
+        )}
+        {!showLoadingError && (
+          <div className={"mx-auto text-center lg:w-2/4"}>
+            <ProgressBar />
+            {activeArea == Area.SongInformation && <SongInformationArea />}
+            {activeArea == Area.Instruments && <InstrumentsArea instruments={instruments} />}
+            {activeArea == Area.Review && <ReviewArea />}
+          </div>
+        )}
+      </div>
+    </FormProvider>
   )
 }
 

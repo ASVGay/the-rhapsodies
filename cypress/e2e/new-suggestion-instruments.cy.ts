@@ -8,6 +8,10 @@ const instrumentEditList = "instrument-edit-list"
 const deleteButton = "delete-button"
 const instrumentSearchCloseButton = "instrument-search-close-button"
 const descriptionInput = "description-input"
+const inputTitle = "input-title"
+const inputArtist = "input-artist"
+const inputLink = "input-link"
+const inputMotivation = "input-motivation"
 
 const addInstrumentItem = () => {
   cy.data(searchInstrumentInput).type("a")
@@ -18,6 +22,10 @@ describe("when creating new instrument suggestions for a suggestion", function (
   beforeEach(() => {
     cy.login()
     cy.visit("/suggestions/new")
+    cy.data(inputTitle).type("Hello")
+    cy.data(inputArtist).type("Hello")
+    cy.data(inputLink).type("www.hello.com")
+    cy.data(inputMotivation).type("Hello")
     cy.data(toInstrumentsProgressButton).click()
   })
 
