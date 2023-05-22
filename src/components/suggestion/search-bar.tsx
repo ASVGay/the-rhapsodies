@@ -22,7 +22,7 @@ const SearchBar = ({handleSearch, inputRef, showSearchBar, setShowSearchBar}: Se
                     placeholder="Enter a song..."
                     data-cy="search-suggestion-input"
                     className="w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
-                ></input>
+                />
                 <MagnifyingGlassIcon className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 cursor-pointer text-gray-500"/>
             </div>
             <div className={"flex"}>

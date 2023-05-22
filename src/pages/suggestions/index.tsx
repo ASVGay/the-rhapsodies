@@ -133,7 +133,7 @@ const Suggestions: FC = () => {
       {noSuggestionsText.length !== 0 && (
         <div
           className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
-          data-cy="no-suggestions-made"
+          data-cy="no-suggestions-text"
         >
           <div>
             <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
