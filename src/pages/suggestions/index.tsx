@@ -10,7 +10,7 @@ import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
-import SearchBar from "@/components/suggestion/search-bar";
+import SearchBar from "@/components/suggestion/search-bar"
 
 const Suggestions: FC = () => {
   const router = useRouter()
@@ -34,7 +34,9 @@ const Suggestions: FC = () => {
 
         response.data?.length! > 0
           ? (setSuggestions(response.data as Suggestion[]), setNoSuggestionsText(""))
-          : setNoSuggestionsText("Looks like there are no suggestions made yet! Feel free to start adding them.")
+          : setNoSuggestionsText(
+              "Looks like there are no suggestions made yet! Feel free to start adding them."
+            )
       })
       .catch(() => {
         setShowLoadingError(true)
@@ -50,7 +52,7 @@ const Suggestions: FC = () => {
     }
   }, [showSearchBar])
 
-  const handleSearch = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const searchText: string = e.target.value
 
     const filteredSuggestions = suggestions.filter((suggestion) => {
@@ -63,8 +65,10 @@ const Suggestions: FC = () => {
       )
     })
 
-    if(filteredSuggestions.length === 0) {
-      setNoSuggestionsText("Looks like the song you are looking for does not exist yet! Feel free to add the song!")
+    if (filteredSuggestions.length === 0) {
+      setNoSuggestionsText(
+        "Looks like the song you are looking for does not exist yet! Feel free to add the song!"
+      )
     } else {
       setNoSuggestionsText("")
     }
@@ -73,24 +77,15 @@ const Suggestions: FC = () => {
   }
 
   const renderSuggestions = () => {
-    if (searchedSuggestions.length !== 0) {
-      return (
-        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-          {searchedSuggestions.map((suggestion) => (
-            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-          ))}
-        </div>
-      )
-    } else if (!showSearchBar) {
-      return (
-        <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-          {suggestions.map((suggestion) => (
-            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-          ))}
-        </div>
-      )
-    }
-    return null
+    const displayedSuggestions = showSearchBar ? searchedSuggestions : suggestions
+
+    return (
+      <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
+        {displayedSuggestions.map((suggestion) => (
+          <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -112,10 +107,10 @@ const Suggestions: FC = () => {
       </div>
 
       <SearchBar
-          handleSearch={handleSearch}
-          inputRef={inputRef}
-          showSearchBar={showSearchBar}
-          setShowSearchBar={setShowSearchBar}
+        handleSearch={handleSearch}
+        inputRef={inputRef}
+        showSearchBar={showSearchBar}
+        setShowSearchBar={setShowSearchBar}
       />
 
       {showSpinner && (
