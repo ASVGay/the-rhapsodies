@@ -15,17 +15,17 @@ import { Area } from "@/constants/area"
 import { useRouter } from "next/router"
 import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
 import Spinner from "@/components/utils/spinner"
-import { useState } from "react"
+import React, { useState } from "react"
+import ErrorPopup from "@/components/popups/error-popup"
 
 const Review = () => {
   const supabase = useSupabaseClient<Database>()
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [insertError, setInsertError] = useState<boolean>(false)
   const dispatch = useDispatch()
   const router = useRouter()
   const user = useUser()
-
-  //TODO add waiting indicator
 
   const saveSuggestion = () => {
     setShowSpinner(true)
@@ -57,7 +57,7 @@ const Review = () => {
   }
 
   const handleError = () => {
-    //TODO: error-handeling
+    setInsertError(true)
   }
 
   const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
@@ -75,7 +75,7 @@ const Review = () => {
 
   const btnCss = () => requiredDataIsPresent()
     ? "bg-moon-500 cursor-pointer"
-    : "bg-moon-100 cursor-not-allowed"
+    : "bg-moon-100 cursor-not-allowed hover:bg-moon-100"
 
   return (
     <div>
@@ -143,6 +143,15 @@ const Review = () => {
               Submit Suggestion
             </button>
           </div>
+
+          {insertError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to save suggestion."}
+                closePopup={() => setInsertError(false)}
+              />
+            </div>
+          )}
         </>)
       }
     </div>
