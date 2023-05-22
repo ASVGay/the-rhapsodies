@@ -40,7 +40,7 @@ const InstrumentsEditItem = ({
           <div />
         </div>
       </div>
-      <button onClick={onDeleteClick} className="h-6 w-6">
+      <button onClick={onDeleteClick} data-cy="delete-button" className="h-6 w-6">
         <TrashIcon className="mr-4 h-6 w-6 text-red-500 focus:text-red-900" />
       </button>
     </li>

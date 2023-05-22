@@ -44,7 +44,7 @@ const InstrumentsEdit = () => {
   }
 
   return (
-    <div>
+    <ul data-cy="instrument-edit-list">
       {instrumentItems.map((instrumentItem: NewSuggestionInstrument, index) => {
         return (
           <InstrumentsEditItem
@@ -55,7 +55,7 @@ const InstrumentsEdit = () => {
           />
         )
       })}
-    </div>
+    </ul>
   )
 }
 

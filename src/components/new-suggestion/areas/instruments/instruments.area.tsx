@@ -48,7 +48,7 @@ const InstrumentsArea = ({ instruments }: InstrumentsAreaProps) => {
         onInstrumentSelected={(instrument: Instrument) => onInstrumentSelected(instrument)}
       />
       <InstrumentsEdit />
-      <button disabled={!canProceed} className="btn" onClick={onSubmit}>
+      <button data-cy="to-review-button" disabled={!canProceed} className="btn" onClick={onSubmit}>
         To Review
       </button>
     </div>
