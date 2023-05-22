@@ -66,7 +66,7 @@
         @apply h-6 w-6 text-gray-400
     }
 
-    .btn {
+    .btn.songInformation {
         @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300
     }
 }

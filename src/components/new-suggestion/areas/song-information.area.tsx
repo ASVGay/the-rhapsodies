@@ -53,6 +53,7 @@ const SongInformationArea = () => {
 
           <div className="input">
             <input
+              data-cy={"input-title"}
               type="text"
               placeholder="Title"
               {...register("title", {
@@ -80,6 +81,7 @@ const SongInformationArea = () => {
 
           <div className="input">
             <input
+              data-cy={"input-artist"}
               type="text"
               placeholder="Artist"
               {...register("artist", {
@@ -106,7 +108,12 @@ const SongInformationArea = () => {
           </label>
 
           <div className="input">
-            <input type="url" placeholder="Link to the song (optional)" {...register("link")} />
+            <input
+              data-cy={"input-link"}
+              type="url"
+              placeholder="Link to the song (optional)"
+              {...register("link")}
+            />
             <span>
               <LinkIcon />
             </span>
@@ -120,6 +127,7 @@ const SongInformationArea = () => {
 
           <div>
             <textarea
+              data-cy={"input-motivation"}
               className="w-full rounded-lg border border-gray-200 p-3 shadow-sm"
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
@@ -138,7 +146,11 @@ const SongInformationArea = () => {
           )}
         </div>
 
-        <button type="submit" className="btn mb-4" onClick={() => console.log(errors)}>
+        <button
+          data-cy={"button-add-instruments"}
+          type="submit"
+          className="btn song-information mb-4"
+        >
           Add instruments
         </button>
       </form>
