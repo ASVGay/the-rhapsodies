@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import {FC, FormEvent, useEffect, useRef, useState} from "react"
 import { getSuggestions } from "@/services/suggestion.service"
 import SuggestionCard from "@/components/suggestion/suggestion-card"
 import { PlusIcon } from "@heroicons/react/24/solid"
@@ -9,15 +9,17 @@ import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
+import {MagnifyingGlassIcon} from "@heroicons/react/20/solid";
 
 const Suggestions: FC = () => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([])
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
   const [noSuggestionsMade, setNoSuggestionsMade] = useState<boolean>(false)
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     setShowSpinner(true)
     getSuggestions(supabaseClient)
@@ -39,6 +41,15 @@ const Suggestions: FC = () => {
       })
   }, [supabaseClient])
 
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault()
+    if(inputRef.current) {
+      const searchText: string = inputRef.current.value;
+      console.log(searchText)
+      inputRef.current.value = ""
+    }
+  }
+
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"}>
@@ -49,6 +60,20 @@ const Suggestions: FC = () => {
           onClick={() => router.push("/suggestions/new")}
         />
       </div>
+
+      <form className="h-12 relative" onSubmit={(e) => handleSearch(e)}>
+        <input
+            ref={inputRef}
+            type="text"
+            placeholder="Enter a song..."
+            data-cy="search-suggestion-input"
+            className="flex w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
+        />
+        <MagnifyingGlassIcon
+            className="absolute right-0 top-0 mr-3 mt-3 h-5 w-5 text-gray-500 cursor-pointer"
+            onClick={(e) => handleSearch(e)}
+        />
+      </form>
 
       {showSpinner && (
         <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
