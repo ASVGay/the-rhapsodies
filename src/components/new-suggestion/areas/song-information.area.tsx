@@ -1,18 +1,13 @@
 import React from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
-import { useForm } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
-
-interface Inputs {
-  artist: string
-  link: string
-  motivation: string
-  title: string
-}
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 
 const SongInformationArea = () => {
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -21,11 +16,9 @@ const SongInformationArea = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: { ...newSuggestion, artist: newSuggestion.artist.join(",") } as Inputs,
-  })
+  } = useFormContext<InputsSongInformation>()
 
-  const onSubmit = ({ title, artist, link, motivation }: Inputs) => {
+  const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
     dispatch(
       updateNewSuggestion({
         ...newSuggestion,
@@ -35,8 +28,13 @@ const SongInformationArea = () => {
         motivation,
       })
     )
+  }
+
+  function submitAndGoToInstruments() {
+    submitSongInformationForm()
     dispatch(setActiveArea(Area.Instruments))
   }
+
   return (
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
@@ -148,8 +146,9 @@ const SongInformationArea = () => {
 
         <button
           data-cy={"button-add-instruments"}
-          type="submit"
+          type="button"
           className="btn song-information mb-4"
+          onClick={() => submitAndGoToInstruments()}
         >
           Add instruments
         </button>

@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 import { toast } from "react-toastify"
+import { useFormContext } from "react-hook-form"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 
 function showSongInformationError() {
   toast.warn("You need to fill in all the required fields before continuing")
@@ -14,33 +17,26 @@ function showSongInformationError() {
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
-  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+  const { watch } = useFormContext<InputsSongInformation>()
 
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
   }
 
   function songInformationIsInvalid() {
-    return suggestion.title == "" || suggestion.artist.length == 0 || suggestion.motivation == ""
-  }
-
-  function triggerSongInformationSubmit() {
-    document
-      .querySelector("#song-information")
-      // Those properties are necessary [src: https://stackoverflow.com/a/65667238]
-      ?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
+    return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
   }
 
   function goToInstruments() {
-    triggerSongInformationSubmit()
     if (songInformationIsInvalid()) showSongInformationError()
     else dispatch(setActiveArea(Area.Instruments))
+    submitSongInformationForm()
   }
 
   function goToReview() {
-    triggerSongInformationSubmit()
     if (songInformationIsInvalid()) showSongInformationError()
     else dispatch(setActiveArea(Area.Review))
+    submitSongInformationForm()
   }
 
   return (
