@@ -18,9 +18,12 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-      <TopNavigation />
-      <div className={"max-lg:pb-[68px]"}>{children}</div>
-      <BottomNavigation />
+      <div className="fixed z-50 h-[env(safe-area-inset-top)] w-full bg-moon-200"></div>
+      <div className={"p-safe"}>
+        <TopNavigation />
+        <div className={"max-lg:pb-[68px]"}>{children}</div>
+        <BottomNavigation />
+      </div>
     </>
   )
 }
