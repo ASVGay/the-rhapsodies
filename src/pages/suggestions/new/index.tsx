@@ -39,9 +39,9 @@ const NewSuggestion = () => {
         if (response.error || response.data?.length! === 0) {
           setShowLoadingError(true)
           return
-        } else {
-          setInstrumentList(response.data as Instrument[])
         }
+
+        setInstrumentList(response.data as Instrument[])
       })
       .catch(() => {
         setShowLoadingError(true)

@@ -48,7 +48,7 @@ const InstrumentsList = () => {
             onDeleteClick={() => onDeleteInstrument(index)}
             instrumentItem={instrumentItem}
             onDescriptionChanged={(description) => onDescriptionChanged(index, description)}
-            key={index}
+            key={instrumentItem.instrument.id + index}
           />
         )
       })}

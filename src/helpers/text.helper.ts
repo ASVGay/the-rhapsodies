@@ -7,7 +7,7 @@ export const boldSpecificTextSections = (str: string, find: string) => {
     const capitalizedWords = words.map((word) => {
       let charIndex = 0
       let firstLetter = ""
-      if (word.charAt(0) === "<") {
+      if (word.startsWith("<")) {
         charIndex = 3
         firstLetter = "<b>" + word.charAt(charIndex).toUpperCase()
       } else {
@@ -21,15 +21,14 @@ export const boldSpecificTextSections = (str: string, find: string) => {
     return capitalizedWords.join(" ")
   }
 
-  var re = new RegExp(find, "gi")
+  const re = new RegExp(find, "gi")
 
   let newString = str.replace(re, "<b>" + find.toLowerCase() + "</b>")
 
   newString = capitalizeFirstLetterOfEachWord(newString)
   // If the first occurrence is the bold tag, Capitalize the letter inside that bold tag.
-  if (newString.charAt(0) === "<")
+  if (newString.startsWith("<"))
     return newString.replace(`<b>${newString.charAt(3)}`, `<b>${newString.charAt(3).toUpperCase()}`)
 
-  // const words = newString.split(" ");
   return newString
 }
