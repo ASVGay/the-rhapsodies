@@ -18,7 +18,7 @@ const addInstrumentItem = () => {
   cy.data(instrumentSearchList).first().click()
 }
 
-describe("when creating new instrument suggestions for a suggestion", function () {
+describe("when creating new instrument suggestions for a suggestion", () => {
   beforeEach(() => {
     cy.login()
     cy.visit("/suggestions/new")
@@ -31,27 +31,27 @@ describe("when creating new instrument suggestions for a suggestion", function (
     cy.data(toInstrumentsProgressButton).click()
   })
 
-  it("should error if it can't retrieve instruments", function () {
+  it("should error if it can't retrieve instruments", () => {
     //TODO: Add test
   })
 
-  it("should prevent the process to proceed further", function () {
+  it("should prevent the process to proceed further", () => {
     cy.data(toReviewButton).should("be.disabled")
   })
 
-  it("adding a instrument should allow the process to proceed", function () {
+  it("adding a instrument should allow the process to proceed", () => {
     addInstrumentItem()
     cy.data(toReviewButton).click()
     cy.data(instrumentsArea).should("not.exist")
   })
 
   context("the search bar", () => {
-    it("should add an item to the edit list", function () {
+    it("should add an item to the edit list", () => {
       addInstrumentItem()
       cy.data(instrumentEditList).first().should("exist")
     })
 
-    it("allow search to be cleared by pressing the clear button", function () {
+    it("allow search to be cleared by pressing the clear button", () => {
       cy.data(searchInstrumentInput).type("a")
       cy.data(instrumentSearchCloseButton).click()
       cy.data(instrumentSearchList).should("not.exist")
@@ -63,7 +63,7 @@ describe("when creating new instrument suggestions for a suggestion", function (
       addInstrumentItem()
     })
 
-    it("should be removed when pressing the delete button", function () {
+    it("should be removed when pressing the delete button", () => {
       cy.data(instrumentEditList).first().data(deleteButton).click()
       cy.data(instrumentEditList).should("be.empty")
     })
@@ -76,15 +76,15 @@ describe("when creating new instrument suggestions for a suggestion", function (
       cy.data(toInstrumentsProgressButton).click()
     })
 
-    it("should populate the list with previously added elements", function () {
+    it("should populate the list with previously added elements", () => {
       cy.data(instrumentEditList).first().should("exist")
     })
 
-    it("should have a clear search bar", function () {
+    it("should have a clear search bar", () => {
       cy.data(searchInstrumentInput).should("be.empty")
     })
 
-    it("should not show any search results", function () {
+    it("should not show any search results", () => {
       cy.data(instrumentSearchList).should("not.exist")
     })
   })
@@ -95,7 +95,7 @@ describe("when creating new instrument suggestions for a suggestion", function (
       cy.wait(500)
     })
 
-    it("should add instruments to redux's newSuggestion's suggestion", function () {
+    it("should add instruments to redux's newSuggestion's suggestion", () => {
       cy.data(instrumentEditList).first().should("exist")
       cy.window()
         .its("store")
@@ -106,7 +106,7 @@ describe("when creating new instrument suggestions for a suggestion", function (
         .should("have.length", 1)
     })
 
-    it("should reflect the correct description on the instrument in redux", function () {
+    it("should reflect the correct description on the instrument in redux", () => {
       cy.data(instrumentEditList).first().data(descriptionInput).type("test description")
       cy.window()
         .its("store")

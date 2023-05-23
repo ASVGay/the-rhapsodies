@@ -5,7 +5,7 @@ describe("suggestions page", () => {
       cy.visit("/suggestions")
     })
 
-    it("should go to new suggestion on click of new suggestion", function () {
+    it("should go to new suggestion on click of new suggestion", () => {
       cy.data("button-new-suggestion").click()
       cy.location("pathname").should("eq", "/suggestions/new")
     })
