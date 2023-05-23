@@ -83,7 +83,7 @@ const NewSuggestion = () => {
             <ProgressBar />
             {activeArea == Area.SongInformation && <SongInformationArea />}
             {activeArea == Area.Instruments && <InstrumentsArea instrumentList={instrumentList} />}
-            {activeArea == Area.Review && <ReviewArea instrumentList={instrumentList} />}
+            {activeArea == Area.Review && <ReviewArea />}
           </div>
         )}
       </div>
