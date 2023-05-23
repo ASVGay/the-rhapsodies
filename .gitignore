@@ -25,7 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-dev.env
+*.env
 .env*.local
 .env
 
@@ -138,6 +138,7 @@ fabric.properties
 serviceAccount.json
 
 .idea
+.vscode
 cypress.env.json
 cypress/videos
 cypress/screenshots

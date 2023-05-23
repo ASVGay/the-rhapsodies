@@ -1,0 +1,12 @@
+{
+  "newSuggestion": {
+    "activeArea": "song-information",
+    "suggestion": {
+      "title": "",
+      "artist": [],
+      "link": null,
+      "motivation": "",
+      "instruments": []
+    }
+  }
+}

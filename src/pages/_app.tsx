@@ -1,3 +1,4 @@
+import "react-toastify/dist/ReactToastify.css"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
@@ -9,6 +10,7 @@ import { useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
+import { Slide, ToastContainer } from "react-toastify"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -45,7 +47,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="An application for members of The Rhapsodies, A.S.V.Gay's house band."
         />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#F5DD8A" />
+        <meta name="theme-color" content="#FAEDC2" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
@@ -215,11 +217,17 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Layout>
               <Component {...pageProps} />
             </Layout>
+            <ToastContainer
+              newestOnTop
+              className={"pt-safe"}
+              bodyClassName={`${lexend.variable} font-sans`}
+              toastClassName="rounded-lg"
+              transition={Slide}
+            />
           </main>
         </SessionContextProvider>
       </Provider>
     </>
   )
 }
-
 export default App

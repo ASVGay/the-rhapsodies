@@ -5,13 +5,53 @@ import { Area } from "@/constants/area"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
+import { toast } from "react-toastify"
+import { useFormContext } from "react-hook-form"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import {
+  isInstrumentSuggestionInvalid,
+  isSongInformationInvalid,
+  submitSongInformationForm,
+} from "@/helpers/new-suggestion.helper"
+
+function showSongInformationError() {
+  toast.warn("You need to fill in all the required fields before continuing")
+}
+
+function showInstrumentError() {
+  toast.warn("You need to add at least one instrument before continuing")
+}
 
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const newSuggestion = useSelector((state: AppState) => state.newSuggestion)
+  const { watch } = useFormContext<InputsSongInformation>()
 
   function colorArea(area: string) {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
+  }
+
+  function goToInstruments() {
+    submitSongInformationForm()
+    if (isSongInformationInvalid(watch)) showSongInformationError()
+    else dispatch(setActiveArea(Area.Instruments))
+  }
+
+  function goToReview() {
+    submitSongInformationForm()
+    if (isSongInformationInvalid(watch)) {
+      showSongInformationError()
+      return
+    }
+
+    if (isInstrumentSuggestionInvalid(newSuggestion.suggestion.instruments)) {
+      showInstrumentError()
+      dispatch(setActiveArea(Area.Instruments))
+      return
+    }
+
+    dispatch(setActiveArea(Area.Review))
   }
 
   return (
@@ -34,7 +74,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-instruments"}
             className={`progress-bar-icon group justify-center ${colorArea(Area.Instruments)}`}
-            onClick={() => dispatch(setActiveArea(Area.Instruments))}
+            onClick={() => goToInstruments()}
           >
             <ListBulletIcon className="mx-auto h-6 w-6" />
             <ProgressBarCheckBox positioning={"left-1/2 -translate-x-1/2"} />
@@ -43,7 +83,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-review"}
             className={`progress-bar-icon group justify-end ${colorArea(Area.Review)}`}
-            onClick={() => dispatch(setActiveArea(Area.Review))}
+            onClick={() => goToReview()}
           >
             <DocumentTextIcon className={"h-6 w-6"} />
             <ProgressBarCheckBox positioning={"end-0"} />

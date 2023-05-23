@@ -3,9 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { Suggestion } from "@/types/database-types"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
-import { Database } from "@/types/database"
-import { getInstrumentImage } from "@/services/suggestion.service"
+import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 
 interface SuggestionCardProps {
   suggestion: Suggestion
