@@ -161,6 +161,7 @@ describe("when creating a new suggestion", function () {
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
             cy.data(error).should("be.visible")
+            cy.data(inputField).should("have.css", "outline-color", "rgb(248, 113, 113)")
           })
 
           it(`should show no error if submitting with ${name}`, function () {
@@ -168,6 +169,7 @@ describe("when creating a new suggestion", function () {
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
             cy.data(error).should("not.exist")
+            cy.data(inputField).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
           })
         })
 
