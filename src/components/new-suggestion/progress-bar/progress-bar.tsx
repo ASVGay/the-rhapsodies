@@ -47,6 +47,7 @@ const ProgressBar = () => {
 
     if (isInstrumentSuggestionInvalid(newSuggestion.suggestion.instruments)) {
       showInstrumentError()
+      dispatch(setActiveArea(Area.Instruments))
       return
     }
 
