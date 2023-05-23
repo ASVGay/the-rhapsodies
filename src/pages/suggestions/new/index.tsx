@@ -36,7 +36,7 @@ const NewSuggestion = () => {
     setShowSpinner(true)
     getInstruments(supabaseClient)
       .then((response) => {
-        if (response.error || response.data?.length! === 0) {
+        if (response.error || response.data?.length === 0) {
           setShowLoadingError(true)
           return
         }
