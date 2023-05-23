@@ -94,6 +94,7 @@ const Suggestions: FC = () => {
         <div className={"flex flex-row gap-2"}>
           <MagnifyingGlassIcon
             data-cy={"button-search-suggestions"}
+            viewBox={"-1.25 -1.25 23.25 23.25"}
             className="h-8 w-8 cursor-pointer text-black hover:text-zinc-400"
             onClick={() => setShowSearchBar(true)}
           />
