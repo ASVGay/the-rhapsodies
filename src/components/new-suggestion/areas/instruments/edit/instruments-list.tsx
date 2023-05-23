@@ -16,7 +16,7 @@ const InstrumentsList = () => {
     setInstrumentListItems(newSuggestion.instruments)
   }, [instrumentListItems, newSuggestion])
 
-  const onDeleteInstrument = (index: number): boolean => {
+  const onDeleteInstrument = (index: number) => {
     const newItems = [...instrumentListItems]
     newItems.splice(index, 1)
 
@@ -26,7 +26,6 @@ const InstrumentsList = () => {
         instruments: newItems,
       })
     )
-    return true
   }
 
   const onDescriptionChanged = (index: number, description: string) => {
@@ -39,8 +38,6 @@ const InstrumentsList = () => {
         instruments: newItems,
       })
     )
-
-    return true
   }
 
   return (

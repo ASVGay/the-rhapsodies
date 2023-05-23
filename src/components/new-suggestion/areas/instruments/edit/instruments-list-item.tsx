@@ -6,8 +6,8 @@ import { ChangeEvent, useEffect, useRef } from "react"
 
 interface InstrumentsListItemProps {
   instrumentItem: NewSuggestionInstrument
-  onDeleteClick(): boolean
-  onDescriptionChanged(value: string): boolean
+  onDeleteClick(): void
+  onDescriptionChanged(value: string): void
 }
 
 const InstrumentsListItem = ({
