@@ -43,12 +43,13 @@ const InstrumentsList = () => {
   return (
     <ul data-cy="instrument-edit-list">
       {instrumentListItems.map((instrumentItem: NewSuggestionInstrument, index) => {
+        const key = `${instrumentItem.instrument.id}-${index}`
         return (
           <InstrumentsListItem
             onDeleteClick={() => onDeleteInstrument(index)}
             instrumentItem={instrumentItem}
             onDescriptionChanged={(description) => onDescriptionChanged(index, description)}
-            key={`${instrumentItem.instrument.id}-${index}`}
+            key={key}
           />
         )
       })}
