@@ -56,6 +56,7 @@ const ReviewArea = () => {
 
   const handleError = () => {
     setInsertError(true)
+    setShowSpinner(false)
   }
 
   const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
@@ -148,8 +149,11 @@ const ReviewArea = () => {
           </div>
 
           {insertError && (
-            <div className={"mt-6"}>
-              <ErrorPopup text={"Failed to save suggestion."} closePopup={() => setInsertError(false)} />
+            <div className={"mt-6"} data-cy="new-suggestion-insert-error">
+              <ErrorPopup
+                text={"Failed to save suggestion."}
+                closePopup={() => setInsertError(false)}
+              />
             </div>
           )}
         </>)

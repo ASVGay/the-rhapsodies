@@ -5,7 +5,7 @@ import {
   SuggestionInstrument,
   SuggestionInstrumentDatabaseOperation
 } from "@/types/database-types"
-import { NewInstrument, NewSuggestion } from "@/interfaces/new-suggestion"
+import { NewSuggestion } from "@/interfaces/new-suggestion"
 
 export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
   return supabase.from("suggestion").select(`
