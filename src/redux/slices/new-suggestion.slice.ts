@@ -34,6 +34,12 @@ export const newSuggestionSlice = createSlice({
         suggestion: action.payload,
       }
     },
+    updateInstrumentNewSuggestion(state, action: PayloadAction<NewSuggestion>) {
+      return {
+        ...state,
+        suggestion: action.payload,
+      }
+    },
   },
 })
 

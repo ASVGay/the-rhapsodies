@@ -1,5 +1,5 @@
 import { UseFormWatch } from "react-hook-form"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 
 export function submitSongInformationForm() {
   document
@@ -12,4 +12,8 @@ export function isSongInformationInvalid<TFieldNames, TFieldName>(
   watch: UseFormWatch<InputsSongInformation>
 ) {
   return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
+}
+
+export function isInstrumentSuggestionInvalid(instruments: NewSuggestionInstrument[]) {
+  return instruments.length < 1
 }

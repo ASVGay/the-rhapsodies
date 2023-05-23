@@ -33,10 +33,6 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .single()
 }
 
-export const getInstrumentImage = (sourceName: string) => {
-  return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1684372007/instrument-icons/${sourceName}.svg`
-}
-
 export const insertDivision = (
   supabaseClient: SupabaseClient<Database>,
   division: DivisionDatabaseOperation

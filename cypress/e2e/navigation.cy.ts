@@ -62,7 +62,7 @@ describe("navigation components", () => {
         })
       })
 
-      it("should highlight navigation item on sub path", function () {
+      it("should highlight navigation item on sub path", () => {
         cy.visit("/suggestions/new")
         cy.data(topNavigation).within(() => {
           cy.get(`[data-cy="suggestions"][data-active=true]`).should("exist")
@@ -92,7 +92,7 @@ describe("navigation components", () => {
         })
       })
 
-      it("should highlight navigation item on sub path", function () {
+      it("should highlight navigation item on sub path", () => {
         cy.visit("/suggestions/new")
         cy.data(bottomNavigation).within(() => {
           cy.get(`[data-cy="suggestions"][data-active=true]`).should("exist")

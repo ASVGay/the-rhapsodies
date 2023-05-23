@@ -138,6 +138,7 @@ fabric.properties
 serviceAccount.json
 
 .idea
+.vscode
 cypress.env.json
 cypress/videos
 cypress/screenshots

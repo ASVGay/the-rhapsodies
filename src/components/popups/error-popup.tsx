@@ -3,7 +3,7 @@ import Image from "next/image"
 
 interface ErrorPopupProps {
   text: string
-  closePopup: () => void
+  closePopup?: () => void
   dataCy?: string
 }
 const ErrorPopup = (props: ErrorPopupProps) => {

@@ -9,12 +9,12 @@ describe("<NotificationSettings />", () => {
   })
 
   context("when notifications are supported", () => {
-    it("notifications should be supported by the browser", function () {
+    it("notifications should be supported by the browser", () => {
       cy.mount(<NotificationSettings />)
       cy.window().should("have.property", "Notification").should("be.a", "function")
     })
 
-    it("should show alert if trying to disable notifications with permission granted", function () {
+    it("should show alert if trying to disable notifications with permission granted", () => {
       cy.stub(window.Notification, "permission", "granted" as unknown as () => {})
       cy.stub(window.Notification, "requestPermission").resolves("granted")
       cy.mount(<NotificationSettings />)
@@ -24,7 +24,7 @@ describe("<NotificationSettings />", () => {
       })
     })
 
-    it("should show alert if trying to enable notifications with permission denied", function () {
+    it("should show alert if trying to enable notifications with permission denied", () => {
       cy.stub(window.Notification, "permission", "denied" as unknown as () => {})
       cy.stub(window.Notification, "requestPermission").resolves("denied")
       cy.mount(<NotificationSettings />)
@@ -50,22 +50,22 @@ describe("<NotificationSettings />", () => {
         cy.stub(window.Notification, "permission", "default" as unknown as () => {})
       })
 
-      it("should check the checkbox when permission is granted", function () {
+      it("should check the checkbox when permission is granted", () => {
         checkToggleStateBasedOnPermission("granted", "be.checked")
       })
 
-      it("should not check the checkbox when permission is not given", function () {
+      it("should not check the checkbox when permission is not given", () => {
         checkToggleStateBasedOnPermission("default", "not.be.checked")
       })
 
-      it("should not check the checkbox when permission is denied", function () {
+      it("should not check the checkbox when permission is denied", () => {
         checkToggleStateBasedOnPermission("denied", "not.be.checked")
       })
     })
   })
 
   context("when notifications are not supported", () => {
-    it("should disable the enable notifications toggle and show info text", function () {
+    it("should disable the enable notifications toggle and show info text", () => {
       delete window.Notification
       cy.mount(<NotificationSettings />)
       cy.data("info-notifications-not-supported").should("be.visible")

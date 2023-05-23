@@ -70,6 +70,17 @@ function shouldContainJSONSongInformationInState() {
   })
 }
 
+function shouldContainJSONInstrumentInState() {
+  cy.fixture("state-filled-in-instruments.json").then((songInfo) => {
+    cy.window()
+      .its("store")
+      .invoke("getState")
+      .its("newSuggestion")
+      .its("suggestion")
+      .should("deep.equal", songInfo.newSuggestion.suggestion)
+  })
+}
+
 function areaInStateShouldBe(area: Area) {
   cy.window()
     .its("store")
@@ -79,7 +90,7 @@ function areaInStateShouldBe(area: Area) {
     .should("equal", area)
 }
 
-describe("when creating a new suggestion", function () {
+describe("when creating a new suggestion", () => {
   beforeEach(() => {
     cy.login()
   })
@@ -88,7 +99,7 @@ describe("when creating a new suggestion", function () {
       cy.visit(path)
     })
 
-    it("should go to suggestions on discard", function () {
+    it("should go to suggestions on discard", () => {
       cy.data(buttonDiscardNewSuggestion).click()
       cy.location("pathname").should("eq", "/suggestions")
     })
@@ -122,7 +133,7 @@ describe("when creating a new suggestion", function () {
 
       instrumentsAndReviewArea.forEach(({ area, progressBarItem }) => {
         context(`when attempting to go to ${area} area`, () => {
-          it("should show toast", function () {
+          it("should show toast", () => {
             cy.data(progressBarItem).click()
             cy.get(".Toastify")
               .get("#1")
@@ -130,7 +141,7 @@ describe("when creating a new suggestion", function () {
               .should("have.text", "You need to fill in all the required fields before continuing")
           })
 
-          it("should stay on the song information", function () {
+          it("should stay on the song information", () => {
             cy.data(progressBarItem).click()
             cy.data(areaSongInformation).should("be.visible")
             cy.data(areaInstruments).should("not.exist")
@@ -138,7 +149,7 @@ describe("when creating a new suggestion", function () {
           })
         })
 
-        it("should show errors on form", function () {
+        it("should show errors on form", () => {
           cy.get(".error-message").should("not.exist")
           cy.data(progressBarItem).click()
           cy.get(".error-message").should("have.length", 3)
@@ -147,7 +158,7 @@ describe("when creating a new suggestion", function () {
     })
 
     context("the form", () => {
-      it("should have no default values", function () {
+      it("should have no default values", () => {
         cy.data(inputArtist).invoke("val").should("be.empty")
         cy.data(inputArtist).invoke("val").should("be.empty")
         cy.data(inputLink).invoke("val").should("be.empty")
@@ -156,7 +167,7 @@ describe("when creating a new suggestion", function () {
 
       context("on submit", () => {
         requiredInputs.forEach(({ name, inputField, error }) => {
-          it(`should show error if submitting with ${name} `, function () {
+          it(`should show error if submitting with ${name} `, () => {
             cy.data(inputField).invoke("val").should("be.empty")
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
@@ -164,7 +175,7 @@ describe("when creating a new suggestion", function () {
             cy.data(inputField).should("have.css", "outline-color", "rgb(248, 113, 113)")
           })
 
-          it(`should show no error if submitting with ${name}`, function () {
+          it(`should show no error if submitting with ${name}`, () => {
             cy.data(inputField).type("Hello")
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
@@ -173,7 +184,7 @@ describe("when creating a new suggestion", function () {
           })
         })
 
-        it("should go to InstrumentsArea if all required values are filled in", function () {
+        it("should go to InstrumentsArea if all required values are filled in", () => {
           cy.data(inputTitle).type("Hello")
           cy.data(inputArtist).type("Hello")
           cy.data(inputLink).type("www.hello.com")
@@ -230,38 +241,48 @@ describe("when creating a new suggestion", function () {
       })
 
       it("should render the review area on click", () => {
-        cy.data(progressBarReview).click()
-        areaInStateShouldBe(Area.Review)
-        cy.data(areaReview).should("be.visible")
-        cy.data(areaSongInformation).should("not.exist")
-        cy.data(areaInstruments).should("not.exist")
-        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
-        shouldContainJSONSongInformationInState()
+        cy.fixture("state-filled-in-instruments.json").then((songInfo) => {
+          cy.window()
+            .its("store")
+            .invoke("dispatch", updateNewSuggestion(songInfo.newSuggestion.suggestion))
+          cy.data(progressBarReview).click()
+          areaInStateShouldBe(Area.Review)
+          cy.data(areaReview).should("be.visible")
+          cy.data(areaSongInformation).should("not.exist")
+          cy.data(areaInstruments).should("not.exist")
+          cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
+          shouldContainJSONInstrumentInState()
+        })
       })
 
-      it("should render the same active area with state content on change of page", function () {
-        cy.data(progressBarReview).click()
-        areaInStateShouldBe(Area.Review)
-        cy.data(buttonDiscardNewSuggestion).click()
-        cy.data("button-new-suggestion").click()
-        cy.data(areaReview).should("be.visible")
-        cy.data(areaReview).should("contain.text", "Let It Be")
-        areaInStateShouldBe(Area.Review)
-        cy.data(areaSongInformation).should("not.exist")
-        cy.data(areaInstruments).should("not.exist")
-        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
-        shouldContainJSONSongInformationInState()
+      it("should render the same active area with state content on change of page", () => {
+        cy.fixture("state-filled-in-instruments.json").then((songInfo) => {
+          cy.window()
+            .its("store")
+            .invoke("dispatch", updateNewSuggestion(songInfo.newSuggestion.suggestion))
+          cy.data(progressBarReview).click()
+          areaInStateShouldBe(Area.Review)
+          cy.data(buttonDiscardNewSuggestion).click()
+          cy.data("button-new-suggestion").click()
+          cy.data(areaReview).should("be.visible")
+          cy.data(areaReview).should("contain.text", "Let It Be")
+          areaInStateShouldBe(Area.Review)
+          cy.data(areaSongInformation).should("not.exist")
+          cy.data(areaInstruments).should("not.exist")
+          cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
+          shouldContainJSONInstrumentInState()
+        })
       })
     })
 
     context("the form", () => {
-      it("should fill in default values when filled in state", function () {
+      it("should fill in default values when filled in state", () => {
         cy.data(inputTitle).invoke("val").should("equal", "Let It Be")
         cy.data(inputArtist).invoke("val").should("equal", "The Beatles")
         cy.data(inputMotivation).invoke("val").should("contain", "We have already sung it once")
       })
 
-      it("should go to instruments area with data if filled in required fields", function () {
+      it("should go to instruments area with data if filled in required fields", () => {
         shouldGoToInstrumentsArea()
         shouldContainJSONSongInformationInState()
       })

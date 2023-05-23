@@ -9,6 +9,7 @@ import { toast } from "react-toastify"
 import { useFormContext } from "react-hook-form"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import {
+  isInstrumentSuggestionInvalid,
   isSongInformationInvalid,
   submitSongInformationForm,
 } from "@/helpers/new-suggestion.helper"
@@ -17,9 +18,14 @@ function showSongInformationError() {
   toast.warn("You need to fill in all the required fields before continuing")
 }
 
+function showInstrumentError() {
+  toast.warn("You need to add at least one instrument before continuing")
+}
+
 const ProgressBar = () => {
   const dispatch: AppDispatch = useDispatch()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
+  const newSuggestion = useSelector((state: AppState) => state.newSuggestion)
   const { watch } = useFormContext<InputsSongInformation>()
 
   function colorArea(area: string) {
@@ -27,15 +33,25 @@ const ProgressBar = () => {
   }
 
   function goToInstruments() {
+    submitSongInformationForm()
     if (isSongInformationInvalid(watch)) showSongInformationError()
     else dispatch(setActiveArea(Area.Instruments))
-    submitSongInformationForm()
   }
 
   function goToReview() {
-    if (isSongInformationInvalid(watch)) showSongInformationError()
-    else dispatch(setActiveArea(Area.Review))
     submitSongInformationForm()
+    if (isSongInformationInvalid(watch)) {
+      showSongInformationError()
+      return
+    }
+
+    if (isInstrumentSuggestionInvalid(newSuggestion.suggestion.instruments)) {
+      showInstrumentError()
+      dispatch(setActiveArea(Area.Instruments))
+      return
+    }
+
+    dispatch(setActiveArea(Area.Review))
   }
 
   return (
