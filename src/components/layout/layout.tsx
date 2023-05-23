@@ -17,10 +17,10 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <>
+    <div className={"p-safe"}>
       <TopNavigation />
       <div className={"max-lg:pb-[68px]"}>{children}</div>
       <BottomNavigation />
-    </>
+    </div>
   )
 }
