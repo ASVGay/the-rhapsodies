@@ -24,6 +24,7 @@ const NewSuggestion = () => {
 
   const methods = useForm<InputsSongInformation>({
     defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
+    shouldFocusError: false,
   })
 
   const supabaseClient = useSupabaseClient<Database>()
