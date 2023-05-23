@@ -47,7 +47,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="An application for members of The Rhapsodies, A.S.V.Gay's house band."
         />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#F5DD8A" />
+        <meta name="theme-color" content="#FAEDC2" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
