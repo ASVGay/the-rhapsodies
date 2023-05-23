@@ -219,6 +219,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             </Layout>
             <ToastContainer
               newestOnTop
+              className={"pt-safe"}
               bodyClassName={`${lexend.variable} font-sans`}
               toastClassName="rounded-lg"
               transition={Slide}

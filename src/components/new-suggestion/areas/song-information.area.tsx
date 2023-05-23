@@ -53,11 +53,18 @@ const SongInformationArea = () => {
             Title
           </label>
 
+          {errors.title && (
+            <ErrorMessage
+              dataCy={"input-title-error"}
+              message={"A title is required for a suggestion"}
+            />
+          )}
           <div className="input">
             <input
               data-cy={"input-title"}
               type="text"
               placeholder="Title"
+              className={`${errors.title && "error"}`}
               {...register("title", {
                 validate: (value) => {
                   return !!value.trim()
@@ -68,15 +75,15 @@ const SongInformationArea = () => {
               <DocumentTextIcon />
             </span>
           </div>
-          {errors.title && (
-            <ErrorMessage
-              dataCy={"input-title-error"}
-              message={"A title is required for a suggestion"}
-            />
-          )}
         </div>
 
         <div className={"input-container"}>
+          {errors.artist && (
+            <ErrorMessage
+              dataCy={"input-artist-error"}
+              message={"One or more artists are required for a suggestion"}
+            />
+          )}
           <label htmlFor="artist" className="sr-only">
             Artist(s)
           </label>
@@ -86,6 +93,7 @@ const SongInformationArea = () => {
               data-cy={"input-artist"}
               type="text"
               placeholder="Artist"
+              className={`${errors.artist && "error"}`}
               {...register("artist", {
                 validate: (value: string) => {
                   return !!value.trim()
@@ -96,12 +104,6 @@ const SongInformationArea = () => {
               <UserIcon />
             </span>
           </div>
-          {errors.artist && (
-            <ErrorMessage
-              dataCy={"input-artist-error"}
-              message={"One or more artists are required for a suggestion"}
-            />
-          )}
         </div>
 
         <div className={"input-container"}>
@@ -123,14 +125,22 @@ const SongInformationArea = () => {
         </div>
 
         <div className={"input-container"}>
+          {errors.motivation && (
+            <ErrorMessage
+              dataCy={"input-motivation-error"}
+              message={"A motivation for this suggestion is required"}
+            />
+          )}
           <label htmlFor="link" className="sr-only">
             Explain why you would like to play this song with The Rhapsodies
           </label>
 
-          <div>
+          <div className={"mt-1"}>
             <textarea
               data-cy={"input-motivation"}
-              className="w-full rounded-lg p-3 shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
+              className={`w-full rounded-lg p-3 shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
+                errors.motivation && "outline-red-400"
+              }`}
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
@@ -140,12 +150,6 @@ const SongInformationArea = () => {
               })}
             />
           </div>
-          {errors.motivation && (
-            <ErrorMessage
-              dataCy={"input-motivation-error"}
-              message={"A motivation for this suggestion is required"}
-            />
-          )}
         </div>
 
         <button
