@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
+import { toast } from "react-toastify"
 
 interface Input {
   email: string
@@ -14,7 +15,8 @@ const Index = () => {
   const supabase = useSupabaseClient()
   const [emailIsSent, setEmailIsSent] = useState<boolean>(false)
   const resetPasswordForEmail = async ({ email }: Input) => {
-    console.log(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email)
+    if (error) toast.error(error.message)
   }
 
   const {
@@ -61,7 +63,11 @@ const Index = () => {
               </span>
             </div>
           </div>
-          <button type={"submit"} className={"btn w-full rounded-lg p-2.5"}>
+          <button
+            data-cy={"button-submit-email"}
+            type={"submit"}
+            className={"btn w-full rounded-lg p-2.5"}
+          >
             Send link
           </button>
         </form>
