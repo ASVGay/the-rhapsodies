@@ -18,6 +18,8 @@ export type SuggestionInstrument = Database["public"]["Tables"]["suggestion_inst
   division: Division[]
 }
 
+export type SuggestionInstrumentDatabaseOperation = Database["public"]["Tables"]["suggestion_instrument"]["Insert"]
+
 export type Suggestion = Database["public"]["Tables"]["suggestion"]["Row"] & {
   suggestion_instruments: SuggestionInstrument[]
   author: string | DisplayName

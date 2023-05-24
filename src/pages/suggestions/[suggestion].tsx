@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import React, { FC, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
@@ -83,7 +83,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               </p>
             </div>
             <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
+              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
             </Link>
           </div>
 
@@ -112,8 +112,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map(
-                (suggestionInstrument: SuggestionInstrument) => {
+              {suggestion.suggestion_instruments.map((suggestionInstrument: SuggestionInstrument) => {
                   const { instrument, division, id, description } = suggestionInstrument
                   return (
                     <div

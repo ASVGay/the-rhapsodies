@@ -1,48 +1,47 @@
-const toInstrumentsProgressButton = "new-suggestion-progress-bar-instruments"
-const instrumentsArea = "area-instruments"
+import {
+  fillSongInformationSuccessfully,
+  shouldGoToInstrumentsArea,
+  fillInstrumentsSuccessfully,
+  addInstrumentItem,
+  shouldGoToReviewArea,
+  shouldBeFilledState,
+} from "./helpers/new-suggestion.helper"
+
 const toReviewButton = "to-review-button"
 const searchInstrumentInput = "search-instrument-input"
-
 const instrumentSearchList = "instrument-search-list"
 const instrumentEditList = "instrument-edit-list"
 const deleteButton = "delete-button"
 const instrumentSearchCloseButton = "instrument-search-close-button"
 const descriptionInput = "description-input"
-const inputTitle = "input-title"
-const inputArtist = "input-artist"
-const inputLink = "input-link"
-const inputMotivation = "input-motivation"
 
-const addInstrumentItem = () => {
-  cy.data(searchInstrumentInput).type("a")
-  cy.data(instrumentSearchList).first().click()
-}
-
-describe("when creating new instrument suggestions for a suggestion", () => {
+describe("when creating a new suggestion, adding instruments", () => {
   beforeEach(() => {
     cy.login()
     cy.visit("/suggestions/new")
     // Wait so content can render properly and set up submit events
     cy.wait(500)
-    cy.data(inputTitle).type("Hello")
-    cy.data(inputArtist).type("Hello")
-    cy.data(inputLink).type("www.hello.com")
-    cy.data(inputMotivation).type("Hello")
-    cy.data(toInstrumentsProgressButton).click()
+    fillSongInformationSuccessfully()
+    shouldGoToInstrumentsArea()
   })
 
   it("should error if it can't retrieve instruments", () => {
-    //TODO: Add test
+    //N.Y.I
   })
 
   it("should prevent the process to proceed further", () => {
     cy.data(toReviewButton).should("be.disabled")
   })
 
+  it("should render the review area on click", () => {
+    fillInstrumentsSuccessfully()
+    shouldBeFilledState()
+    shouldGoToReviewArea()
+  })
+
   it("adding a instrument should allow the process to proceed", () => {
     addInstrumentItem()
-    cy.data(toReviewButton).click()
-    cy.data(instrumentsArea).should("not.exist")
+    shouldGoToReviewArea()
   })
 
   context("the search bar", () => {
@@ -72,8 +71,6 @@ describe("when creating new instrument suggestions for a suggestion", () => {
   context("when proceeding to next step, but return to make changes", () => {
     beforeEach(() => {
       addInstrumentItem()
-      cy.data(toReviewButton).click()
-      cy.data(toInstrumentsProgressButton).click()
     })
 
     it("should populate the list with previously added elements", () => {

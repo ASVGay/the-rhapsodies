@@ -29,6 +29,14 @@ describe("suggestion detail page", () => {
             })
         })
     })
+
+    it("should redirect to suggestions on pressing the exit button", () => {
+      cy.data("suggestion-x-icon").click()
+        .then(() => {
+          cy.location('pathname').should("equal", "/suggestions")
+        })
+    })
+
   })
 
   context("suggestion doesn't exist", () => {

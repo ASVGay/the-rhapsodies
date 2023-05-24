@@ -24,7 +24,7 @@ const NewSuggestion = () => {
 
   const methods = useForm<InputsSongInformation>({
     defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
-    shouldFocusError: false,
+    shouldFocusError: false
   })
 
   const supabaseClient = useSupabaseClient<Database>()
@@ -73,7 +73,8 @@ const NewSuggestion = () => {
             <ErrorPopup
               text={`“Something went wrong”
             You can try again. Contact support if this error persists.`}
-              closePopup={() => {}}
+              closePopup={() => {
+              }}
             />
           </div>
         )}
