@@ -18,13 +18,21 @@
     .pt-safe {
         padding-top: env(safe-area-inset-top);
     }
-    
+
     .p-safe {
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 }
 
 @layer components {
+    .full-bg-moon-50 {
+        @apply flex h-screen w-screen items-center justify-center bg-moon-50
+    }
+
+    .auth-container {
+        @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light
+    }
+
     .settings-wrapper p {
         @apply py-2 text-base;
     }

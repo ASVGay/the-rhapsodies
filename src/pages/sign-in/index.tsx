@@ -58,12 +58,8 @@ const Index = () => {
   }
 
   return (
-    <div className={"flex h-screen w-screen items-center justify-center bg-moon-50" + ""}>
-      <div
-        className={
-          "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
-        }
-      >
+    <div className={"full-bg-moon-50"}>
+      <div className={"auth-container"}>
         <div className={"flex w-full justify-center"}>
           <Image
             height={150}
