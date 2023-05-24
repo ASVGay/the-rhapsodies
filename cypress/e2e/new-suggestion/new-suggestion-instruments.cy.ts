@@ -36,6 +36,7 @@ describe("when creating a new suggestion, adding instruments", () => {
   it("should render the review area on click", () => {
     fillInstrumentsSuccessfully()
     shouldBeFilledState()
+    shouldGoToReviewArea()
   })
 
   it("adding a instrument should allow the process to proceed", () => {
