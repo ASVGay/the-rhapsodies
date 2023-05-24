@@ -1,5 +1,11 @@
-import { addInstrumentItem } from "./new-suggestion-instruments"
+import {
+  addInstrumentItem,
+  fillInstrumentsSuccessfully,
+  shouldGoToInstrumentsArea,
+} from "./new-suggestion-instruments"
 import { fillSongInformationSuccessfully } from "../song-information/new-suggestion-song-information"
+import { shouldBeFilledState as shouldBeFinishedState } from "../new-suggestion"
+import { shouldGoToReviewArea } from "../review/new-suggestion-review"
 
 const toInstrumentsProgressButton = "new-suggestion-progress-bar-instruments"
 const instrumentsArea = "area-instruments"
@@ -11,14 +17,14 @@ const deleteButton = "delete-button"
 const instrumentSearchCloseButton = "instrument-search-close-button"
 const descriptionInput = "description-input"
 
-describe("when creating new instrument suggestions for a suggestion", () => {
+describe("when creating a new suggestion, adding instruments", () => {
   beforeEach(() => {
     cy.login()
     cy.visit("/suggestions/new")
     // Wait so content can render properly and set up submit events
     cy.wait(500)
     fillSongInformationSuccessfully()
-    cy.data(toInstrumentsProgressButton).click()
+    shouldGoToInstrumentsArea()
   })
 
   it("should error if it can't retrieve instruments", () => {
@@ -29,10 +35,14 @@ describe("when creating new instrument suggestions for a suggestion", () => {
     cy.data(toReviewButton).should("be.disabled")
   })
 
+  it("should render the review area on click", () => {
+    fillInstrumentsSuccessfully()
+    shouldBeFinishedState()
+  })
+
   it("adding a instrument should allow the process to proceed", () => {
     addInstrumentItem()
-    cy.data(toReviewButton).click()
-    cy.data(instrumentsArea).should("not.exist")
+    shouldGoToReviewArea()
   })
 
   context("the search bar", () => {
@@ -62,8 +72,6 @@ describe("when creating new instrument suggestions for a suggestion", () => {
   context("when proceeding to next step, but return to make changes", () => {
     beforeEach(() => {
       addInstrumentItem()
-      cy.data(toReviewButton).click()
-      cy.data(toInstrumentsProgressButton).click()
     })
 
     it("should populate the list with previously added elements", () => {

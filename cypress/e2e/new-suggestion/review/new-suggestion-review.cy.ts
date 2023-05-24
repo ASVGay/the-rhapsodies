@@ -1,17 +1,19 @@
 import { NewSuggestion } from "@/interfaces/new-suggestion"
+import { fillSongInformationSuccessfully } from "../song-information/new-suggestion-song-information"
+import {
+  fillInstrumentsSuccessfully,
+  shouldGoToInstrumentsArea,
+} from "../instruments/new-suggestion-instruments"
+import { shouldGoToReviewArea } from "./new-suggestion-review"
 
 const setUp = () => {
   cy.login()
   cy.visit(`/suggestions/new`)
   cy.wait(500) // Wait so content can render properly and set up submit events
-  cy.data("input-title").type("Hello")
-  cy.data("input-artist").type("Hello")
-  cy.data("input-link").type("www.hello.com")
-  cy.data("input-motivation").type("Hello")
-  cy.data("new-suggestion-progress-bar-instruments").click()
-  cy.data("search-instrument-input").type("a")
-  cy.data("instrument-search-list").first().click()
-  cy.data("new-suggestion-progress-bar-review").click()
+  fillSongInformationSuccessfully()
+  shouldGoToInstrumentsArea()
+  fillInstrumentsSuccessfully()
+  shouldGoToReviewArea()
 }
 
 describe("review new suggestion page", () => {

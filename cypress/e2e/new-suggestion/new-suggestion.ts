@@ -1,7 +1,13 @@
 import { Area } from "@/constants/area"
-import { shouldBeEmptyInformationState } from "./song-information/new-suggestion-song-information"
+import {
+  shouldBeEmptyInformationState,
+  shouldContainJSONSongInformationInState,
+} from "./song-information/new-suggestion-song-information"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
-import { shouldBeEmptyInstrumentsState } from "./instruments/new-suggestion-instruments"
+import {
+  shouldBeEmptyInstrumentsState,
+  shouldContainJSONInstrumentInState,
+} from "./instruments/new-suggestion-instruments"
 
 export const newSuggestionEmpty: NewSuggestion = {
   artist: [],
@@ -14,6 +20,11 @@ export const newSuggestionEmpty: NewSuggestion = {
 export const shouldBeEmptyState = () => {
   shouldBeEmptyInformationState()
   shouldBeEmptyInstrumentsState()
+}
+
+export const shouldBeFilledState = () => {
+  shouldContainJSONSongInformationInState()
+  shouldContainJSONInstrumentInState()
 }
 
 export const areaInStateShouldBe = (area: Area) => {

@@ -1,5 +1,11 @@
 import { Area } from "@/constants/area"
-import { shouldBeEmptyState } from "./new-suggestion"
+import { areaInStateShouldBe, shouldBeEmptyState } from "./new-suggestion"
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import {
+  fillSongInformationSuccessfully,
+  shouldContainJSONSongInformationInState,
+} from "./song-information/new-suggestion-song-information"
+import { shouldContainJSONInstrumentInState } from "./instruments/new-suggestion-instruments"
 
 const path = "/suggestions/new"
 const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
@@ -8,6 +14,7 @@ const areaInstruments = "area-instruments"
 const areaReview = "area-review"
 const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 const progressBarReview = "new-suggestion-progress-bar-review"
+const progressBar = "progress-bar"
 
 const instrumentsAndReviewArea = [
   {
@@ -65,6 +72,22 @@ describe("when creating a new suggestion", () => {
           cy.get(".error-message").should("have.length", 3)
         })
       })
+    })
+  })
+  context("with song information", () => {
+    it("should render the same active area with state content on change of page", () => {
+      fillSongInformationSuccessfully()
+      cy.data(progressBarInstruments).click()
+      areaInStateShouldBe(Area.Instruments)
+      shouldContainJSONSongInformationInState()
+      cy.data(buttonDiscardNewSuggestion).click()
+      cy.data("button-new-suggestion").click()
+      cy.data(areaInstruments).should("be.visible")
+      areaInStateShouldBe(Area.Instruments)
+      cy.data(areaSongInformation).should("not.exist")
+      cy.data(areaReview).should("not.exist")
+      cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Instruments)
+      shouldContainJSONSongInformationInState()
     })
   })
 })

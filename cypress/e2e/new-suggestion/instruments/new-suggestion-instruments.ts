@@ -10,6 +10,15 @@ const progressBar = "progress-bar"
 const searchInstrumentInput = "search-instrument-input"
 const instrumentSearchList = "instrument-search-list"
 
+export const filledInInstrument: NewSuggestionInstrument = {
+  description: "",
+  instrument: {
+    id: "f5ccaa5d-c601-40fb-8604-5fc7485f8528",
+    image_source: "guitar",
+    instrument_name: "Acoustic Guitar",
+  },
+}
+
 export const shouldGoToInstrumentsArea = () => {
   cy.data(buttonAddInstruments).click()
   cy.data(areaInstruments).should("be.visible")
@@ -33,7 +42,17 @@ export const shouldBeEmptyInstrumentsState = () => {
     .should("deep.equal", [])
 }
 
+export const shouldContainJSONInstrumentInState = () => {
+  cy.window()
+    .its("store")
+    .invoke("getState")
+    .its("newSuggestion")
+    .its("suggestion")
+    .its("instruments")
+    .should("deep.equal", [filledInInstrument])
+}
+
 export const addInstrumentItem = () => {
-  cy.data(searchInstrumentInput).type("a")
+  cy.data(searchInstrumentInput).type(filledInInstrument.instrument.instrument_name)
   cy.data(instrumentSearchList).first().click()
 }
