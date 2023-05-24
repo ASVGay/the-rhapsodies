@@ -9,11 +9,11 @@ import {
 const setUp = () => {
   cy.login()
   cy.visit(`/suggestions/new`)
+  cy.wait(500) // Wait so content can render properly and set up submit events
   fillSongInformationSuccessfully()
   shouldGoToInstrumentsArea()
   fillInstrumentsSuccessfully()
   shouldGoToReviewArea()
-  cy.wait(500) // Wait so content can render properly and set up submit events
 }
 
 describe("review new suggestion page", () => {
