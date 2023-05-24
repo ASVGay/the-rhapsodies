@@ -22,7 +22,7 @@ describe("when creating new instrument suggestions for a suggestion", () => {
   })
 
   it("should error if it can't retrieve instruments", () => {
-    //TODO: Add test
+    //N.Y.I
   })
 
   it("should prevent the process to proceed further", () => {

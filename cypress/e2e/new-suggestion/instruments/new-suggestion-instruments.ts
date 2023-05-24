@@ -23,6 +23,16 @@ export const fillInstrumentsSuccessfully = () => {
   addInstrumentItem()
 }
 
+export const shouldBeEmptyInstrumentsState = () => {
+  cy.window()
+    .its("store")
+    .invoke("getState")
+    .its("newSuggestion")
+    .its("suggestion")
+    .its("artist")
+    .should("deep.equal", [])
+}
+
 export const addInstrumentItem = () => {
   cy.data(searchInstrumentInput).type("a")
   cy.data(instrumentSearchList).first().click()

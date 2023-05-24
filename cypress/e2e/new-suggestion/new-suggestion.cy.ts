@@ -1,23 +1,13 @@
-enum Area {
-  SongInformation = "song-information",
-  Instruments = "instruments",
-  Review = "review",
-}
+import { Area } from "@/constants/area"
+import { shouldBeEmptyState } from "./new-suggestion"
 
 const path = "/suggestions/new"
-const buttonAddInstruments = "button-add-instruments"
 const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
 const areaSongInformation = "area-song-information"
 const areaInstruments = "area-instruments"
 const areaReview = "area-review"
-const progressBar = "progress-bar"
-const progressBarSongInformation = "new-suggestion-progress-bar-song-information"
 const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 const progressBarReview = "new-suggestion-progress-bar-review"
-const inputTitle = "input-title"
-const inputArtist = "input-artist"
-const inputLink = "input-link"
-const inputMotivation = "input-motivation"
 
 const instrumentsAndReviewArea = [
   {
@@ -30,56 +20,26 @@ const instrumentsAndReviewArea = [
   },
 ]
 
-const requiredInputs = [
-  {
-    name: "title",
-    inputField: inputTitle,
-    error: "input-title-error",
-  },
-  {
-    name: "artist",
-    inputField: inputArtist,
-    error: "input-artist-error",
-  },
-  {
-    name: "motivation",
-    inputField: inputMotivation,
-    error: "input-motivation-error",
-  },
-]
-
 describe("when creating a new suggestion", () => {
   beforeEach(() => {
     cy.login()
+    cy.visit(path)
+    // Wait so content can render properly and set up submit events
+    cy.wait(500)
   })
-  context("on page load", () => {
-    beforeEach(() => {
-      cy.visit(path)
-    })
 
+  context("on page load", () => {
     it("should go to suggestions on discard", () => {
       cy.data(buttonDiscardNewSuggestion).click()
       cy.location("pathname").should("eq", "/suggestions")
     })
 
     it("should have empty state on load", () => {
-      cy.fixture("state-empty-new-suggestion.json").then((state) => {
-        cy.window()
-          .its("store")
-          .invoke("getState")
-          .its("newSuggestion")
-          .should("deep.equal", state.newSuggestion)
-      })
+      shouldBeEmptyState()
     })
   })
 
   context("with no song information", () => {
-    beforeEach(() => {
-      cy.visit(path)
-      // Wait so content can render properly and set up submit events
-      cy.wait(500)
-    })
-
     context("the progress bar", () => {
       instrumentsAndReviewArea.forEach(({ area, progressBarItem }) => {
         context(`when attempting to go to ${area} area`, () => {

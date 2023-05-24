@@ -1,5 +1,4 @@
 import { NewSuggestion } from "@/interfaces/new-suggestion"
-import { data } from "autoprefixer"
 
 const setUp = () => {
   cy.login()

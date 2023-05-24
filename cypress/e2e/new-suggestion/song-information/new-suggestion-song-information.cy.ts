@@ -8,7 +8,6 @@ import { shouldGoToInstrumentsArea } from "../instruments/new-suggestion-instrum
 
 const path = "/suggestions/new"
 const buttonAddInstruments = "button-add-instruments"
-const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 const inputTitle = "input-title"
 const inputArtist = "input-artist"
 const inputLink = "input-link"
