@@ -1,11 +1,11 @@
 import {
-  addInstrumentItem,
-  fillInstrumentsSuccessfully,
+  fillSongInformationSuccessfully,
   shouldGoToInstrumentsArea,
-} from "./new-suggestion-instruments"
-import { fillSongInformationSuccessfully } from "../song-information/new-suggestion-song-information"
-import { shouldBeFilledState as shouldBeFinishedState } from "../new-suggestion"
-import { shouldGoToReviewArea } from "../review/new-suggestion-review"
+  fillInstrumentsSuccessfully,
+  addInstrumentItem,
+  shouldGoToReviewArea,
+  shouldBeFilledState,
+} from "./helpers/new-suggestion.helper"
 
 const toInstrumentsProgressButton = "new-suggestion-progress-bar-instruments"
 const instrumentsArea = "area-instruments"
@@ -37,7 +37,7 @@ describe("when creating a new suggestion, adding instruments", () => {
 
   it("should render the review area on click", () => {
     fillInstrumentsSuccessfully()
-    shouldBeFinishedState()
+    shouldBeFilledState()
   })
 
   it("adding a instrument should allow the process to proceed", () => {

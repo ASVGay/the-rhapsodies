@@ -1,9 +1,9 @@
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
+  shouldGoToInstrumentsArea,
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState,
-} from "./new-suggestion-song-information"
-import { shouldGoToInstrumentsArea } from "../instruments/new-suggestion-instruments"
+} from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
 const buttonAddInstruments = "button-add-instruments"

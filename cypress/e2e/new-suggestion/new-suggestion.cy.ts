@@ -1,9 +1,10 @@
 import { Area } from "@/constants/area"
-import { areaInStateShouldBe, shouldBeEmptyState } from "./new-suggestion"
 import {
+  shouldBeEmptyState,
   fillSongInformationSuccessfully,
+  areaInStateShouldBe,
   shouldContainJSONSongInformationInState,
-} from "./song-information/new-suggestion-song-information"
+} from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
 const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
