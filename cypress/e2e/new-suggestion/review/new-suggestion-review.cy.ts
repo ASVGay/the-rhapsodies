@@ -43,14 +43,13 @@ describe("review new suggestion page", () => {
       setUp()
     })
 
-    // Commented out due to failing in both branches, will be resolved in feat/review-new-suggestion
-    // it("should display spinner while creating a new suggestion", () => {
-    //   cy.data("submit-suggestion-btn")
-    //     .click()
-    //     .then(() => {
-    //       cy.data("suggestions-spinner").should("be.visible")
-    //     })
-    // })
+    it("should display spinner while creating a new suggestion", () => {
+      cy.data("submit-suggestion-btn")
+        .click()
+        .then(() => {
+          cy.data("suggestions-spinner").should("be.visible")
+        })
+    })
 
     it("should display error-element if insert call(s) fail", () => {
       cy.intercept({ url: "/rest/v1/suggestion*" }, { forceNetworkError: true }).then(() => {
@@ -59,13 +58,12 @@ describe("review new suggestion page", () => {
       })
     })
 
-    // Commented out due to failing in both branches, will be resolved in feat/review-new-suggestion
-    // it("should redirect to the suggestions page after saving a new suggestion", () => {
-    //   cy.data("submit-suggestion-btn")
-    //     .click()
-    //     .then(() => {
-    //       cy.location("pathname").should("equal", "/suggestions")
-    //     })
-    // })
+    it("should redirect to the suggestions page after saving a new suggestion", () => {
+      cy.data("submit-suggestion-btn")
+        .click()
+        .then(() => {
+          cy.location("pathname").should("equal", "/suggestions")
+        })
+    })
   })
 })
