@@ -24,30 +24,30 @@ const inputMotivation = "input-motivation"
 const instrumentsAndReviewArea = [
   {
     area: Area.Instruments,
-    progressBarItem: progressBarInstruments,
+    progressBarItem: progressBarInstruments
   },
   {
     area: Area.Review,
-    progressBarItem: progressBarReview,
-  },
+    progressBarItem: progressBarReview
+  }
 ]
 
 const requiredInputs = [
   {
     name: "title",
     inputField: inputTitle,
-    error: "input-title-error",
+    error: "input-title-error"
   },
   {
     name: "artist",
     inputField: inputArtist,
-    error: "input-artist-error",
+    error: "input-artist-error"
   },
   {
     name: "motivation",
     inputField: inputMotivation,
-    error: "input-motivation-error",
-  },
+    error: "input-motivation-error"
+  }
 ]
 
 function shouldGoToInstrumentsArea() {
@@ -90,6 +90,21 @@ function areaInStateShouldBe(area: Area) {
     .should("equal", area)
 }
 
+const setUp = () => {
+  cy.login()
+  cy.visit(`/suggestions/new`)
+  cy.wait(500) // Wait so content can render properly and set up submit events
+  cy.data("input-title").type("Hello")
+  cy.data("input-artist").type("Hello")
+  cy.data("input-link").type("www.hello.com")
+  cy.data("input-motivation").type("Hello")
+  cy.data("new-suggestion-progress-bar-instruments").click()
+  cy.data("search-instrument-input").type("a")
+  cy.data("instrument-search-list").first().click()
+  cy.data("new-suggestion-progress-bar-review").click()
+}
+
+
 describe("when creating a new suggestion", () => {
   beforeEach(() => {
     cy.login()
@@ -117,6 +132,7 @@ describe("when creating a new suggestion", () => {
 
   context("with no song information", () => {
     beforeEach(() => {
+      cy.login()
       cy.visit(path)
       // Wait so content can render properly and set up submit events
       cy.wait(500)
@@ -200,7 +216,7 @@ describe("when creating a new suggestion", () => {
               artist: ["Hello"],
               link: "www.hello.com",
               motivation: "Hello",
-              instruments: [],
+              instruments: []
             })
         })
       })
@@ -215,7 +231,7 @@ describe("when creating a new suggestion", () => {
             cy.window()
               .its("store")
               .invoke("dispatch", updateNewSuggestion(songInfo.newSuggestion.suggestion))
-          },
+          }
         })
       })
       cy.wait(500)
@@ -241,37 +257,28 @@ describe("when creating a new suggestion", () => {
       })
 
       it("should render the review area on click", () => {
-        cy.fixture("state-filled-in-instruments.json").then((songInfo) => {
-          cy.window()
-            .its("store")
-            .invoke("dispatch", updateNewSuggestion(songInfo.newSuggestion.suggestion))
-          cy.data(progressBarReview).click()
-          areaInStateShouldBe(Area.Review)
-          cy.data(areaReview).should("be.visible")
-          cy.data(areaSongInformation).should("not.exist")
-          cy.data(areaInstruments).should("not.exist")
-          cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
-          shouldContainJSONInstrumentInState()
-        })
+        setUp()
+        cy.wait(500) // Wait so content can render properly and set up submit events
+        cy.data(progressBarReview).click()
+        areaInStateShouldBe(Area.Review)
+        cy.data(areaReview).should("be.visible")
+        cy.data(areaSongInformation).should("not.exist")
+        cy.data(areaInstruments).should("not.exist")
+        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
       })
 
       it("should render the same active area with state content on change of page", () => {
-        cy.fixture("state-filled-in-instruments.json").then((songInfo) => {
-          cy.window()
-            .its("store")
-            .invoke("dispatch", updateNewSuggestion(songInfo.newSuggestion.suggestion))
-          cy.data(progressBarReview).click()
-          areaInStateShouldBe(Area.Review)
-          cy.data(buttonDiscardNewSuggestion).click()
-          cy.data("button-new-suggestion").click()
-          cy.data(areaReview).should("be.visible")
-          cy.data(areaReview).should("contain.text", "Let It Be")
-          areaInStateShouldBe(Area.Review)
-          cy.data(areaSongInformation).should("not.exist")
-          cy.data(areaInstruments).should("not.exist")
-          cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
-          shouldContainJSONInstrumentInState()
-        })
+        setUp()
+        cy.data(progressBarReview).click()
+        areaInStateShouldBe(Area.Review)
+        cy.data(buttonDiscardNewSuggestion).click()
+        cy.data("button-new-suggestion").click()
+        cy.data(areaReview).should("be.visible")
+        cy.data(areaReview).should("contain.text", "Hello")
+        areaInStateShouldBe(Area.Review)
+        cy.data(areaSongInformation).should("not.exist")
+        cy.data(areaInstruments).should("not.exist")
+        cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Review)
       })
     })
 
