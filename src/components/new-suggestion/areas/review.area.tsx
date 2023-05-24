@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
 import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import { ReviewPlaceholder } from "@/constants/review-placeholder"
 import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
@@ -46,16 +45,15 @@ const ReviewArea = () => {
               return
             }
 
-            dispatch(updateNewSuggestion(initialState.suggestion))
-            dispatch(setActiveArea(Area.SongInformation))
-            router.push("/suggestions")
+            router.push("/suggestions").then(() => {
+              setShowSpinner(false)
+              dispatch(updateNewSuggestion(initialState.suggestion))
+              dispatch(setActiveArea(Area.SongInformation))
+            })
           })
           .catch(() => handleError())
       })
       .catch(() => handleError())
-      .finally(() => {
-        setShowSpinner(false)
-      })
   }
 
   const handleError = () => {
@@ -92,7 +90,7 @@ const ReviewArea = () => {
         </div>
       ) : (
         <>
-          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
+          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm text-left"}>
             <div className={"flex"}>
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
@@ -100,20 +98,20 @@ const ReviewArea = () => {
                   <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 </span>
                 <span data-cy="review-artists">
-                  <p className={"line-clamp-1 text-left"}>{suggestion.artist.join(", ")}</p>
+                  <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
                 </span>
               </div>
             </div>
             <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm leading-4 text-gray-400"}
+              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
               data-cy="review-motivation"
             >
               {suggestion.motivation}
             </p>
           </div>
 
-          <p className={"mb-4 text-center text-lg font-medium text-moon-200"}>Instruments</p>
-          <div className={"mb-12 grid justify-center gap-6"} data-cy="review-instruments">
+          <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>
+          <div className={"mb-12 grid justify-center gap-6 text-left"} data-cy="review-instruments">
             {suggestion.instruments.map(
               ({ instrument, description }: NewSuggestionInstrument, index) => {
                 return (
