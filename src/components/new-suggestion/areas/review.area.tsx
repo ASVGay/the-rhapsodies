@@ -10,7 +10,11 @@ import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
-import { initialState, setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import {
+  initialState,
+  setActiveArea,
+  updateNewSuggestion,
+} from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
@@ -61,57 +65,64 @@ const ReviewArea = () => {
 
   const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
     return suggestion.instruments.map(({ instrument, description }) => {
-      return ({ suggestion_id: suggestionId, instrument_id: instrument.id, description: description })
+      return { suggestion_id: suggestionId, instrument_id: instrument.id, description: description }
     })
   }
 
   const requiredDataIsPresent = () => {
-    return suggestion.artist.length > 0
-      && suggestion.motivation.length > 0
-      && suggestion.title.length > 0
-      && suggestion.instruments.length > 0
+    return (
+      suggestion.artist.length > 0 &&
+      suggestion.motivation.length > 0 &&
+      suggestion.title.length > 0 &&
+      suggestion.instruments.length > 0
+    )
   }
 
-  const btnCss = () => requiredDataIsPresent()
-    ? "bg-moon-500 cursor-pointer"
-    : "bg-moon-100 cursor-not-allowed hover:bg-moon-100"
+  const btnCss = () =>
+    requiredDataIsPresent()
+      ? "bg-moon-500 cursor-pointer"
+      : "bg-moon-100 cursor-not-allowed hover:bg-moon-100"
 
   return (
     <div data-cy="area-review">
       <h2 className={"area-header"}>Review</h2>
-      {showSpinner
-        ? (
-          <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
-            <Spinner size={10} />
-          </div>
-        )
-        : (<>
+      {showSpinner ? (
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+          <Spinner size={10} />
+        </div>
+      ) : (
+        <>
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
             <div className={"flex"}>
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
-               <span data-cy="review-title">
-                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-               </span>
+                <span data-cy="review-title">
+                  <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
+                </span>
                 <span data-cy="review-artists">
                   <p className={"line-clamp-1 text-left"}>{suggestion.artist.join(", ")}</p>
                 </span>
               </div>
             </div>
-            <p className={"mb-3 mt-3 line-clamp-3 h-12 text-sm leading-4 text-gray-400"} data-cy="review-motivation">
+            <p
+              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm leading-4 text-gray-400"}
+              data-cy="review-motivation"
+            >
               {suggestion.motivation}
             </p>
           </div>
 
-          <p className={"text-center text-lg font-medium text-moon-200 mb-4"}>Instruments</p>
-          <div className={"grid gap-6 mb-12 justify-center"} data-cy="review-instruments">
-            {suggestion.instruments.map(({ instrument, description }: NewSuggestionInstrument, index) => {
+          <p className={"mb-4 text-center text-lg font-medium text-moon-200"}>Instruments</p>
+          <div className={"mb-12 grid justify-center gap-6"} data-cy="review-instruments">
+            {suggestion.instruments.map(
+              ({ instrument, description }: NewSuggestionInstrument, index) => {
                 return (
                   <div key={index} className={"flex select-none"}>
                     <Image
                       src={getInstrumentImage(instrument.image_source)}
                       alt={instrument.instrument_name}
-                      width={64} height={64}
+                      width={64}
+                      height={64}
                       className={"mr-4 h-10 w-10"}
                       draggable={"false"}
                     />
@@ -144,8 +155,8 @@ const ReviewArea = () => {
               />
             </div>
           )}
-        </>)
-      }
+        </>
+      )}
     </div>
   )
 }
