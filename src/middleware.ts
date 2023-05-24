@@ -34,8 +34,9 @@ export const middleware = async (req: NextRequest) => {
     return res
   }
 
-  // If user is not logged in and going to sign-in, let them
+  // If user is not logged in and going to sign-in or forgot-password, let them
   if (req.nextUrl.pathname.startsWith("/sign-in")) return res
+  if (req.nextUrl.pathname.startsWith("/forgot-password")) return res
   // Else, redirect to sign in page
   const redirectUrl = req.nextUrl.clone()
   redirectUrl.pathname = "/sign-in"

@@ -8,6 +8,7 @@ import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/formdata"
+import Link from "next/link"
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -57,7 +58,7 @@ const Index = () => {
   }
 
   return (
-    <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
+    <div className={"flex h-screen w-screen items-center justify-center bg-moon-50" + ""}>
       <div
         className={
           "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
@@ -105,6 +106,13 @@ const Index = () => {
             <ErrorMessage dataCy={"sign-in-err"} message={errorPopupText} />
           )}
         </form>
+        <Link
+          href={"/forgot-password"}
+          className={"text-center text-sm text-gray-400"}
+          data-cy={"forgot-password"}
+        >
+          Forgot password?
+        </Link>
       </div>
     </div>
   )

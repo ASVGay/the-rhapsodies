@@ -11,6 +11,7 @@ const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
 const newUserEmail = Cypress.env("CYPRESS_NEW_EMAIL")
 const newUserPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 
+const forgotPassword = "forgot-password"
 describe("Sign-in", () => {
   beforeEach(() => {
     cy.logout()
@@ -46,5 +47,10 @@ describe("Sign-in", () => {
       cy.data(signInSubmitBtn).click()
       cy.data(`${passwordTextField}-error`).contains(passwordIsMissing)
     })
+  })
+
+  it("should go to forgot password if clicked on forgot password", () => {
+    cy.data(forgotPassword).click()
+    cy.location("pathname").should("equal", "/forgot-password")
   })
 })
