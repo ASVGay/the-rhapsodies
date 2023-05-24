@@ -91,24 +91,15 @@ const ReviewArea = () => {
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
                <span data-cy="review-title">
-                 {suggestion.title.length > 0
-                   ? <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-                   : <p className={"text-zinc-300"}>{ReviewPlaceholder.title}</p>
-                 }
+                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                </span>
                 <span data-cy="review-artists">
-                  {suggestion.artist.length > 0
-                    ? <p className={"line-clamp-1 text-left"}>{suggestion.artist.join(", ")}</p>
-                    : <p className={"text-zinc-300"}>{ReviewPlaceholder.artist}</p>
-                  }
+                  <p className={"line-clamp-1 text-left"}>{suggestion.artist.join(", ")}</p>
                 </span>
               </div>
             </div>
             <p className={"mb-3 mt-3 line-clamp-3 h-12 text-sm leading-4 text-gray-400"} data-cy="review-motivation">
-              {suggestion.motivation.length > 0
-                ? suggestion.motivation
-                : ReviewPlaceholder.motivation
-              }
+              {suggestion.motivation}
             </p>
           </div>
 
@@ -131,9 +122,6 @@ const ReviewArea = () => {
                   </div>
                 )
               }
-            )}
-            {suggestion.instruments.length == 0 && (
-              <p className={"text-sm leading-4 text-gray-400"}>{ReviewPlaceholder.instruments}</p>
             )}
           </div>
 
