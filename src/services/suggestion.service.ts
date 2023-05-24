@@ -2,7 +2,6 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 import {
   DivisionDatabaseOperation,
-  SuggestionInstrument,
   SuggestionInstrumentDatabaseOperation
 } from "@/types/database-types"
 import { NewSuggestion } from "@/interfaces/new-suggestion"

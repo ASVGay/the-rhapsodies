@@ -12,7 +12,7 @@ import { useRouter } from "next/router"
 import {
   initialState,
   setActiveArea,
-  updateNewSuggestion,
+  updateNewSuggestion
 } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
@@ -29,31 +29,35 @@ const ReviewArea = () => {
   const user = useUser()
 
   const saveSuggestion = () => {
-    setShowSpinner(true)
-    insertSuggestion(supabase, suggestion, user!.id)
-      .then((response) => {
-        if (response.error) {
-          handleError()
-          return
-        }
+    if (user) {
+      setShowSpinner(true)
+      insertSuggestion(supabase, suggestion, user.id)
+        .then((response) => {
+          if (response.error) {
+            handleError()
+            return
+          }
 
-        const suggestionId = response.data.at(0)!.id
-        insertSuggestionInstruments(supabase, mapInstruments(suggestionId))
-          .then((response) => {
-            if (response.error) {
-              handleError()
-              return
-            }
+          const suggestionId = response.data.at(0)!.id
+          insertSuggestionInstruments(supabase, mapInstruments(suggestionId))
+            .then((response) => {
+              if (response.error) {
+                handleError()
+                return
+              }
 
-            router.push("/suggestions").then(() => {
-              setShowSpinner(false)
-              dispatch(updateNewSuggestion(initialState.suggestion))
-              dispatch(setActiveArea(Area.SongInformation))
+              router.push("/suggestions").then(() => {
+                setShowSpinner(false)
+                dispatch(updateNewSuggestion(initialState.suggestion))
+                dispatch(setActiveArea(Area.SongInformation))
+              })
             })
-          })
-          .catch(() => handleError())
-      })
-      .catch(() => handleError())
+            .catch(() => handleError())
+        })
+        .catch(() => handleError())
+    } else {
+      handleError()
+    }
   }
 
   const handleError = () => {
@@ -114,8 +118,9 @@ const ReviewArea = () => {
           <div className={"mb-12 grid justify-center gap-6 text-left"} data-cy="review-instruments">
             {suggestion.instruments.map(
               ({ instrument, description }: NewSuggestionInstrument, index) => {
+                const key = `${instrument.id}-${index}`
                 return (
-                  <div key={index} className={"flex select-none"}>
+                  <div key={key} className={"flex select-none"}>
                     <Image
                       src={getInstrumentImage(instrument.image_source)}
                       alt={instrument.instrument_name}
