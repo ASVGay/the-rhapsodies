@@ -1,6 +1,5 @@
 import { Area } from "@/constants/area"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import { NewSuggestion } from "@/interfaces/new-suggestion"
+import { NewSuggestionInstrument, NewSuggestion } from "@/interfaces/new-suggestion"
 
 const buttonAddInstruments = "button-add-instruments"
 const areaSongInformation = "area-song-information"

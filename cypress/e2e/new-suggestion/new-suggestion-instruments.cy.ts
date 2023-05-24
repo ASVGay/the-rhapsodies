@@ -7,8 +7,6 @@ import {
   shouldBeFilledState,
 } from "./helpers/new-suggestion.helper"
 
-const toInstrumentsProgressButton = "new-suggestion-progress-bar-instruments"
-const instrumentsArea = "area-instruments"
 const toReviewButton = "to-review-button"
 const searchInstrumentInput = "search-instrument-input"
 const instrumentSearchList = "instrument-search-list"
