@@ -1,11 +1,9 @@
 import { Area } from "@/constants/area"
 import { areaInStateShouldBe, shouldBeEmptyState } from "./new-suggestion"
-import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
   fillSongInformationSuccessfully,
   shouldContainJSONSongInformationInState,
 } from "./song-information/new-suggestion-song-information"
-import { shouldContainJSONInstrumentInState } from "./instruments/new-suggestion-instruments"
 
 const path = "/suggestions/new"
 const buttonDiscardNewSuggestion = "button-discard-new-suggestion"
