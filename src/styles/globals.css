@@ -30,7 +30,7 @@
     }
 
     .auth-container {
-        @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light
+        @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-sm
     }
 
     .settings-wrapper p {
