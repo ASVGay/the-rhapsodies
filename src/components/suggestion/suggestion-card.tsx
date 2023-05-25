@@ -3,20 +3,18 @@ import Image from "next/image"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { Suggestion } from "@/types/database-types"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
-import { Database } from "@/types/database"
-import { getInstrumentImage } from "@/services/suggestion.service"
+import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 
 interface SuggestionCardProps {
   suggestion: Suggestion
 }
 
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
-  const supabaseClient = useSupabaseClient<Database>()
   return (
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
+      data-cy="suggestion-card"
     >
       <div className={"flex items-start p-3"}>
         <div className={"mb-auto mt-auto flex"}>

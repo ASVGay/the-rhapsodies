@@ -1,13 +1,16 @@
+import "react-toastify/dist/ReactToastify.css"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { Lexend } from "next/font/google"
-import { wrapper } from "@/store/store"
 import Layout from "@/components/layout/layout"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import { useState } from "react"
 import { Database } from "@/types/database"
+import { Provider } from "react-redux"
+import store from "@/redux/store"
+import { Slide, ToastContainer } from "react-toastify"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -24,6 +27,14 @@ const App = ({ Component, pageProps }: AppProps) => {
     })
   )
 
+  if (typeof window !== "undefined") {
+    // @ts-ignore
+    if (window.Cypress) {
+      // @ts-ignore
+      window.store = store
+    }
+  }
+
   return (
     <>
       <Head>
@@ -36,7 +47,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="An application for members of The Rhapsodies, A.S.V.Gay's house band."
         />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#F5DD8A" />
+        <meta name="theme-color" content="#FAEDC2" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
@@ -197,18 +208,26 @@ const App = ({ Component, pageProps }: AppProps) => {
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </Head>
-      <SessionContextProvider
-        supabaseClient={supabaseClient}
-        initialSession={pageProps.initialSession}
-      >
-        <main className={`${lexend.variable} font-sans`}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </main>
-      </SessionContextProvider>
+      <Provider store={store}>
+        <SessionContextProvider
+          supabaseClient={supabaseClient}
+          initialSession={pageProps.initialSession}
+        >
+          <main className={`${lexend.variable} font-sans`}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            <ToastContainer
+              newestOnTop
+              className={"pt-safe"}
+              bodyClassName={`${lexend.variable} font-sans`}
+              toastClassName="rounded-lg"
+              transition={Slide}
+            />
+          </main>
+        </SessionContextProvider>
+      </Provider>
     </>
   )
 }
-
-export default wrapper.withRedux(App)
+export default App

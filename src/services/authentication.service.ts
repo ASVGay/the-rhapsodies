@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 
-export const setNameAndFirstLoginFalse = async (
+export const setName = async (
   supabaseClient: SupabaseClient<Database>,
   id: string,
   name: string
