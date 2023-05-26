@@ -6,7 +6,7 @@ import Image from "next/image"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
   Division,
   DivisionDatabaseOperation,
@@ -112,7 +112,8 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map((suggestionInstrument: SuggestionInstrument) => {
+              {suggestion.suggestion_instruments.map(
+                (suggestionInstrument: SuggestionInstrument) => {
                   const { instrument, division, id, description } = suggestionInstrument
                   return (
                     <div
@@ -159,7 +160,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context)
+  const supabase = createPagesServerClient(context)
   const { params } = context
   try {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)

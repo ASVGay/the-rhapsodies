@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
 import { isInMemberDatabase } from "@/services/authentication.service"
 
 const goToPath = (path: string, req: NextRequest) => {
@@ -12,7 +12,7 @@ export const middleware = async (req: NextRequest) => {
   // We need to create a response and hand it to the supabase client to be able to modify the response headers
   const res = NextResponse.next()
   // Create authenticated Supabase Client
-  const supabase = createMiddlewareSupabaseClient({ req, res })
+  const supabase = createMiddlewareClient({ req, res })
   // Check if we have a session
   const {
     data: { session },
