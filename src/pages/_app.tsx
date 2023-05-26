@@ -5,7 +5,7 @@ import Head from "next/head"
 import { Lexend } from "next/font/google"
 import Layout from "@/components/layout/layout"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs"
 import { useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
@@ -21,7 +21,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const [supabaseClient] = useState(() =>
-    createBrowserSupabaseClient<Database>({
+    createPagesBrowserClient<Database>({
       supabaseUrl,
       supabaseKey,
     })
