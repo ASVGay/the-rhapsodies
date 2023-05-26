@@ -47,14 +47,14 @@ Cypress.Commands.add("login", (useNewUser: boolean = false) => {
   if (useNewUser) user = "NEW"
   cy.task("getUserSession", {
     email: Cypress.env(`CYPRESS_${user}_EMAIL`),
-    password: Cypress.env(`CYPRESS_${user}_PASSWORD`),
+    password: Cypress.env(`CYPRESS_${user}_PASSWORD`)
   }).then((sessionData) => {
-    cy.setCookie("supabase-auth-token", JSON.stringify(sessionData))
+    cy.setCookie("sb-127-auth-token", JSON.stringify(sessionData))
   })
 })
 
 Cypress.Commands.add("logout", () => {
-  cy.setCookie("supabase-auth-token", "")
+  cy.setCookie("sb-127-auth-token", "")
 })
 
 Cypress.Commands.add("deleteNewUser", () => {
