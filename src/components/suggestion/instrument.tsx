@@ -24,7 +24,11 @@ const Instrument = ({ imageURL, name, division, description, uid, onclick, toggl
   }
 
   return (
-    <div className={"flex cursor-pointer select-none"} onClick={() => onclick && onclick()}>
+    <div
+      className={`flex ${onclick && "cursor-pointer"} select-none`}
+      onClick={() => onclick && onclick()}
+      data-cy="instrument"
+    >
       <Image
         src={getInstrumentImage(imageURL)}
         alt={name}
@@ -36,11 +40,9 @@ const Instrument = ({ imageURL, name, division, description, uid, onclick, toggl
       <div>
         <p>{name}</p>
         <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-        {division && (
-          <div className={`font-bold`} data-cy="division">
-            {formatUsernames(division)}
-          </div>
-        )}
+        <div className={`font-bold`} data-cy="division">
+          {division && formatUsernames(division)}
+        </div>
       </div>
     </div>
   )
