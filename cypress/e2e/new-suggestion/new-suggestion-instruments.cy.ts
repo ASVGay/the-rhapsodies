@@ -25,10 +25,6 @@ describe("when creating a new suggestion, adding instruments", () => {
     shouldGoToInstrumentsArea()
   })
 
-  it("should error if it can't retrieve instruments", () => {
-    //N.Y.I
-  })
-
   it("should prevent the process to proceed further", () => {
     cy.data(toReviewButton).should("be.disabled")
   })
