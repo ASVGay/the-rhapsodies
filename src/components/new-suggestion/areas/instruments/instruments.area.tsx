@@ -3,19 +3,19 @@ import InstrumentsList from "./edit/instruments-list"
 import InstrumentSearch from "@/components/search/instrument/instrument-search"
 import { Instrument } from "@/types/database-types"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { AppDispatch, AppState } from "@/redux/store"
-import { useDispatch, useSelector } from "react-redux"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { AppDispatch } from "@/redux/store"
+import { useDispatch } from "react-redux"
+import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { Area } from "@/constants/area"
 import { isInstrumentSuggestionInvalid } from "@/helpers/new-suggestion.helper"
 
 interface InstrumentsAreaProps {
   instrumentList: Instrument[]
+  suggestion: NewSuggestion
 }
 
-const InstrumentsArea = ({ instrumentList }: InstrumentsAreaProps) => {
+const InstrumentsArea = ({ instrumentList, suggestion }: InstrumentsAreaProps) => {
   const dispatch: AppDispatch = useDispatch()
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
 
   const onInstrumentSelected = (instrument: Instrument): boolean => {
     const newItem: NewSuggestionInstrument = {
@@ -25,15 +25,14 @@ const InstrumentsArea = ({ instrumentList }: InstrumentsAreaProps) => {
 
     dispatch(
       updateNewSuggestion({
-        ...newSuggestion,
-        instruments: [...newSuggestion.instruments, newItem],
+        ...suggestion,
+        instruments: [...suggestion.instruments, newItem],
       })
     )
     return true
   }
 
   const onSubmit = () => {
-    isInstrumentSuggestionInvalid(newSuggestion.instruments)
     dispatch(setActiveArea(Area.Review))
   }
 
@@ -47,7 +46,7 @@ const InstrumentsArea = ({ instrumentList }: InstrumentsAreaProps) => {
       <InstrumentsList />
       <button
         data-cy="to-review-button"
-        disabled={newSuggestion.instruments.length < 1}
+        disabled={suggestion.instruments.length < 1}
         className="btn"
         onClick={onSubmit}
       >

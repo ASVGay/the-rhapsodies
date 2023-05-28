@@ -12,16 +12,20 @@ import { useRouter } from "next/router"
 import {
   initialState,
   setActiveArea,
-  updateNewSuggestion
+  updateNewSuggestion,
 } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import Image from "next/image"
 
-const ReviewArea = () => {
+interface ReviewAreaProps {
+  suggestion: NewSuggestion
+}
+
+const ReviewArea = ({ suggestion }: ReviewAreaProps) => {
   const supabase = useSupabaseClient<Database>()
-  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [insertError, setInsertError] = useState<boolean>(false)
   const dispatch = useDispatch()
@@ -94,7 +98,7 @@ const ReviewArea = () => {
         </div>
       ) : (
         <>
-          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm text-left"}>
+          <div className={"m-2 text-left md:ml-auto md:mr-auto md:max-w-sm"}>
             <div className={"flex"}>
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
