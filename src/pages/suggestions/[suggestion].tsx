@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
@@ -11,12 +11,14 @@ import {
   Division,
   DivisionDatabaseOperation,
   Suggestion,
-  SuggestionInstrument,
+  SuggestionInstrument
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import { UserAppMetadata } from "@supabase/gotrue-js"
+import { createSong } from "@/services/repertoire.service"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -25,9 +27,18 @@ interface SuggestionProps {
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
+
+  //TODO: use stored procedure instead of checking session storage
+  //TODO: write docs on how to add an admin role
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) {
+      setRoles(session?.user?.app_metadata)
+    }
+  })
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -42,7 +53,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      suggestion_instrument_id: suggestionInstrument.id,
+      suggestion_instrument_id: suggestionInstrument.id
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
@@ -67,6 +78,18 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
         {index != divisions.length - 1 && ", "}
       </span>
     ))
+  }
+
+  const displayButton = (): boolean => {
+    return roles?.["access"] == "admin" && suggestion.suggestion_instruments
+      .filter((i) => i.division.length == 0).length == 0
+  }
+
+  const addToRepertoire = () => {
+    const song = { title: suggestion.title, artists: suggestion.artist, link: suggestion.link }
+    createSong(supabase, song).then((response) => {
+      console.log(response)
+    })
   }
 
   return (
@@ -144,6 +167,16 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               )}
             </div>
           </div>
+
+          {displayButton() && (
+            <div className={"m-8 flex justify-center"}>
+              <button className={"btn"}
+                      onClick={() => addToRepertoire()}
+              >
+                Move to repertoire
+              </button>
+            </div>
+          )}
 
           {showUpdateError && (
             <div className={"mt-6"}>
