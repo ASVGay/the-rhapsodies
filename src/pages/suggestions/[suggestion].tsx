@@ -18,7 +18,7 @@ import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import { UserAppMetadata } from "@supabase/gotrue-js"
-import { createSong } from "@/services/repertoire.service"
+import { createSongFromSuggestion } from "@/services/song.service"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -34,11 +34,15 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   //TODO: use stored procedure instead of checking session storage
   //TODO: write docs on how to add an admin role
-  supabase.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
-      setRoles(session?.user?.app_metadata)
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          setRoles(session?.user?.app_metadata)
+        }
+      })
     }
-  })
+  }, [supabase])
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -81,15 +85,19 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   }
 
   const displayButton = (): boolean => {
-    return roles?.["access"] == "admin" && suggestion.suggestion_instruments
+    return roles?.["accessLevel"] == "admin" && suggestion.suggestion_instruments
       .filter((i) => i.division.length == 0).length == 0
   }
 
   const addToRepertoire = () => {
-    const song = { title: suggestion.title, artists: suggestion.artist, link: suggestion.link }
-    createSong(supabase, song).then((response) => {
-      console.log(response)
-    })
+    createSongFromSuggestion(supabase, suggestion)
+      .then((songId) => {
+        //TODO delete suggestion
+        //  Redirect to repertoire
+      })
+      .catch(() => {
+        //TODO handle error
+      })
   }
 
   return (

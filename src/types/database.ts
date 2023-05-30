@@ -17,6 +17,16 @@ export interface Database {
           suggestion_instrument_id?: string
         }
       }
+      song_division: {
+        Row: {
+          musician: string
+          song_instrument_id: string
+        }
+        Insert: {
+          musician: string
+          song_instrument_id: string
+        }
+      }
       instrument: {
         Row: {
           id: string
@@ -98,6 +108,34 @@ export interface Database {
           id?: string
           instrument_id?: string
           suggestion_id?: string
+        }
+      }
+      song: {
+        Row: {
+          artist: string[]
+          id: string
+          link?: string | null
+          title: string
+        }
+        Insert: {
+          artist: string[]
+          id?: string
+          link?: string | null
+          title: string
+        }
+      }
+      song_instrument: {
+        Row: {
+          description: string | null
+          id: string
+          instrument_id: string
+          song_id: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          instrument_id: string
+          song_id: string
         }
       }
     }
