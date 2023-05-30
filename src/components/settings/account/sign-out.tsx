@@ -4,7 +4,6 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
-import { isAuthError } from "@supabase/gotrue-js"
 
 const SignOut = () => {
   const supabase = useSupabaseClient<Database>()
