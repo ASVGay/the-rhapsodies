@@ -1,13 +1,12 @@
 import React from "react"
-import InstrumentsList from "./edit/instruments-list"
-import InstrumentSearch from "@/components/search/instrument/instrument-search"
+import InstrumentsList from "./list/instruments-list"
+import InstrumentSearch from "@/components/new-suggestion/areas/instruments/search/instrument-search"
 import { Instrument } from "@/types/database-types"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { AppDispatch } from "@/redux/store"
 import { useDispatch } from "react-redux"
 import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { Area } from "@/constants/area"
-import { isInstrumentSuggestionInvalid } from "@/helpers/new-suggestion.helper"
 
 interface InstrumentsAreaProps {
   instrumentList: Instrument[]
