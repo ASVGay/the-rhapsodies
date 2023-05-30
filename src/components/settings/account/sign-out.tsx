@@ -4,20 +4,23 @@ import {useSupabaseClient} from "@supabase/auth-helpers-react";
 import {Database} from "@/types/database";
 import {useRouter} from "next/router";
 import {toast} from "react-toastify";
+import {isAuthError} from "@supabase/gotrue-js";
 
 const SignOut = () => {
     const supabase  = useSupabaseClient<Database>()
     const router = useRouter();
 
+
+
     const signOut = () => {
         (async () => {
-            const { error } = await supabase.auth.signOut()
-            if (error) toast.warn("Can't log out right now.")
+            const res = await supabase.auth.signOut()
+            if (res.error) toast.warn("Can't log out right now.")
             else await router.push("/sign-in")
         })()
     }
     return (
-        <div className={"flex justify-between items-center hover:cursor-pointer"} onClick={signOut}>
+        <div className={"flex justify-between items-center hover:cursor-pointer"} data-cy={"logout-btn"} onClick={signOut}>
             <p>Sign out</p>
             <ChevronRightIcon height={16} width={16}/>
         </div>

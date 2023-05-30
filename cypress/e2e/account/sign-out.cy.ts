@@ -1,19 +1,24 @@
-
-
 describe("Sign-out", () => {
     beforeEach(() => {
-        cy.logout()
-        cy.visit("/sign-in")
-    })
+        cy.login()
+        cy.visit("/settings")
+    });
 
-    it("Should navigate to home page when signing out", () => {
-        cy.data(emailTextField).type(oldUserEmail)
-        cy.data(passwordTextField).type(oldUserPassword)
-        cy.data(signInSubmitBtn).click()
-        cy.location("pathname").should("equal", "/")
+    it("Should change route to sign in page after signing out", () => {
+        cy.data("logout-btn").click()
+        cy.location("pathname").should("equal", "/sign-in")
     })
 
     it("Should show toastr when signing out returns error", () => {
-        cy.intercept('POST', '/auth/v1/logout', { fixture: "signout-error.json"}).as('mockedRequest');
+        cy.intercept("POST", "/auth/v1/logout", (req) => {
+            req.reply({
+                statusCode: 500,
+            })
+        }).as('interceptedRequest');
+        cy.data("logout-btn").click()
+        cy.get(".Toastify")
+            .get("#1")
+            .get(".Toastify__toast-body")
+            .should("have.text", "Can't log out right now.")
     })
 })
