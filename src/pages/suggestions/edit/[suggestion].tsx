@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import SuggestionPageSection from "@/components/new-suggestion/suggestion-page-section"
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { getSuggestion, getAuthorOfSuggestion } from "@/services/suggestion.service"
+import { getSuggestion } from "@/services/suggestion.service"
 import { Suggestion } from "@/types/database-types"
 import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 
@@ -12,26 +12,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-
   const { params } = context
+
   try {
-    const { data: authorData } = await getAuthorOfSuggestion(supabase, params?.suggestion as string)
+    // Check if the suggestion exists
+    const { data } = await getSuggestion(supabase, params?.suggestion as string)
+    if (data == null) return { notFound: true }
 
-    // No suggestion found at all
-    if (authorData === null) return { notFound: true }
+    // If the suggestion has no id
+    const author: { id: string } = data?.author as { id: string }
+    if (author?.id === undefined) return { notFound: true }
 
-    // If the the user does not match with the
-    if (session?.user.id !== authorData.author)
+    // If the user does not match with the author of the suggestion
+    if (session?.user.id !== author.id)
       return {
         redirect: {
           destination: "/403",
           permanent: false,
         },
       }
-
-    //Fetch the suggestion from the database
-    const { data } = await getSuggestion(supabase, params?.suggestion as string)
-    if (data == null) return { notFound: true }
 
     return { props: { suggestion: data } }
   } catch {

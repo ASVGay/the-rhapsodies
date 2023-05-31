@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
-import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { GetServerSideProps } from "next"
@@ -21,6 +20,7 @@ import { useRouter } from "next/router"
 
 interface SuggestionProps {
   suggestion: Suggestion
+  isEditable: boolean
 }
 
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
@@ -85,11 +85,13 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               </p>
             </div>
             <div className={"flex flex-row gap-2"}>
-              <PencilSquareIcon
-                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
-                data-cy="suggestion-edit-icon"
-                onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
-              />
+              {props.isEditable && (
+                <PencilSquareIcon
+                  className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                  data-cy="suggestion-edit-icon"
+                  onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
+                />
+              )}
               <XMarkIcon
                 className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
                 data-cy="suggestion-x-icon"
@@ -172,11 +174,21 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
   const { params } = context
   try {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
+
     if (data == null) return { notFound: true }
-    return { props: { suggestion: data } }
+    return {
+      props: {
+        suggestion: data,
+        isEditable: (data.author as { id: string }).id === session?.user.id,
+      },
+    }
   } catch {
     return { notFound: true }
   }

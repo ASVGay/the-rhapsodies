@@ -23,7 +23,7 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .from("suggestion")
     .select(
       `*,
-        author (display_name),
+        author (display_name, id),
         suggestion_instruments:suggestion_instrument (
           id,
           description,
@@ -37,10 +37,6 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .eq("id", id)
     .limit(1)
     .single()
-}
-
-export const getAuthorOfSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {
-  return supabase.from("suggestion").select(`author`).eq("id", id).single()
 }
 
 export const insertDivision = (
