@@ -27,7 +27,11 @@ export const middleware = async (req: NextRequest) => {
     if (count === 0) {
       if (req.nextUrl.pathname.startsWith("/change-password")) return res
       else return goToPath("/change-password", req)
+      // If not and trying to go to change-password, send to home
     } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
+
+    // If trying to reset password, let them
+    if (req.nextUrl.pathname.startsWith("/forgot-password/reset")) return res
 
     // Go to homepage if user is logged in and tries to go to sign-in or forgot-password
     if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
@@ -37,7 +41,8 @@ export const middleware = async (req: NextRequest) => {
 
   // If user is not logged in and going to sign-in or forgot-password, let them
   if (req.nextUrl.pathname.startsWith("/sign-in")) return res
-  if (req.nextUrl.pathname.startsWith("/forgot-password")) return res
+  if (req.nextUrl.pathname === "/forgot-password") return res
+
   // Else, redirect to sign in page
   const redirectUrl = req.nextUrl.clone()
   redirectUrl.pathname = "/sign-in"

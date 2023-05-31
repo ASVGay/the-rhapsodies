@@ -16,7 +16,7 @@ export const isInMemberDatabase = (supabaseClient: SupabaseClient<Database>, id:
 
 export const resetPasswordForEmail = async (supabase: SupabaseClient, email: string) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/forgot-password/reset`,
+    redirectTo: `${window.location.origin}/api/auth/callback?next=/forgot-password/reset&`,
   })
   if (error) {
     toast.error(error.message)
