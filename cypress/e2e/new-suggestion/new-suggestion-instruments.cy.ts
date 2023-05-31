@@ -48,7 +48,7 @@ describe("when creating a new suggestion, adding instruments", () => {
           .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
       },
     })
-
+    cy.wait(500) // Wait so content can render properly and set up submit events
     cy.data(progressBarInstruments).click()
   })
 
