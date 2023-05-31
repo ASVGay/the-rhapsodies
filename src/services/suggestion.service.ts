@@ -2,7 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 import {
   DivisionDatabaseOperation,
-  SuggestionInstrumentDatabaseOperation
+  SuggestionInstrumentDatabaseOperation,
 } from "@/types/database-types"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 
@@ -11,6 +11,7 @@ export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
       *,
       suggestion_instruments:suggestion_instrument (
         id,
+        description,
         instrument (*),
         division (*)
       )
@@ -25,6 +26,7 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
         author (display_name),
         suggestion_instruments:suggestion_instrument (
           id,
+          description,
           instrument (*),
           division (
             *,
@@ -55,7 +57,6 @@ export const deleteDivision = (
     .eq("suggestion_instrument_id", division.suggestion_instrument_id)
 }
 
-
 export const insertSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
   { artist, link, motivation, title }: NewSuggestion,
@@ -68,7 +69,7 @@ export const insertSuggestion = async (
       artist: artist,
       motivation: motivation,
       author: uid,
-      link: link
+      link: link,
     })
     .select()
 }
@@ -77,7 +78,5 @@ export const insertSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
   operation: SuggestionInstrumentDatabaseOperation[]
 ) => {
-  return supabaseClient
-    .from("suggestion_instrument")
-    .insert(operation)
+  return supabaseClient.from("suggestion_instrument").insert(operation)
 }
