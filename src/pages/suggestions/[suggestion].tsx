@@ -121,9 +121,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
+            <p className={"mb-3 mt-3 text-sm font-medium leading-4 text-gray-400"}>
               {suggestion.motivation}
             </p>
             <SuggestionLink link={suggestion.link} />

@@ -107,7 +107,7 @@ const ReviewArea = () => {
               </div>
             </div>
             <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
+              className={"mb-3 mt-3 text-sm font-medium leading-4 text-gray-400"}
               data-cy="review-motivation"
             >
               {suggestion.motivation}
