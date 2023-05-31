@@ -1,4 +1,5 @@
 describe("on the reset password page", () => {
+  // -------------------------------------------------------------- Variables
   const buttonSubmitNewPassword = "button-submit-new-password"
   const inputPasswordError = "input-password-error"
   const inputPassword = "input-password"
@@ -12,6 +13,7 @@ describe("on the reset password page", () => {
     cy.data(buttonSubmitNewPassword).click()
   }
 
+  // -------------------------------------------------------------- Tests
   context("without an auth session", () => {
     beforeEach(() => {
       cy.logout()
