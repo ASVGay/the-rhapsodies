@@ -20,9 +20,10 @@ import ErrorPopup from "@/components/popups/error-popup"
 interface SuggestionPageSectionProps {
   title: string
   suggestion: NewSuggestion
+  onSubmit(onSuccess: () => void, onError: () => void): void
 }
 
-const SuggestionPageSection = ({ title, suggestion }: SuggestionPageSectionProps) => {
+const SuggestionPageSection = ({ title, suggestion, onSubmit }: SuggestionPageSectionProps) => {
   const router = useRouter()
   const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
 
@@ -88,7 +89,9 @@ const SuggestionPageSection = ({ title, suggestion }: SuggestionPageSectionProps
             {activeArea == Area.Instruments && (
               <InstrumentsArea suggestion={suggestion} instrumentList={instrumentList} />
             )}
-            {activeArea == Area.Review && <ReviewArea suggestion={suggestion} />}
+            {activeArea == Area.Review && (
+              <ReviewArea suggestion={suggestion} onSubmit={onSubmit} />
+            )}
           </div>
         )}
       </div>

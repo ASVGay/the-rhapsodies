@@ -18,19 +18,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data: authorData } = await getAuthorOfSuggestion(supabase, params?.suggestion as string)
 
     // No suggestion found at all
-    if (authorData === null) {
-      return { notFound: true }
-    }
+    if (authorData === null) return { notFound: true }
 
     // If the the user does not match with the
-    if (session?.user.id !== authorData.author) {
+    if (session?.user.id !== authorData.author)
       return {
         redirect: {
           destination: "/403",
           permanent: false,
         },
       }
-    }
 
     //Fetch the suggestion from the database
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
@@ -66,7 +63,15 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     instruments: suggestionInstruments,
   })
 
-  return <SuggestionPageSection title={"Edit Suggestion"} suggestion={suggestion} />
+  const saveSuggestion = (onSuccess: () => void, onError: () => void) => {}
+
+  return (
+    <SuggestionPageSection
+      title={"Edit Suggestion"}
+      suggestion={suggestion}
+      onSubmit={(success, error) => saveSuggestion(success, error)}
+    />
+  )
 }
 
 export default EditSuggestionPage
