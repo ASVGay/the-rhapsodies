@@ -9,6 +9,7 @@ import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/formdata"
 import Link from "next/link"
+import { toast } from "react-toastify"
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -24,6 +25,11 @@ const Index = () => {
   useEffect(() => {
     watch(() => setErrorPopupText(""))
   }, [watch])
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(router.asPath.split("#")[1])
+    toast.error(urlSearchParams.get("error_description"), { toastId: "error_description" })
+  }, [router.asPath])
 
   const signInFormData: FormDataItem[] = [
     {
