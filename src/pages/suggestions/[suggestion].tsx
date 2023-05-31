@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
+import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
@@ -17,6 +17,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import { useRouter } from "next/router"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -27,6 +28,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
+  const router = useRouter()
   const uid = user?.id
 
   const updateSuggestion = () => {
@@ -82,9 +84,18 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
-            </Link>
+            <div className={"flex flex-row gap-2"}>
+              <PencilSquareIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-edit-icon"
+                onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
+              />
+              <XMarkIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-x-icon"
+                onClick={() => router.push("/suggestions")}
+              />
+            </div>
           </div>
 
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
