@@ -29,8 +29,9 @@ export const middleware = async (req: NextRequest) => {
       else return goToPath("/change-password", req)
     } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
 
-    // Go to homepage if user is logged in and tries to go to sign-in
+    // Go to homepage if user is logged in and tries to go to sign-in or forgot-password
     if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
+    if (req.nextUrl.pathname.startsWith("/forgot-password")) return goToPath("/", req)
     return res
   }
 

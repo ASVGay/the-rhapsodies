@@ -1,4 +1,5 @@
 describe("the forgot password page", () => {
+  // -------------------------------------------------------------- Variables
   const inputEmail = "input-email"
   const buttonSubmit = "button-submit-email"
   const error = "input-email-error"
@@ -6,19 +7,24 @@ describe("the forgot password page", () => {
   const requestLink = "request-link"
   const tryAgain = "try-again"
   const backToSignIn = "back-to-sign-in"
-  const testEmail = "test@email"
+  const testEmail = "em@il"
   const emailValue = "email-value"
   const successMessage = "An email has been sent. Check your spam folder if you cannot find it."
   const errorLink = {
     code: 429,
     msg: "For security purposes, you can only request this once every 60 seconds",
   }
+
+  // -------------------------------------------------------------- Tests
   beforeEach(() => {
+    cy.logout()
     cy.visit("/forgot-password")
   })
 
   it("should go to homepage if logged in", () => {
     cy.login()
+    cy.visit("/forgot-password")
+    cy.location("pathname").should("equal", "/")
   })
 
   it("should render request password area", () => {
@@ -33,7 +39,7 @@ describe("the forgot password page", () => {
     cy.location("pathname").should("equal", "/sign-in")
   })
 
-  it("should require a email before submit", () => {
+  it("should require an email before submit", () => {
     cy.data(error).should("not.exist")
     cy.data(buttonSubmit).click()
     cy.data(error).should("be.visible")
