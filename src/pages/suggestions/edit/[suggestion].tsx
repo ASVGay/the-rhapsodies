@@ -2,16 +2,40 @@ import React, { useState } from "react"
 import SuggestionPageSection from "@/components/new-suggestion/suggestion-page-section"
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { getSuggestion } from "@/services/suggestion.service"
-import { Instrument, Suggestion } from "@/types/database-types"
+import { getSuggestion, getAuthorOfSuggestion } from "@/services/suggestion.service"
+import { Suggestion } from "@/types/database-types"
 import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
   const { params } = context
   try {
-    let { data } = await getSuggestion(supabase, params?.suggestion as string)
+    const { data: authorData } = await getAuthorOfSuggestion(supabase, params?.suggestion as string)
+
+    // No suggestion found at all
+    if (authorData === null) {
+      return { notFound: true }
+    }
+
+    // If the the user does not match with the
+    if (session?.user.id !== authorData.author) {
+      return {
+        redirect: {
+          destination: "/403",
+          permanent: false,
+        },
+      }
+    }
+
+    //Fetch the suggestion from the database
+    const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
+
     return { props: { suggestion: data } }
   } catch {
     return { notFound: true }
@@ -28,7 +52,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   const suggestionInstruments: NewSuggestionInstrument[] = []
 
   props.suggestion.suggestion_instruments.forEach((element) => {
-    console.log(element.description)
+    // console.log(element.description)
     suggestionInstruments.push({
       description: element.description || "",
       instrument: element.instrument,
