@@ -112,7 +112,7 @@ const ReviewArea = () => {
             >
               {suggestion.motivation}
             </p>
-            <SuggestionLink link={suggestion.link} />
+            <SuggestionLink link={suggestion.link} dataCy={"review-link"} />
           </div>
 
           <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>

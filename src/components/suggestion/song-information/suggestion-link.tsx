@@ -3,9 +3,10 @@ import { Suggestion } from "@/types/database-types"
 
 interface SuggestionLinkProps {
   link: Suggestion["link"]
+  dataCy?: string
 }
 
-const SuggestionLink = ({ link }: SuggestionLinkProps) => {
+const SuggestionLink = ({ link, dataCy }: SuggestionLinkProps) => {
   return (
     <>
       {link && (
@@ -15,6 +16,7 @@ const SuggestionLink = ({ link }: SuggestionLinkProps) => {
           }
           href={link}
           target={"_blank"}
+          data-cy={dataCy}
         >
           <PlayCircleIcon className={"mr-1 inline h-6"} />
           Link to the song
