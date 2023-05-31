@@ -4,13 +4,13 @@ import React from "react"
 import { toast } from "react-toastify"
 import { resetPasswordForEmail } from "@/services/authentication.service"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { useFormContext } from "react-hook-form"
+import { ForgotPasswordInputs } from "@/components/forgot-password/forgot-password-form"
 
-interface ForgotPasswordConfirmationProps {
-  emailAddress: string
-}
-
-export function ForgotPasswordConfirmation({ emailAddress }: ForgotPasswordConfirmationProps) {
+export function ForgotPasswordConfirmation() {
   const supabase = useSupabaseClient()
+  const { watch } = useFormContext<ForgotPasswordInputs>()
+  const emailAddress = watch("email")
 
   const resendEmail = async () => {
     const isSuccess = await resetPasswordForEmail(supabase, emailAddress)
