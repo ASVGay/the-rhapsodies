@@ -12,9 +12,10 @@ import { useRouter } from "next/router"
 import {
   initialState,
   setActiveArea,
-  updateNewSuggestion
+  updateNewSuggestion,
 } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
+import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import Instrument from "@/components/suggestion/instrument"
 
 const ReviewArea = () => {
@@ -93,7 +94,7 @@ const ReviewArea = () => {
         </div>
       ) : (
         <>
-          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm text-left"}>
+          <div className={"m-2 text-left md:ml-auto md:mr-auto md:max-w-sm"}>
             <div className={"flex"}>
               <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
               <div className={"ml-3"}>
@@ -111,22 +112,23 @@ const ReviewArea = () => {
             >
               {suggestion.motivation}
             </p>
+            <SuggestionLink link={suggestion.link} />
           </div>
 
           <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>
           <div className={"mb-12 grid justify-center gap-6 text-left"} data-cy="review-instruments">
-            {suggestion.instruments.map(
-              (instrument, index) => {
-                const key = `${instrument.instrument.id}-${index}`
-                return <Instrument
+            {suggestion.instruments.map((instrument, index) => {
+              const key = `${instrument.instrument.id}-${index}`
+              return (
+                <Instrument
                   key={key}
                   imageURL={instrument.instrument.image_source}
                   name={instrument.instrument.instrument_name}
                   description={instrument.description}
                   uid={uid}
                 />
-              }
-            )}
+              )
+            })}
           </div>
 
           <div className={`flex justify-center`}>
