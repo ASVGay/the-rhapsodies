@@ -5,11 +5,8 @@ import ProgressionBar from "@/components/suggestion/progression-bar"
 import { Suggestion } from "@/types/database-types"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 
-interface SuggestionCardProps {
-  suggestion: Suggestion
-}
 
-const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
+const SuggestionCard = (suggestion : Suggestion) => {
   return (
     <Link
       href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}

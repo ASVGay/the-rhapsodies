@@ -1,13 +1,10 @@
-import React, {useEffect} from 'react';
-import {getSuggestions} from "@/services/suggestion.service";
-import {Suggestion} from "@/types/database-types";
+import React from 'react';
+import SongListPageWrapper from "@/components/wrapper/song-list-wrapper";
+import SuggestionCard from "@/components/suggestion/suggestion-card";
+
 
 const Index = () => {
-    return (
-        <div>
-
-        </div>
-    );
+    return <SongListPageWrapper renderSuggestionCard={SuggestionCard} pageName={"Repertoire"}/>
 };
 
 export default Index;
