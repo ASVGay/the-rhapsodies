@@ -13,9 +13,11 @@ import { Database } from "@/types/database"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { useRouter } from "next/router"
 import { mapInstruments } from "@/helpers/new-suggestion.helper"
+import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 
 const NewSuggestion = () => {
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+  const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
 
   const supabase = useSupabaseClient<Database>()
   const dispatch = useDispatch()
@@ -53,11 +55,43 @@ const NewSuggestion = () => {
     }
   }
 
+  const onAreaSelect = (area: Area) => {
+    dispatch(setActiveArea(area))
+  }
+
+  const onInstrumentSubmit = (newInstruments: NewSuggestionInstrument[]) => {
+    dispatch(
+      updateNewSuggestion({
+        ...suggestion,
+        instruments: newInstruments,
+      })
+    )
+    dispatch(setActiveArea(Area.Review))
+  }
+
+  const onSongInformationSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
+    dispatch(
+      updateNewSuggestion({
+        ...suggestion,
+        title,
+        artist: [artist],
+        link,
+        motivation,
+      })
+    )
+  }
+
   return (
     <SuggestionPageSection
       title={"New Suggestion"}
-      suggestion={suggestion}
-      onSubmit={(success, error) => saveSuggestion(success, error)}
+      newSuggestion={suggestion}
+      startingArea={activeArea}
+      onSongInformationSubmit={onSongInformationSubmit}
+      onAreaSelect={onAreaSelect}
+      onInstrumentSubmit={(newInstruments) => {
+        onInstrumentSubmit(newInstruments)
+      }}
+      onReviewSubmit={(success, error) => saveSuggestion(success, error)}
     />
   )
 }

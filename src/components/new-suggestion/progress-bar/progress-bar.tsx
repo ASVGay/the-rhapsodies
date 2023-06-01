@@ -2,12 +2,9 @@ import React from "react"
 import { DocumentTextIcon, ListBulletIcon, MusicalNoteIcon } from "@heroicons/react/24/outline"
 import ProgressBarCheckBox from "@/components/new-suggestion/progress-bar/progress-bar-check-box"
 import { Area } from "@/constants/area"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, AppState } from "@/redux/store"
-import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 import { toast } from "react-toastify"
 import { useFormContext } from "react-hook-form"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { InputsSongInformation, NewSuggestion } from "@/interfaces/new-suggestion"
 import {
   isInstrumentSuggestionInvalid,
   isSongInformationInvalid,
@@ -22,10 +19,13 @@ function showInstrumentError() {
   toast.warn("You need to add at least one instrument before continuing")
 }
 
-const ProgressBar = () => {
-  const dispatch: AppDispatch = useDispatch()
-  const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion)
+interface ProgressBarProps {
+  activeArea: Area
+  newSuggestion: NewSuggestion
+  onAreaSelect(newArea: Area): void
+}
+
+const ProgressBar = ({ activeArea, onAreaSelect, newSuggestion }: ProgressBarProps) => {
   const { watch } = useFormContext<InputsSongInformation>()
 
   function colorArea(area: string) {
@@ -35,7 +35,7 @@ const ProgressBar = () => {
   function goToInstruments() {
     submitSongInformationForm()
     if (isSongInformationInvalid(watch)) showSongInformationError()
-    else dispatch(setActiveArea(Area.Instruments))
+    else onAreaSelect(Area.Instruments)
   }
 
   function goToReview() {
@@ -45,13 +45,13 @@ const ProgressBar = () => {
       return
     }
 
-    if (isInstrumentSuggestionInvalid(newSuggestion.suggestion.instruments)) {
+    if (isInstrumentSuggestionInvalid(newSuggestion.instruments)) {
       showInstrumentError()
-      dispatch(setActiveArea(Area.Instruments))
+      onAreaSelect(Area.Instruments)
       return
     }
 
-    dispatch(setActiveArea(Area.Review))
+    onAreaSelect(Area.Review)
   }
 
   return (
@@ -65,7 +65,7 @@ const ProgressBar = () => {
           <li
             data-cy={"new-suggestion-progress-bar-song-information"}
             className={`progress-bar-icon group justify-start ${colorArea(Area.SongInformation)}`}
-            onClick={() => dispatch(setActiveArea(Area.SongInformation))}
+            onClick={() => onAreaSelect(Area.SongInformation)}
           >
             <MusicalNoteIcon className={"h-6 w-6"} />
             <ProgressBarCheckBox positioning={"start-0"} />

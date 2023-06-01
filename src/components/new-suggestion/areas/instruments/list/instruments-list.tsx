@@ -5,44 +5,45 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 
-const InstrumentsList = () => {
-  const dispatch: AppDispatch = useDispatch()
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const [instrumentListItems, setInstrumentListItems] = useState<NewSuggestionInstrument[]>(
-    newSuggestion.instruments
-  )
+interface InstrumentsListProps {
+  newInstruments: NewSuggestionInstrument[]
+  onNewInstrumentsChanged(newInstrumentsList: NewSuggestionInstrument[]): void
+}
 
-  useEffect(() => {
-    setInstrumentListItems(newSuggestion.instruments)
-  }, [instrumentListItems, newSuggestion])
+const InstrumentsList = ({ newInstruments, onNewInstrumentsChanged }: InstrumentsListProps) => {
+  // useEffect(() => {
+  //   setInstrumentListItems(newSuggestion.instruments)
+  // }, [instrumentListItems, newSuggestion])
 
   const onDeleteInstrument = (index: number) => {
-    const newItems = [...instrumentListItems]
+    const newItems: NewSuggestionInstrument[] = [...newInstruments]
     newItems.splice(index, 1)
 
-    dispatch(
-      updateNewSuggestion({
-        ...newSuggestion,
-        instruments: newItems,
-      })
-    )
+    onNewInstrumentsChanged(newItems)
+    // dispatch(
+    //   updateNewSuggestion({
+    //     ...newSuggestion,
+    //     instruments: newItems,
+    //   })
+    // )
   }
 
   const onDescriptionChanged = (index: number, description: string) => {
-    const newItems = [...instrumentListItems]
+    const newItems = [...newInstruments]
     newItems[index] = { ...newItems[index], description }
-
-    dispatch(
-      updateNewSuggestion({
-        ...newSuggestion,
-        instruments: newItems,
-      })
-    )
+    newItems[index].description = description
+    onNewInstrumentsChanged(newItems)
+    // dispatch(
+    //   updateNewSuggestion({
+    //     ...newSuggestion,
+    //     instruments: newItems,
+    //   })
+    // )
   }
 
   return (
     <ul data-cy="instrument-edit-list">
-      {instrumentListItems.map((instrumentItem: NewSuggestionInstrument, index) => {
+      {newInstruments.map((instrumentItem: NewSuggestionInstrument, index) => {
         const key = `${instrumentItem.instrument.id}-${index}`
         return (
           <InstrumentsListItem

@@ -74,6 +74,23 @@ export const insertSuggestion = async (
     .select()
 }
 
+export const updateSuggestion = async (
+  supabaseClient: SupabaseClient<Database>,
+  { artist, link, motivation, title }: NewSuggestion,
+  uid: string
+) => {
+  return supabaseClient
+    .from("suggestion")
+    .update({
+      title: title,
+      artist: artist,
+      motivation: motivation,
+      author: uid,
+      link: link,
+    })
+    .select()
+}
+
 export const insertSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
   operation: SuggestionInstrumentDatabaseOperation[]

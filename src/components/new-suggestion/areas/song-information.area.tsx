@@ -1,24 +1,18 @@
 import React from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/redux/store"
-import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
-import { InputsSongInformation, NewSuggestion } from "@/interfaces/new-suggestion"
+import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import {
   isSongInformationInvalid,
   submitSongInformationForm,
 } from "@/helpers/new-suggestion.helper"
 
 interface SongInformationAreaProps {
-  suggestion: NewSuggestion
+  onFormSuccess(songInformation: InputsSongInformation): void
 }
 
-const SongInformationArea = ({ suggestion }: SongInformationAreaProps) => {
-  const dispatch: AppDispatch = useDispatch()
-
+const SongInformationArea = ({ onFormSuccess }: SongInformationAreaProps) => {
   const {
     register,
     handleSubmit,
@@ -26,21 +20,8 @@ const SongInformationArea = ({ suggestion }: SongInformationAreaProps) => {
     watch,
   } = useFormContext<InputsSongInformation>()
 
-  const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
-    dispatch(
-      updateNewSuggestion({
-        ...suggestion,
-        title,
-        artist: [artist],
-        link,
-        motivation,
-      })
-    )
-  }
-
-  function submitAndGoToInstruments() {
-    submitSongInformationForm()
-    if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
+  const onSubmit = (songInformation: InputsSongInformation) => {
+    if (!isSongInformationInvalid(watch)) onFormSuccess(songInformation)
   }
 
   return (
@@ -160,7 +141,7 @@ const SongInformationArea = ({ suggestion }: SongInformationAreaProps) => {
           data-cy={"button-add-instruments"}
           type="button"
           className="btn song-information mb-4"
-          onClick={() => submitAndGoToInstruments()}
+          onClick={() => submitSongInformationForm()}
         >
           Add instruments
         </button>

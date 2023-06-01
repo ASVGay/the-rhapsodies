@@ -7,11 +7,11 @@ import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import Image from "next/image"
 
 interface ReviewAreaProps {
-  suggestion: NewSuggestion
+  newSuggestion: NewSuggestion
   onSubmit(onSuccess: () => void, onError: () => void): void
 }
 
-const ReviewArea = ({ suggestion, onSubmit }: ReviewAreaProps) => {
+const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) => {
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [insertError, setInsertError] = useState<boolean>(false)
 

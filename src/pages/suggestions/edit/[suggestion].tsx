@@ -2,9 +2,13 @@ import React, { useState } from "react"
 import SuggestionPageSection from "@/components/new-suggestion/suggestion-page-section"
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { getSuggestion } from "@/services/suggestion.service"
+import { getSuggestion, updateSuggestion } from "@/services/suggestion.service"
 import { Suggestion } from "@/types/database-types"
 import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { useRouter } from "next/router"
+import { Area } from "@/constants/area"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -43,17 +47,18 @@ interface EditSuggestionPageProps {
 }
 
 const EditSuggestionPage = (props: EditSuggestionPageProps) => {
-  //TODO: add method to retrieve correct suggestion to edit
+  const user = useUser()
+  const supabase = useSupabaseClient<Database>()
+  const router = useRouter()
 
   const suggestionInstruments: NewSuggestionInstrument[] = []
-
   props.suggestion.suggestion_instruments.forEach((element) => {
-    // console.log(element.description)
     suggestionInstruments.push({
       description: element.description || "",
       instrument: element.instrument,
     })
   })
+
   const [suggestion] = useState<NewSuggestion>({
     artist: props.suggestion.artist,
     link: props.suggestion.link,
@@ -62,13 +67,30 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     instruments: suggestionInstruments,
   })
 
-  const saveSuggestion = (onSuccess: () => void, onError: () => void) => {}
+  const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
+    if (user) {
+      updateSuggestion(supabase, suggestion, user.id)
+        .then((response) => {
+          if (response.error) {
+            onError()
+          }
+
+          router.push("/suggestions").then(() => {
+            onSuccess()
+          })
+        })
+        .catch(() => onError())
+    } else {
+      onError()
+    }
+  }
 
   return (
     <SuggestionPageSection
       title={"Edit Suggestion"}
-      suggestion={suggestion}
-      onSubmit={(success, error) => saveSuggestion(success, error)}
+      newSuggestion={suggestion}
+      startingArea={Area.Review}
+      onReviewSubmit={(success, error) => saveSuggestion(success, error)}
     />
   )
 }

@@ -5,10 +5,12 @@ import { useRouter } from "next/router"
 import SongInformationArea from "@/components/new-suggestion/areas/song-information.area"
 import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
-import { useSelector } from "react-redux"
-import { AppState } from "@/redux/store"
 import { FormProvider, useForm } from "react-hook-form"
-import { InputsSongInformation, NewSuggestion } from "@/interfaces/new-suggestion"
+import {
+  InputsSongInformation,
+  NewSuggestion,
+  NewSuggestionInstrument,
+} from "@/interfaces/new-suggestion"
 import InstrumentsArea from "@/components/new-suggestion/areas/instruments/instruments.area"
 import { Database } from "@/types/database"
 import { Instrument } from "@/types/database-types"
@@ -19,16 +21,30 @@ import ErrorPopup from "@/components/popups/error-popup"
 
 interface SuggestionPageSectionProps {
   title: string
-  suggestion: NewSuggestion
-  onSubmit(onSuccess: () => void, onError: () => void): void
+  newSuggestion: NewSuggestion
+  startingArea: Area
+  onSongInformationSubmit?(songInformation: InputsSongInformation): void
+  onReviewSubmit(onSuccess: () => void, onError: () => void): void
+  onInstrumentSubmit?(newInstruments: NewSuggestionInstrument[]): void
+  onAreaSelect?(newArea: Area): void
 }
 
-const SuggestionPageSection = ({ title, suggestion, onSubmit }: SuggestionPageSectionProps) => {
+const SuggestionPageSection = ({
+  title,
+  newSuggestion,
+  startingArea,
+  onReviewSubmit,
+  onAreaSelect,
+  onInstrumentSubmit,
+  onSongInformationSubmit,
+}: SuggestionPageSectionProps) => {
   const router = useRouter()
-  const activeArea = useSelector((state: AppState) => state.newSuggestion.activeArea)
-
+  const [activeArea, setActiveArea] = useState<Area>(startingArea)
   const methods = useForm<InputsSongInformation>({
-    defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
+    defaultValues: {
+      ...newSuggestion,
+      artist: newSuggestion.artist.join(","),
+    } as InputsSongInformation,
     shouldFocusError: false,
   })
 
@@ -55,6 +71,15 @@ const SuggestionPageSection = ({ title, suggestion, onSubmit }: SuggestionPageSe
         setShowSpinner(false)
       })
   }, [supabaseClient])
+
+  const handleAreaChange = (area: Area) => {
+    if (onAreaSelect) onAreaSelect(area)
+    setActiveArea(area)
+  }
+
+  const [newSuggestionInstruments, setNewSuggestionInstruments] = useState<
+    NewSuggestionInstrument[]
+  >(newSuggestion.instruments)
 
   return (
     <FormProvider {...methods}>
@@ -84,13 +109,32 @@ const SuggestionPageSection = ({ title, suggestion, onSubmit }: SuggestionPageSe
         )}
         {!showLoadingError && (
           <div className={"mx-auto text-center lg:w-2/4"}>
-            <ProgressBar />
-            {activeArea == Area.SongInformation && <SongInformationArea suggestion={suggestion} />}
+            <ProgressBar
+              activeArea={activeArea}
+              newSuggestion={newSuggestion}
+              onAreaSelect={(area) => handleAreaChange(area)}
+            />
+            {activeArea == Area.SongInformation && (
+              <SongInformationArea
+                onFormSuccess={(songInformation) => {
+                  handleAreaChange(Area.Instruments)
+                  if (onSongInformationSubmit) onSongInformationSubmit(songInformation)
+                }}
+              />
+            )}
             {activeArea == Area.Instruments && (
-              <InstrumentsArea suggestion={suggestion} instrumentList={instrumentList} />
+              <InstrumentsArea
+                onInstrumentsChanged={setNewSuggestionInstruments}
+                newSuggestionInstruments={newSuggestionInstruments}
+                instrumentList={instrumentList}
+                onSubmit={() => {
+                  handleAreaChange(Area.Review)
+                  if (onInstrumentSubmit) onInstrumentSubmit(newSuggestionInstruments)
+                }}
+              />
             )}
             {activeArea == Area.Review && (
-              <ReviewArea suggestion={suggestion} onSubmit={onSubmit} />
+              <ReviewArea newSuggestion={newSuggestion} onSubmit={onReviewSubmit} />
             )}
           </div>
         )}

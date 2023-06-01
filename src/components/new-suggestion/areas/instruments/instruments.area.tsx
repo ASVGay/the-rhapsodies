@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import InstrumentsList from "./list/instruments-list"
 import InstrumentSearch from "@/components/new-suggestion/areas/instruments/search/instrument-search"
 import { Instrument } from "@/types/database-types"
@@ -10,29 +10,24 @@ import { Area } from "@/constants/area"
 
 interface InstrumentsAreaProps {
   instrumentList: Instrument[]
-  suggestion: NewSuggestion
+  newSuggestionInstruments: NewSuggestionInstrument[]
+  onInstrumentsChanged(newInstruments: NewSuggestionInstrument[]): void
+  onSubmit(): void
 }
 
-const InstrumentsArea = ({ instrumentList, suggestion }: InstrumentsAreaProps) => {
-  const dispatch: AppDispatch = useDispatch()
-
-  const onInstrumentSelected = (instrument: Instrument): boolean => {
+const InstrumentsArea = ({
+  instrumentList,
+  newSuggestionInstruments,
+  onSubmit,
+  onInstrumentsChanged,
+}: InstrumentsAreaProps) => {
+  const onInstrumentSelected = (instrument: Instrument) => {
     const newItem: NewSuggestionInstrument = {
       instrument: instrument,
       description: "",
     }
 
-    dispatch(
-      updateNewSuggestion({
-        ...suggestion,
-        instruments: [...suggestion.instruments, newItem],
-      })
-    )
-    return true
-  }
-
-  const onSubmit = () => {
-    dispatch(setActiveArea(Area.Review))
+    onInstrumentsChanged([...newSuggestionInstruments, newItem])
   }
 
   return (
@@ -42,10 +37,13 @@ const InstrumentsArea = ({ instrumentList, suggestion }: InstrumentsAreaProps) =
         instruments={instrumentList}
         onInstrumentSelected={(instrument: Instrument) => onInstrumentSelected(instrument)}
       />
-      <InstrumentsList />
+      <InstrumentsList
+        newInstruments={newSuggestionInstruments}
+        onNewInstrumentsChanged={onInstrumentsChanged}
+      />
       <button
         data-cy="to-review-button"
-        disabled={suggestion.instruments.length < 1}
+        disabled={newSuggestionInstruments.length < 1}
         className="btn"
         onClick={onSubmit}
       >
