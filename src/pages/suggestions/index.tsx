@@ -11,42 +11,16 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import SearchBar from "@/components/suggestion/search-bar"
+import useSuggestions from "@/components/hooks/useSuggestions";
 
 const Suggestions: FC = () => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([])
-  const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
-  const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
-  const [noSuggestionsText, setNoSuggestionsText] = useState<string>("")
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    setShowSpinner(true)
-    getSuggestions(supabaseClient)
-      .then((response) => {
-        if (response.error) {
-          setShowLoadingError(true)
-          return
-        }
-
-        if(response.data?.length! > 0) {
-          setSuggestions(response.data as Suggestion[])
-          setNoSuggestionsText("")
-        } else {
-          setNoSuggestionsText(
-              "Looks like there are no suggestions made yet! Feel free to start adding them.")
-        }
-      })
-      .catch(() => {
-        setShowLoadingError(true)
-      })
-      .finally(() => {
-        setShowSpinner(false)
-      })
-  }, [supabaseClient])
+  const { suggestions, showSpinner, showLoadingError, noSuggestionsText, setNoSuggestionsText, setShowLoadingError } = useSuggestions(supabaseClient);
 
   useEffect(() => {
     if (showSearchBar && inputRef.current) {
