@@ -27,6 +27,7 @@
 @layer components {
     .settings-wrapper p {
         @apply py-2 text-base;
+        @apply pb-8;
     }
 
   .btn {

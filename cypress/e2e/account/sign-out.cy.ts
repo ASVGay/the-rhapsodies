@@ -9,7 +9,7 @@ describe("Sign-out", () => {
     cy.location("pathname").should("equal", "/sign-in")
   })
 
-  it("Should show toastr when signing out returns error", () => {
+  it("Should show toast when signing out returns error", () => {
     cy.intercept("POST", "/auth/v1/logout", (req) => {
       req.reply({
         statusCode: 500,

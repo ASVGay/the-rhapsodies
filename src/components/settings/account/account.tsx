@@ -3,7 +3,7 @@ import SettingsWrapper from "@/components/settings/settings-wrapper"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import SignOut from "@/components/settings/account/sign-out"
 
-const Account = () => {
+const AccountSettings = () => {
   return (
     <SettingsWrapper category={"Account"} icon={UserCircleIcon}>
       <SignOut />
@@ -11,4 +11,4 @@ const Account = () => {
   )
 }
 
-export default Account
+export default AccountSettings
