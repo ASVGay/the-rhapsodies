@@ -24,9 +24,9 @@ interface SuggestionPageSectionProps {
   newSuggestion: NewSuggestion
   startingArea: Area
   onSongInformationSubmit?(songInformation: InputsSongInformation): void
-  onReviewSubmit(onSuccess: () => void, onError: () => void): void
   onInstrumentSubmit?(newInstruments: NewSuggestionInstrument[]): void
   onAreaSelect?(newArea: Area): void
+  onReviewSubmit(onSuccess: () => void, onError: () => void): void
 }
 
 const SuggestionPageSection = ({
@@ -40,6 +40,10 @@ const SuggestionPageSection = ({
 }: SuggestionPageSectionProps) => {
   const router = useRouter()
   const [activeArea, setActiveArea] = useState<Area>(startingArea)
+  const supabaseClient = useSupabaseClient<Database>()
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
+
   const methods = useForm<InputsSongInformation>({
     defaultValues: {
       ...newSuggestion,
@@ -48,10 +52,10 @@ const SuggestionPageSection = ({
     shouldFocusError: false,
   })
 
-  const supabaseClient = useSupabaseClient<Database>()
   const [instrumentList, setInstrumentList] = useState<Instrument[]>([])
-  const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
+  const [newSuggestionInstruments, setNewSuggestionInstruments] = useState<
+    NewSuggestionInstrument[]
+  >(newSuggestion.instruments)
 
   useEffect(() => {
     setShowSpinner(true)
@@ -74,12 +78,12 @@ const SuggestionPageSection = ({
 
   const handleAreaChange = (area: Area) => {
     if (onAreaSelect) onAreaSelect(area)
+
+    if (area !== Area.Instruments)
+      if (onInstrumentSubmit) onInstrumentSubmit(newSuggestionInstruments)
+
     setActiveArea(area)
   }
-
-  const [newSuggestionInstruments, setNewSuggestionInstruments] = useState<
-    NewSuggestionInstrument[]
-  >(newSuggestion.instruments)
 
   return (
     <FormProvider {...methods}>
@@ -99,7 +103,7 @@ const SuggestionPageSection = ({
           </div>
         )}
         {showLoadingError && (
-          <div className={"mt-6"} data-cy="failed-fetching-suggestions">
+          <div className={"mt-6"} data-cy="failed-fetching-instruments">
             <ErrorPopup
               text={`“Something went wrong”
             You can try again. Contact support if this error persists.`}
@@ -111,7 +115,7 @@ const SuggestionPageSection = ({
           <div className={"mx-auto text-center lg:w-2/4"}>
             <ProgressBar
               activeArea={activeArea}
-              newSuggestion={newSuggestion}
+              newSuggestionInstruments={newSuggestionInstruments}
               onAreaSelect={(area) => handleAreaChange(area)}
             />
             {activeArea == Area.SongInformation && (
@@ -129,7 +133,6 @@ const SuggestionPageSection = ({
                 instrumentList={instrumentList}
                 onSubmit={() => {
                   handleAreaChange(Area.Review)
-                  if (onInstrumentSubmit) onInstrumentSubmit(newSuggestionInstruments)
                 }}
               />
             )}

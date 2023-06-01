@@ -4,48 +4,48 @@ import ProgressBarCheckBox from "@/components/new-suggestion/progress-bar/progre
 import { Area } from "@/constants/area"
 import { toast } from "react-toastify"
 import { useFormContext } from "react-hook-form"
-import { InputsSongInformation, NewSuggestion } from "@/interfaces/new-suggestion"
+import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import {
   isInstrumentSuggestionInvalid,
   isSongInformationInvalid,
   submitSongInformationForm,
 } from "@/helpers/new-suggestion.helper"
 
-function showSongInformationError() {
+const showSongInformationError = () => {
   toast.warn("You need to fill in all the required fields before continuing")
 }
 
-function showInstrumentError() {
+const showInstrumentError = () => {
   toast.warn("You need to add at least one instrument before continuing")
 }
 
 interface ProgressBarProps {
   activeArea: Area
-  newSuggestion: NewSuggestion
+  newSuggestionInstruments: NewSuggestionInstrument[]
   onAreaSelect(newArea: Area): void
 }
 
-const ProgressBar = ({ activeArea, onAreaSelect, newSuggestion }: ProgressBarProps) => {
+const ProgressBar = ({ activeArea, onAreaSelect, newSuggestionInstruments }: ProgressBarProps) => {
   const { watch } = useFormContext<InputsSongInformation>()
 
-  function colorArea(area: string) {
+  const colorArea = (area: string) => {
     return area === activeArea ? "text-moon-300" : "text-zinc-300"
   }
 
-  function goToInstruments() {
+  const goToInstruments = () => {
     submitSongInformationForm()
     if (isSongInformationInvalid(watch)) showSongInformationError()
     else onAreaSelect(Area.Instruments)
   }
 
-  function goToReview() {
+  const goToReview = () => {
     submitSongInformationForm()
     if (isSongInformationInvalid(watch)) {
       showSongInformationError()
       return
     }
 
-    if (isInstrumentSuggestionInvalid(newSuggestion.instruments)) {
+    if (isInstrumentSuggestionInvalid(newSuggestionInstruments)) {
       showInstrumentError()
       onAreaSelect(Area.Instruments)
       return
