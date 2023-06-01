@@ -12,15 +12,16 @@ import { useRouter } from "next/router"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import SearchBar from "@/components/suggestion/search-bar"
 import useSuggestions from "@/components/hooks/useSuggestions";
+import {useSearchSuggestions} from "@/components/hooks/useSearchSuggestions";
 
 const Suggestions: FC = () => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
-  const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([])
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { suggestions, showSpinner, showLoadingError, noSuggestionsText, setNoSuggestionsText, setShowLoadingError } = useSuggestions(supabaseClient);
+  const { searchedSuggestions, noSearchResultText, handleSearch } = useSearchSuggestions(suggestions);
 
   useEffect(() => {
     if (showSearchBar && inputRef.current) {
@@ -28,33 +29,14 @@ const Suggestions: FC = () => {
     }
   }, [showSearchBar])
 
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const input: string = e.target.value.toLowerCase()
-    const filteredSuggestions = suggestions.filter(({ title, motivation, artist }) => {
-      return (
-        title.toLowerCase().includes(input) ||
-        motivation.toLowerCase().includes(input) ||
-        artist.some((artist) => artist.toLowerCase().includes(input))
-      )
-    })
 
-    if (filteredSuggestions.length === 0) {
-      setNoSuggestionsText(
-        "It looks like the song you are looking for has not been suggested yet. Feel free to suggest the song!"
-      )
-    } else {
-      setNoSuggestionsText("")
-    }
-
-    setSearchedSuggestions(filteredSuggestions)
-  }
 
   const renderSuggestions = () => {
     const displayedSuggestions = showSearchBar ? searchedSuggestions : suggestions
 
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {displayedSuggestions.map((suggestion) => (
+        {displayedSuggestions.map((suggestion: Suggestion) => (
           <SuggestionCard key={suggestion.id} suggestion={suggestion} />
         ))}
       </div>
@@ -104,7 +86,7 @@ const Suggestions: FC = () => {
         </div>
       )}
 
-      {noSuggestionsText.length !== 0 && (
+      {noSuggestionsText.length !== 0 || noSearchResultText.length !== 0 && (
         <div
           className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
           data-cy="no-suggestions-text"
@@ -112,7 +94,7 @@ const Suggestions: FC = () => {
           <div>
             <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
           </div>
-          <p>{noSuggestionsText}</p>
+          <p>{noSuggestionsText.length !== 0 ? noSuggestionsText : noSearchResultText}</p>
         </div>
       )}
     </div>
