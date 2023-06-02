@@ -4,7 +4,7 @@ import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { GetServerSideProps } from "next"
-import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
+import { deleteDivision, deleteSuggestion, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
@@ -19,6 +19,7 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
+import { useRouter } from "next/router"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -31,6 +32,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
+  const router = useRouter()
 
   //TODO: use stored procedure instead of checking session storage
   //TODO: write docs on how to add an admin role
@@ -91,9 +93,14 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   const addToRepertoire = () => {
     createSongFromSuggestion(supabase, suggestion)
-      .then((songId) => {
-        //TODO delete suggestion
-        //  Redirect to repertoire
+      .then((response) => {
+        deleteSuggestion(supabase, suggestion.id)
+          .then(() => {
+            router.push("/suggestions") //TODO: redirect to repertoire
+          })
+          .catch(() => {
+            //TODO handle error
+          })
       })
       .catch(() => {
         //TODO handle error

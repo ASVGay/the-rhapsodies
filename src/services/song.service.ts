@@ -17,25 +17,30 @@ export const createSongFromSuggestion = async (
 
   const songId = (song_data as Song[])[0].id
 
-  for (const instrument of suggestion.suggestion_instruments) {
-    const { data, error } = await supabaseClient
-      .from("song_instrument")
-      .insert({
-        instrument_id: instrument.instrument.id,
-        song_id: songId,
-        description: instrument.description
-      })
-      .select()
-    const songInstrumentId = (data as Instrument[])[0].id
-    const divisions = suggestion.suggestion_instruments
-      .flatMap((instrument) => instrument.division)
-      .map((division) => ({
-        song_instrument_id: songInstrumentId,
-        musician: division.musician.id
-      }))
-    const { data: division_data, error: division_error } = await supabaseClient
-      .from("song_division")
-      .insert(divisions)
+  try {
+    for (const instrument of suggestion.suggestion_instruments) {
+      await supabaseClient
+        .from("song_instrument")
+        .insert({
+          instrument_id: instrument.instrument.id,
+          song_id: songId,
+          description: instrument.description
+        })
+        .select()
+        .then(async ({ data: instrument_data, error }) => {
+          const songInstrumentId = (instrument_data as Instrument[])[0].id
+          const divisions = instrument.division.map(division => ({
+            song_instrument_id: songInstrumentId,
+            musician: division.musician.id
+          }))
+
+          await supabaseClient
+            .from("song_division")
+            .insert(divisions)
+        })
+    }
+  } catch (err) {
+    //TODO revert and throw error
   }
 
   return songId

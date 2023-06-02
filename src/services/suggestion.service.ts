@@ -1,9 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import {
-  DivisionDatabaseOperation,
-  SuggestionInstrumentDatabaseOperation
-} from "@/types/database-types"
+import { DivisionDatabaseOperation, SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 
 export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
@@ -80,4 +77,14 @@ export const insertSuggestionInstruments = async (
   return supabaseClient
     .from("suggestion_instrument")
     .insert(operation)
+}
+
+export const deleteSuggestion = async (
+  supabaseClient: SupabaseClient<Database>,
+  id: string
+) => {
+  return supabaseClient
+    .from("suggestion")
+    .delete()
+    .eq("id", id)
 }
