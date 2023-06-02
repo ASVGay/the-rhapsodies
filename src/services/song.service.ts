@@ -6,7 +6,7 @@ export const createSongFromSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
   suggestion: Suggestion
 ) => {
-  const { data: song_data, error: song_error } = await supabaseClient
+  const { data: song_data } = await supabaseClient
     .from("song")
     .insert({
       title: suggestion.title,
@@ -27,7 +27,7 @@ export const createSongFromSuggestion = async (
           description: instrument.description
         })
         .select()
-        .then(async ({ data: instrument_data, error }) => {
+        .then(async ({ data: instrument_data }) => {
           const songInstrumentId = (instrument_data as Instrument[])[0].id
           const divisions = instrument.division.map(division => ({
             song_instrument_id: songInstrumentId,
@@ -40,8 +40,20 @@ export const createSongFromSuggestion = async (
         })
     }
   } catch (err) {
-    //TODO revert and throw error
+    await deleteSong(supabaseClient, songId).then(() => {
+      throw Error("Couldn't insert song details into the database, song creation has been reverted.")
+    })
   }
 
   return songId
+}
+
+export const deleteSong = async (
+  supabaseClient: SupabaseClient<Database>,
+  id: string
+) => {
+  return supabaseClient
+    .from("song")
+    .delete()
+    .eq("id", id)
 }

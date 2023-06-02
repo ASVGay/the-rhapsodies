@@ -21,7 +21,6 @@ import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
-import { tr } from "date-fns/locale"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -52,9 +51,9 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Suggestion) : setShowDeleteError(true)
+        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
       })
-      .catch(() => setShowDeleteError(true))
+      .catch(() => setShowUpdateError(true))
   }
 
   const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
