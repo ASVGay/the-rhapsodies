@@ -8,7 +8,7 @@ interface InstrumentProps {
   name: string
   division?: Division[]
   description: string | null
-  uid: string
+  uid: string | undefined
   onclick?: () => void
   toggleOpacity?: boolean
 }
@@ -26,7 +26,7 @@ const Instrument = ({ imageURL, name, division, description, uid, onclick, toggl
   return (
     <div
       className={`flex ${onclick && "cursor-pointer"} select-none`}
-      onClick={() => onclick && onclick()}
+      onClick={() => onclick?.()}
       data-cy="instrument"
     >
       <Image

@@ -25,6 +25,7 @@ const ReviewArea = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const user = useUser()
+  const uid = user?.id
 
   const saveSuggestion = () => {
     if (user) {
@@ -122,7 +123,7 @@ const ReviewArea = () => {
                   imageURL={instrument.instrument.image_source}
                   name={instrument.instrument.instrument_name}
                   description={instrument.description}
-                  uid={user!.id}
+                  uid={uid}
                 />
               }
             )}

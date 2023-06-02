@@ -24,8 +24,8 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const user = useUser()
-  const supabase = useSupabaseClient<Database>()
   const uid = user?.id
+  const supabase = useSupabaseClient<Database>()
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -108,7 +108,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                   name={instrument.instrument.instrument_name}
                   division={instrument.division}
                   description={instrument.description}
-                  uid={uid!}
+                  uid={uid}
                   onclick={() => selectInstrument(instrument)}
                 />
               })}
