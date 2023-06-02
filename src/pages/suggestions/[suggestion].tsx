@@ -89,7 +89,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   }
 
   const displayButton = (): boolean => {
-    return roles?.["claims_admin"] == true && suggestion.suggestion_instruments
+    return roles?.["claims_admin"] && suggestion.suggestion_instruments
       .filter((i) => i.division.length == 0).length == 0
   }
 
