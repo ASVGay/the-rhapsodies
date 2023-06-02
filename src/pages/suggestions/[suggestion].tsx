@@ -21,6 +21,7 @@ import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
+import { tr } from "date-fns/locale"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -29,6 +30,8 @@ interface SuggestionProps {
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [showSongError, setShowSongError] = useState<boolean>(false)
+  const [showDeleteError, setShowDeleteError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
@@ -49,9 +52,9 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
+        response.data ? setSuggestion(response.data as Suggestion) : setShowDeleteError(true)
       })
-      .catch(() => setShowUpdateError(true))
+      .catch(() => setShowDeleteError(true))
   }
 
   const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
@@ -87,33 +90,29 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   }
 
   const displayButton = (): boolean => {
-    return roles?.["accessLevel"] == "admin" && suggestion.suggestion_instruments
+    return roles?.["claims_admin"] == true && suggestion.suggestion_instruments
       .filter((i) => i.division.length == 0).length == 0
   }
 
   const addToRepertoire = () => {
+    setShowSpinner(true)
     createSongFromSuggestion(supabase, suggestion)
-      .then((response) => {
+      .then(() => {
         deleteSuggestion(supabase, suggestion.id)
-          .then(() => {
-            router.push("/suggestions") //TODO: redirect to repertoire
-          })
-          .catch(() => {
-            //TODO handle error
-          })
+          .then(() => router.push("/repertoire"))
+          .catch(() => setShowDeleteError(true))
       })
-      .catch(() => {
-        //TODO handle error
-      })
+      .catch(() => setShowSongError(true))
+      .finally(() => setShowSpinner(false))
   }
 
   return (
     <>
       {showSpinner ? (
-          <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
-            <Spinner size={10} />
-          </div>
-        ) : (<div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+          <Spinner size={10} />
+        </div>
+      ) : (<div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
@@ -200,13 +199,31 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             <div className={"mt-6"}>
               <ErrorPopup
                 text={"Failed to add or remove user to instrument."}
-                closePopup={() => setShowUpdateError(false)}
+                closePopup={() => setShowDeleteError(false)}
               />
             </div>
           )}
 
-        </div>)
-      }
+          {showSongError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to convert this suggestion to a repertoire song."}
+                closePopup={() => setShowDeleteError(false)}
+              />
+            </div>
+          )}
+
+          {showDeleteError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to delete this suggestion after song creation."}
+                closePopup={() => setShowDeleteError(false)}
+              />
+            </div>
+          )}
+
+        </div>
+      )}
     </>
   )
 }
