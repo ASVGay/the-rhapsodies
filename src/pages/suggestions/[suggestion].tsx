@@ -20,6 +20,7 @@ import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
+import Spinner from "@/components/utils/spinner"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -28,14 +29,13 @@ interface SuggestionProps {
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
   const router = useRouter()
 
-  //TODO: use stored procedure instead of checking session storage
-  //TODO: write docs on how to add an admin role
   useEffect(() => {
     if (supabase) {
       supabase.auth.onAuthStateChange((_event, session) => {
@@ -109,8 +109,11 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   return (
     <>
-      {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
+      {showSpinner ? (
+          <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+            <Spinner size={10} />
+          </div>
+        ) : (<div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
               <p className={"text-2xl leading-8"}>
@@ -201,8 +204,9 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               />
             </div>
           )}
-        </div>
-      )}
+
+        </div>)
+      }
     </>
   )
 }
