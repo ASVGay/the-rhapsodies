@@ -184,7 +184,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
             {displayButton() && (
               <div className={"m-8 flex justify-center"}>
-                <button className={"btn"}
+                <button className={"btn toRepertoire"}
                         onClick={() => addToRepertoire()}
                 >
                   Move to repertoire
