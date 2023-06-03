@@ -5,7 +5,10 @@ import {
   addInstrumentItem,
   shouldGoToReviewArea,
   shouldBeFilledState,
+  newSuggestionFilledSongInformation,
 } from "./helpers/new-suggestion.helper"
+import { CyHttpMessages } from "cypress/types/net-stubbing"
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 
 const toReviewButton = "to-review-button"
 const searchInstrumentInput = "search-instrument-input"
@@ -14,19 +17,39 @@ const instrumentEditList = "instrument-edit-list"
 const deleteButton = "delete-button"
 const instrumentSearchCloseButton = "instrument-search-close-button"
 const descriptionInput = "description-input"
+const progressBarInstruments = "new-suggestion-progress-bar-instruments"
+
+let instrumentResponseCache: CyHttpMessages.BaseMessage
 
 describe("when creating a new suggestion, adding instruments", () => {
-  beforeEach(() => {
+  before(() => {
     cy.login()
     cy.visit("/suggestions/new")
-    // Wait so content can render properly and set up submit events
-    cy.wait(500)
-    fillSongInformationSuccessfully()
-    shouldGoToInstrumentsArea()
+
+    //Intercept and cache the instrument list
+    cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc").as(
+      "getInstruments"
+    )
+    cy.wait("@getInstruments").then((intercept) => {
+      instrumentResponseCache = intercept.response
+    })
   })
 
-  it("should error if it can't retrieve instruments", () => {
-    //N.Y.I
+  beforeEach(() => {
+    cy.login()
+    cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc", {
+      body: instrumentResponseCache.body,
+    })
+
+    cy.visit("/suggestions/new", {
+      onBeforeLoad(win: Cypress.AUTWindow) {
+        cy.window()
+          .its("store")
+          .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
+      },
+    })
+    cy.wait(500) // Wait so content can render properly and set up submit events
+    cy.data(progressBarInstruments).click()
   })
 
   it("should prevent the process to proceed further", () => {
