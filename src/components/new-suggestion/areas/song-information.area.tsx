@@ -10,9 +10,10 @@ import {
 
 interface SongInformationAreaProps {
   onFormSuccess(songInformation: InputsSongInformation): void
+  proceedToNextArea(): void
 }
 
-const SongInformationArea = ({ onFormSuccess }: SongInformationAreaProps) => {
+const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformationAreaProps) => {
   const {
     register,
     handleSubmit,
@@ -21,7 +22,12 @@ const SongInformationArea = ({ onFormSuccess }: SongInformationAreaProps) => {
   } = useFormContext<InputsSongInformation>()
 
   const onSubmit = (songInformation: InputsSongInformation) => {
-    if (!isSongInformationInvalid(watch)) onFormSuccess(songInformation)
+    onFormSuccess(songInformation)
+  }
+
+  const submitAndGoToInstruments = () => {
+    submitSongInformationForm()
+    if (!isSongInformationInvalid(watch)) proceedToNextArea()
   }
 
   return (
@@ -141,7 +147,7 @@ const SongInformationArea = ({ onFormSuccess }: SongInformationAreaProps) => {
           data-cy={"button-add-instruments"}
           type="button"
           className="btn song-information mb-4"
-          onClick={() => submitSongInformationForm()}
+          onClick={() => submitAndGoToInstruments()}
         >
           Add instruments
         </button>

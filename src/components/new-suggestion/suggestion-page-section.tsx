@@ -18,6 +18,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { getInstruments } from "@/services/instrument.service"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
+import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 
 interface SuggestionPageSectionProps {
   title: string
@@ -79,6 +80,11 @@ const SuggestionPageSection = ({
   const handleAreaChange = (area: Area) => {
     if (onAreaSelect) onAreaSelect(area)
 
+    submitSongInformationForm()
+    if (onSongInformationSubmit) {
+      onSongInformationSubmit(methods.getValues())
+    }
+
     if (area !== Area.Instruments)
       if (onInstrumentSubmit) onInstrumentSubmit(newSuggestionInstruments)
 
@@ -121,9 +127,9 @@ const SuggestionPageSection = ({
             {activeArea == Area.SongInformation && (
               <SongInformationArea
                 onFormSuccess={(songInformation) => {
-                  handleAreaChange(Area.Instruments)
                   if (onSongInformationSubmit) onSongInformationSubmit(songInformation)
                 }}
+                proceedToNextArea={() => handleAreaChange(Area.Instruments)}
               />
             )}
             {activeArea == Area.Instruments && (
