@@ -4,14 +4,14 @@ import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import Image from "next/image"
 import { GetServerSideProps } from "next"
-import { deleteDivision, deleteSuggestion, getSuggestion, insertDivision } from "@/services/suggestion.service"
+import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
   Division,
   DivisionDatabaseOperation,
   Suggestion,
-  SuggestionInstrument
+  SongInstrument
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -30,7 +30,6 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
-  const [showDeleteError, setShowDeleteError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
@@ -56,16 +55,16 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
       .catch(() => setShowUpdateError(true))
   }
 
-  const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
+  const selectInstrument = (songInstrument: SongInstrument) => {
     if (!uid) return
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      suggestion_instrument_id: suggestionInstrument.id
+      song_instrument_id: songInstrument.id
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
-    const exists = suggestionInstrument.division.some(({ musician }) => musician.id === uid)
+    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
       deleteDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
@@ -89,18 +88,14 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   }
 
   const displayButton = (): boolean => {
-    return roles?.["claims_admin"] && suggestion.suggestion_instruments
+    return roles?.["claims_admin"] && suggestion.song_instruments
       .filter((i) => i.division.length == 0).length == 0
   }
 
   const addToRepertoire = () => {
     setShowSpinner(true)
-    createSongFromSuggestion(supabase, suggestion)
-      .then(() => {
-        deleteSuggestion(supabase, suggestion.id)
-          .then(() => router.push("/repertoire"))
-          .catch(() => setShowDeleteError(true))
-      })
+    createSongFromSuggestion(supabase, suggestion.id)
+      .then(() => router.push("/repertoire"))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
   }
@@ -145,12 +140,12 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
             <div className={"flex-col items-center md:flex"}>
               <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
               <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-                <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
+                <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
               </div>
 
               <div className={"grid gap-6"}>
-                {suggestion.suggestion_instruments.map(
-                  (suggestionInstrument: SuggestionInstrument) => {
+                {suggestion.song_instruments.map(
+                  (suggestionInstrument: SongInstrument) => {
                     const { instrument, division, id, description } = suggestionInstrument
                     return (
                       <div
@@ -196,7 +191,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               <div className={"mt-6"}>
                 <ErrorPopup
                   text={"Failed to add or remove user to instrument."}
-                  closePopup={() => setShowDeleteError(false)}
+                  closePopup={() => setShowUpdateError(false)}
                 />
               </div>
             )}
@@ -205,16 +200,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               <div className={"mt-6"}>
                 <ErrorPopup
                   text={"Failed to convert this suggestion to a repertoire song."}
-                  closePopup={() => setShowDeleteError(false)}
-                />
-              </div>
-            )}
-
-            {showDeleteError && (
-              <div className={"mt-6"}>
-                <ErrorPopup
-                  text={"Failed to delete this suggestion after song creation."}
-                  closePopup={() => setShowDeleteError(false)}
+                  closePopup={() => setShowSongError(false)}
                 />
               </div>
             )}
