@@ -4,7 +4,10 @@ import {
   NewSuggestion,
   NewSuggestionInstrument,
 } from "@/interfaces/new-suggestion"
-import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
+import {
+  SuggestionInstrumentDatabaseOperation,
+  SuggestionInstrumentEditDatabaseOperation,
+} from "@/types/database-types"
 
 export const submitSongInformationForm = () => {
   document
@@ -29,5 +32,19 @@ export const mapInstruments = (
 ): SuggestionInstrumentDatabaseOperation[] => {
   return suggestion.instruments.map(({ instrument, description }) => {
     return { suggestion_id: suggestionId, instrument_id: instrument.id, description: description }
+  })
+}
+
+export const mapEditInstruments = (
+  suggestion: NewSuggestion,
+  suggestionId: string
+): SuggestionInstrumentDatabaseOperation[] => {
+  return suggestion.instruments.map(({ id, instrument, description }) => {
+    return {
+      id: id,
+      suggestion_id: suggestionId,
+      instrument_id: instrument.id,
+      description: description,
+    }
   })
 }

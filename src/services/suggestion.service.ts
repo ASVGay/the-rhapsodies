@@ -3,6 +3,7 @@ import { Database } from "@/types/database"
 import {
   DivisionDatabaseOperation,
   SuggestionInstrumentDatabaseOperation,
+  SuggestionInstrumentEditDatabaseOperation,
 } from "@/types/database-types"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 
@@ -85,10 +86,17 @@ export const updateSuggestion = async (
       title: title,
       artist: artist,
       motivation: motivation,
-      author: uid,
       link: link,
     })
+    .eq("id", uid)
     .select()
+}
+
+export const updateSuggestionInstruments = async (
+  supabaseClient: SupabaseClient<Database>,
+  operations: SuggestionInstrumentDatabaseOperation[]
+) => {
+  return supabaseClient.from("suggestion_instrument").upsert(operations)
 }
 
 export const insertSuggestionInstruments = async (
@@ -96,4 +104,11 @@ export const insertSuggestionInstruments = async (
   operation: SuggestionInstrumentDatabaseOperation[]
 ) => {
   return supabaseClient.from("suggestion_instrument").insert(operation)
+}
+
+export const deleteSuggestionInstruments = async (
+  supabaseClient: SupabaseClient<Database>,
+  ids: string[]
+) => {
+  return supabaseClient.from("suggestion_instrument").delete().in("id", ids)
 }

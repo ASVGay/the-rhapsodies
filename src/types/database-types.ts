@@ -15,12 +15,16 @@ export type Division = Database["public"]["Tables"]["division"]["Row"] & {
 }
 
 export type SuggestionInstrument = Database["public"]["Tables"]["suggestion_instrument"]["Row"] & {
+  id?: string
   instrument: Instrument
   division: Division[]
 }
 
 export type SuggestionInstrumentDatabaseOperation =
   Database["public"]["Tables"]["suggestion_instrument"]["Insert"]
+
+export type SuggestionInstrumentEditDatabaseOperation =
+  Database["public"]["Tables"]["suggestion_instrument"]["Update"]
 
 export type Suggestion = Database["public"]["Tables"]["suggestion"]["Row"] & {
   suggestion_instruments: SuggestionInstrument[]

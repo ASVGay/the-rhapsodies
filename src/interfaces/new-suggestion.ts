@@ -9,6 +9,7 @@ export interface NewSuggestion {
 }
 
 export interface NewSuggestionInstrument {
+  id?: string
   description: string
   instrument: Instrument
 }

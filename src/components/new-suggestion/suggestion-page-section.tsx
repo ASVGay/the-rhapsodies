@@ -99,7 +99,7 @@ const SuggestionPageSection = ({
           <XMarkIcon
             data-cy={"button-discard-new-suggestion"}
             className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={() => router.push("/suggestions")}
+            onClick={() => router.back()}
           />
         </div>
 
