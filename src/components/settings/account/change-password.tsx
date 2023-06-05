@@ -54,7 +54,7 @@ const ChangePassword = () => {
                     />
                     {errors["password"] && (
                         <ErrorMessage
-                            dataCy={`password-error`}
+                            dataCy={`change-password-textfield-error`}
                             message={errors["password"]?.message?.toString()}
                         />
                     )}
@@ -71,7 +71,7 @@ const ChangePassword = () => {
                     />
                     {errors["confirm-password"] && (
                         <ErrorMessage
-                            dataCy={`confirm-password-error`}
+                            dataCy={`confirm-password-textfield-error`}
                             message={errors["confirm-password"]?.message?.toString()}
                         />
                     )}
