@@ -13,27 +13,25 @@ describe("suggestion detail page", () => {
     })
 
     it("should add or remove username from division", () => {
-      cy.intercept("GET", "/rest/v1/suggestion*").as("updateSuggestion")
       cy.data("division")
         .first()
         .then((division) => {
           const criteria = division.text().includes(username)
-          cy.data("division")
+          cy.intercept("GET", "/rest/v1/suggestion*").as("updateSuggestion")
+          cy.data("instrument")
             .first()
             .click()
             .wait("@updateSuggestion")
-            .then(() => {
-              criteria
-                ? cy.data("division").first().should(`not.contain.text`, username)
-                : cy.data("division").first().should(`contain.text`, username)
-            })
+          criteria
+            ? cy.data("division").first().should(`not.contain.text`, username)
+            : cy.data("division").first().should(`contain.text`, username)
         })
     })
 
     it("should redirect to suggestions on pressing the exit button", () => {
       cy.data("suggestion-x-icon").click()
         .then(() => {
-          cy.location('pathname').should("equal", "/suggestions")
+          cy.location("pathname").should("equal", "/suggestions")
         })
     })
 
