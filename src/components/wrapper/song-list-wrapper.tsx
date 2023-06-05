@@ -25,9 +25,9 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   const [songs, setSongs] = useState<Suggestion[]>([]);
   const [showSpinner, setShowSpinner] = useState(true);
   const [showLoadingError, setShowLoadingError] = useState(false);
-  const [noSongsText, setNoSongsText] = useState("");
   const [searchedSong, setSearchedSong] = useState<Suggestion[]>([]);
-  const [noSearchResultText, setNoSearchResultText] = useState('');
+  const [errorText, setErrorText] = useState('');
+
 
   useEffect(() => {
     setShowSpinner(true);
@@ -42,9 +42,9 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
 
           if (response.data?.length > 0) {
             setSongs(response.data as Suggestion[]);
-            setNoSongsText("");
+            setErrorText("");
           } else {
-            setNoSongsText(
+            setErrorText(
                 `Looks like there are no ${props.pageName === "Suggestions" ? "Suggestions made" : "Songs in repertoire"} yet! Feel free to start adding them.`
             );
           }
@@ -69,11 +69,11 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
     });
 
     if (filteredSongs.length === 0) {
-      setNoSearchResultText(
+      setErrorText(
           `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
       );
     } else {
-      setNoSearchResultText('');
+      setErrorText('');
     }
 
     setSearchedSong(filteredSongs);
@@ -141,8 +141,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
         </div>
       )}
 
-      {noSongsText.length !== 0 ||
-        (noSearchResultText.length !== 0 && (
+      {errorText.length !== 0 && (
           <div
             className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
             data-cy="no-suggestions-text"
@@ -150,9 +149,9 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
             <div>
               <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
             </div>
-            <p>{noSongsText.length !== 0 ? noSongsText : noSearchResultText}</p>
+            <p>{errorText}</p>
           </div>
-        ))}
+        )}
     </div>
   )
 }
