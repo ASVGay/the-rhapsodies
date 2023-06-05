@@ -27,7 +27,10 @@ const ChangePassword = () => {
     const submitNewPassword: SubmitHandler<FieldValues> = async ({password}) => {
         if (!user) return
 
-        const {data, error} = await supabase.auth.updateUser({password})
+        const confirmed = window.confirm("Are you sure you want to change your password?");
+        if (!confirmed) return
+
+        const { error} = await supabase.auth.updateUser({password})
 
         if (error) {
             setErrorMessage("Change password failed, try again")
