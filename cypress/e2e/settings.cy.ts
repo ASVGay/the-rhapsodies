@@ -6,6 +6,7 @@ const passwordTextfield = "change-password-textfield"
 const confirmPasswordTextfield = "confirm-password-textfield"
 const submitPasswordBtn = "submit-password-btn"
 const shortPassword = "test"
+const longPassword = "test1234"
 describe("the settings page", () => {
   beforeEach(() => {
     cy.login()
@@ -20,5 +21,17 @@ describe("the settings page", () => {
 
   context("when changing password", () => {
       testErrorHandlingChangePassword(submitPasswordBtn, confirmPasswordTextfield, passwordTextfield, shortPassword)
+
+    it("Should show alert when server returns error", () => {
+      cy.intercept("PUT", "/auth/v1/user", (req) => {
+        req.reply({
+          statusCode: 500,
+        })
+      }).as("interceptedRequest")
+      cy.data(passwordTextfield).type(longPassword)
+      cy.data(confirmPasswordTextfield).type(longPassword)
+      cy.data(submitPasswordBtn).click()
+      cy.data("submit-password-err").contains("Change password failed, try again")
+    })
   })
 })
