@@ -57,9 +57,10 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
         });
   }, [supabaseClient]);
 
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toLowerCase();
-    const filteredSuggestions = songs.filter(({ title, motivation, artist }) => {
+    const filteredSongs = songs.filter(({ title, motivation, artist }) => {
       return (
           title.toLowerCase().includes(input) ||
           motivation.toLowerCase().includes(input) ||
@@ -67,7 +68,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
       );
     });
 
-    if (filteredSuggestions.length === 0) {
+    if (filteredSongs.length === 0) {
       setNoSearchResultText(
           `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
       );
@@ -75,7 +76,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
       setNoSearchResultText('');
     }
 
-    setSearchedSong(filteredSuggestions);
+    setSearchedSong(filteredSongs);
   };
 
 
@@ -85,16 +86,17 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
     }
   }, [showSearchBar])
 
-  const renderSuggestions = () => {
+  const renderSongs = () => {
     const searchedSongs = showSearchBar ? searchedSong : songs
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {searchedSongs.map((suggestion: Suggestion) =>
-          props.renderSongCard(suggestion)
+        {searchedSongs.map((song: Suggestion) =>
+          props.renderSongCard(song)
         )}
       </div>
     )
   }
+
 
    return (
     <div className={"page-wrapper"}>
@@ -128,12 +130,12 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
         </div>
       )}
 
-      {renderSuggestions()}
+      {renderSongs()}
 
       {showLoadingError && (
         <div className={"mt-6"} data-cy="failed-fetching-suggestions">
           <ErrorPopup
-            text={"Failed to load suggestions."}
+            text={"Failed to load songs."}
             closePopup={() => setShowLoadingError(false)}
           />
         </div>

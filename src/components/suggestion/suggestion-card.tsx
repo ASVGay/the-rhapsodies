@@ -13,7 +13,7 @@ const SuggestionCard = (suggestion : Suggestion) => {
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
       data-cy="suggestion-card"
     >
-      <div className={"flex items-start p-3"}>
+      <div className={"flex items-start p-3"} key={suggestion.id}>
         <div className={"mb-auto mt-auto flex"}>
           <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
         </div>
