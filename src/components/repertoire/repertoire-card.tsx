@@ -1,12 +1,28 @@
-import React from 'react';
-import {Suggestion} from "@/types/database-types";
+import React from "react"
+import { Suggestion } from "@/types/database-types"
+import { MusicalNoteIcon } from "@heroicons/react/24/solid"
+import Image from "next/image";
 
-const RepertoireCard = (suggestion : Suggestion) => {
-    return (
-        <div className={"w-[22rem] h-12 rounded-md bg-neutral-50 drop-shadow-lg"}>
-            <h1>{suggestion.title}</h1>
+const RepertoireCard = (suggestion: Suggestion) => {
+
+  return (
+    <div className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg cursor-pointer"}>
+      <div className={"m-2 flex"}>
+        <div className={"mb-auto mt-auto flex w-full justify-between"}>
+          <div className={"flex gap-2"}>
+            <div className={"mb-auto mt-auto flex"}>
+              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+            </div>
+            <div className={"flex flex-col justify-center"}>
+              <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
+              <p className={"line-clamp-1"}>{suggestion.artist}</p>
+            </div>
+          </div>
+            <Image src={"/icons/exclaimation-circle.svg"} alt={"Exclaimation circle"} height={24} width={24}/>
         </div>
-    );
-};
+      </div>
+    </div>
+  )
+}
 
-export default RepertoireCard;
+export default RepertoireCard

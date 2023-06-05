@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import {ChangeEvent, useEffect, useRef, useState} from "react"
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -9,8 +9,7 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import SearchBar from "@/components/suggestion/search-bar"
-import useSuggestions from "@/components/hooks/useSuggestions"
-import { useSearchSuggestions } from "@/components/hooks/useSearchSuggestions"
+import {getSuggestions} from "@/services/suggestion.service";
 
 interface SongListPageWrapperProps {
   renderSuggestionCard: (suggestion: Suggestion) => JSX.Element
@@ -21,10 +20,61 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   const supabaseClient = useSupabaseClient<Database>()
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { suggestions, showSpinner, showLoadingError, noSuggestionsText, setShowLoadingError } =
-    useSuggestions(supabaseClient)
-  const { searchedSuggestions, noSearchResultText, handleSearch } =
-    useSearchSuggestions(suggestions)
+
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [showSpinner, setShowSpinner] = useState(true);
+  const [showLoadingError, setShowLoadingError] = useState(false);
+  const [noSuggestionsText, setNoSuggestionsText] = useState("");
+  const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([]);
+  const [noSearchResultText, setNoSearchResultText] = useState('');
+
+  useEffect(() => {
+    setShowSpinner(true);
+    getSuggestions(supabaseClient)
+        .then((response) => {
+          if (response.error) {
+            setShowLoadingError(true);
+            return;
+          }
+
+          if (response.data?.length > 0) {
+            setSuggestions(response.data as Suggestion[]);
+            setNoSuggestionsText("");
+          } else {
+            setNoSuggestionsText(
+                "Looks like there are no suggestions made yet! Feel free to start adding them."
+            );
+          }
+        })
+        .catch(() => {
+          setShowLoadingError(true);
+        })
+        .finally(() => {
+          setShowSpinner(false);
+        });
+  }, [supabaseClient]);
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.toLowerCase();
+    const filteredSuggestions = suggestions.filter(({ title, motivation, artist }) => {
+      return (
+          title.toLowerCase().includes(input) ||
+          motivation.toLowerCase().includes(input) ||
+          artist.some((artist) => artist.toLowerCase().includes(input))
+      );
+    });
+
+    if (filteredSuggestions.length === 0) {
+      setNoSearchResultText(
+          "It looks like the song you are looking for has not been suggested yet. Feel free to suggest the song!"
+      );
+    } else {
+      setNoSearchResultText('');
+    }
+
+    setSearchedSuggestions(filteredSuggestions);
+  };
+
 
   useEffect(() => {
     if (showSearchBar && inputRef.current) {
