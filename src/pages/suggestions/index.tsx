@@ -3,7 +3,7 @@ import SuggestionCard from "@/components/suggestion/suggestion-card"
 import SongListPageWrapper from "@/components/wrapper/song-list-wrapper";
 
 const Suggestions: FC = () => {
-  return <SongListPageWrapper renderSuggestionCard={SuggestionCard} pageName={"Suggestions"}/>
+  return <SongListPageWrapper renderSongCard={SuggestionCard} pageName={"Suggestions"}/>
 }
 
 export default Suggestions

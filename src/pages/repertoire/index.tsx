@@ -4,7 +4,7 @@ import RepertoireCard from "@/components/repertoire/repertoire-card";
 
 
 const Index = () => {
-    return <SongListPageWrapper renderSuggestionCard={RepertoireCard} pageName={"Repertoire"}/>
+    return <SongListPageWrapper renderSongCard={RepertoireCard} pageName={"Repertoire"}/>
 };
 
 export default Index;

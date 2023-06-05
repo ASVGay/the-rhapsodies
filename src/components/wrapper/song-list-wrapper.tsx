@@ -12,25 +12,28 @@ import SearchBar from "@/components/suggestion/search-bar"
 import {getSuggestions} from "@/services/suggestion.service";
 
 interface SongListPageWrapperProps {
-  renderSuggestionCard: (suggestion: Suggestion) => JSX.Element
-  pageName: string
+  renderSongCard: (suggestion: Suggestion) => JSX.Element
+  pageName: string,
 }
+
 const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [songs, setSongs] = useState<Suggestion[]>([]);
   const [showSpinner, setShowSpinner] = useState(true);
   const [showLoadingError, setShowLoadingError] = useState(false);
-  const [noSuggestionsText, setNoSuggestionsText] = useState("");
-  const [searchedSuggestions, setSearchedSuggestions] = useState<Suggestion[]>([]);
+  const [noSongsText, setNoSongsText] = useState("");
+  const [searchedSong, setSearchedSong] = useState<Suggestion[]>([]);
   const [noSearchResultText, setNoSearchResultText] = useState('');
 
   useEffect(() => {
     setShowSpinner(true);
+
     getSuggestions(supabaseClient)
+        //todo fetch correct songs based on pagename
         .then((response) => {
           if (response.error) {
             setShowLoadingError(true);
@@ -38,11 +41,11 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
           }
 
           if (response.data?.length > 0) {
-            setSuggestions(response.data as Suggestion[]);
-            setNoSuggestionsText("");
+            setSongs(response.data as Suggestion[]);
+            setNoSongsText("");
           } else {
-            setNoSuggestionsText(
-                "Looks like there are no suggestions made yet! Feel free to start adding them."
+            setNoSongsText(
+                `Looks like there are no ${props.pageName === "Suggestions" ? "Suggestions made" : "Songs in repertoire"} yet! Feel free to start adding them.`
             );
           }
         })
@@ -56,7 +59,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toLowerCase();
-    const filteredSuggestions = suggestions.filter(({ title, motivation, artist }) => {
+    const filteredSuggestions = songs.filter(({ title, motivation, artist }) => {
       return (
           title.toLowerCase().includes(input) ||
           motivation.toLowerCase().includes(input) ||
@@ -66,13 +69,13 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
 
     if (filteredSuggestions.length === 0) {
       setNoSearchResultText(
-          "It looks like the song you are looking for has not been suggested yet. Feel free to suggest the song!"
+          `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
       );
     } else {
       setNoSearchResultText('');
     }
 
-    setSearchedSuggestions(filteredSuggestions);
+    setSearchedSong(filteredSuggestions);
   };
 
 
@@ -83,17 +86,17 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   }, [showSearchBar])
 
   const renderSuggestions = () => {
-    const displayedSuggestions = showSearchBar ? searchedSuggestions : suggestions
+    const searchedSongs = showSearchBar ? searchedSong : songs
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {displayedSuggestions.map((suggestion: Suggestion) =>
-          props.renderSuggestionCard(suggestion)
+        {searchedSongs.map((suggestion: Suggestion) =>
+          props.renderSongCard(suggestion)
         )}
       </div>
     )
   }
 
-  return (
+   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
         <div className={"page-header"}>{props.pageName}</div>
@@ -136,7 +139,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
         </div>
       )}
 
-      {noSuggestionsText.length !== 0 ||
+      {noSongsText.length !== 0 ||
         (noSearchResultText.length !== 0 && (
           <div
             className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
@@ -145,7 +148,7 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
             <div>
               <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
             </div>
-            <p>{noSuggestionsText.length !== 0 ? noSuggestionsText : noSearchResultText}</p>
+            <p>{noSongsText.length !== 0 ? noSongsText : noSearchResultText}</p>
           </div>
         ))}
     </div>
