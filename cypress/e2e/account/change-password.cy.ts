@@ -1,4 +1,4 @@
-import {testErrorHandlingChangePassword} from "./helpers/change-password.helper";
+import {testErrorHandlingChangePassword} from "../helpers/change-password.helper";
 
 const displayName = "New"
 const newPassword = Cypress.env("CYPRESS_NEW_PASSWORD")

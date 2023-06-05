@@ -1,4 +1,4 @@
-import {testErrorHandlingChangePassword} from "./account/helpers/change-password.helper";
+import {testErrorHandlingChangePassword} from "./helpers/change-password.helper";
 
 const icons8Link = "https://icons8.com"
 
