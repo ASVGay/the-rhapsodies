@@ -22,7 +22,7 @@ describe("the settings page", () => {
   context("when changing password", () => {
       testErrorHandlingChangePassword(submitPasswordBtn, confirmPasswordTextfield, passwordTextfield, shortPassword)
 
-    it("Should show alert when server returns error", () => {
+    it("Should show error when server returns an error", () => {
       cy.intercept("PUT", "/auth/v1/user", (req) => {
         req.reply({
           statusCode: 500,
@@ -32,6 +32,15 @@ describe("the settings page", () => {
       cy.data(confirmPasswordTextfield).type(longPassword)
       cy.data(submitPasswordBtn).click()
       cy.data("submit-password-err").contains("Change password failed, try again")
+    })
+
+    it("Should show alert when trying to change password", () => {
+      cy.data(passwordTextfield).type(longPassword)
+      cy.data(confirmPasswordTextfield).type(longPassword)
+      cy.data(submitPasswordBtn).click()
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("Are you sure you want to change your password?")
+      })
     })
   })
 })
