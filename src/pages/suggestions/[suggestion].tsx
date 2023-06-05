@@ -2,13 +2,11 @@ import React, { FC, useEffect, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
-import Image from "next/image"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
-  Division,
   DivisionDatabaseOperation,
   Suggestion,
   SongInstrument
@@ -16,11 +14,11 @@ import {
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
-import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
+import Instrument from "@/components/suggestion/instrument"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -76,15 +74,6 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
         updateSuggestion()
       })
     }
-  }
-
-  const formatUsernames = (divisions: Division[]) => {
-    return divisions.map(({ musician }, index) => (
-      <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
-        {musician.display_name}
-        {index != divisions.length - 1 && ", "}
-      </span>
-    ))
   }
 
   const displayButton = (): boolean => {
@@ -144,36 +133,17 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               </div>
 
               <div className={"grid gap-6"}>
-                {suggestion.song_instruments.map(
-                  (suggestionInstrument: SongInstrument) => {
-                    const { instrument, division, id, description } = suggestionInstrument
-                    return (
-                      <div
-                        key={id}
-                        className={"flex cursor-pointer select-none"}
-                        onClick={() => selectInstrument(suggestionInstrument)}
-                      >
-                        <Image
-                          src={getInstrumentImage(instrument.image_source)}
-                          alt={instrument.instrument_name.toString()}
-                          width={64}
-                          height={64}
-                          className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
-                          draggable={"false"}
-                        />
-                        <div>
-                          <p>{instrument.instrument_name}</p>
-                          <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-                          {division.length > 0 && (
-                            <div className={`font-bold`} data-cy="division">
-                              {formatUsernames(division)}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  }
-                )}
+                {suggestion.song_instruments.map((instrument) => {
+                  return <Instrument
+                    key={instrument.id}
+                    imageURL={instrument.instrument.image_source}
+                    name={instrument.instrument.instrument_name}
+                    division={instrument.division}
+                    description={instrument.description}
+                    uid={uid}
+                    onclick={() => selectInstrument(instrument)}
+                  />
+                })}
               </div>
             </div>
 
