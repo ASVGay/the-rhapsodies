@@ -6,7 +6,7 @@ const passwordTextfield = "change-password-textfield"
 const confirmPasswordTextfield = "confirm-password-textfield"
 const submitPasswordBtn = "submit-password-btn"
 const shortPassword = "test"
-const longPassword = "test1234"
+const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
 describe("the settings page", () => {
   beforeEach(() => {
     cy.login()
@@ -28,15 +28,15 @@ describe("the settings page", () => {
           statusCode: 500,
         })
       }).as("interceptedRequest")
-      cy.data(passwordTextfield).type(longPassword)
-      cy.data(confirmPasswordTextfield).type(longPassword)
+      cy.data(passwordTextfield).type(oldUserPassword)
+      cy.data(confirmPasswordTextfield).type(oldUserPassword)
       cy.data(submitPasswordBtn).click()
       cy.data("submit-password-err").contains("Change password failed, try again")
     })
 
     it("Should show alert when trying to change password", () => {
-      cy.data(passwordTextfield).type(longPassword)
-      cy.data(confirmPasswordTextfield).type(longPassword)
+      cy.data(passwordTextfield).type(oldUserPassword)
+      cy.data(confirmPasswordTextfield).type(oldUserPassword)
       cy.data(submitPasswordBtn).click()
       cy.on("window:alert", (text) => {
         expect(text).to.contains("Are you sure you want to change your password?")
