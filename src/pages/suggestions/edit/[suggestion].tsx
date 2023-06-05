@@ -183,6 +183,9 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       onInstrumentSubmit={(newInstruments) => {
         onInstrumentSubmit(newInstruments)
       }}
+      onCloseClicked={() => {
+        router.push(`/suggestions/${props.suggestion.id}`)
+      }}
       onReviewSubmit={(success, error) => saveSuggestion(success, error)}
     />
   )

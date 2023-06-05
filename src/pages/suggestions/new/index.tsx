@@ -92,6 +92,9 @@ const NewSuggestion = () => {
         onInstrumentSubmit(newInstruments)
       }}
       onReviewSubmit={(success, error) => saveSuggestion(success, error)}
+      onCloseClicked={() => {
+        router.push("/suggestions")
+      }}
     />
   )
 }

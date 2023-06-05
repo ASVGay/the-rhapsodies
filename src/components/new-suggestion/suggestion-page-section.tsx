@@ -24,6 +24,7 @@ interface SuggestionPageSectionProps {
   title: string
   newSuggestion: NewSuggestion
   startingArea: Area
+  onCloseClicked(): void
   onSongInformationSubmit?(songInformation: InputsSongInformation): void
   onInstrumentSubmit?(newInstruments: NewSuggestionInstrument[]): void
   onAreaSelect?(newArea: Area): void
@@ -36,6 +37,7 @@ const SuggestionPageSection = ({
   startingArea,
   onReviewSubmit,
   onAreaSelect,
+  onCloseClicked,
   onInstrumentSubmit,
   onSongInformationSubmit,
 }: SuggestionPageSectionProps) => {
@@ -99,7 +101,7 @@ const SuggestionPageSection = ({
           <XMarkIcon
             data-cy={"button-discard-new-suggestion"}
             className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={() => router.back()}
+            onClick={onCloseClicked}
           />
         </div>
 
