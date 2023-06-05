@@ -18,7 +18,9 @@ const ChangePassword = () => {
     } = useForm()
 
     useEffect(() => {
-        watch(() => setErrorMessage(""))
+        watch(() =>  {
+            setErrorMessage("")
+        })
     }, [watch])
 
     const password = watch("password")
@@ -67,12 +69,15 @@ const ChangePassword = () => {
                     {errors["confirm-password"] && (
                         <ErrorMessage
                             dataCy={`confirm-password-error`}
-                            message={errors["password"]?.message?.toString()}
+                            message={errors["confirm-password"]?.message?.toString()}
                         />
                     )}
                     <button className={"btn"} data-cy={"submit-password-btn"}>
                         Submit
                     </button>
+                    {errorMessage !== "" && (
+                        <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
+                    )}
                 </div>
             </form>
         </div>
