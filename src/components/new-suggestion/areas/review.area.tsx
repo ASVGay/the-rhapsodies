@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import ErrorPopup from "@/components/popups/error-popup"
-import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import { getInstrumentImage } from "@/helpers/cloudinary.helper"
-import Image from "next/image"
+import { useUser } from "@supabase/auth-helpers-react"
+import Instrument from "@/components/suggestion/instrument"
+import { NewSuggestion } from "@/interfaces/new-suggestion"
 
 interface ReviewAreaProps {
   newSuggestion: NewSuggestion
@@ -69,27 +69,18 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
 
           <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>
           <div className={"mb-12 grid justify-center gap-6 text-left"} data-cy="review-instruments">
-            {suggestion.instruments.map(
-              ({ instrument, description }: NewSuggestionInstrument, index) => {
-                const key = `${instrument.id}-${index}`
-                return (
-                  <div key={key} className={"flex select-none"}>
-                    <Image
-                      src={getInstrumentImage(instrument.image_source)}
-                      alt={instrument.instrument_name}
-                      width={64}
-                      height={64}
-                      className={"mr-4 h-10 w-10"}
-                      draggable={"false"}
-                    />
-                    <div>
-                      <p className={"text-left"}>{instrument.instrument_name}</p>
-                      <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-                    </div>
-                  </div>
-                )
-              }
-            )}
+            {suggestion.instruments.map((instrument, index) => {
+              const key = `${instrument.instrument.id}-${index}`
+              return (
+                <Instrument
+                  key={key}
+                  imageURL={instrument.instrument.image_source}
+                  name={instrument.instrument.instrument_name}
+                  description={instrument.description}
+                  uid={undefined}
+                />
+              )
+            })}
           </div>
 
           <div className={`flex justify-center`}>

@@ -32,12 +32,13 @@ const Suggestions: FC = () => {
           return
         }
 
-        if(response.data?.length! > 0) {
+        if (response.data?.length! > 0) {
           setSuggestions(response.data as Suggestion[])
           setNoSuggestionsText("")
         } else {
           setNoSuggestionsText(
-              "Looks like there are no suggestions made yet! Feel free to start adding them.")
+            "Looks like there are no suggestions made yet! Feel free to start adding them."
+          )
         }
       })
       .catch(() => {
@@ -60,7 +61,7 @@ const Suggestions: FC = () => {
       return (
         title.toLowerCase().includes(input) ||
         motivation.toLowerCase().includes(input) ||
-        artist.some((artist) => artist.toLowerCase().includes(input))
+        artist.some((artist: string) => artist.toLowerCase().includes(input))
       )
     })
 

@@ -47,54 +47,54 @@ INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALU
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('7d0a428d-eae6-429d-9877-48b8b79ecc73', 'Clap', 'applause');
 
 -- Create suggestions
-INSERT INTO "public"."suggestion" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'Nobody', '{Mitski}', 'Banger with almost all instruments we have and even a fun hand clap part for those who have their hands free (unfortunately for me😔)!', '2023-03-05 00:00:00+00', 'de315267-9634-4cb8-9c7c-d0edd66c62fe', 'https://open.spotify.com/track/2P5yIMu2DNeMXTyOANKS6k?si=TT9hBdpWSausBKiT7hqBVA');
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'Nobody', '{Mitski}', 'Banger with almost all instruments we have and even a fun hand clap part for those who have their hands free (unfortunately for me😔)!', '2023-03-05 00:00:00+00', 'de315267-9634-4cb8-9c7c-d0edd66c62fe', 'https://open.spotify.com/track/2P5yIMu2DNeMXTyOANKS6k?si=TT9hBdpWSausBKiT7hqBVA');
 -- Suggestion used for edit-suggestion testing (authorized for test user)
-INSERT INTO "public"."suggestion" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('e743664e-b85b-4164-8163-24c9957f5ffd', 'Don''t Stop Believin''', '{Journey}', 'Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', 'https://open.spotify.com/track/4bHsxqR3GMrXTxEPLuK5ue?si=84ccb0c63a4046e8');
-INSERT INTO "public"."suggestion" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('ca20ae76-f6b3-4224-99af-cac14643a967', 'Smells Like Teen Spirit', '{Nirvana}', 'i know some of us already want to play this song, so let''s just do it :)', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', NULL);
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('e743664e-b85b-4164-8163-24c9957f5ffd', 'Don''t Stop Believin''', '{Journey}', 'Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', 'https://open.spotify.com/track/4bHsxqR3GMrXTxEPLuK5ue?si=84ccb0c63a4046e8');
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('ca20ae76-f6b3-4224-99af-cac14643a967', 'Smells Like Teen Spirit', '{Nirvana}', 'i know some of us already want to play this song, so let''s just do it :)', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', NULL);
 -- Suggestion used for edit-suggestion testing (unauthorized for test user)
-INSERT INTO "public"."suggestion" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('f0a04fe5-8290-445b-af94-1b2ae0263431', 'Jessie''s Girl', '{"Rick Springfield"}', 'Pretty fun song with a nice guitar solo and fun interlude in it. Vocals are not too high and I think it would sound okay with multiple vocalists as well. All instruments (expect for the lead guitar) are fairly easy as well.', '2023-05-10 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', NULL);
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('f0a04fe5-8290-445b-af94-1b2ae0263431', 'Jessie''s Girl', '{"Rick Springfield"}', 'Pretty fun song with a nice guitar solo and fun interlude in it. Vocals are not too high and I think it would sound okay with multiple vocalists as well. All instruments (expect for the lead guitar) are fairly easy as well.', '2023-05-10 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', NULL);
 
--- Add instruments to suggestions
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('a6744f20-5de3-45d5-833d-fa5eb93eac38', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('ff9a05ed-32a6-4807-bdba-4b16b63ea11c', 'ca20ae76-f6b3-4224-99af-cac14643a967', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('cdcc14bf-8411-4e5d-8f49-4aaef682d27e', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('df8927e4-da0c-4e90-a97d-8ddcc55adbd7', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('188ca387-db21-471b-b6c0-43c3d7aab6a9', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('c1bca47a-5efb-45cf-9432-fea82540a09b', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('d39707d9-9cdb-4cf3-ba17-bed580973155', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '52cf33dd-0067-431d-bc2f-745bedb3e07e', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('e98b5f78-2117-43e6-90ed-1f9d5b7489f7', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('2c5b40c0-983e-44c1-a056-9981a0a84bac', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('750a1051-c6d8-4f9a-abce-3ed9b19eb9be', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('655f1c30-57cf-41bd-9f28-c3df16c29ea9', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '7d0a428d-eae6-429d-9877-48b8b79ecc73', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('e6fa73a2-ab7e-433b-8fd0-b389aa6adacc', 'e743664e-b85b-4164-8163-24c9957f5ffd', '52cf33dd-0067-431d-bc2f-745bedb3e07e', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('612d1c2c-23e6-4e70-b4cd-43876ca03926', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('e7d1ff1c-0791-4944-98c9-a91db19b665b', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('44065868-03df-494f-91ad-127bd803c3f1', 'e743664e-b85b-4164-8163-24c9957f5ffd', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('3833a088-798c-4078-8171-36224892da62', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('e85d3c27-cd2f-4f17-9e1d-76efb95dc811', 'f0a04fe5-8290-445b-af94-1b2ae0263431', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('0facee49-a54b-4970-9a97-c974e39da600', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('570a12d4-a436-40cb-9936-cffb6148b506', 'f0a04fe5-8290-445b-af94-1b2ae0263431', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
-INSERT INTO "public"."suggestion_instrument" ("id", "suggestion_id", "instrument_id", "description") VALUES ('e3ae0780-78c9-453e-bef2-5f0d0788d68b', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
+-- Add instruments to songs
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('a6744f20-5de3-45d5-833d-fa5eb93eac38', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('ff9a05ed-32a6-4807-bdba-4b16b63ea11c', 'ca20ae76-f6b3-4224-99af-cac14643a967', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('cdcc14bf-8411-4e5d-8f49-4aaef682d27e', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('df8927e4-da0c-4e90-a97d-8ddcc55adbd7', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('188ca387-db21-471b-b6c0-43c3d7aab6a9', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('c1bca47a-5efb-45cf-9432-fea82540a09b', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('d39707d9-9cdb-4cf3-ba17-bed580973155', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '52cf33dd-0067-431d-bc2f-745bedb3e07e', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e98b5f78-2117-43e6-90ed-1f9d5b7489f7', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('2c5b40c0-983e-44c1-a056-9981a0a84bac', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('750a1051-c6d8-4f9a-abce-3ed9b19eb9be', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('655f1c30-57cf-41bd-9f28-c3df16c29ea9', '687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', '7d0a428d-eae6-429d-9877-48b8b79ecc73', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e6fa73a2-ab7e-433b-8fd0-b389aa6adacc', 'e743664e-b85b-4164-8163-24c9957f5ffd', '52cf33dd-0067-431d-bc2f-745bedb3e07e', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('612d1c2c-23e6-4e70-b4cd-43876ca03926', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e7d1ff1c-0791-4944-98c9-a91db19b665b', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('44065868-03df-494f-91ad-127bd803c3f1', 'e743664e-b85b-4164-8163-24c9957f5ffd', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'e743664e-b85b-4164-8163-24c9957f5ffd', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('3833a088-798c-4078-8171-36224892da62', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'eb70c557-f23e-42b8-9e6e-3726d2ff2e88', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e85d3c27-cd2f-4f17-9e1d-76efb95dc811', 'f0a04fe5-8290-445b-af94-1b2ae0263431', '52bcbb7a-02e2-4cc8-a353-7b4402efacd7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('0facee49-a54b-4970-9a97-c974e39da600', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('570a12d4-a436-40cb-9936-cffb6148b506', 'f0a04fe5-8290-445b-af94-1b2ae0263431', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e3ae0780-78c9-453e-bef2-5f0d0788d68b', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
 
 -- Insert instrument divisions
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('cdcc14bf-8411-4e5d-8f49-4aaef682d27e', '1ce835c1-a708-4e73-a808-334e982dfe3d');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('2c5b40c0-983e-44c1-a056-9981a0a84bac', '1ce835c1-a708-4e73-a808-334e982dfe3d');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('612d1c2c-23e6-4e70-b4cd-43876ca03926', '1ce835c1-a708-4e73-a808-334e982dfe3d');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('e3ae0780-78c9-453e-bef2-5f0d0788d68b', '1ce835c1-a708-4e73-a808-334e982dfe3d');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('a6744f20-5de3-45d5-833d-fa5eb93eac38', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('750a1051-c6d8-4f9a-abce-3ed9b19eb9be', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('e7d1ff1c-0791-4944-98c9-a91db19b665b', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('0facee49-a54b-4970-9a97-c974e39da600', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('ff9a05ed-32a6-4807-bdba-4b16b63ea11c', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('188ca387-db21-471b-b6c0-43c3d7aab6a9', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('44065868-03df-494f-91ad-127bd803c3f1', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('3833a088-798c-4078-8171-36224892da62', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('df8927e4-da0c-4e90-a97d-8ddcc55adbd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
-INSERT INTO "public"."division" ("suggestion_instrument_id", "musician") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('cdcc14bf-8411-4e5d-8f49-4aaef682d27e', '1ce835c1-a708-4e73-a808-334e982dfe3d');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('2c5b40c0-983e-44c1-a056-9981a0a84bac', '1ce835c1-a708-4e73-a808-334e982dfe3d');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('612d1c2c-23e6-4e70-b4cd-43876ca03926', '1ce835c1-a708-4e73-a808-334e982dfe3d');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('e3ae0780-78c9-453e-bef2-5f0d0788d68b', '1ce835c1-a708-4e73-a808-334e982dfe3d');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('a6744f20-5de3-45d5-833d-fa5eb93eac38', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('750a1051-c6d8-4f9a-abce-3ed9b19eb9be', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('e7d1ff1c-0791-4944-98c9-a91db19b665b', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('0facee49-a54b-4970-9a97-c974e39da600', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('ff9a05ed-32a6-4807-bdba-4b16b63ea11c', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('188ca387-db21-471b-b6c0-43c3d7aab6a9', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('44065868-03df-494f-91ad-127bd803c3f1', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('3833a088-798c-4078-8171-36224892da62', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('df8927e4-da0c-4e90-a97d-8ddcc55adbd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
+INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 
 

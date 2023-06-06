@@ -16,13 +16,13 @@ import { useRouter } from "next/router"
 import { Area } from "@/constants/area"
 import { AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
+import { mapEditInstruments } from "@/helpers/new-suggestion.helper"
 import {
-  setActiveArea,
   updateEditSuggestion,
   updateLastDeletedInstrumentUuid,
   updateLastEditedUuid,
 } from "@/redux/slices/edit-suggestion.slice"
-import { mapEditInstruments } from "@/helpers/new-suggestion.helper"
+import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -76,7 +76,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   //If the user visits a new edit page, clear the previously edited from redux
   if (props.suggestion.id !== newSuggestion.lastEditedUuid) {
     const suggestionInstruments: NewSuggestionInstrument[] = []
-    props.suggestion.suggestion_instruments.forEach((element) => {
+    props.suggestion.song_instruments.forEach((element) => {
       suggestionInstruments.push({
         id: element.id,
         description: element.description || "",
