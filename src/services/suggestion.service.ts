@@ -57,7 +57,6 @@ export const deleteDivision = (
     .delete()
     .eq("musician", division.musician)
     .eq("song_instrument_id", division.song_instrument_id)
-    .eq("inRepertoire", false)
 }
 
 export const insertSuggestion = async (
