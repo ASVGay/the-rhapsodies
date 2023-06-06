@@ -34,6 +34,7 @@ describe("review new suggestion page", () => {
             cy.data("review-artists").invoke("text").should("contain", artist)
           )
           cy.data("review-motivation").invoke("text").should("equal", state.motivation)
+          cy.data("review-link").invoke("attr", "href").should("equal", state.link)
           cy.data("review-instruments").children().should("have.length", state.instruments.length)
         })
     })
