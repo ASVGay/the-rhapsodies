@@ -18,7 +18,7 @@ interface SongListWrapperProps {
 
 export enum SongType {
   Repertoire,
-  Suggestion
+  Suggestion,
 }
 
 const SongListWrapper = (props: SongListWrapperProps) => {
@@ -50,11 +50,11 @@ const SongListWrapper = (props: SongListWrapperProps) => {
         if (response.data?.length > 0) {
           setSongs(response.data as Suggestion[])
         } else {
-          setErrorText(
-            `Looks like there are no ${
-              props.songType === SongType.Suggestion ? "Suggestions made" : "Songs in repertoire"
-            } yet! Feel free to start adding them.`
-          )
+          props.songType === SongType.Suggestion
+            ? setErrorText(
+                "Looks like there are no suggestions made yet! Feel free to start adding them."
+              )
+            : setErrorText("Looks like there are no songs in the repertoire yet.")
         }
       })
       .catch(() => {
@@ -76,9 +76,11 @@ const SongListWrapper = (props: SongListWrapperProps) => {
     })
 
     if (filteredSongs.length === 0) {
-      setErrorText(
-        `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
-      )
+      props.songType === SongType.Suggestion
+        ? setErrorText(
+            `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
+          )
+        : setErrorText("This song is currently not in the repertoire.")
     } else {
       setErrorText("")
     }
@@ -104,7 +106,9 @@ const SongListWrapper = (props: SongListWrapperProps) => {
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
-        <div className={"page-header"}>{props.songType === SongType.Suggestion ? "Suggestion" : "Repertoire"}</div>
+        <div className={"page-header"}>
+          {props.songType === SongType.Suggestion ? "Suggestion" : "Repertoire"}
+        </div>
         <div className={"flex flex-row gap-2"}>
           <MagnifyingGlassIcon
             data-cy={"button-search-suggestions"}

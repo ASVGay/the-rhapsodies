@@ -27,16 +27,16 @@ const RepertoireCard = (song: Suggestion) => {
               <p className={"line-clamp-1"}>{song.artist}</p>
             </div>
           </div>
-          {
-            <div className="flex items-center">
+          <div className="flex items-center">
+            {checkEmptyDivision() && (
               <ExclamationCircleIcon
                 color={"red"}
                 width={24}
                 height={24}
                 className={"flex align-bottom"}
               />
-            </div>
-          }
+            )}
+          </div>
         </div>
       </div>
     </div>
