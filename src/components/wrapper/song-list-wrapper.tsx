@@ -44,7 +44,6 @@ const SongListWrapper = (props: SongListWrapperProps) => {
 
         if (response.data?.length > 0) {
           setSongs(response.data as Suggestion[])
-          setErrorText("")
         } else {
           setErrorText(
             `Looks like there are no ${
