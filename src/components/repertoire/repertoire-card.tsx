@@ -26,7 +26,7 @@ const RepertoireCard = (song: Suggestion) => {
           </div>
           {
             checkEmptyDivision() &&
-              <Image src={"/icons/exclaimation-circle.svg"} alt={"Exclaimation circle"} height={24} width={24}/>
+              <Image data-cy={"exclamation-circle"} src={"/icons/exclaimation-circle.svg"} alt={"Exclaimation circle"} height={24} width={24}/>
           }
         </div>
       </div>
