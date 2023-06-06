@@ -19,7 +19,7 @@ interface SongProps {
   song: Song
 }
 
-const Song = (props: SongProps) => {
+const SongPage = (props: SongProps) => {
   const [song, setSong] = useState<Song>(props.song)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
@@ -178,4 +178,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default Song
+export default SongPage
