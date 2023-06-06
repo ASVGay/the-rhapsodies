@@ -80,6 +80,14 @@ export interface Database {
           title?: string
         }
       }
+      song: {
+        Row: {
+          artist: string[]
+          id: string
+          link: string | null
+          title: string
+        }
+      }
       song_instrument: {
         Row: {
           description: string | null
