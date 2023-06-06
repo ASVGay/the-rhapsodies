@@ -4,10 +4,7 @@ import {
   NewSuggestion,
   NewSuggestionInstrument,
 } from "@/interfaces/new-suggestion"
-import {
-  SuggestionInstrumentDatabaseOperation,
-  SuggestionInstrumentEditDatabaseOperation,
-} from "@/types/database-types"
+import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
 
 export const submitSongInformationForm = () => {
   document

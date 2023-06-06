@@ -3,7 +3,6 @@ import { Database } from "@/types/database"
 import {
   DivisionDatabaseOperation,
   SuggestionInstrumentDatabaseOperation,
-  SuggestionInstrumentEditDatabaseOperation,
 } from "@/types/database-types"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 
