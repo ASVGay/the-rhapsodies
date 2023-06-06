@@ -29,12 +29,12 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        {suggestion.suggestion_instruments && (
-          <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
+        {suggestion.song_instruments && (
+          <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
         )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
-            {suggestion.suggestion_instruments?.map((suggestion_instrument) => {
+            {suggestion.song_instruments?.map((suggestion_instrument) => {
               const { instrument, division } = suggestion_instrument
               return (
                 <Image

@@ -44,19 +44,19 @@ describe("suggestions page", () => {
     })
 
     it("should display no suggestions message", () => {
-      cy.intercept("/rest/v1/suggestion*", [])
+      cy.intercept("/rest/v1/song*", [])
       cy.data("no-suggestions-text").should("be.visible")
     })
 
     it("should display get suggestions error", () => {
-      cy.intercept({ method: "GET", url: "/rest/v1/suggestion*" }, { forceNetworkError: true })
+      cy.intercept({ method: "GET", url: "/rest/v1/song*" }, { forceNetworkError: true })
       cy.data("failed-fetching-suggestions").should("be.visible")
     })
   })
 
   context("search suggestions", () => {
     beforeEach(() => {
-      cy.intercept('GET', '/rest/v1/suggestion*', { fixture: "mock-suggestions.json"}).as('mockedRequest');
+      cy.intercept('GET', '/rest/v1/song*', { fixture: "mock-suggestions.json"}).as('mockedRequest');
       cy.login()
       cy.visit("suggestions")
       cy.wait('@mockedRequest');
@@ -107,13 +107,13 @@ describe("suggestions page", () => {
     })
 
     it("should display spinner when suggestions are still being retrieved", () => {
-      cy.intercept("GET", "/rest/v1/suggestion*").as("getSuggestions")
+      cy.intercept("GET", "/rest/v1/song*").as("getSuggestions")
       cy.wait("@getSuggestions")
       cy.data("suggestions-spinner").should("exist")
     })
 
     it("shouldn't display spinner after suggestion have been retrieved", () => {
-      cy.intercept("GET", "/rest/v1/suggestion*").as("getSuggestions")
+      cy.intercept("GET", "/rest/v1/song*").as("getSuggestions")
       cy.wait("@getSuggestions").then(() => {
         cy.data("suggestions-spinner").should("not.exist")
       })

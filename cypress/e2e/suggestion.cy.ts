@@ -17,7 +17,7 @@ describe("suggestion detail page", () => {
         .first()
         .then((division) => {
           const criteria = division.text().includes(username)
-          cy.intercept("GET", "/rest/v1/suggestion*").as("updateSuggestion")
+          cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
           cy.data("instrument")
             .first()
             .click()
