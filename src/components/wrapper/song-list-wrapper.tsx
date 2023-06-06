@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useRef, useState} from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -9,11 +9,11 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import SearchBar from "@/components/suggestion/search-bar"
-import {getSuggestions} from "@/services/suggestion.service";
+import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.service"
 
 interface SongListPageWrapperProps {
   renderSongCard: (suggestion: Suggestion) => JSX.Element
-  pageName: string,
+  pageName: string
 }
 
 const SongListPageWrapper = (props: SongListPageWrapperProps) => {
@@ -22,62 +22,65 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const [songs, setSongs] = useState<Suggestion[]>([]);
-  const [showSpinner, setShowSpinner] = useState(true);
-  const [showLoadingError, setShowLoadingError] = useState(false);
-  const [searchedSong, setSearchedSong] = useState<Suggestion[]>([]);
-  const [errorText, setErrorText] = useState('');
-
+  const [songs, setSongs] = useState<Suggestion[]>([])
+  const [showSpinner, setShowSpinner] = useState(true)
+  const [showLoadingError, setShowLoadingError] = useState(false)
+  const [searchedSong, setSearchedSong] = useState<Suggestion[]>([])
+  const [errorText, setErrorText] = useState("")
 
   useEffect(() => {
-    setShowSpinner(true);
-    getSuggestions(supabaseClient)
-        //todo fetch correct songs based on pagename
-        .then((response) => {
-          if (response.error) {
-            setShowLoadingError(true);
-            return;
-          }
+    setShowSpinner(true)
+    const songs =
+      props.pageName == "Suggestions"
+        ? getSuggestions(supabaseClient)
+        : getRepertoireSongs(supabaseClient)
 
-          if (response.data?.length > 0) {
-            setSongs(response.data as Suggestion[]);
-            setErrorText("");
-          } else {
-            setErrorText(
-                `Looks like there are no ${props.pageName === "Suggestions" ? "Suggestions made" : "Songs in repertoire"} yet! Feel free to start adding them.`
-            );
-          }
-        })
-        .catch(() => {
-          setShowLoadingError(true);
-        })
-        .finally(() => {
-          setShowSpinner(false);
-        });
-  }, [supabaseClient]);
+    songs
+      .then((response) => {
+        if (response.error) {
+          setShowLoadingError(true)
+          return
+        }
 
+        if (response.data?.length > 0) {
+          setSongs(response.data as Suggestion[])
+          setErrorText("")
+        } else {
+          setErrorText(
+            `Looks like there are no ${
+              props.pageName === "Suggestions" ? "Suggestions made" : "Songs in repertoire"
+            } yet! Feel free to start adding them.`
+          )
+        }
+      })
+      .catch(() => {
+        setShowLoadingError(true)
+      })
+      .finally(() => {
+        setShowSpinner(false)
+      })
+  }, [supabaseClient])
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.toLowerCase();
+    const input = e.target.value.toLowerCase()
     const filteredSongs = songs.filter(({ title, motivation, artist }) => {
       return (
-          title.toLowerCase().includes(input) ||
-          motivation.toLowerCase().includes(input) ||
-          artist.some((artist) => artist.toLowerCase().includes(input))
-      );
-    });
+        title.toLowerCase().includes(input) ||
+        motivation.toLowerCase().includes(input) ||
+        artist.some((artist) => artist.toLowerCase().includes(input))
+      )
+    })
 
     if (filteredSongs.length === 0) {
       setErrorText(
-          `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
-      );
+        `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
+      )
     } else {
-      setErrorText('');
+      setErrorText("")
     }
 
-    setSearchedSong(filteredSongs);
-  };
-
+    setSearchedSong(filteredSongs)
+  }
 
   useEffect(() => {
     if (showSearchBar && inputRef.current) {
@@ -89,15 +92,12 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
     const searchedSongs = showSearchBar ? searchedSong : songs
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {searchedSongs.map((song: Suggestion) =>
-          props.renderSongCard(song)
-        )}
+        {searchedSongs.map((song: Suggestion) => props.renderSongCard(song))}
       </div>
     )
   }
 
-
-   return (
+  return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
         <div className={"page-header"}>{props.pageName}</div>
@@ -141,16 +141,16 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
       )}
 
       {errorText.length !== 0 && (
-          <div
-            className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
-            data-cy="no-suggestions-text"
-          >
-            <div>
-              <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
-            </div>
-            <p>{errorText}</p>
+        <div
+          className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
+          data-cy="no-suggestions-text"
+        >
+          <div>
+            <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
           </div>
-        )}
+          <p>{errorText}</p>
+        </div>
+      )}
     </div>
   )
 }
