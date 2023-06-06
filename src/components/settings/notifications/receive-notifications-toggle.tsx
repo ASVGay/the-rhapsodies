@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import Toggle from "@/components/settings/controls/toggle"
 import OneSignal from "react-onesignal"
+import { toast } from "react-toastify"
 
 interface ReceiveNotificationsToggleProps {
   isSubscribed: boolean
@@ -18,20 +19,26 @@ const ReceiveNotificationsToggle = ({
   const getSubscriptionStatus = useCallback(() => {
     OneSignal.isPushNotificationsEnabled()
       .then((isEnabled) => setIsSubscribed(isEnabled))
-      .catch(() => console.error)
-  }, [])
+      .catch((error) => {
+        toast.error("Something went wrong while retrieving your notification data")
+        console.error(error)
+      })
+  }, [setIsSubscribed])
+
+  const changeSubscription = () => {
+    OneSignal.setSubscription(!isSubscribed)
+      .then(() => getSubscriptionStatus())
+      .catch((error) => {
+        toast.error("Something went wrong while retrieving your notification data")
+        console.error(error)
+      })
+  }
 
   useEffect(() => {
     // Only show content once window has been defined (since that is necessary for notificationsAreSupported)
     setRenderContent(true)
     getSubscriptionStatus()
   }, [getSubscriptionStatus])
-
-  const changeSubscription = () => {
-    OneSignal.setSubscription(!isSubscribed)
-      .then(() => getSubscriptionStatus())
-      .catch(() => console.error)
-  }
 
   return (
     <>
