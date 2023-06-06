@@ -95,7 +95,6 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     )
 
     dispatch(updateLastDeletedInstrumentUuid([]))
-
     dispatch(updateLastEditedUuid(props.suggestion.id))
   }
 

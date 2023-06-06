@@ -41,7 +41,6 @@ const SuggestionPageSection = ({
   onInstrumentSubmit,
   onSongInformationSubmit,
 }: SuggestionPageSectionProps) => {
-  const router = useRouter()
   const [activeArea, setActiveArea] = useState<Area>(startingArea)
   const supabaseClient = useSupabaseClient<Database>()
   const [showSpinner, setShowSpinner] = useState<boolean>(false)

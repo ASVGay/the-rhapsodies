@@ -1,12 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 import InstrumentsList from "./list/instruments-list"
 import InstrumentSearch from "@/components/new-suggestion/areas/instruments/search/instrument-search"
 import { Instrument } from "@/types/database-types"
-import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { AppDispatch } from "@/redux/store"
-import { useDispatch } from "react-redux"
-import { NewSuggestion, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import { Area } from "@/constants/area"
+import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 
 interface InstrumentsAreaProps {
   instrumentList: Instrument[]
