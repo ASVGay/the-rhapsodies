@@ -79,7 +79,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     props.suggestion.song_instruments.forEach((element) => {
       suggestionInstruments.push({
         id: element.id,
-        description: element.description || "",
+        description: element.description ?? "",
         instrument: element.instrument,
       })
     })

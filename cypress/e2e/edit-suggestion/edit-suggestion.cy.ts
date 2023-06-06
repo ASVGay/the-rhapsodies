@@ -1,7 +1,3 @@
-import { shouldBeEmptyState } from "../new-suggestion/helpers/new-suggestion.helper"
-
-let cachedSuggestionId = ""
-
 const userSuggestion = "ca20ae76-f6b3-4224-99af-cac14643a967"
 const userSecondSuggestion = "e743664e-b85b-4164-8163-24c9957f5ffd"
 const notOfUserSuggestion = "f0a04fe5-8290-445b-af94-1b2ae0263431"
