@@ -13,7 +13,12 @@ import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.servic
 
 interface SongListWrapperProps {
   renderSongCard: (suggestion: Suggestion) => JSX.Element
-  pageName: string
+  songType: SongType
+}
+
+export enum SongType {
+  Repertoire,
+  Suggestion
 }
 
 const SongListWrapper = (props: SongListWrapperProps) => {
@@ -31,7 +36,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
   useEffect(() => {
     setShowSpinner(true)
     const songs =
-      props.pageName == "Suggestions"
+      props.songType == SongType.Suggestion
         ? getSuggestions(supabaseClient)
         : getRepertoireSongs(supabaseClient)
 
@@ -47,7 +52,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
         } else {
           setErrorText(
             `Looks like there are no ${
-              props.pageName === "Suggestions" ? "Suggestions made" : "Songs in repertoire"
+              props.songType === SongType.Suggestion ? "Suggestions made" : "Songs in repertoire"
             } yet! Feel free to start adding them.`
           )
         }
@@ -99,7 +104,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
-        <div className={"page-header"}>{props.pageName}</div>
+        <div className={"page-header"}>{props.songType === SongType.Suggestion ? "Suggestion" : "Repertoire"}</div>
         <div className={"flex flex-row gap-2"}>
           <MagnifyingGlassIcon
             data-cy={"button-search-suggestions"}
