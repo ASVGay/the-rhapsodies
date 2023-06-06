@@ -8,6 +8,8 @@ import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/formdata"
+import Link from "next/link"
+import { toast } from "react-toastify"
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
@@ -23,6 +25,11 @@ const Index = () => {
   useEffect(() => {
     watch(() => setErrorPopupText(""))
   }, [watch])
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(router.asPath.split("#")[1])
+    toast.error(urlSearchParams.get("error_description"), { toastId: "error_description" })
+  }, [router.asPath])
 
   const signInFormData: FormDataItem[] = [
     {
@@ -57,12 +64,8 @@ const Index = () => {
   }
 
   return (
-    <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
-      <div
-        className={
-          "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
-        }
-      >
+    <div className={"full-bg-moon-50"}>
+      <div className={"auth-container"}>
         <div className={"flex w-full justify-center"}>
           <Image
             height={150}
@@ -105,6 +108,13 @@ const Index = () => {
             <ErrorMessage dataCy={"sign-in-err"} message={errorPopupText} />
           )}
         </form>
+        <Link
+          href={"/forgot-password"}
+          className={"text-center text-sm text-gray-400"}
+          data-cy={"forgot-password"}
+        >
+          Forgot password?
+        </Link>
       </div>
     </div>
   )
