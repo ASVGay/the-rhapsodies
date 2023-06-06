@@ -6,6 +6,8 @@ export type Instrument = Database["public"]["Tables"]["instrument"]["Row"]
 
 export type DivisionDatabaseOperation = Database["public"]["Tables"]["division"]["Insert"]
 
+export type SongInstrumentDatabaseOperation = Database["public"]["Tables"]["song_instrument"]["Insert"]
+
 export type Division = Database["public"]["Tables"]["division"]["Row"] & {
   musician: {
     display_name: string
@@ -13,14 +15,13 @@ export type Division = Database["public"]["Tables"]["division"]["Row"] & {
   }
 }
 
-export type SuggestionInstrument = Database["public"]["Tables"]["suggestion_instrument"]["Row"] & {
+export type SongInstrument = Database["public"]["Tables"]["song_instrument"]["Row"] & {
   instrument: Instrument
   division: Division[]
 }
 
-export type SuggestionInstrumentDatabaseOperation = Database["public"]["Tables"]["suggestion_instrument"]["Insert"]
-
 export type Suggestion = Database["public"]["Tables"]["suggestion"]["Row"] & {
-  suggestion_instruments: SuggestionInstrument[]
+  song_instruments: SongInstrument[]
   author: string | DisplayName
 }
+

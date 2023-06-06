@@ -53,7 +53,7 @@ describe("review new suggestion page", () => {
     })
 
     it("should display error-element if insert call(s) fail", () => {
-      cy.intercept({ url: "/rest/v1/suggestion*" }, { forceNetworkError: true }).then(() => {
+      cy.intercept({ url: "/rest/v1/song*" }, { forceNetworkError: true }).then(() => {
         cy.data("submit-suggestion-btn").click()
         cy.data("new-suggestion-insert-error").should("be.visible")
       })

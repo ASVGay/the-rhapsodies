@@ -31,7 +31,6 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
 
   useEffect(() => {
     setShowSpinner(true);
-
     getSuggestions(supabaseClient)
         //todo fetch correct songs based on pagename
         .then((response) => {

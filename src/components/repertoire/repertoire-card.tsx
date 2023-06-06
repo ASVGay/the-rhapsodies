@@ -6,7 +6,7 @@ import Image from "next/image";
 const RepertoireCard = (song: Suggestion) => {
 
   const checkEmptyDivision = () => {
-    for (const item of song.suggestion_instruments) {
+    for (const item of song.song_instruments) {
       if (item.division.length === 0) return true
     }
     return false

@@ -5,7 +5,7 @@ import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import ErrorPopup from "@/components/popups/error-popup"
-import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
+import { SongInstrumentDatabaseOperation } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
@@ -64,9 +64,9 @@ const ReviewArea = () => {
     setShowSpinner(false)
   }
 
-  const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
+  const mapInstruments = (suggestionId: string): SongInstrumentDatabaseOperation[] => {
     return suggestion.instruments.map(({ instrument, description }) => {
-      return { suggestion_id: suggestionId, instrument_id: instrument.id, description: description }
+      return { song_id: suggestionId, instrument_id: instrument.id, description: description }
     })
   }
 
