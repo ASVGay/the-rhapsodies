@@ -57,6 +57,7 @@ const Index = () => {
   ]
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
+
     const { data, error } = await supabase.auth.updateUser({ password })
 
     if (error) {

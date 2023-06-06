@@ -11,7 +11,7 @@ const SignOut = () => {
   const signOut = () => {
     ;(async () => {
       const confirmed = window.confirm("Are you sure you want to sign out?");
-      if (!confirmed) return;
+      if (!confirmed) return
 
       const res = await supabase.auth.signOut()
       if (res.error) toast.warn("Can't log out right now.")
