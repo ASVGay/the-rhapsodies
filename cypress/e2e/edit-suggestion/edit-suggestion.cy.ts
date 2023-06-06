@@ -46,6 +46,7 @@ describe("when the user wants to edit a suggestion", () => {
 
       it("should force the user to the 403 page", () => {
         cy.location("pathname").should("eq", `/403`)
+        cy.data("403-page").should("be.visible")
       })
     })
 

@@ -6,7 +6,7 @@ export default function Custom404() {
 
   return (
     <div
-      data-cy="404-page"
+      data-cy="403-page"
       className="grid h-[calc(100vh-68px)]  place-content-center bg-white px-4 lg:h-[calc(100vh-6rem)]"
     >
       <div className="text-center">
