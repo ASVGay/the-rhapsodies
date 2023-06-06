@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
-import Link from "next/link"
+import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -105,9 +104,20 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
-            </Link>
+            <div className={"flex flex-row gap-2"}>
+              {props.isEditable && (
+                <PencilSquareIcon
+                  className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                  data-cy="suggestion-edit-icon"
+                  onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
+                />
+              )}
+              <XMarkIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-x-icon"
+                onClick={() => router.push("/suggestions")}
+              />
+            </div>
           </div>
 
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
@@ -193,6 +203,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
 
     if (data == null) return { notFound: true }
+    console.log(data.author + " | " + session?.user.id)
     return {
       props: {
         suggestion: data,

@@ -36,10 +36,10 @@ export const mapEditInstruments = (
   suggestion: NewSuggestion,
   suggestionId: string
 ): SongInstrumentDatabaseOperation[] => {
-  return suggestion.instruments.map(({ instrument, description }) => {
+  return suggestion.instruments.map(({ id, instrument, description }) => {
     return {
+      id: id,
       song_id: suggestionId,
-      suggestion_id: suggestionId,
       instrument_id: instrument.id,
       description: description,
     }

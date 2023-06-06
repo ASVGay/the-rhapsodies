@@ -25,7 +25,7 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .from("song")
     .select(
       `*,
-        author (display_name),
+        author (display_name, id),
         song_instruments:song_instrument (
           id,
           description,
@@ -84,7 +84,7 @@ export const updateSuggestion = async (
   uid: string
 ) => {
   return supabaseClient
-    .from("suggestion")
+    .from("song")
     .update({
       title: title,
       artist: artist,
@@ -117,5 +117,5 @@ export const deleteSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
   ids: string[]
 ) => {
-  return supabaseClient.from("suggestion_instrument").delete().in("id", ids)
+  return supabaseClient.from("song_instrument").delete().in("id", ids)
 }
