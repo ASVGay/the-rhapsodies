@@ -7,7 +7,7 @@ import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
 import SearchBar from "@/components/suggestion/search-bar"
 import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.service"
 
