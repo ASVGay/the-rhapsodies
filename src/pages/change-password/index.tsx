@@ -57,6 +57,7 @@ const Index = () => {
   ]
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
+
     const { data, error } = await supabase.auth.updateUser({ password })
 
     if (error) {
@@ -77,12 +78,8 @@ const Index = () => {
 
   return (
     <div>
-      <div className={"flex h-screen w-screen items-center justify-center bg-moon-50"}>
-        <div
-          className={
-            "flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light"
-          }
-        >
+      <div className={"full-bg-moon-50"}>
+        <div className={"auth-container"}>
           <div className={"flex w-full flex-col justify-center gap-6"}>
             <span className={"w-fit font-semibold leading-8 text-black"}>
               Welcome to the application of The Rhapsodies! Please give us your name and change your
