@@ -93,4 +93,8 @@
     .btn.toRepertoire {
         @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
     }
+
+    .btn.toSuggestions {
+        @apply rounded bg-red-400 px-12 py-2 font-bold text-white hover:bg-red-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
+    }
 }

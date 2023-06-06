@@ -12,7 +12,7 @@ import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import { UserAppMetadata } from "@supabase/gotrue-js"
-import { createSongFromSuggestion } from "@/services/song.service"
+import { moveSongToRepertoire } from "@/services/suggestion.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
@@ -27,8 +27,8 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [roles, setRoles] = useState<UserAppMetadata>()
-  const user = useUser()
   const supabase = useSupabaseClient<Database>()
+  const user = useUser()
   const uid = user?.id
   const router = useRouter()
 
@@ -82,7 +82,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   const addToRepertoire = () => {
     setShowSpinner(true)
-    createSongFromSuggestion(supabase, suggestion.id)
+    moveSongToRepertoire(supabase, suggestion.id)
       .then(() => router.push("/repertoire"))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
