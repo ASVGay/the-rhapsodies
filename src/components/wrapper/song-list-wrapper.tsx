@@ -11,12 +11,12 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import SearchBar from "@/components/suggestion/search-bar"
 import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.service"
 
-interface SongListPageWrapperProps {
+interface SongListWrapperProps {
   renderSongCard: (suggestion: Suggestion) => JSX.Element
   pageName: string
 }
 
-const SongListPageWrapper = (props: SongListPageWrapperProps) => {
+const SongListWrapper = (props: SongListWrapperProps) => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
@@ -155,4 +155,4 @@ const SongListPageWrapper = (props: SongListPageWrapperProps) => {
   )
 }
 
-export default SongListPageWrapper
+export default SongListWrapper
