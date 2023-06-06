@@ -1,6 +1,4 @@
 import {
-  fillSongInformationSuccessfully,
-  shouldGoToInstrumentsArea,
   fillInstrumentsSuccessfully,
   addInstrumentItem,
   shouldGoToReviewArea,
