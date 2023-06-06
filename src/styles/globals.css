@@ -29,6 +29,10 @@
         @apply py-2 text-base;
     }
 
+    .settings-wrapper {
+        @apply pb-8;
+    }
+
   .btn {
      @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
    }
