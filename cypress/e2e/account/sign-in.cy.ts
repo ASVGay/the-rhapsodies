@@ -11,6 +11,7 @@ const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
 const newUserEmail = Cypress.env("CYPRESS_NEW_EMAIL")
 const newUserPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 
+const forgotPassword = "forgot-password"
 describe("Sign-in", () => {
   beforeEach(() => {
     cy.logout()
@@ -46,5 +47,23 @@ describe("Sign-in", () => {
       cy.data(signInSubmitBtn).click()
       cy.data(`${passwordTextField}-error`).contains(passwordIsMissing)
     })
+  })
+})
+
+describe("forgot password", () => {
+  it("should go to forgot password if clicked on forgot password", () => {
+    cy.visit("/sign-in")
+    cy.data(forgotPassword).click()
+    cy.location("pathname").should("equal", "/forgot-password")
+  })
+
+  it("should show error if reset password link has an error", () => {
+    cy.visit(
+      "/sign-in#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired"
+    )
+    cy.get(".Toastify")
+      .get("#error_description")
+      .get(".Toastify__toast-body")
+      .should("have.text", "Email link is invalid or has expired")
   })
 })

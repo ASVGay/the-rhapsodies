@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import ErrorPopup from "@/components/popups/error-popup"
-import { useUser } from "@supabase/auth-helpers-react"
 import Instrument from "@/components/suggestion/instrument"
 import { NewSuggestion } from "@/interfaces/new-suggestion"
+import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 
 interface ReviewAreaProps {
   newSuggestion: NewSuggestion
@@ -60,11 +60,12 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
               </div>
             </div>
             <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
+              className={"mb-3 mt-3 text-sm font-medium leading-4 text-gray-400"}
               data-cy="review-motivation"
             >
               {suggestion.motivation}
             </p>
+            <SuggestionLink link={suggestion.link} dataCy={"review-link"} />
           </div>
 
           <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>

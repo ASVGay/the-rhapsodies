@@ -5,10 +5,11 @@ import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, Suggestion, SongInstrument } from "@/types/database-types"
+import { DivisionDatabaseOperation, SongInstrument, Suggestion } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
+import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
@@ -131,11 +132,10 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
+            <p className={"mb-3 mt-3 text-sm font-medium leading-4 text-gray-400"}>
               {suggestion.motivation}
             </p>
+            <SuggestionLink link={suggestion.link} />
           </div>
 
           <div className={"flex-col items-center md:flex"}>
