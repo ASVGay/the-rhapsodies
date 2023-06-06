@@ -1,7 +1,6 @@
 import React from "react"
 import { Suggestion } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import Image from "next/image"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 
 const RepertoireCard = (song: Suggestion) => {

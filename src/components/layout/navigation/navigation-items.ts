@@ -1,7 +1,6 @@
-import { Cog8ToothIcon, HomeIcon, LightBulbIcon } from "@heroicons/react/24/solid"
+import { Cog8ToothIcon, HomeIcon, LightBulbIcon, FolderIcon } from "@heroicons/react/24/solid"
 import { NextRouter } from "next/router"
 import { HeroIcon } from "@/types/hero-icon"
-import { FolderIcon } from "@heroicons/react/24/solid"
 
 export type NavItem = {
   icon: HeroIcon
