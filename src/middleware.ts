@@ -15,8 +15,13 @@ async function handleRoutesWhenLoggedIn(
   req: NextRequest,
   res: NextResponse<unknown>
 ) {
-  // TODO Add error handling (perhaps a new page for it?)
-  const { count } = await isInMemberDatabase(supabase, session.user.id)
+  // Try to fetch the user first login status
+  let count
+  try {
+    count = (await isInMemberDatabase(supabase, session.user.id)).count
+  } catch (error) {
+    return goToPath("/500", req)
+  }
 
   // If is first login, go to change password
   if (count === 0) {
