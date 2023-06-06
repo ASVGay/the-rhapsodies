@@ -5,7 +5,7 @@ import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import ErrorPopup from "@/components/popups/error-popup"
-import { SuggestionInstrumentDatabaseOperation } from "@/types/database-types"
+import { SongInstrumentDatabaseOperation } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
@@ -15,9 +15,7 @@ import {
   updateNewSuggestion
 } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import { getInstrumentImage } from "@/helpers/cloudinary.helper"
-import Image from "next/image"
+import Instrument from "@/components/suggestion/instrument"
 
 const ReviewArea = () => {
   const supabase = useSupabaseClient<Database>()
@@ -27,6 +25,7 @@ const ReviewArea = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const user = useUser()
+  const uid = user?.id
 
   const saveSuggestion = () => {
     if (user) {
@@ -65,9 +64,9 @@ const ReviewArea = () => {
     setShowSpinner(false)
   }
 
-  const mapInstruments = (suggestionId: string): SuggestionInstrumentDatabaseOperation[] => {
+  const mapInstruments = (suggestionId: string): SongInstrumentDatabaseOperation[] => {
     return suggestion.instruments.map(({ instrument, description }) => {
-      return { suggestion_id: suggestionId, instrument_id: instrument.id, description: description }
+      return { song_id: suggestionId, instrument_id: instrument.id, description: description }
     })
   }
 
@@ -117,24 +116,15 @@ const ReviewArea = () => {
           <p className={"mb-4 text-center text-lg text-moon-400"}>Instruments</p>
           <div className={"mb-12 grid justify-center gap-6 text-left"} data-cy="review-instruments">
             {suggestion.instruments.map(
-              ({ instrument, description }: NewSuggestionInstrument, index) => {
-                const key = `${instrument.id}-${index}`
-                return (
-                  <div key={key} className={"flex select-none"}>
-                    <Image
-                      src={getInstrumentImage(instrument.image_source)}
-                      alt={instrument.instrument_name}
-                      width={64}
-                      height={64}
-                      className={"mr-4 h-10 w-10"}
-                      draggable={"false"}
-                    />
-                    <div>
-                      <p className={"text-left"}>{instrument.instrument_name}</p>
-                      <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-                    </div>
-                  </div>
-                )
+              (instrument, index) => {
+                const key = `${instrument.instrument.id}-${index}`
+                return <Instrument
+                  key={key}
+                  imageURL={instrument.instrument.image_source}
+                  name={instrument.instrument.instrument_name}
+                  description={instrument.description}
+                  uid={uid}
+                />
               }
             )}
           </div>

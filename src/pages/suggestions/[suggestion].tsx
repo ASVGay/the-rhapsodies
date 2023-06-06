@@ -1,22 +1,24 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
-import Image from "next/image"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
-  Division,
   DivisionDatabaseOperation,
   Suggestion,
-  SuggestionInstrument,
+  SongInstrument
 } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
-import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import { UserAppMetadata } from "@supabase/gotrue-js"
+import { createSongFromSuggestion } from "@/services/song.service"
+import { useRouter } from "next/router"
+import Spinner from "@/components/utils/spinner"
+import Instrument from "@/components/suggestion/instrument"
 
 interface SuggestionProps {
   suggestion: Suggestion
@@ -25,9 +27,23 @@ interface SuggestionProps {
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [showSongError, setShowSongError] = useState<boolean>(false)
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const uid = user?.id
+  const router = useRouter()
+
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          setRoles(session?.user?.app_metadata)
+        }
+      })
+    }
+  }, [supabase])
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -37,16 +53,16 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
       .catch(() => setShowUpdateError(true))
   }
 
-  const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
+  const selectInstrument = (songInstrument: SongInstrument) => {
     if (!uid) return
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      suggestion_instrument_id: suggestionInstrument.id,
+      song_instrument_id: songInstrument.id
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
-    const exists = suggestionInstrument.division.some(({ musician }) => musician.id === uid)
+    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
       deleteDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
@@ -60,101 +76,107 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
     }
   }
 
-  const formatUsernames = (divisions: Division[]) => {
-    return divisions.map(({ musician }, index) => (
-      <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
-        {musician.display_name}
-        {index != divisions.length - 1 && ", "}
-      </span>
-    ))
+  const displayButton = (): boolean => {
+    return roles?.["claims_admin"] && suggestion.song_instruments
+      .filter((i) => i.division.length == 0).length == 0
+  }
+
+  const addToRepertoire = () => {
+    setShowSpinner(true)
+    createSongFromSuggestion(supabase, suggestion.id)
+      .then(() => router.push("/repertoire"))
+      .catch(() => setShowSongError(true))
+      .finally(() => setShowSpinner(false))
   }
 
   return (
     <>
-      {suggestion && (
-        <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
-          <div className={"flex"}>
-            <div className={"w-full"}>
-              <p className={"text-2xl leading-8"}>
-                <b>Suggestion</b> by {(suggestion.author as { display_name: string }).display_name}
+      {showSpinner
+        ? (<div className={"h-[75vh] text-center"}><Spinner size={10} /></div>)
+        : (<div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
+            <div className={"flex"}>
+              <div className={"w-full"}>
+                <p className={"text-2xl leading-8"}>
+                  <b>Suggestion</b> by {(suggestion.author as { display_name: string }).display_name}
+                </p>
+                <p className={"text-sm font-medium leading-4 text-zinc-200"}>
+                  Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
+                </p>
+              </div>
+              <Link href={"/suggestions"}>
+                <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
+              </Link>
+            </div>
+
+            <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
+              <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
+                Song information
               </p>
-              <p className={"text-sm font-medium leading-4 text-zinc-200"}>
-                Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
+              <div className={"flex"}>
+                <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+                <div className={"ml-3"}>
+                  <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
+                  <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
+                </div>
+              </div>
+              <p
+                className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
+              >
+                {suggestion.motivation}
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
-            </Link>
-          </div>
 
-          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
-            <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
-              Song information
-            </p>
-            <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
-              <div className={"ml-3"}>
-                <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-                <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
+            <div className={"flex-col items-center md:flex"}>
+              <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
+              <div className={"m-4 md:w-2/3 lg:w-1/3"}>
+                <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
+              </div>
+
+              <div className={"grid gap-6"}>
+                {suggestion.song_instruments.map((instrument) => {
+                  return <Instrument
+                    key={instrument.id}
+                    imageURL={instrument.instrument.image_source}
+                    name={instrument.instrument.instrument_name}
+                    division={instrument.division}
+                    description={instrument.description}
+                    uid={uid}
+                    onclick={() => selectInstrument(instrument)}
+                  />
+                })}
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
-              {suggestion.motivation}
-            </p>
+
+            {displayButton() && (
+              <div className={"m-8 flex justify-center"}>
+                <button className={"btn toRepertoire"}
+                        onClick={() => addToRepertoire()}
+                >
+                  Move to repertoire
+                </button>
+              </div>
+            )}
+
+            {showUpdateError && (
+              <div className={"mt-6"}>
+                <ErrorPopup
+                  text={"Failed to add or remove user to instrument."}
+                  closePopup={() => setShowUpdateError(false)}
+                />
+              </div>
+            )}
+
+            {showSongError && (
+              <div className={"mt-6"}>
+                <ErrorPopup
+                  text={"Failed to convert this suggestion to a repertoire song."}
+                  closePopup={() => setShowSongError(false)}
+                />
+              </div>
+            )}
+
           </div>
-
-          <div className={"flex-col items-center md:flex"}>
-            <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
-            <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
-            </div>
-
-            <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map(
-                (suggestionInstrument: SuggestionInstrument) => {
-                  const { instrument, division, id, description } = suggestionInstrument
-                  return (
-                    <div
-                      key={id}
-                      className={"flex cursor-pointer select-none"}
-                      onClick={() => selectInstrument(suggestionInstrument)}
-                    >
-                      <Image
-                        src={getInstrumentImage(instrument.image_source)}
-                        alt={instrument.instrument_name.toString()}
-                        width={64}
-                        height={64}
-                        className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
-                        draggable={"false"}
-                      />
-                      <div>
-                        <p>{instrument.instrument_name}</p>
-                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-                        {division.length > 0 && (
-                          <div className={`font-bold`} data-cy="division">
-                            {formatUsernames(division)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                }
-              )}
-            </div>
-          </div>
-
-          {showUpdateError && (
-            <div className={"mt-6"}>
-              <ErrorPopup
-                text={"Failed to add or remove user to instrument."}
-                closePopup={() => setShowUpdateError(false)}
-              />
-            </div>
-          )}
-        </div>
-      )}
+        )}
     </>
   )
 }

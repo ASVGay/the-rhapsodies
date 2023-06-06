@@ -41,6 +41,15 @@ export const newSuggestionFilledSongInformation: NewSuggestion = {
   instruments: [],
 }
 
+export const newSuggestionFilledInInstruments: NewSuggestion = {
+  artist: ["The Beatles"],
+  link: "www.hello.com",
+  motivation:
+    "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
+  title: "Let It Be",
+  instruments: [filledInInstrument],
+}
+
 export const shouldGoToInstrumentsArea = () => {
   cy.data(buttonAddInstruments).click()
   cy.data(areaInstruments).should("be.visible")

@@ -1,19 +1,20 @@
 import { NewSuggestion } from "@/interfaces/new-suggestion"
-import {
-  fillSongInformationSuccessfully,
-  shouldGoToInstrumentsArea,
-  fillInstrumentsSuccessfully,
-  shouldGoToReviewArea,
-} from "./helpers/new-suggestion.helper"
+import { newSuggestionFilledInInstruments } from "./helpers/new-suggestion.helper"
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+const progressBarReview = "new-suggestion-progress-bar-review"
 
 const setUp = () => {
   cy.login()
-  cy.visit(`/suggestions/new`)
+  cy.visit("/suggestions/new", {
+    onBeforeLoad(win: Cypress.AUTWindow) {
+      cy.window()
+        .its("store")
+        .invoke("dispatch", updateNewSuggestion(newSuggestionFilledInInstruments))
+    },
+  })
+
   cy.wait(500) // Wait so content can render properly and set up submit events
-  fillSongInformationSuccessfully()
-  shouldGoToInstrumentsArea()
-  fillInstrumentsSuccessfully()
-  shouldGoToReviewArea()
+  cy.data(progressBarReview).click()
 }
 
 describe("review new suggestion page", () => {
@@ -52,7 +53,7 @@ describe("review new suggestion page", () => {
     })
 
     it("should display error-element if insert call(s) fail", () => {
-      cy.intercept({ url: "/rest/v1/suggestion*" }, { forceNetworkError: true }).then(() => {
+      cy.intercept({ url: "/rest/v1/song*" }, { forceNetworkError: true }).then(() => {
         cy.data("submit-suggestion-btn").click()
         cy.data("new-suggestion-insert-error").should("be.visible")
       })

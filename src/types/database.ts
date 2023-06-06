@@ -6,15 +6,15 @@ export interface Database {
       division: {
         Row: {
           musician: string
-          suggestion_instrument_id: string
+          song_instrument_id: string
         }
         Insert: {
           musician: string
-          suggestion_instrument_id: string
+          song_instrument_id: string
         }
         Update: {
           musician?: string
-          suggestion_instrument_id?: string
+          song_instrument_id?: string
         }
       }
       instrument: {
@@ -80,24 +80,24 @@ export interface Database {
           title?: string
         }
       }
-      suggestion_instrument: {
+      song_instrument: {
         Row: {
           description: string | null
           id: string
           instrument_id: string
-          suggestion_id: string
+          song_id: string
         }
         Insert: {
           description?: string | null
           id?: string
           instrument_id: string
-          suggestion_id: string
+          song_id: string
         }
         Update: {
           description?: string | null
           id?: string
           instrument_id?: string
-          suggestion_id?: string
+          song_id?: string
         }
       }
     }

@@ -60,7 +60,7 @@ const Suggestions: FC = () => {
       return (
         title.toLowerCase().includes(input) ||
         motivation.toLowerCase().includes(input) ||
-        artist.some((artist) => artist.toLowerCase().includes(input))
+        artist.some((artist: string) => artist.toLowerCase().includes(input))
       )
     })
 

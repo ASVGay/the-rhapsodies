@@ -1,7 +1,7 @@
-import { SuggestionInstrument } from "@/types/database-types"
+import { SongInstrument } from "@/types/database-types"
 
 interface ProgressionBarProps {
-  suggestionInstruments: SuggestionInstrument[]
+  suggestionInstruments: SongInstrument[]
 }
 
 const ProgressionBar = ({ suggestionInstruments }: ProgressionBarProps) => {
