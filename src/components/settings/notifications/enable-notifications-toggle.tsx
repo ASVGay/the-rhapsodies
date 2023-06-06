@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { notificationsAreSupported } from "@/helpers/pwa.helper"
 import Toggle from "@/components/settings/controls/toggle"
 import { AlertText } from "@/constants/notifications"
+import OneSignal from "react-onesignal"
 
 const showPermissionInstructions = (result: NotificationPermission) => {
   if (result === "denied") {
@@ -11,22 +12,28 @@ const showPermissionInstructions = (result: NotificationPermission) => {
   }
 }
 
-const EnableNotificationsToggle = () => {
+interface EnableNotificationsToggleProps {
+  hasNotificationPermission: boolean
+  setHasNotificationPermission: React.Dispatch<boolean>
+}
+
+const EnableNotificationsToggle = ({
+  hasNotificationPermission,
+  setHasNotificationPermission,
+}: EnableNotificationsToggleProps) => {
   const [renderContent, setRenderContent] = useState<boolean>(false)
-  const [permissionChecked, setPermissionChecked] = useState<boolean>(
-    notificationsAreSupported() ? Notification.permission === "granted" : false
-  )
 
   const [permission, setPermission] = useState<NotificationPermission>(
     notificationsAreSupported() ? Notification.permission : "default"
   )
 
   const changeNotificationSetting = () => {
-    Notification.requestPermission()
-      .then((result) => {
+    OneSignal.registerForPushNotifications()
+      .then(() => {
+        const result = Notification.permission
         // If permission is same as before, refer user to settings to change permission
         if (result === permission) showPermissionInstructions(result)
-        setPermissionChecked(result === "granted")
+        setHasNotificationPermission(result === "granted")
       })
       .catch((error) => alert(error))
       .finally(() => {
@@ -44,8 +51,8 @@ const EnableNotificationsToggle = () => {
       {renderContent && (
         <Toggle
           dataCy={"enable-notifications-toggle"}
-          text={"Enable notifications"}
-          checked={permissionChecked}
+          text={"Allow notifications on device"}
+          checked={hasNotificationPermission}
           handleChange={changeNotificationSetting}
           disabled={!notificationsAreSupported()}
         />
