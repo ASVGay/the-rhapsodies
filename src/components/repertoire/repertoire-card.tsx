@@ -1,10 +1,10 @@
 import React from "react"
 import { Suggestion } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import Image from "next/image";
+import Image from "next/image"
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 
 const RepertoireCard = (song: Suggestion) => {
-
   const checkEmptyDivision = () => {
     for (const item of song.song_instruments) {
       if (item.division.length === 0) return true
@@ -12,7 +12,10 @@ const RepertoireCard = (song: Suggestion) => {
     return false
   }
   return (
-    <div className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg cursor-pointer"} key={song.id}>
+    <div
+      className={"w-[22rem] cursor-pointer rounded-md bg-neutral-50 drop-shadow-lg"}
+      key={song.id}
+    >
       <div className={"m-2 flex"}>
         <div className={"mb-auto mt-auto flex w-full justify-between"}>
           <div className={"flex gap-2"}>
@@ -25,8 +28,14 @@ const RepertoireCard = (song: Suggestion) => {
             </div>
           </div>
           {
-            checkEmptyDivision() &&
-              <Image data-cy={"exclamation-circle"} src={"/icons/exclaimation-circle.svg"} alt={"Exclaimation circle"} height={24} width={24}/>
+            <div className="flex items-center">
+              <ExclamationCircleIcon
+                color={"red"}
+                width={24}
+                height={24}
+                className={"flex align-bottom"}
+              />
+            </div>
           }
         </div>
       </div>
