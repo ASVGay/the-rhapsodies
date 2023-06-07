@@ -3,7 +3,7 @@ import { Database } from "@/types/database"
 import React from "react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import { LockClosedIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, LockClosedIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { verifyPassword } from "@/services/authentication.service"
@@ -69,7 +69,16 @@ const Index = () => {
   }
   return (
     <div className={"page-wrapper lg:w-3/5"}>
-      <h1 className={"page-header lg:text-center"}>Change Password</h1>
+      <h1 className={"page-header flex items-center lg:justify-between lg:text-center"}>
+        <ArrowLeftIcon
+          data-cy={"back-to-settings"}
+          className={"mr-2 h-8 cursor-pointer hover:text-moon"}
+          onClick={() => router.push("/settings")}
+        />
+        Change Password
+        {/*Empty span to center text on lg screen*/}
+        <span />
+      </h1>
 
       <form
         className={"flex flex-col gap-4 text-zinc-400"}

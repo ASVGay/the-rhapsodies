@@ -22,6 +22,11 @@ describe("the change password page", () => {
     cy.data(buttonSubmitNewPassword).should("be.visible")
   })
 
+  it("should go back to settings on click of arrow", () => {
+    cy.data("back-to-settings").click()
+    cy.location("pathname").should("eq", "/settings")
+  })
+
   context("with incorrect values", () => {
     it("should show errors if no password values", () => {
       cy.data(buttonSubmitNewPassword).click()
