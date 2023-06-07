@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
+import { DivisionDatabaseOperation, RepertoireSong, SongInstrument } from "@/types/database-types"
 import React, { useEffect, useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
@@ -16,11 +16,11 @@ import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
 
 interface SongProps {
-  song: Song
+  song: RepertoireSong
 }
 
 const SongPage = (props: SongProps) => {
-  const [song, setSong] = useState<Song>(props.song)
+  const [song, setSong] = useState<RepertoireSong>(props.song)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showConversionError, setShowConversionError] = useState<boolean>(false)
@@ -45,7 +45,7 @@ const SongPage = (props: SongProps) => {
     getSong(supabase, song.id)
       .then((response) => {
         response.data
-          ? setSong(response.data as Song)
+          ? setSong(response.data as RepertoireSong)
           : setShowUpdateError("Failed to update the song.")
       })
       .catch(() => setShowUpdateError("Failed to update the song."))
