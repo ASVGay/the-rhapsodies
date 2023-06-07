@@ -10,7 +10,7 @@ import {
 } from "@/services/suggestion.service"
 import { Suggestion } from "@/types/database-types"
 import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import { Area } from "@/constants/area"
