@@ -61,7 +61,6 @@ interface EditSuggestionPageProps {
 }
 
 const EditSuggestionPage = (props: EditSuggestionPageProps) => {
-  const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
   const dispatch = useDispatch()
@@ -98,44 +97,31 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     dispatch(updateLastEditedUuid(props.suggestion.id))
   }
 
-  const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
-    if (user) {
-      updateSuggestion(supabase, suggestion, lastEditedUuid ?? "")
-        .then((response) => {
-          if (response.error) {
-            onError()
-            return
-          }
+  const saveSuggestion = async (onSuccess: () => void, onError: () => void) => {
+    try {
+      const suggestionResponse = await updateSuggestion(supabase, suggestion, lastEditedUuid ?? "")
+      if (suggestionResponse.error) throw new Error("Failed to update song")
 
-          const suggestionId = response.data.at(0)!.id
-          updateSuggestionInstruments(supabase, mapEditInstruments(suggestion, suggestionId))
-            .then((response) => {
-              if (response.error) {
-                onError()
-                return
-              }
+      const suggestionId = suggestionResponse.data.at(0)!.id
+      const suggestionInstrumentResponse = await updateSuggestionInstruments(
+        supabase,
+        mapEditInstruments(suggestion, suggestionId)
+      )
+      if (suggestionInstrumentResponse.error) throw Error("Failed to update song_instruments")
 
-              deleteSuggestionInstruments(supabase, deletedInstruments)
-                .then((response) => {
-                  router.push(`/suggestions/${suggestionId}`).then(() => {
-                    onSuccess()
-                    dispatch(setActiveArea(Area.SongInformation))
-                    dispatch(updateLastEditedUuid(""))
-                    dispatch(updateDeletedInstrumentUuid([]))
-                  })
-                })
-                .catch(() => {
-                  onError()
-                })
-            })
-            .catch(() => {
-              onError()
-            })
-        })
-        .catch(() => {
-          onError()
-        })
-    } else {
+      const deleteSuggestionResponse = await deleteSuggestionInstruments(
+        supabase,
+        deletedInstruments
+      )
+      if (deleteSuggestionResponse.error) throw new Error("Failed to delete song_instruments")
+
+      await router.push(`/suggestions/${suggestionId}`).then(() => {
+        onSuccess()
+        dispatch(setActiveArea(Area.SongInformation))
+        dispatch(updateLastEditedUuid(""))
+        dispatch(updateDeletedInstrumentUuid([]))
+      })
+    } catch (error) {
       onError()
     }
   }

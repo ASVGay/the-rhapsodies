@@ -78,7 +78,7 @@ const SuggestionPageSection = ({
   }, [supabaseClient])
 
   const handleAreaChange = (area: Area) => {
-    if (onAreaSelect) onAreaSelect(area)
+    onAreaSelect(area)
 
     submitSongInformationForm()
     onSongInformationSubmit(methods.getValues())
