@@ -129,6 +129,10 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     }
   }
 
+  const callSaveSuggestion = (success: () => void, error: () => void) => {
+    saveSuggestion(success, error).catch(() => {})
+  }
+
   const onAreaSelect = (area: Area) => {
     dispatch(setActiveArea(area))
   }
@@ -174,7 +178,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       onCloseClicked={() => {
         router.push(`/suggestions/${props.suggestion.id}`)
       }}
-      onReviewSubmit={(success, error) => saveSuggestion(success, error).catch(() => {})}
+      onReviewSubmit={callSaveSuggestion}
     />
   )
 }
