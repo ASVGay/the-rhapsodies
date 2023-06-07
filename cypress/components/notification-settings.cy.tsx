@@ -4,17 +4,6 @@ import NotificationSettings from "@/components/settings/notifications/notificati
 const React = require("React")
 const enableNotificationsToggle: string = "enable-notifications-toggle"
 describe("<NotificationSettings />", () => {
-  const checkToggleStateBasedOnPermission = (
-    permission: NotificationPermission,
-    toggleState: "be.checked" | "not.be.checked"
-  ) => {
-    cy.stub(window.Notification, "requestPermission").resolves(permission)
-    cy.mount(<NotificationSettings />)
-    cy.data(enableNotificationsToggle).within(() => cy.get("input").should("not.be.checked"))
-    cy.data(enableNotificationsToggle).within(() => cy.get("label").click())
-    cy.data(enableNotificationsToggle).within(() => cy.get("input").should(toggleState))
-  }
-
   it("renders", () => {
     cy.mount(<NotificationSettings />)
   })
