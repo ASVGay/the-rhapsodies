@@ -105,7 +105,7 @@ const SuggestionPageSection = ({
             <Spinner size={10} />
           </div>
         )}
-        {showLoadingError && (
+        {showLoadingError ? (
           <div className={"mt-6"} data-cy="failed-fetching-instruments">
             <ErrorPopup
               text={`“Something went wrong”
@@ -113,8 +113,7 @@ const SuggestionPageSection = ({
               closePopup={() => {}}
             />
           </div>
-        )}
-        {!showLoadingError && (
+        ) : (
           <div className={"mx-auto text-center lg:w-2/4"}>
             <ProgressBar
               activeArea={activeArea}
