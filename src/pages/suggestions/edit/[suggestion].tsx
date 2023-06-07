@@ -37,10 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
 
-    // If the suggestion has no id
     const author: { id: string } = data?.author as { id: string }
-    if (author.id === undefined) return { notFound: true }
-
     // If the user does not match with the author of the suggestion
     if (session?.user.id !== author.id)
       return {
