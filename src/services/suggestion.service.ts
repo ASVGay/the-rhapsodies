@@ -11,7 +11,6 @@ export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
       *,
       song_instruments:song_instrument (
         id,
-        description,
         instrument (*),
         division (*)
       )

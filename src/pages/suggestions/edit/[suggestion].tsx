@@ -19,10 +19,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { mapEditInstruments } from "@/helpers/new-suggestion.helper"
 import {
   updateEditSuggestion,
-  updateLastDeletedInstrumentUuid,
+  updateDeletedInstrumentUuid,
   updateLastEditedUuid,
+  setActiveArea,
 } from "@/redux/slices/edit-suggestion.slice"
-import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -38,8 +38,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (data == null) return { notFound: true }
 
     // If the suggestion has no id
-    const author: { id: string } = data?.author as { id: string }
-    if (author?.id === undefined) return { notFound: true }
+    const author: { id: string } = data?.author
+    if (author.id === undefined) return { notFound: true }
 
     // If the user does not match with the author of the suggestion
     if (session?.user.id !== author.id)
@@ -66,7 +66,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const newSuggestion = useSelector((state: AppState) => state.editSuggestion)
+  const lastEditedUuid = useSelector((state: AppState) => state.editSuggestion.lastEditedUuid)
   const suggestion = useSelector((state: AppState) => state.editSuggestion.suggestion)
   const activeArea = useSelector((state: AppState) => state.editSuggestion.activeArea)
   const deletedInstruments = useSelector(
@@ -74,7 +74,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   )
 
   //If the user visits a new edit page, clear the previously edited from redux
-  if (props.suggestion.id !== newSuggestion.lastEditedUuid) {
+  if (props.suggestion.id !== lastEditedUuid) {
     const suggestionInstruments: NewSuggestionInstrument[] = []
     props.suggestion.song_instruments.forEach((element) => {
       suggestionInstruments.push({
@@ -94,13 +94,13 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       })
     )
 
-    dispatch(updateLastDeletedInstrumentUuid([]))
+    dispatch(updateDeletedInstrumentUuid([]))
     dispatch(updateLastEditedUuid(props.suggestion.id))
   }
 
   const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
     if (user) {
-      updateSuggestion(supabase, suggestion, newSuggestion.lastEditedUuid ?? "")
+      updateSuggestion(supabase, suggestion, lastEditedUuid ?? "")
         .then((response) => {
           if (response.error) {
             onError()
@@ -121,7 +121,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
                     onSuccess()
                     dispatch(setActiveArea(Area.SongInformation))
                     dispatch(updateLastEditedUuid(""))
-                    dispatch(updateLastDeletedInstrumentUuid([]))
+                    dispatch(updateDeletedInstrumentUuid([]))
                   })
                 })
                 .catch(() => {
@@ -149,7 +149,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     const oldIds = newInstruments.map((item) => item.id)
     const newIds = suggestion.instruments.map((item) => item.id)
     const missingIds = newIds.filter((id) => !oldIds.includes(id)) as string[]
-    dispatch(updateLastDeletedInstrumentUuid([...deletedInstruments, ...missingIds]))
+    dispatch(updateDeletedInstrumentUuid([...deletedInstruments, ...missingIds]))
 
     dispatch(
       updateEditSuggestion({
@@ -185,7 +185,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       onCloseClicked={() => {
         router.push(`/suggestions/${props.suggestion.id}`)
       }}
-      onReviewSubmit={(success, error) => saveSuggestion(success, error)}
+      onReviewSubmit={saveSuggestion}
     />
   )
 }

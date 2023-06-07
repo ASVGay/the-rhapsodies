@@ -87,7 +87,6 @@ describe("when the user wants to edit a suggestion", () => {
 
       it("should change to a different suggestion's data when switching between suggestion edits", () => {
         const firstInputText = cy.data("input-title").invoke("val")
-        console.log(firstInputText)
         cy.visit(`suggestions/edit/${userSecondSuggestion}`)
         cy.data("input-title").should("not.contain", firstInputText)
       })

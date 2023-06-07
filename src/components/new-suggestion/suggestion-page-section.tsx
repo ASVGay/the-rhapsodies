@@ -24,9 +24,9 @@ interface SuggestionPageSectionProps {
   newSuggestion: NewSuggestion
   startingArea: Area
   onCloseClicked(): void
-  onSongInformationSubmit?(songInformation: InputsSongInformation): void
-  onInstrumentSubmit?(newInstruments: NewSuggestionInstrument[]): void
-  onAreaSelect?(newArea: Area): void
+  onSongInformationSubmit(songInformation: InputsSongInformation): void
+  onInstrumentSubmit(newInstruments: NewSuggestionInstrument[]): void
+  onAreaSelect(newArea: Area): void
   onReviewSubmit(onSuccess: () => void, onError: () => void): void
 }
 
@@ -81,12 +81,9 @@ const SuggestionPageSection = ({
     if (onAreaSelect) onAreaSelect(area)
 
     submitSongInformationForm()
-    if (onSongInformationSubmit) {
-      onSongInformationSubmit(methods.getValues())
-    }
+    onSongInformationSubmit(methods.getValues())
 
-    if (area !== Area.Instruments)
-      if (onInstrumentSubmit) onInstrumentSubmit(newSuggestionInstruments)
+    if (area !== Area.Instruments) onInstrumentSubmit(newSuggestionInstruments)
 
     setActiveArea(area)
   }

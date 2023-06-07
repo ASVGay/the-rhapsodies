@@ -37,7 +37,7 @@ export const editSuggestionSlice = createSlice({
         lastEditedUuid: action.payload,
       }
     },
-    updateLastDeletedInstrumentUuid(state, action: PayloadAction<string[]>) {
+    updateDeletedInstrumentUuid(state, action: PayloadAction<string[]>) {
       return {
         ...state,
         deletedInstrumentUuids: action.payload,
@@ -49,17 +49,11 @@ export const editSuggestionSlice = createSlice({
         suggestion: action.payload,
       }
     },
-    updateInstrumentEditSuggestion(state, action: PayloadAction<NewSuggestion>) {
-      return {
-        ...state,
-        suggestion: action.payload,
-      }
-    },
   },
 })
 
 export const {
-  updateLastDeletedInstrumentUuid,
+  updateDeletedInstrumentUuid,
   updateLastEditedUuid,
   updateEditSuggestion,
   setActiveArea,

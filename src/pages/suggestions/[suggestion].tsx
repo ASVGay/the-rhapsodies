@@ -203,7 +203,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
 
     if (data == null) return { notFound: true }
-    console.log(data.author + " | " + session?.user.id)
     return {
       props: {
         suggestion: data,
