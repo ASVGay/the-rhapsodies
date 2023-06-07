@@ -173,7 +173,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       onCloseClicked={() => {
         router.push(`/suggestions/${props.suggestion.id}`)
       }}
-      onReviewSubmit={saveSuggestion}
+      onReviewSubmit={(success, error) => saveSuggestion(success, error)}
     />
   )
 }
