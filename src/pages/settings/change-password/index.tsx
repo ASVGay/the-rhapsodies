@@ -45,6 +45,24 @@ const Index = () => {
       .catch(() => signOutError)
   }
 
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+
+    if (error) {
+      updatePasswordError()
+    } else {
+      toast.success("Password successfully changed!")
+      await router.push("/settings")
+    }
+  }
+
+  const showIncorrectPassword = () => {
+    toast.error("Please fill in your current password correctly.", {
+      toastId: "incorrect-password",
+    })
+    setError("currentPassword", { type: "custom", message: "Incorrect password" })
+  }
+
   const submitNewPassword = async ({ currentPassword, newPassword }: FormInputs) => {
     setIsLoading(true)
     if (!user) {
@@ -54,22 +72,9 @@ const Index = () => {
       verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
         if (error) updatePasswordError()
         // check if verify password returns true (correct password)
-        if (data === false) {
-          toast.error("Please fill in your current password correctly.", {
-            toastId: "incorrect-password",
-          })
-          setError("currentPassword", { type: "custom", message: "Incorrect password" })
-        }
-        if (data) {
-          const { error } = await supabase.auth.updateUser({ password: newPassword })
-
-          if (error) {
-            updatePasswordError()
-          } else {
-            toast.success("Password successfully changed!")
-            await router.push("/settings")
-          }
-        }
+        if (data) await updatePassword(newPassword)
+        // deep check that data returns false and not null or undefined
+        if (data === false) showIncorrectPassword()
 
         setIsLoading(false)
       })
