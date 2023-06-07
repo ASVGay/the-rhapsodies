@@ -49,16 +49,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
       .catch(() => setShowUpdateError(true))
   }
 
-  const selectInstrument = (songInstrument: SongInstrument) => {
-    if (!uid) return
-
-    const division: DivisionDatabaseOperation = {
-      musician: uid,
-      song_instrument_id: songInstrument.id,
-    }
-
-    // TODO implement error handling and loading (so that users cant click when updating division)
-    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
+  const updateOrDeleteDivision = async (exists: boolean, division: DivisionDatabaseOperation) => {
     if (exists) {
       deleteDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
@@ -70,6 +61,22 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
         updateSuggestion()
       })
     }
+  }
+
+
+  const selectInstrument = (songInstrument: SongInstrument) => {
+    if (!uid) return
+
+    setShowSpinner(true)
+
+    const division: DivisionDatabaseOperation = {
+      musician: uid,
+      song_instrument_id: songInstrument.id
+    }
+
+    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
+    updateOrDeleteDivision(exists, division)
+      .then(() => setShowSpinner(false))
   }
 
   const displayButton = (): boolean => {
@@ -142,7 +149,10 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                     division={instrument.division}
                     description={instrument.description}
                     uid={uid}
-                    onclick={() => selectInstrument(instrument)}
+                    onclick={() => {
+                      if (showSpinner) return
+                      selectInstrument(instrument)
+                    }}
                   />
                 )
               })}

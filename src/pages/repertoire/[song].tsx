@@ -52,10 +52,30 @@ const SongPage = (props: SongProps) => {
       .finally(() => setShowSpinner(false))
   }
 
-  const selectInstrument = (songInstrument: SongInstrument) => {
-    setShowSpinner(true)
+  const updateOrDeleteDivision = async (
+    exists: boolean,
+    division: DivisionDatabaseOperation,
+    divisionLength: number
+  ) => {
+    if (exists && divisionLength == 0) {
+      setShowUpdateError("You're not allowed to remove yourself from this instrument.")
+    } else if (exists) {
+      deleteDivision(supabase, division).then(({ error }) => {
+        if (error) setShowUpdateError("Failed to remove user from the instrument.")
+        updateSong()
+      })
+    } else {
+      insertDivision(supabase, division).then(({ error }) => {
+        if (error) setShowUpdateError("Failed to add user to the instrument.")
+        updateSong()
+      })
+    }
+  }
 
+  const selectInstrument = (songInstrument: SongInstrument) => {
     if (!uid) return
+
+    setShowSpinner(true)
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
@@ -63,19 +83,8 @@ const SongPage = (props: SongProps) => {
     }
 
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
-    if (exists && songInstrument.division.length == 0) {
-      setShowUpdateError("You're not allowed to remove yourself from this instrument.")
-    } else if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
-        if (error) setShowUpdateError("Failed to remove user from the instrument.")
-        updateSong()
-      }).then(() => setShowSpinner(false))
-    } else {
-      insertDivision(supabase, division).then(({ error }) => {
-        if (error) setShowUpdateError("Failed to add user to the instrument.")
-        updateSong()
-      }).then(() => setShowSpinner(false))
-    }
+    updateOrDeleteDivision(exists, division, songInstrument.division.length)
+      .then(() => setShowSpinner(false))
   }
 
   const displayButton = (): boolean => roles?.["claims_admin"]
