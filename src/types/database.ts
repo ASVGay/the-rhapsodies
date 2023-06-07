@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export interface Database {
   graphql_public: {
@@ -47,6 +41,20 @@ export interface Database {
           musician?: string
           song_instrument_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "division_musician_fkey"
+            columns: ["musician"]
+            referencedRelation: "member"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "division_song_instrument_id_fkey"
+            columns: ["song_instrument_id"]
+            referencedRelation: "song_instrument"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       instrument: {
         Row: {
@@ -64,6 +72,7 @@ export interface Database {
           image_source?: string
           instrument_name?: string
         }
+        Relationships: []
       }
       member: {
         Row: {
@@ -78,6 +87,14 @@ export interface Database {
           display_name?: string
           id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "member_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       song: {
         Row: {
@@ -110,6 +127,14 @@ export interface Database {
           motivation?: string
           title?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "song_author_fkey"
+            columns: ["author"]
+            referencedRelation: "member"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       song_instrument: {
         Row: {
@@ -130,6 +155,20 @@ export interface Database {
           instrument_id?: string
           song_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "song_instrument_instrument_id_fkey"
+            columns: ["instrument_id"]
+            referencedRelation: "instrument"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "song_instrument_song_id_fkey"
+            columns: ["song_id"]
+            referencedRelation: "song"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
@@ -178,6 +217,12 @@ export interface Database {
         }
         Returns: string
       }
+      verify_user_password: {
+        Args: {
+          password: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -222,6 +267,14 @@ export interface Database {
           public?: boolean | null
           updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "buckets_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       migrations: {
         Row: {
@@ -242,6 +295,7 @@ export interface Database {
           id?: number
           name?: string
         }
+        Relationships: []
       }
       objects: {
         Row: {
@@ -280,6 +334,20 @@ export interface Database {
           updated_at?: string | null
           version?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "objects_bucketId_fkey"
+            columns: ["bucket_id"]
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objects_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
@@ -311,7 +379,7 @@ export interface Database {
         Args: {
           name: string
         }
-        Returns: string[]
+        Returns: unknown
       }
       get_size_by_bucket: {
         Args: Record<PropertyKey, never>
@@ -349,4 +417,3 @@ export interface Database {
     }
   }
 }
-

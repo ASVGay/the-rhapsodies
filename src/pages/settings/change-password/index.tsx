@@ -6,6 +6,7 @@ import ErrorMessage from "@/components/error/error-message"
 import { LockClosedIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
+import { verifyPassword } from "@/services/authentication.service"
 
 interface FormInputs {
   currentPassword: string
@@ -14,6 +15,9 @@ interface FormInputs {
 }
 
 const signOutError = () => toast.error("Something went wrong while logging out.")
+
+const updatePasswordError = () =>
+  toast.error("Something went wrong while changing your password. Please try again.")
 
 const Index = () => {
   const user = useUser()
@@ -25,10 +29,11 @@ const Index = () => {
     register,
     watch,
     formState: { errors },
+    setError,
   } = useForm<FormInputs>()
 
   const signOut = () => {
-    toast.error("Something went wrong. Please login again")
+    toast.error("Something went wrong while retrieving your data. Please sign in again.")
     supabase.auth
       .signOut()
       .then(async (response) => {
@@ -38,22 +43,28 @@ const Index = () => {
       .catch(() => signOutError)
   }
 
-  const submitNewPassword = async ({ newPassword }: FormInputs) => {
+  const submitNewPassword = async ({ currentPassword, newPassword }: FormInputs) => {
     if (!user) {
       await signOut()
-      return
-    }
-
-    const confirmed = window.confirm("Are you sure you want to change your password?")
-    if (!confirmed) return
-
-    const { error } = await supabase.auth.updateUser({ password: newPassword })
-
-    if (error) {
-      toast.error("Something went wrong while changing your password. Try again.")
     } else {
-      toast.success("Password successfully changed!")
-      await router.push("/settings")
+      verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
+        if (error) updatePasswordError()
+        // check if verify password returns true (correct password)
+        if (!data) {
+          toast.error("Please fill in your current password correctly.")
+          setError("currentPassword", { type: "custom", message: "Incorrect password" })
+        }
+        if (data) {
+          const { error } = await supabase.auth.updateUser({ password: newPassword })
+
+          if (error) {
+            updatePasswordError()
+          } else {
+            toast.success("Password successfully changed!")
+            await router.push("/settings")
+          }
+        }
+      })
     }
   }
   return (

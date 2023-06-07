@@ -1,10 +1,11 @@
-const errorNewPassword = "input-new-password-error"
-const errorConfirmationPassword = "input-confirmation-password-error"
 describe("the change password page", () => {
-  const inputCurrentPassword = "input-current-password"
   const buttonSubmitNewPassword = "button-submit-new-password"
+  const inputCurrentPassword = "input-current-password"
   const inputNewPassword = "input-new-password"
   const inputConfirmationPassword = "input-confirmation-password"
+  const errorNewPassword = "input-new-password-error"
+  const errorConfirmationPassword = "input-confirmation-password-error"
+  const errorCurrentPassword = "input-current-password-error"
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
 
   beforeEach(() => {
@@ -30,10 +31,7 @@ describe("the change password page", () => {
         cy.data(input).should("have.css", "outline-color", "rgb(248, 113, 113)")
       })
 
-      cy.data("input-current-password-error").should(
-        "contain.text",
-        "Please provide your current password"
-      )
+      cy.data(errorCurrentPassword).should("contain.text", "Please provide your current password")
       cy.data(errorNewPassword).should("contain.text", "Please provide a password")
       cy.data(errorConfirmationPassword).should("contain.text", "Please provide your password")
     })
@@ -51,6 +49,21 @@ describe("the change password page", () => {
       cy.data(buttonSubmitNewPassword).click()
       cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
       cy.data(errorConfirmationPassword).should("contain.text", "not match")
+    })
+
+    it("should show error & toast if current password is not correct", () => {
+      cy.data(inputCurrentPassword).type("incorrect")
+      cy.data(inputNewPassword).type(currentPassword)
+      cy.data(inputConfirmationPassword).type(currentPassword)
+      cy.data(buttonSubmitNewPassword).click()
+      cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
+      cy.get(".Toastify")
+        .get("#1")
+        .should("be.visible")
+        .should("have.class", "Toastify__toast--error")
+        .get(".Toastify__toast-body")
+        .should("contain.text", "Please fill in your current password correctly")
     })
   })
 
