@@ -4,6 +4,7 @@ import { defineConfig } from "cypress"
 const tasks = require("./cypress/plugins/index")
 
 export default defineConfig({
+  projectId: "xjdkjh",
   e2e: {
     defaultCommandTimeout: 1000 * parseInt(process.env.CYPRESS_TIMEOUT_SECONDS || "12"),
     baseUrl: process.env.CYPRESS_BASE_URL,
