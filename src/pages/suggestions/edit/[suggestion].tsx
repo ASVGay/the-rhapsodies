@@ -58,7 +58,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 interface EditSuggestionPageProps {
   suggestion: Song
-  isEditable: boolean
 }
 
 const EditSuggestionPage = (props: EditSuggestionPageProps) => {
