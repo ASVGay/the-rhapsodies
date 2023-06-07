@@ -19,6 +19,22 @@ export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
     .eq("inRepertoire", false)
 }
 
+export const getRepertoireSongs = async (supabase: SupabaseClient<Database>) => {
+  return supabase
+    .from("song")
+    .select(
+      `
+      *,
+      song_instruments:song_instrument (
+        id,
+        instrument (*),
+        division (*)
+      )
+    `
+    )
+    .eq("inRepertoire", true)
+}
+
 export const getSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {
   return supabase
     .from("song")

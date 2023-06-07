@@ -1,9 +1,9 @@
 import React from "react"
-import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
+import SettingsButton from "@/components/settings/controls/settings-button"
 
 const SignOut = () => {
   const supabase = useSupabaseClient<Database>()
@@ -19,14 +19,7 @@ const SignOut = () => {
     })()
   }
   return (
-    <div
-      className={"flex items-center justify-between hover:cursor-pointer"}
-      data-cy={"logout-btn"}
-      onClick={signOut}
-    >
-      <p>Sign out</p>
-      <ChevronRightIcon height={16} width={16} />
-    </div>
+    <SettingsButton dataCy={"logout-btn"} disabled={false} onClick={signOut} text={"Sign out"} />
   )
 }
 

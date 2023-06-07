@@ -13,6 +13,7 @@ env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
   NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+  NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
   CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
   CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
   CYPRESS_NEW_ID: ${{secrets.CYPRESS_NEW_ID}}
@@ -28,16 +29,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: dev
-    strategy:
-      matrix:
-        node-version: [ 16.x, 18.x ]
     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
           cache: 'npm'
       - name: Clean install node modules
         run: npm ci

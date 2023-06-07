@@ -8,7 +8,6 @@ import {
   updateSuggestion,
   updateSuggestionInstruments,
 } from "@/services/suggestion.service"
-import { Suggestion } from "@/types/database-types"
 import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
@@ -23,6 +22,7 @@ import {
   updateLastEditedUuid,
   setActiveArea,
 } from "@/redux/slices/edit-suggestion.slice"
+import { Song } from "@/types/database-types"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (data == null) return { notFound: true }
 
     // If the suggestion has no id
-    const author: { id: string } = data?.author
+    const author: { id: string } = data?.author as { id: string }
     if (author.id === undefined) return { notFound: true }
 
     // If the user does not match with the author of the suggestion
@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 interface EditSuggestionPageProps {
-  suggestion: Suggestion
+  suggestion: Song
 }
 
 const EditSuggestionPage = (props: EditSuggestionPageProps) => {
@@ -75,13 +75,15 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   //If the user visits a new edit page, clear the previously edited from redux
   if (props.suggestion.id !== lastEditedUuid) {
     const suggestionInstruments: NewSuggestionInstrument[] = []
-    props.suggestion.song_instruments.forEach((element) => {
-      suggestionInstruments.push({
-        id: element.id,
-        description: element.description ?? "",
-        instrument: element.instrument,
-      })
-    })
+    props.suggestion.song_instruments.forEach(
+      (element: { id: any; description: any; instrument: any }) => {
+        suggestionInstruments.push({
+          id: element.id,
+          description: element.description ?? "",
+          instrument: element.instrument,
+        })
+      }
+    )
 
     dispatch(
       updateEditSuggestion({
