@@ -1,12 +1,13 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import React from "react"
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import { ArrowLeftIcon, LockClosedIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { verifyPassword } from "@/services/authentication.service"
+import SpinnerStripes from "@/components/utils/spinner-stripes"
 
 interface FormInputs {
   currentPassword: string
@@ -23,6 +24,7 @@ const Index = () => {
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const {
     handleSubmit,
@@ -44,14 +46,18 @@ const Index = () => {
   }
 
   const submitNewPassword = async ({ currentPassword, newPassword }: FormInputs) => {
+    setIsLoading(true)
     if (!user) {
       await signOut()
+      setIsLoading(false)
     } else {
       verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
         if (error) updatePasswordError()
         // check if verify password returns true (correct password)
-        if (!data) {
-          toast.error("Please fill in your current password correctly.")
+        if (data === false) {
+          toast.error("Please fill in your current password correctly.", {
+            toastId: "incorrect-password",
+          })
           setError("currentPassword", { type: "custom", message: "Incorrect password" })
         }
         if (data) {
@@ -64,6 +70,8 @@ const Index = () => {
             await router.push("/settings")
           }
         }
+
+        setIsLoading(false)
       })
     }
   }
@@ -83,6 +91,7 @@ const Index = () => {
       <form
         className={"flex flex-col gap-4 text-zinc-400"}
         onSubmit={handleSubmit(submitNewPassword)}
+        data-cy={"change-password-form"}
       >
         <p>
           Please enter your <b>current</b> password.
@@ -106,6 +115,7 @@ const Index = () => {
               {...register("currentPassword", {
                 required: { value: true, message: "Please provide your current password" },
               })}
+              disabled={isLoading}
             />
             <span>
               <LockClosedIcon />
@@ -136,6 +146,7 @@ const Index = () => {
                 required: { value: true, message: "Please provide a password" },
                 minLength: { value: 6, message: "Your password must be at least six characters" },
               })}
+              disabled={isLoading}
             />
             <span>
               <LockClosedIcon />
@@ -163,6 +174,7 @@ const Index = () => {
                 required: "Please provide your password",
                 validate: (value) => value === watch("newPassword") || "Passwords do not match",
               })}
+              disabled={isLoading}
             />
             <span>
               <LockClosedIcon />
@@ -172,9 +184,10 @@ const Index = () => {
         <button
           data-cy={"button-submit-new-password"}
           type={"submit"}
-          className={"btn w-full rounded-lg p-2.5"}
+          className={"btn flex w-full justify-center gap-2 rounded-lg p-2.5"}
+          disabled={isLoading}
         >
-          Change password
+          {isLoading ? <SpinnerStripes dataCy={"spinner"} /> : "Change password"}
         </button>
       </form>
     </div>

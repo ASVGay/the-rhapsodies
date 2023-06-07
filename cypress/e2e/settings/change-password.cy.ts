@@ -1,3 +1,5 @@
+import { interceptIndefinitely } from "../helpers/interception.helper.ts"
+
 describe("the change password page", () => {
   const buttonSubmitNewPassword = "button-submit-new-password"
   const inputCurrentPassword = "input-current-password"
@@ -7,6 +9,24 @@ describe("the change password page", () => {
   const errorConfirmationPassword = "input-confirmation-password-error"
   const errorCurrentPassword = "input-current-password-error"
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
+  const errorResponse = {
+    statusCode: 401,
+    body: {
+      error: "Error",
+    },
+  }
+  const submitCorrectData = () => {
+    cy.data(inputCurrentPassword).type(currentPassword)
+    cy.data(inputNewPassword).type(currentPassword)
+    cy.data(inputConfirmationPassword).type(currentPassword)
+    cy.data(buttonSubmitNewPassword).click()
+  }
+
+  before(() => {
+    Cypress.Keyboard.defaults({
+      keystrokeDelay: 0,
+    })
+  })
 
   beforeEach(() => {
     cy.login()
@@ -64,7 +84,7 @@ describe("the change password page", () => {
       cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
       cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
       cy.get(".Toastify")
-        .get("#1")
+        .get("#incorrect-password")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
         .get(".Toastify__toast-body")
@@ -74,10 +94,7 @@ describe("the change password page", () => {
 
   context("with correct values", () => {
     it("should redirect & show toast if successful update", () => {
-      cy.data(inputCurrentPassword).type(currentPassword)
-      cy.data(inputNewPassword).type(currentPassword)
-      cy.data(inputConfirmationPassword).type(currentPassword)
-      cy.data(buttonSubmitNewPassword).click()
+      submitCorrectData()
 
       cy.get(".Toastify")
         .get("#1")
@@ -89,16 +106,14 @@ describe("the change password page", () => {
     })
 
     it("should show toast if unsuccessful update", () => {
-      cy.intercept("/auth/v1/user", {
-        statusCode: 401,
-        body: {
-          error: "Error",
-        },
-      })
-      cy.data(inputCurrentPassword).type(currentPassword)
-      cy.data(inputNewPassword).type(currentPassword)
-      cy.data(inputConfirmationPassword).type(currentPassword)
-      cy.data(buttonSubmitNewPassword).click()
+      cy.intercept("/auth/v1/user", errorResponse)
+      submitCorrectData(
+        inputCurrentPassword,
+        currentPassword,
+        inputNewPassword,
+        inputConfirmationPassword,
+        buttonSubmitNewPassword
+      )
 
       cy.get(".Toastify")
         .get("#1")
@@ -106,6 +121,28 @@ describe("the change password page", () => {
         .should("have.class", "Toastify__toast--error")
         .get(".Toastify__toast-body")
         .should("contain.text", "Something went wrong")
+    })
+
+    it("should disable form & show spinner when loading", () => {
+      const interception = interceptIndefinitely("/auth/v1/user", errorResponse)
+      submitCorrectData()
+      cy.data("change-password-form")
+        .within(() => {
+          cy.data(inputCurrentPassword).should("be.disabled")
+          cy.data(inputNewPassword).should("be.disabled")
+          cy.data(inputConfirmationPassword).should("be.disabled")
+          cy.data(buttonSubmitNewPassword).should("be.disabled")
+          cy.data("spinner").should("be.visible")
+        })
+        .then(() => {
+          interception.sendResponse()
+
+          cy.data(inputCurrentPassword).should("not.be.disabled")
+          cy.data(inputNewPassword).should("not.be.disabled")
+          cy.data(inputConfirmationPassword).should("not.be.disabled")
+          cy.data(buttonSubmitNewPassword).should("not.be.disabled")
+          cy.data("spinner").should("not.exist")
+        })
     })
   })
 })
