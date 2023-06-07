@@ -25,7 +25,7 @@ const NewSuggestion = () => {
   const user = useUser()
 
   const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
-    if (user) {
+    if (!user) return
       insertSuggestion(supabase, suggestion, user.id)
         .then((response) => {
           if (response.error) {
