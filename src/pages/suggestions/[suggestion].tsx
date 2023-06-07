@@ -76,7 +76,8 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     updateOrDeleteDivision(exists, division)
-      .then(() => setShowSpinner(false))
+      .catch(() => setShowUpdateError(true))
+      .finally(() => setShowSpinner(false))
   }
 
   const displayButton = (): boolean => {

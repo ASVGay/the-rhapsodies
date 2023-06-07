@@ -84,7 +84,8 @@ const SongPage = (props: SongProps) => {
 
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     updateOrDeleteDivision(exists, division, songInstrument.division.length)
-      .then(() => setShowSpinner(false))
+      .catch(() => setShowUpdateError("Failed to update the instrument division."))
+      .finally(() => setShowSpinner(false))
   }
 
   const displayButton = (): boolean => roles?.["claims_admin"]
