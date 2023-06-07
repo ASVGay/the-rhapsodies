@@ -1,12 +1,13 @@
 import {
-  fillInstrumentsSuccessfully,
   addInstrumentItem,
-  shouldGoToReviewArea,
-  shouldBeFilledState,
+  fillInstrumentsSuccessfully,
   newSuggestionFilledSongInformation,
+  shouldBeFilledState,
+  shouldGoToReviewArea,
 } from "./helpers/new-suggestion.helper"
 import { CyHttpMessages } from "cypress/types/net-stubbing"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import { mockInstruments } from "../../fixtures/mock-instruments.ts"
 
 const toReviewButton = "to-review-button"
 const searchInstrumentInput = "search-instrument-input"
@@ -20,23 +21,10 @@ const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 let instrumentResponseCache: CyHttpMessages.BaseMessage
 
 describe("when creating a new suggestion, adding instruments", () => {
-  before(() => {
-    cy.login()
-    cy.visit("/suggestions/new")
-
-    //Intercept and cache the instrument list
-    cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc").as(
-      "getInstruments"
-    )
-    cy.wait("@getInstruments").then((intercept) => {
-      instrumentResponseCache = intercept.response
-    })
-  })
-
   beforeEach(() => {
     cy.login()
     cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc", {
-      body: instrumentResponseCache.body,
+      body: mockInstruments,
     })
 
     cy.visit("/suggestions/new", {
