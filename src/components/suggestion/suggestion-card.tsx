@@ -2,39 +2,39 @@ import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
-import { Suggestion } from "@/types/database-types"
+import {Song} from "@/types/database-types"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 
-interface SuggestionCardProps {
-  suggestion: Suggestion
-}
 
-const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
+interface SuggestionCardProps {
+  song: Song
+}
+const SuggestionCard = ({song}: SuggestionCardProps) => {
   return (
     <Link
-      href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: suggestion.id } }}
+      href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
       data-cy="suggestion-card"
     >
-      <div className={"flex items-start p-3"}>
+      <div className={"flex items-start p-3"} key={song.id}>
         <div className={"mb-auto mt-auto flex"}>
           <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
         </div>
         <span className={"pl-3"}>
-          <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
-          <p className={"line-clamp-1"}>{suggestion.artist?.join(", ")}</p>
+          <p className={"line-clamp-1 font-bold"}>{song.title}</p>
+          <p className={"line-clamp-1"}>{song.artist?.join(", ")}</p>
           <p className={"line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}>
-            {suggestion.motivation}
+            {song.motivation}
           </p>
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        {suggestion.song_instruments && (
-          <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
+        {song.song_instruments && (
+          <ProgressionBar suggestionInstruments={song.song_instruments} />
         )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
-            {suggestion.song_instruments?.map((suggestion_instrument) => {
+            {song.song_instruments?.map((suggestion_instrument) => {
               const { instrument, division } = suggestion_instrument
               return (
                 <Image

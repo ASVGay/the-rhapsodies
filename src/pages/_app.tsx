@@ -6,11 +6,12 @@ import { Lexend } from "next/font/google"
 import Layout from "@/components/layout/layout"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
 import { Slide, ToastContainer } from "react-toastify"
+import OneSignal from "react-onesignal"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -34,6 +35,17 @@ const App = ({ Component, pageProps }: AppProps) => {
       window.store = store
     }
   }
+
+  useEffect(() => {
+    OneSignal.init({
+      appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
+      allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
+      serviceWorkerParam: {
+        scope: "/js/push/onesignal/",
+      },
+      serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
+    })
+  }, [])
 
   return (
     <>

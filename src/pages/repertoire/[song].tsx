@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, RepertoireSong, SongInstrument } from "@/types/database-types"
+import { Division, DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
 import React, { useEffect, useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
@@ -16,11 +16,11 @@ import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
 
 interface SongProps {
-  song: RepertoireSong
+  song: Song
 }
 
 const SongPage = (props: SongProps) => {
-  const [song, setSong] = useState<RepertoireSong>(props.song)
+  const [song, setSong] = useState<Song>(props.song)
   const [roles, setRoles] = useState<UserAppMetadata>()
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showConversionError, setShowConversionError] = useState<boolean>(false)
@@ -45,7 +45,7 @@ const SongPage = (props: SongProps) => {
     getSong(supabase, song.id)
       .then((response) => {
         response.data
-          ? setSong(response.data as RepertoireSong)
+          ? setSong(response.data as Song)
           : setShowUpdateError("Failed to update the song.")
       })
       .catch(() => setShowUpdateError("Failed to update the song."))
@@ -54,18 +54,18 @@ const SongPage = (props: SongProps) => {
 
   const updateOrDeleteDivision = async (
     exists: boolean,
-    division: DivisionDatabaseOperation,
+    divisionOperation: DivisionDatabaseOperation,
     divisionLength: number
   ) => {
-    if (exists && divisionLength == 0) {
+    if (exists && divisionLength == 1) {
       setShowUpdateError("You're not allowed to remove yourself from this instrument.")
     } else if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
+      deleteDivision(supabase, divisionOperation).then(({ error }) => {
         if (error) setShowUpdateError("Failed to remove user from the instrument.")
         updateSong()
       })
     } else {
-      insertDivision(supabase, division).then(({ error }) => {
+      insertDivision(supabase, divisionOperation).then(({ error }) => {
         if (error) setShowUpdateError("Failed to add user to the instrument.")
         updateSong()
       })

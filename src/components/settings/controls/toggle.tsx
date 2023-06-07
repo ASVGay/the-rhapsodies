@@ -16,11 +16,10 @@ const Toggle = ({ text, handleChange, checked, disabled, dataCy }: ToggleProps) 
       ${disabled && "pointer-events-none select-none opacity-20"}`}
     >
       <p>{text}</p>
-      <label htmlFor="AcceptConditions" className="blcok relative h-8 w-14 cursor-pointer">
+      <label className="relative h-8 w-14 cursor-pointer">
         <input
           disabled={disabled}
           type="checkbox"
-          id="AcceptConditions"
           className="peer sr-only"
           checked={checked}
           onChange={handleChange}

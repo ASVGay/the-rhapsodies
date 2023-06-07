@@ -6,7 +6,7 @@ import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision, moveSongToRepertoire } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, SongInstrument, Suggestion } from "@/types/database-types"
+import {DivisionDatabaseOperation, Song, SongInstrument} from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
@@ -17,11 +17,11 @@ import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 
 interface SuggestionProps {
-  suggestion: Suggestion
+  suggestion: Song
 }
 
 const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
-  const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
+  const [suggestion, setSuggestion] = useState<Song>(props.suggestion)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
@@ -44,7 +44,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
+        response.data ? setSuggestion(response.data as Song) : setShowUpdateError(true)
       })
       .catch(() => setShowUpdateError(true))
   }
