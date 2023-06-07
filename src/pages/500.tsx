@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import React from "react"
 
-export default function Custom404() {
+export default function Custom500() {
   const router = useRouter()
 
   return (
