@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
-import { Database } from "@/types/database"
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import SignInTextField from "@/components/text-fields/sign-in-text-field"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { useEffect, useState } from "react"
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 
-const ChangePassword = () => {
+const Index = () => {
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
   const [errorMessage, setErrorMessage] = useState("")
@@ -87,4 +87,4 @@ const ChangePassword = () => {
   )
 }
 
-export default ChangePassword
+export default Index

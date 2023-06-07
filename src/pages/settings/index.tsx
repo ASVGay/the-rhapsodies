@@ -1,12 +1,12 @@
 import NotificationSettings from "@/components/settings/notifications/notification-settings"
-import AccountSettings from "@/components/settings/account/account"
+import AccountSettings from "@/components/settings/account/account-settings"
 
 export default function Settings() {
   return (
     <div className={"page-wrapper lg:w-3/5"}>
       <h1 className={"page-header lg:text-center"}>Settings</h1>
-      <NotificationSettings />
       <AccountSettings />
+      <NotificationSettings />
       <p className={"bottom-0 pt-6 text-center italic text-zinc-300"}>
         Icons by{" "}
         <a href={"https://icons8.com"} className={"underline"}>
