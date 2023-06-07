@@ -1,10 +1,5 @@
 const icons8Link = "https://icons8.com"
 
-const passwordTextfield = "change-password-textfield"
-const confirmPasswordTextfield = "confirm-password-textfield"
-const submitPasswordBtn = "submit-password-btn"
-const shortPassword = "test"
-const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
 describe("the settings page", () => {
   beforeEach(() => {
     cy.login()

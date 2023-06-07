@@ -48,7 +48,7 @@ const Index = () => {
   const submitNewPassword = async ({ currentPassword, newPassword }: FormInputs) => {
     setIsLoading(true)
     if (!user) {
-      await signOut()
+      signOut()
       setIsLoading(false)
     } else {
       verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
