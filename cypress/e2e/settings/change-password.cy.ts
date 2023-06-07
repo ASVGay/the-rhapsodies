@@ -31,7 +31,7 @@ describe("the change password page", () => {
   beforeEach(() => {
     cy.login()
     cy.visit("/settings/change-password")
-    cy.intercept("GET", "/_next/static/development/_devPagesManifest.json").as("manifest")
+    cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
     cy.wait("@manifest")
   })
 
