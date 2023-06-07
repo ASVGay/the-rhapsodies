@@ -132,10 +132,6 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     saveSuggestion(success, error).catch(() => {})
   }
 
-  const onAreaSelect = (area: Area) => {
-    dispatch(setActiveArea(area))
-  }
-
   const onInstrumentSubmit = (newInstruments: NewSuggestionInstrument[]) => {
     //Add deleted entries to redux to remove on submit.
     const oldIds = newInstruments.map((item) => item.id)
@@ -170,7 +166,9 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       newSuggestion={suggestion}
       startingArea={activeArea}
       onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={onAreaSelect}
+      onAreaSelect={(area) => {
+        dispatch(setActiveArea(area))
+      }}
       onInstrumentSubmit={(newInstruments) => {
         onInstrumentSubmit(newInstruments)
       }}
