@@ -5,6 +5,7 @@ export const testErrorHandlingChangePassword = (
   shortPassword
 ) => {
   it("should all give error messages when nothing is filled in", () => {
+    cy.wait(500)
     cy.data(submitPasswordBtn).click()
     cy.data(`${confirmPasswordTextfield}-error`).contains("Confirm Password is required")
     cy.data(`${passwordTextfield}-error`).contains("Password is required")
