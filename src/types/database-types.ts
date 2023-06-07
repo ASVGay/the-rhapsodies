@@ -20,7 +20,7 @@ export type SongInstrument = Database["public"]["Tables"]["song_instrument"]["Ro
   division: Division[]
 }
 
-export type Suggestion = Database["public"]["Tables"]["suggestion"]["Row"] & {
+export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   song_instruments: SongInstrument[]
   author: string | DisplayName
 }

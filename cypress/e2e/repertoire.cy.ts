@@ -3,7 +3,7 @@ import {testSearchSongs} from "./helpers/search-songs.helpers";
 describe("repertoire page page", () => {
     const songArtist = "Nirvana"
     const songTitle = "Nobody"
-    const songNotFoundText = "It looks like the song you are looking for has not been added yet. Feel free to add the song!"
+    const songNotFoundText = "This song is currently not in the repertoire."
 
     beforeEach(() => {
         cy.intercept('GET', '/rest/v1/song*', { fixture: "mock-repertoire-songs.json"}).as('mockedRequest');

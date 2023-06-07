@@ -2,16 +2,17 @@ import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Suggestion } from "@/types/database-types"
+import {Song} from "@/types/database-types"
 import { MagnifyingGlassCircleIcon , MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import SearchBar from "@/components/suggestion/search-bar"
 import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.service"
+import SuggestionCard from "@/components/suggestion/suggestion-card";
+import RepertoireCard from "@/components/repertoire/repertoire-card";
 
 interface SongListWrapperProps {
-  renderSongCard: (suggestion: Suggestion) => JSX.Element
   songType: SongType
 }
 
@@ -26,10 +27,10 @@ const SongListWrapper = (props: SongListWrapperProps) => {
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const [songs, setSongs] = useState<Suggestion[]>([])
+  const [songs, setSongs] = useState<Song[]>([])
   const [showSpinner, setShowSpinner] = useState(true)
   const [showLoadingError, setShowLoadingError] = useState(false)
-  const [searchedSong, setSearchedSong] = useState<Suggestion[]>([])
+  const [searchedSong, setSearchedSong] = useState<Song[]>([])
   const [errorText, setErrorText] = useState("")
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
         }
 
         if (response.data?.length > 0) {
-          setSongs(response.data as Suggestion[])
+          setSongs(response.data as Song[])
         } else {
           props.songType === SongType.Suggestion
             ? setErrorText(
@@ -70,7 +71,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
       return (
         title.toLowerCase().includes(input) ||
         motivation.toLowerCase().includes(input) ||
-        artist.some((artist) => artist.toLowerCase().includes(input))
+        artist.some((artist: string) => artist.toLowerCase().includes(input))
       )
     })
 
@@ -97,7 +98,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
     const searchedSongs = showSearchBar ? searchedSong : songs
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {searchedSongs.map((song: Suggestion) => props.renderSongCard(song))}
+        {searchedSongs.map((song: Song) => props.songType == SongType.Suggestion ? <SuggestionCard key={song.id} song={song}/> : <RepertoireCard key={song.id} song={song}/>)}
       </div>
     )
   }

@@ -4,7 +4,7 @@ import RepertoireCard from "@/components/repertoire/repertoire-card";
 
 
 const Index = () => {
-    return <SongListWrapper renderSongCard={RepertoireCard} songType={SongType.Repertoire}/>
+    return <SongListWrapper songType={SongType.Repertoire}/>
 };
 
 export default Index;

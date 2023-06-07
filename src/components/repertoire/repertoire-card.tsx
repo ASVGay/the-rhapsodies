@@ -1,9 +1,12 @@
 import React from "react"
-import { Suggestion } from "@/types/database-types"
+import { Song } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 
-const RepertoireCard = (song: Suggestion) => {
+interface RepertoireCardProps {
+  song: Song
+}
+const RepertoireCard = ({ song }: RepertoireCardProps) => {
   const checkEmptyDivision = () => {
     for (const item of song.song_instruments) {
       if (item.division.length === 0) return true
@@ -29,6 +32,7 @@ const RepertoireCard = (song: Suggestion) => {
           <div className="flex items-center">
             {checkEmptyDivision() && (
               <ExclamationCircleIcon
+                data-cy={"exclamation-circle"}
                 color={"red"}
                 width={24}
                 height={24}
