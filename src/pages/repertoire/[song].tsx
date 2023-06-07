@@ -103,73 +103,79 @@ const SongPage = (props: SongProps) => {
         <Spinner size={10} />
       </div>
     ) : (
-      <div className={"m-4 flex flex-col pt-2"}>
+      <>
+        {song && <div className={"m-4 flex flex-col pt-2"} data-cy="song">
 
-        <div className={"flex"}>
-          <p className={"w-full text-2xl leading-8"}>Repertoire</p>
-          <Link href={"/repertoire"}><XMarkIcon className={"h-8 w-8 text-zinc-400"} /></Link>
-        </div>
-
-        <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
-          <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
-            Song information
-          </p>
           <div className={"flex"}>
-            <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
-            <div className={"ml-3"}>
-              <p className={"line-clamp-1 font-bold"}>{song.title}</p>
-              <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>
+            <p className={"w-full text-2xl leading-8"}>Repertoire</p>
+            <Link href={"/repertoire"} data-cy="song-x-icon">
+              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
+            </Link>
+          </div>
+
+          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
+            <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
+              Song information
+            </p>
+            <div className={"flex"}>
+              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <div className={"ml-3"}>
+                <p className={"line-clamp-1 font-bold"}>{song.title}</p>
+                <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>
+              </div>
+            </div>
+            <div className={"my-3"}><SuggestionLink link={song.link} /></div>
+          </div>
+
+          <div className={"flex-col items-center md:flex mt-2"}>
+            <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
+            <div className={"grid gap-6"}>
+              {song.song_instruments.map((instrument) => {
+                return (
+                  <Instrument
+                    key={instrument.id}
+                    imageURL={instrument.instrument.image_source}
+                    name={instrument.instrument.instrument_name}
+                    division={instrument.division}
+                    description={instrument.description}
+                    uid={uid}
+                    onclick={() => {
+                      if (showSpinner) return
+                      selectInstrument(instrument)
+                    }}
+                  />
+                )
+              })}
             </div>
           </div>
-          <div className={"my-3"}><SuggestionLink link={song.link} /></div>
+
+          {displayButton() && (
+            <div className={"m-8 flex justify-center"}>
+              <button className={"btn toSuggestions"} onClick={() => moveToSuggestions()}>
+                Move to suggestions
+              </button>
+            </div>
+          )}
+
+          {showConversionError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to convert this song back into a suggestion."}
+                closePopup={() => setShowConversionError(false)}
+              />
+            </div>
+          )}
+
+          {showUpdateError &&
+            <div className={"mt-6"}>
+              <ErrorPopup text={showUpdateError} closePopup={() => setShowUpdateError("")} />
+            </div>
+          }
+
         </div>
-
-        <div className={"flex-col items-center md:flex mt-2"}>
-          <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
-          <div className={"grid gap-6"}>
-            {song.song_instruments.map((instrument) => {
-              return (
-                <Instrument
-                  key={instrument.id}
-                  imageURL={instrument.instrument.image_source}
-                  name={instrument.instrument.instrument_name}
-                  division={instrument.division}
-                  description={instrument.description}
-                  uid={uid}
-                  onclick={() => {
-                    if (showSpinner) return
-                    selectInstrument(instrument)
-                  }}
-                />
-              )
-            })}
-          </div>
-        </div>
-
-        {displayButton() && (
-          <div className={"m-8 flex justify-center"}>
-            <button className={"btn toSuggestions"} onClick={() => moveToSuggestions()}>
-              Move to suggestions
-            </button>
-          </div>
-        )}
-
-        {showConversionError && (
-          <div className={"mt-6"}>
-            <ErrorPopup
-              text={"Failed to convert this song back into a suggestion."}
-              closePopup={() => setShowConversionError(false)}
-            />
-          </div>
-        )}
-
-        {showUpdateError &&
-          <div className={"mt-6"}>
-            <ErrorPopup text={showUpdateError} closePopup={() => setShowUpdateError("")} />
-          </div>
         }
 
-      </div>
+      </>
     )
     }
   </>
