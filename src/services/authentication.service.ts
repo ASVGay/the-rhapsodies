@@ -25,3 +25,7 @@ export const resetPasswordForEmail = async (supabase: SupabaseClient, email: str
     return true
   }
 }
+
+export const verifyPassword = (supabaseClient: SupabaseClient<Database>, password: string) => {
+  return supabaseClient.rpc("verify_user_password", { password })
+}
