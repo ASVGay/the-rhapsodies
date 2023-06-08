@@ -58,18 +58,14 @@ jobs:
         run: supabase stop
       - name: Start Supabase
         run: supabase start -x studio,imgproxy,inbucket
-      - name: Save build folder
+      - name: Save build files
         uses: actions/upload-artifact@v3
         with:
           name: build
           if-no-files-found: error
-          path: .next
-      - name: Save public folder
-        uses: actions/upload-artifact@v3
-        with:
-          name: public
-          if-no-files-found: error
-          path: public
+          path: |
+            .next
+            public
 
   cypress-run:
     runs-on: ubuntu-22.04
@@ -86,16 +82,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Download the build folder
+      - name: Download the build files
         uses: actions/download-artifact@v3
         with:
           name: build
-          path: .next
-      - name: Download the public folder
-        uses: actions/download-artifact@v3
-        with:
-          name: public
-          path: public
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
