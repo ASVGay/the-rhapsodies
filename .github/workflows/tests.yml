@@ -38,6 +38,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: supabase/setup-cli@v1
+        with:
+          version: latest
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
@@ -83,7 +85,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - run: supabase status
       - name: Download the build files
         uses: actions/download-artifact@v3
         with:
