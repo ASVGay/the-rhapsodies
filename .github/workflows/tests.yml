@@ -63,6 +63,12 @@ jobs:
           name: build
           if-no-files-found: error
           path: .next
+      - name: Save public folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: public
+          if-no-files-found: error
+          path: public
 
   cypress-run:
     runs-on: ubuntu-22.04
@@ -83,6 +89,11 @@ jobs:
         with:
           name: build
           path: .next
+      - name: Download the public folder
+        uses: actions/download-artifact@v3
+        with:
+          name: public
+          path: public
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
