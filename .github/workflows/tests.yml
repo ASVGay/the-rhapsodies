@@ -11,6 +11,8 @@ on:
 
 env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.HOSTED_SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.HOSTED_SUPABASE_DB_PASSWORD }}
   NEXT_PUBLIC_SUPABASE_URL: ${{secrets.HOSTED_SUPABASE_URL}}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.HOSTED_SUPABASE_ANON_KEY}}
   NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
@@ -55,7 +57,7 @@ jobs:
           build: npm run build
       - uses: supabase/setup-cli@v1
       - name: Link to hosted Supabase
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
         run: supabase db reset --linked
       - name: Save build files
