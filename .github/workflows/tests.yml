@@ -1,0 +1,81 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Build & test project
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+env:
+  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+  NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+  NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
+  CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
+  CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
+  CYPRESS_NEW_ID: ${{secrets.CYPRESS_NEW_ID}}
+  CYPRESS_NEW_EMAIL: ${{secrets.CYPRESS_NEW_EMAIL}}
+  CYPRESS_NEW_PASSWORD: ${{secrets.CYPRESS_NEW_PASSWORD}}
+  CYPRESS_SUGGESTION_ID: ${{secrets.CYPRESS_SUGGESTION_ID}}
+  CYPRESS_USERNAME_OLD: ${{secrets.CYPRESS_USERNAME_OLD}}
+  CYPRESS_PROJECT_ID: ${{secrets.CYPRESS_PROJECT_ID}}
+  CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_RECORD_KEY}}
+  CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}}
+  CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
+  CYPRESS_RETRY_MODE_RUN: ${{vars.CYPRESS_RETRY_MODE_RUN}}
+
+jobs:
+  install:
+    runs-on: ubuntu-22.04
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v5
+        with:
+          # Disable running of tests within install job
+          runTests: false
+          build: npm run build
+      - uses: supabase/setup-cli@v1
+      - name: Stop supabase (in case it is running)
+        run: supabase stop
+      - name: Start Supabase
+        run: supabase start -x studio,imgproxy,inbucket
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          if-no-files-found: error
+          path: dist
+
+  cypress-run:
+    runs-on: ubuntu-22.04
+    environment: dev
+    needs: install
+    strategy:
+      # don't fail the entire matrix on failure
+      fail-fast: false
+      matrix:
+        # run copies of the current job in parallel
+        containers: [ 1, 2, 3, 4, 5 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download the build folder
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          build: npm run build
+          record: true
+          parallel: true
+          start: npm start
