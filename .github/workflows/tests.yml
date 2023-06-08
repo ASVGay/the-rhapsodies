@@ -8,6 +8,12 @@ on:
     branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
+  workflow_dispatch:
+    inputs:
+      dbResetOptions:
+        description: "Options to add to supabase db reset"
+        required: false
+        type: string
 
 env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
@@ -43,7 +49,7 @@ jobs:
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
-        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }}
+        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
       - name: Setup cache
         uses: actions/cache@v3
         with:
