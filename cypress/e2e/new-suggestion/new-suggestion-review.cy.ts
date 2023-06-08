@@ -1,6 +1,7 @@
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 import { newSuggestionFilledInInstruments } from "./helpers/new-suggestion.helper"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+
 const progressBarReview = "new-suggestion-progress-bar-review"
 
 const setUp = () => {
@@ -13,7 +14,8 @@ const setUp = () => {
     },
   })
 
-  cy.wait(500) // Wait so content can render properly and set up submit events
+  cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
+  cy.wait("@manifest")
   cy.data(progressBarReview).click()
 }
 
