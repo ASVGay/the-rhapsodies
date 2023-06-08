@@ -90,6 +90,7 @@ describe("when creating a new suggestion, adding song information", () => {
 
   context("with filled in song information", () => {
     beforeEach(() => {
+      cy.login()
       cy.visit(path, {
         onBeforeLoad(win: Cypress.AUTWindow) {
           cy.window()
