@@ -37,6 +37,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: supabase/setup-cli@v1
+      - name: Link to hosted Supabase
+        run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
+      - name: Push local migrations to hosted Supabase
+        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }}
       - name: Setup cache
         uses: actions/cache@v3
         with:
@@ -55,11 +60,6 @@ jobs:
           # Disable running of tests within install job
           runTests: false
           build: npm run build
-      - uses: supabase/setup-cli@v1
-      - name: Link to hosted Supabase
-        run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
-      - name: Push local migrations to hosted Supabase
-        run: supabase db reset --linked
       - name: Save build files
         uses: actions/upload-artifact@v3
         with:
