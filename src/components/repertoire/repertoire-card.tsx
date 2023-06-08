@@ -2,10 +2,12 @@ import React from "react"
 import { Song } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import Link from "next/link"
 
 interface RepertoireCardProps {
   song: Song
 }
+
 const RepertoireCard = ({ song }: RepertoireCardProps) => {
   const checkEmptyDivision = () => {
     for (const item of song.song_instruments) {
@@ -14,9 +16,11 @@ const RepertoireCard = ({ song }: RepertoireCardProps) => {
     return false
   }
   return (
-    <div
+    <Link
+      href={{ pathname: "/repertoire/[song]", query: { song: song.id } }}
       className={"w-[22rem] cursor-pointer rounded-md bg-neutral-50 drop-shadow-lg"}
       key={song.id}
+
     >
       <div className={"m-2 flex"}>
         <div className={"mb-auto mt-auto flex w-full justify-between"}>
@@ -42,7 +46,7 @@ const RepertoireCard = ({ song }: RepertoireCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
