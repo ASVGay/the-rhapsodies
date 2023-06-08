@@ -136,14 +136,6 @@ export interface Database {
           }
         ]
       }
-      song: {
-        Row: {
-          artist: string[]
-          id: string
-          link: string | null
-          title: string
-        }
-      }
       song_instrument: {
         Row: {
           description: string | null
