@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
@@ -6,12 +6,11 @@ import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision, moveSongToRepertoire } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import {DivisionDatabaseOperation, Song, SongInstrument} from "@/types/database-types"
+import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
-import { UserAppMetadata } from "@supabase/gotrue-js"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
@@ -25,21 +24,11 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [roles, setRoles] = useState<UserAppMetadata>()
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const uid = user?.id
   const router = useRouter()
-
-  useEffect(() => {
-    if (supabase) {
-      supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          setRoles(session?.user?.app_metadata)
-        }
-      })
-    }
-  }, [supabase])
+  const isAdmin = user?.app_metadata.claims_admin
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -82,7 +71,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
   const displayButton = (): boolean => {
     return (
-      roles?.["claims_admin"] &&
+      isAdmin &&
       suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
     )
   }
@@ -162,7 +151,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
           {displayButton() && (
             <div className={"m-8 flex justify-center"}>
-              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
+              <button className={"btn px-12 bg-green-500 hover:bg-green-300"} onClick={() => addToRepertoire()}>
                 Move to repertoire
               </button>
             </div>

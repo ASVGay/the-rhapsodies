@@ -1,27 +1,25 @@
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, RepertoireSong, SongInstrument } from "@/types/database-types"
-import React, { useEffect, useState } from "react"
+import {  DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
+import React, { useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import Instrument from "@/components/suggestion/instrument"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
-import { UserAppMetadata } from "@supabase/gotrue-js"
 import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import ErrorPopup from "@/components/popups/error-popup"
 import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 
 interface SongProps {
-  song: RepertoireSong
+  song: Song
 }
 
 const SongPage = (props: SongProps) => {
-  const [song, setSong] = useState<RepertoireSong>(props.song)
-  const [roles, setRoles] = useState<UserAppMetadata>()
+  const [song, setSong] = useState<Song>(props.song)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showConversionError, setShowConversionError] = useState<boolean>(false)
   const [showUpdateError, setShowUpdateError] = useState<string>("")
@@ -29,23 +27,14 @@ const SongPage = (props: SongProps) => {
   const router = useRouter()
   const user = useUser()
   const uid = user?.id
-
-  useEffect(() => {
-    if (supabase) {
-      supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          setRoles(session?.user?.app_metadata)
-        }
-      })
-    }
-  }, [supabase])
+  const isAdmin = user?.app_metadata.claims_admin
 
   const updateSong = () => {
     setShowSpinner(true)
     getSong(supabase, song.id)
       .then((response) => {
         response.data
-          ? setSong(response.data as RepertoireSong)
+          ? setSong(response.data as Song)
           : setShowUpdateError("Failed to update the song.")
       })
       .catch(() => setShowUpdateError("Failed to update the song."))
@@ -54,18 +43,18 @@ const SongPage = (props: SongProps) => {
 
   const updateOrDeleteDivision = async (
     exists: boolean,
-    division: DivisionDatabaseOperation,
+    divisionOperation: DivisionDatabaseOperation,
     divisionLength: number
   ) => {
-    if (exists && divisionLength == 0) {
+    if (exists && divisionLength == 1) {
       setShowUpdateError("You're not allowed to remove yourself from this instrument.")
     } else if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
+      deleteDivision(supabase, divisionOperation).then(({ error }) => {
         if (error) setShowUpdateError("Failed to remove user from the instrument.")
         updateSong()
       })
     } else {
-      insertDivision(supabase, division).then(({ error }) => {
+      insertDivision(supabase, divisionOperation).then(({ error }) => {
         if (error) setShowUpdateError("Failed to add user to the instrument.")
         updateSong()
       })
@@ -88,7 +77,7 @@ const SongPage = (props: SongProps) => {
       .finally(() => setShowSpinner(false))
   }
 
-  const displayButton = (): boolean => roles?.["claims_admin"]
+  const displayButton = (): boolean => isAdmin
 
   const moveToSuggestions = () => {
     setShowSpinner(true)

@@ -32,18 +32,19 @@ describe("song detail page", () => {
     it("should redirect to repertoire on pressing the exit button", () => {
       cy.data("song-x-icon").click()
         .then(() => {
-          cy.location("pathname").should("equal", "/repertoire")
+          cy.location("pathname")
+            .should("equal", "/repertoire")
         })
     })
 
   })
 
-  context("song doesn't exist", () => {
+  context("song doesn't exist in repertoire", () => {
     before(() => {
       cy.login()
     })
 
-    it("should display 404 page", () => {
+    it("should redirect to 404 page", () => {
       cy.request({ url: "/repertoire/non-existing-id", failOnStatusCode: false })
         .its("status")
         .should("equal", 404)
