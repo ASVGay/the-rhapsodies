@@ -57,7 +57,7 @@ jobs:
       - name: Stop supabase (in case it is running)
         run: supabase stop
       - name: Start Supabase
-        run: supabase start -x realtime,storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,vector
+        run: supabase start -x realtime,storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,studio,edge-runtime,logflare,vector
       - name: Save build folder
         uses: actions/upload-artifact@v3
         with:
