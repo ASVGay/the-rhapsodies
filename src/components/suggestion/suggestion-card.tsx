@@ -1,18 +1,17 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
-import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
-import {Song} from "@/types/database-types"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import React from "react"
+import { SongCardProps } from "@/interfaces/song-card-props"
 
-
-interface SuggestionCardProps {
-  song: Song
-}
-const SuggestionCard = ({song}: SuggestionCardProps) => {
+const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   return (
-    <Link
-      href={{ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } }}
+    <div
+      onClick={async () => {
+        await router.push({ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } })
+        setShowSpinner(true)
+      }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
       data-cy="suggestion-card"
     >
@@ -29,9 +28,7 @@ const SuggestionCard = ({song}: SuggestionCardProps) => {
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        {song.song_instruments && (
-          <ProgressionBar suggestionInstruments={song.song_instruments} />
-        )}
+        {song.song_instruments && <ProgressionBar suggestionInstruments={song.song_instruments} />}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
             {song.song_instruments?.map((suggestion_instrument) => {
@@ -50,7 +47,7 @@ const SuggestionCard = ({song}: SuggestionCardProps) => {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
 

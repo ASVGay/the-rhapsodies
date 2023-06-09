@@ -1,12 +1,9 @@
 import React from "react"
-import { Song } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { SongCardProps } from "@/interfaces/song-card-props"
 
-interface RepertoireCardProps {
-  song: Song
-}
-const RepertoireCard = ({ song }: RepertoireCardProps) => {
+const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
   const checkEmptyDivision = () => {
     for (const item of song.song_instruments) {
       if (item.division.length === 0) return true
@@ -15,6 +12,10 @@ const RepertoireCard = ({ song }: RepertoireCardProps) => {
   }
   return (
     <div
+      onClick={async () => {
+        await router.push({ pathname: "/repertoire/[song]", query: { song: song.id } })
+        setShowSpinner(true)
+      }}
       className={"w-[22rem] cursor-pointer rounded-md bg-neutral-50 drop-shadow-lg"}
       key={song.id}
     >
