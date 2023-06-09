@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import {  DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
+import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
 import React, { useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
@@ -13,6 +13,7 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { PostgrestError } from "@supabase/supabase-js"
 
 interface SongProps {
   song: Song
@@ -41,6 +42,11 @@ const SongPage = (props: SongProps) => {
       .finally(() => setShowSpinner(false))
   }
 
+  const handleDivisionOperation = (error: PostgrestError | null, message: string) => {
+    if (error) setShowUpdateError(message)
+    else updateSong()
+  }
+
   const updateOrDeleteDivision = async (
     exists: boolean,
     divisionOperation: DivisionDatabaseOperation,
@@ -50,13 +56,11 @@ const SongPage = (props: SongProps) => {
       setShowUpdateError("You're not allowed to remove yourself from this instrument.")
     } else if (exists) {
       deleteDivision(supabase, divisionOperation).then(({ error }) => {
-        if (error) setShowUpdateError("Failed to remove user from the instrument.")
-        updateSong()
+        handleDivisionOperation(error, "Failed to remove user from the instrument.")
       })
     } else {
       insertDivision(supabase, divisionOperation).then(({ error }) => {
-        if (error) setShowUpdateError("Failed to add user to the instrument.")
-        updateSong()
+        handleDivisionOperation(error, "Failed to add user to the instrument.")
       })
     }
   }
@@ -92,81 +96,79 @@ const SongPage = (props: SongProps) => {
       <div className={"h-[75vh] text-center"}>
         <Spinner size={10} />
       </div>
-    ) : (
-      <>
-        {song && <div className={"m-4 flex flex-col pt-2"} data-cy="song">
+    ) : <>
+      {song && <div className={"m-4 flex flex-col pt-2"} data-cy="song">
 
-          <div className={"flex"}>
-            <p className={"w-full text-2xl leading-8"}>Repertoire</p>
-            <Link href={"/repertoire"} data-cy="song-x-icon">
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
-            </Link>
-          </div>
-
-          <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
-            <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
-              Song information
-            </p>
-            <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
-              <div className={"ml-3"}>
-                <p className={"line-clamp-1 font-bold"}>{song.title}</p>
-                <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>
-              </div>
-            </div>
-            <div className={"my-3"}><SuggestionLink link={song.link} /></div>
-          </div>
-
-          <div className={"flex-col items-center md:flex mt-2"}>
-            <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
-            <div className={"grid gap-6"}>
-              {song.song_instruments.map((instrument) => {
-                return (
-                  <Instrument
-                    key={instrument.id}
-                    imageURL={instrument.instrument.image_source}
-                    name={instrument.instrument.instrument_name}
-                    division={instrument.division}
-                    description={instrument.description}
-                    uid={uid}
-                    onclick={() => {
-                      if (showSpinner) return
-                      selectInstrument(instrument)
-                    }}
-                  />
-                )
-              })}
-            </div>
-          </div>
-
-          {displayButton() && (
-            <div className={"m-8 flex justify-center"}>
-              <button className={"btn toSuggestions"} onClick={() => moveToSuggestions()}>
-                Move to suggestions
-              </button>
-            </div>
-          )}
-
-          {showConversionError && (
-            <div className={"mt-6"}>
-              <ErrorPopup
-                text={"Failed to convert this song back into a suggestion."}
-                closePopup={() => setShowConversionError(false)}
-              />
-            </div>
-          )}
-
-          {showUpdateError &&
-            <div className={"mt-6"}>
-              <ErrorPopup text={showUpdateError} closePopup={() => setShowUpdateError("")} />
-            </div>
-          }
-
+        <div className={"flex"}>
+          <p className={"w-full text-2xl leading-8"}>Repertoire</p>
+          <Link href={"/repertoire"} data-cy="song-x-icon">
+            <XMarkIcon className={"h-8 w-8 text-zinc-400"} />
+          </Link>
         </div>
+
+        <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
+          <p className={"m-4 text-center text-xl font-medium leading-7 text-moon-500"}>
+            Song information
+          </p>
+          <div className={"flex"}>
+            <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+            <div className={"ml-3"}>
+              <p className={"line-clamp-1 font-bold"}>{song.title}</p>
+              <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>
+            </div>
+          </div>
+          <div className={"my-3"}><SuggestionLink link={song.link} /></div>
+        </div>
+
+        <div className={"flex-col items-center md:flex mt-2"}>
+          <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
+          <div className={"grid gap-6"}>
+            {song.song_instruments.map((instrument) => {
+              return (
+                <Instrument
+                  key={instrument.id}
+                  imageURL={instrument.instrument.image_source}
+                  name={instrument.instrument.instrument_name}
+                  division={instrument.division}
+                  description={instrument.description}
+                  uid={uid}
+                  onclick={() => {
+                    if (showSpinner) return
+                    selectInstrument(instrument)
+                  }}
+                />
+              )
+            })}
+          </div>
+        </div>
+
+        {displayButton() && (
+          <div className={"m-8 flex justify-center"}>
+            <button className={"btn toSuggestions"} onClick={() => moveToSuggestions()}>
+              Move to suggestions
+            </button>
+          </div>
+        )}
+
+        {showConversionError && (
+          <div className={"mt-6"}>
+            <ErrorPopup
+              text={"Failed to convert this song back into a suggestion."}
+              closePopup={() => setShowConversionError(false)}
+            />
+          </div>
+        )}
+
+        {showUpdateError &&
+          <div className={"mt-6"}>
+            <ErrorPopup text={showUpdateError} closePopup={() => setShowUpdateError("")} />
+          </div>
         }
 
-      </>
-    )
+      </div>
+      }
+
+    </>
     }
   </>
 }
