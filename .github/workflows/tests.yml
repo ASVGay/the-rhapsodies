@@ -1,0 +1,112 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Build & test project
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+  workflow_dispatch:
+    inputs:
+      dbResetOptions:
+        description: "Options to add to supabase db reset"
+        required: false
+        type: string
+
+env:
+  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.HOSTED_SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.HOSTED_SUPABASE_DB_PASSWORD }}
+  NEXT_PUBLIC_SUPABASE_URL: ${{secrets.HOSTED_SUPABASE_URL}}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.HOSTED_SUPABASE_ANON_KEY}}
+  NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
+  CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
+  CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
+  CYPRESS_NEW_ID: ${{secrets.CYPRESS_NEW_ID}}
+  CYPRESS_NEW_EMAIL: ${{secrets.CYPRESS_NEW_EMAIL}}
+  CYPRESS_NEW_PASSWORD: ${{secrets.CYPRESS_NEW_PASSWORD}}
+  CYPRESS_SUGGESTION_ID: ${{secrets.CYPRESS_SUGGESTION_ID}}
+  CYPRESS_USERNAME_OLD: ${{secrets.CYPRESS_USERNAME_OLD}}
+  CYPRESS_PROJECT_ID: ${{secrets.CYPRESS_PROJECT_ID}}
+  CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_RECORD_KEY}}
+  CYPRESS_BASE_URL: ${{vars.CYPRESS_BASE_URL}}
+  CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
+  CYPRESS_RETRY_MODE_RUN: ${{vars.CYPRESS_RETRY_MODE_RUN}}
+  HUSKY: 0
+
+jobs:
+  install:
+    runs-on: ubuntu-22.04
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Link to hosted Supabase
+        run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
+      - name: Push local migrations to hosted Supabase
+        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
+      - name: Setup cache
+        uses: actions/cache@v3
+        with:
+          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Cypress install
+        uses: cypress-io/github-action@v5
+        with:
+          # Disable running of tests within install job
+          runTests: false
+          build: npm run build
+      - name: Save build files
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          if-no-files-found: error
+          path: |
+            .next
+            public
+
+  cypress-run:
+    runs-on: ubuntu-22.04
+    container: cypress/browsers:node18.12.0-chrome103-ff107
+    environment: dev
+    needs: install
+    strategy:
+      # don't fail the entire matrix on failure
+      fail-fast: false
+      matrix:
+        # run copies of the current job in parallel
+        containers: [ 1, 2, 3, 4, 5 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download the build files
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          working-directory: ./
+          record: true
+          parallel: true
+          start: npm run start
+          wait-on: ${{ vars.CYPRESS_BASE_URL }}
+          browser: chrome
+        env:
+          # - if the event is push, the title will be undefined
+          # and Cypress will get the commit message from Git information
+          # - if the event is pull_request, then we set the commit
+          # message to the pull request title
+          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
