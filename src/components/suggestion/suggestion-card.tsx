@@ -9,11 +9,12 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   return (
     <div
       onClick={async () => {
-        await router.push({ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } })
         setShowSpinner(true)
+        await router.push({ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } })
       }}
       className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
       data-cy="suggestion-card"
+      data-id={song.id}
     >
       <div className={"flex items-start p-3"} key={song.id}>
         <div className={"mb-auto mt-auto flex"}>

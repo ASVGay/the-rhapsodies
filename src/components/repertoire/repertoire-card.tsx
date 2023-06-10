@@ -13,8 +13,8 @@ const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
   return (
     <div
       onClick={async () => {
-        await router.push({ pathname: "/repertoire/[song]", query: { song: song.id } })
         setShowSpinner(true)
+        await router.push({ pathname: "/repertoire/[song]", query: { song: song.id } })
       }}
       className={"w-[22rem] cursor-pointer rounded-md bg-neutral-50 drop-shadow-lg"}
       key={song.id}

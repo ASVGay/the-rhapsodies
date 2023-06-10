@@ -148,7 +148,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
       />
 
       {showSpinner && (
-        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+        <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
           <Spinner size={10} />
         </div>
       )}
