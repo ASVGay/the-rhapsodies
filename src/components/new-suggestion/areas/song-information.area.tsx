@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
@@ -9,7 +9,7 @@ import ErrorMessage from "@/components/error/error-message"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import {
   isSongInformationInvalid,
-  submitSongInformationForm,
+  submitSongInformationForm
 } from "@/helpers/new-suggestion.helper"
 
 const SongInformationArea = () => {
@@ -19,8 +19,13 @@ const SongInformationArea = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
+    watch
   } = useFormContext<InputsSongInformation>()
+  const [manualInput, setManualInput] = useState<boolean>(false)
+
+  useEffect(() => {
+    setManualInput(newSuggestion.title.length !== 0)
+  }, [])
 
   const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
     dispatch(
@@ -29,7 +34,7 @@ const SongInformationArea = () => {
         title,
         artist: [artist],
         link,
-        motivation,
+        motivation
       })
     )
   }
@@ -59,6 +64,7 @@ const SongInformationArea = () => {
               message={"A title is required for a suggestion"}
             />
           )}
+
           <div className="input">
             <input
               data-cy={"input-title"}
@@ -68,7 +74,7 @@ const SongInformationArea = () => {
               {...register("title", {
                 validate: (value) => {
                   return !!value.trim()
-                },
+                }
               })}
             />
             <span>
@@ -77,52 +83,56 @@ const SongInformationArea = () => {
           </div>
         </div>
 
-        <div className={"input-container"}>
-          {errors.artist && (
-            <ErrorMessage
-              dataCy={"input-artist-error"}
-              message={"One or more artists are required for a suggestion"}
-            />
-          )}
-          <label htmlFor="artist" className="sr-only">
-            Artist(s)
-          </label>
+        {/*TODO: toggle if artists fails*/}
+        {manualInput && <>
+          <div className={`input-container`}>
+            {errors.artist && (
+              <ErrorMessage
+                dataCy={"input-artist-error"}
+                message={"One or more artists are required for a suggestion"}
+              />
+            )}
+            <label htmlFor="artist" className="sr-only">
+              Artist(s)
+            </label>
 
-          <div className="input">
-            <input
-              data-cy={"input-artist"}
-              type="text"
-              placeholder="Artist"
-              className={`${errors.artist && "error"}`}
-              {...register("artist", {
-                validate: (value: string) => {
-                  return !!value.trim()
-                },
-              })}
-            />
-            <span>
+            <div className="input">
+              <input
+                data-cy={"input-artist"}
+                type="text"
+                placeholder="Artist"
+                className={`${errors.artist && "error"}`}
+                {...register("artist", {
+                  validate: (value: string) => {
+                    return !!value.trim()
+                  }
+                })}
+              />
+              <span>
               <UserIcon />
             </span>
+            </div>
           </div>
-        </div>
 
-        <div className={"input-container"}>
-          <label htmlFor="link" className="sr-only">
-            Link to the song (optional)
-          </label>
+          <div className={"input-container"}>
+            <label htmlFor="link" className="sr-only">
+              Link to the song (optional)
+            </label>
 
-          <div className="input">
-            <input
-              data-cy={"input-link"}
-              type="url"
-              placeholder="Link to the song (optional)"
-              {...register("link")}
-            />
-            <span>
+            <div className="input">
+              <input
+                data-cy={"input-link"}
+                type="url"
+                placeholder="Link to the song (optional)"
+                {...register("link")}
+              />
+              <span>
               <LinkIcon />
             </span>
+            </div>
           </div>
-        </div>
+        </>}
+
 
         <div className={"input-container"}>
           {errors.motivation && (
@@ -146,10 +156,23 @@ const SongInformationArea = () => {
               {...register("motivation", {
                 validate: (value) => {
                   return !!value.trim()
-                },
+                }
               })}
             />
           </div>
+        </div>
+
+        {/*TODO prevent errors on toggle manual input*/}
+        <div>
+          <button
+            className={"text-moon-400 mb-6"}
+            onClick={() => setManualInput(!manualInput)}
+          >
+            {manualInput
+              ? "Or autofill song information"
+              : "Or enter song information manually"
+            }
+          </button>
         </div>
 
         <button

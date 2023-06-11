@@ -5,8 +5,8 @@ import { useRouter } from "next/router"
 import SongInformationArea from "@/components/new-suggestion/areas/song-information.area"
 import ReviewArea from "@/components/new-suggestion/areas/review.area"
 import { Area } from "@/constants/area"
-import { useSelector } from "react-redux"
-import { AppState } from "@/redux/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, AppState } from "@/redux/store"
 import { FormProvider, useForm } from "react-hook-form"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import InstrumentsArea from "@/components/new-suggestion/areas/instruments/instruments.area"
@@ -16,6 +16,11 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { getInstruments } from "@/services/instrument.service"
 import Spinner from "@/components/utils/spinner"
 import ErrorPopup from "@/components/popups/error-popup"
+import {
+  initialState,
+  setActiveArea,
+  updateNewSuggestion
+} from "@/redux/slices/new-suggestion.slice"
 
 const NewSuggestion = () => {
   const router = useRouter()
@@ -24,13 +29,14 @@ const NewSuggestion = () => {
 
   const methods = useForm<InputsSongInformation>({
     defaultValues: { ...suggestion, artist: suggestion.artist.join(",") } as InputsSongInformation,
-    shouldFocusError: false,
+    shouldFocusError: false
   })
 
   const supabaseClient = useSupabaseClient<Database>()
   const [instrumentList, setInstrumentList] = useState<Instrument[]>([])
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
+  const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
     setShowSpinner(true)
@@ -40,7 +46,6 @@ const NewSuggestion = () => {
           setShowLoadingError(true)
           return
         }
-
         setInstrumentList(response.data as Instrument[])
       })
       .catch(() => {
@@ -59,7 +64,13 @@ const NewSuggestion = () => {
           <XMarkIcon
             data-cy={"button-discard-new-suggestion"}
             className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={() => router.push("/suggestions")}
+            onClick={() => {
+              router.push("/suggestions")
+                .then(() => {
+                  dispatch(updateNewSuggestion(initialState.suggestion))
+                  dispatch(setActiveArea(Area.SongInformation))
+                })
+            }}
           />
         </div>
 
@@ -73,7 +84,8 @@ const NewSuggestion = () => {
             <ErrorPopup
               text={`“Something went wrong”
             You can try again. Contact support if this error persists.`}
-              closePopup={() => {}}
+              closePopup={() => {
+              }}
             />
           </div>
         )}
