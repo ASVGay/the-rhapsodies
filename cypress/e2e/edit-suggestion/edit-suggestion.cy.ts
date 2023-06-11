@@ -96,7 +96,6 @@ describe("when the user wants to edit a suggestion", () => {
         cy.data("submit-suggestion-btn")
           .click()
           .then(() => {
-            cy.wait(5000)
             cy.location("pathname").should("equal", `/suggestions/${userSuggestion}`)
           })
       })
