@@ -1,6 +1,7 @@
 import { NewSuggestion } from "@/interfaces/new-suggestion"
 import { newSuggestionFilledInInstruments } from "./helpers/new-suggestion.helper"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+
 const progressBarReview = "new-suggestion-progress-bar-review"
 
 const setUp = () => {
@@ -19,7 +20,7 @@ const setUp = () => {
 
 describe("review new suggestion page", () => {
   context("review new suggestion details", () => {
-    before(() => {
+    beforeEach(() => {
       setUp()
     })
 

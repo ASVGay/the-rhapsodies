@@ -5,7 +5,7 @@ import { Database } from "@/types/database"
 import { setName } from "@/services/authentication.service"
 import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
-import { FormDataItem } from "@/interfaces/formdata"
+import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
 
 const Index = () => {
