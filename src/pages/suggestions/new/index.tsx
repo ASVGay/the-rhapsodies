@@ -25,34 +25,34 @@ const NewSuggestion = () => {
   const user = useUser()
 
   const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
-    if (user) {
-      insertSuggestion(supabase, suggestion, user.id)
-        .then((response) => {
-          if (response.error) {
-            onError()
-            return
-          }
-
-          const suggestionId = response.data.at(0)!.id
-          insertSuggestionInstruments(supabase, mapInstruments(suggestion, suggestionId))
-            .then((response) => {
-              if (response.error) {
-                onError()
-                return
-              }
-
-              router.push("/suggestions").then(() => {
-                onSuccess()
-                dispatch(updateNewSuggestion(initialState.suggestion))
-                dispatch(setActiveArea(Area.SongInformation))
-              })
-            })
-            .catch(() => onError())
-        })
-        .catch(() => onError())
-    } else {
+    if (user === null) {
       onError()
+      return
     }
+    insertSuggestion(supabase, suggestion, user.id)
+      .then((response) => {
+        if (response.error) {
+          onError()
+          return
+        }
+
+        const suggestionId = response.data.at(0)!.id
+        insertSuggestionInstruments(supabase, mapInstruments(suggestion, suggestionId))
+          .then((response) => {
+            if (response.error) {
+              onError()
+              return
+            }
+
+            router.push("/suggestions").then(() => {
+              onSuccess()
+              dispatch(updateNewSuggestion(initialState.suggestion))
+              dispatch(setActiveArea(Area.SongInformation))
+            })
+          })
+          .catch(() => onError())
+      })
+      .catch(() => onError())
   }
 
   const onAreaSelect = (area: Area) => {
