@@ -1,8 +1,8 @@
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
-  shouldGoToInstrumentsArea,
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState,
+  shouldGoToInstrumentsArea,
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -34,7 +34,8 @@ describe("when creating a new suggestion, adding song information", { keystrokeD
   beforeEach(() => {
     cy.login()
     cy.visit(path)
-    cy.wait(500)
+    cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
+    cy.wait("@manifest")
   })
 
   context("with no song information", () => {
