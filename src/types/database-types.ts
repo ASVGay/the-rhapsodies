@@ -1,12 +1,14 @@
 import { Database } from "@/types/database"
 
 export type DisplayName = { display_name: string }
+export type Author = { display_name: string; id: string }
 
 export type Instrument = Database["public"]["Tables"]["instrument"]["Row"]
 
 export type DivisionDatabaseOperation = Database["public"]["Tables"]["division"]["Insert"]
 
-export type SongInstrumentDatabaseOperation = Database["public"]["Tables"]["song_instrument"]["Insert"]
+export type SongInstrumentDatabaseOperation =
+  Database["public"]["Tables"]["song_instrument"]["Insert"]
 
 export type Division = Database["public"]["Tables"]["division"]["Row"] & {
   musician: {
@@ -22,6 +24,5 @@ export type SongInstrument = Database["public"]["Tables"]["song_instrument"]["Ro
 
 export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   song_instruments: SongInstrument[]
-  author: string | DisplayName
+  author: string | DisplayName | Author
 }
-

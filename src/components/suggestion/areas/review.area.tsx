@@ -1,74 +1,27 @@
 import React, { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { AppState } from "@/redux/store"
 import Spinner from "@/components/utils/spinner"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import ErrorPopup from "@/components/popups/error-popup"
-import { SongInstrumentDatabaseOperation } from "@/types/database-types"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
-import { Database } from "@/types/database"
-import { useRouter } from "next/router"
-import {
-  initialState,
-  setActiveArea,
-  updateNewSuggestion,
-} from "@/redux/slices/new-suggestion.slice"
-import { Area } from "@/constants/area"
-import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import Instrument from "@/components/suggestion/instrument"
+import { ISuggestion } from "@/interfaces/suggestion"
+import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 
-const ReviewArea = () => {
-  const supabase = useSupabaseClient<Database>()
-  const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
+interface ReviewAreaProps {
+  newSuggestion: ISuggestion
+  onSubmit(onSuccess: () => void, onError: () => void): void
+}
+
+const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) => {
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [insertError, setInsertError] = useState<boolean>(false)
-  const dispatch = useDispatch()
-  const router = useRouter()
-  const user = useUser()
-  const uid = user?.id
-
-  const saveSuggestion = () => {
-    if (user) {
-      setShowSpinner(true)
-      insertSuggestion(supabase, suggestion, user.id)
-        .then((response) => {
-          if (response.error) {
-            handleError()
-            return
-          }
-
-          const suggestionId = response.data.at(0)!.id
-          insertSuggestionInstruments(supabase, mapInstruments(suggestionId))
-            .then((response) => {
-              if (response.error) {
-                handleError()
-                return
-              }
-
-              router.push("/suggestions").then(() => {
-                setShowSpinner(false)
-                dispatch(updateNewSuggestion(initialState.suggestion))
-                dispatch(setActiveArea(Area.SongInformation))
-              })
-            })
-            .catch(() => handleError())
-        })
-        .catch(() => handleError())
-    } else {
-      handleError()
-    }
-  }
 
   const handleError = () => {
     setInsertError(true)
     setShowSpinner(false)
   }
 
-  const mapInstruments = (suggestionId: string): SongInstrumentDatabaseOperation[] => {
-    return suggestion.instruments.map(({ instrument, description }) => {
-      return { song_id: suggestionId, instrument_id: instrument.id, description: description }
-    })
+  const handleSuccess = () => {
+    setShowSpinner(false)
   }
 
   const requiredDataIsPresent = () => {
@@ -125,7 +78,7 @@ const ReviewArea = () => {
                   imageURL={instrument.instrument.image_source}
                   name={instrument.instrument.instrument_name}
                   description={instrument.description}
-                  uid={uid}
+                  uid={undefined}
                 />
               )
             })}
@@ -133,7 +86,10 @@ const ReviewArea = () => {
 
           <div className={`flex justify-center`}>
             <button
-              onClick={() => saveSuggestion()}
+              onClick={() => {
+                setShowSpinner(true)
+                onSubmit(handleSuccess, handleError)
+              }}
               disabled={!requiredDataIsPresent()}
               className={`btn ${btnCss()}`}
               data-cy="submit-suggestion-btn"

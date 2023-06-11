@@ -9,6 +9,7 @@ export interface ISuggestion {
 }
 
 export interface ISuggestionInstrument {
+  id?: string
   description: string
   instrument: Instrument
 }
