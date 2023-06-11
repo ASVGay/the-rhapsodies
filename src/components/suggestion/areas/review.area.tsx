@@ -78,7 +78,7 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
                   imageURL={instrument.instrument.image_source}
                   name={instrument.instrument.instrument_name}
                   description={instrument.description}
-                  uid={undefined}
+                  uid={null}
                 />
               )
             })}
