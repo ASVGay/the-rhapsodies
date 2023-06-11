@@ -1,35 +1,38 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import {
-  DivisionDatabaseOperation,
-  SongInstrumentDatabaseOperation
-} from "@/types/database-types"
-import { NewSuggestion } from "@/interfaces/new-suggestion"
+import { DivisionDatabaseOperation, SongInstrumentDatabaseOperation } from "@/types/database-types"
+import { ISuggestion } from "@/interfaces/suggestion"
 
 export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
-  return supabase.from("song")
-    .select(`
+  return supabase
+    .from("song")
+    .select(
+      `
       *,
       song_instruments:song_instrument (
         id,
         instrument (*),
         division (*)
       )
-    `)
-  .eq("inRepertoire", false)
+    `
+    )
+    .eq("inRepertoire", false)
 }
 
 export const getRepertoireSongs = async (supabase: SupabaseClient<Database>) => {
-    return supabase.from("song")
-        .select(`
+  return supabase
+    .from("song")
+    .select(
+      `
       *,
       song_instruments:song_instrument (
         id,
         instrument (*),
         division (*)
       )
-    `)
-        .eq("inRepertoire", true)
+    `
+    )
+    .eq("inRepertoire", true)
 }
 
 export const getSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {
@@ -74,7 +77,7 @@ export const deleteDivision = (
 
 export const insertSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
-  { artist, link, motivation, title }: NewSuggestion,
+  { artist, link, motivation, title }: ISuggestion,
   uid: string
 ) => {
   return supabaseClient
@@ -84,7 +87,7 @@ export const insertSuggestion = async (
       artist: artist,
       motivation: motivation,
       author: uid,
-      link: link
+      link: link,
     })
     .eq("inRepertoire", false)
     .select()
@@ -94,18 +97,9 @@ export const insertSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
   operation: SongInstrumentDatabaseOperation[]
 ) => {
-  return supabaseClient
-    .from("song_instrument")
-    .insert(operation)
+  return supabaseClient.from("song_instrument").insert(operation)
 }
 
-export const deleteSuggestion = async (
-  supabaseClient: SupabaseClient<Database>,
-  id: string
-) => {
-  return supabaseClient
-    .from("song")
-    .delete()
-    .eq("id", id)
-    .eq("inRepertoire", false)
+export const deleteSuggestion = async (supabaseClient: SupabaseClient<Database>, id: string) => {
+  return supabaseClient.from("song").delete().eq("id", id).eq("inRepertoire", false)
 }

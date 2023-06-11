@@ -7,7 +7,7 @@ import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 import { toast } from "react-toastify"
 import { useFormContext } from "react-hook-form"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { InputsSongInformation } from "@/interfaces/suggestion"
 import {
   isInstrumentSuggestionInvalid,
   isSongInformationInvalid,

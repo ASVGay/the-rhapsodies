@@ -6,7 +6,7 @@ import { AppDispatch, AppState } from "@/redux/store"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { InputsSongInformation } from "@/interfaces/suggestion"
 import {
   isSongInformationInvalid,
   submitSongInformationForm,

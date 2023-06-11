@@ -5,7 +5,7 @@ import { Instrument } from "@/types/database-types"
 import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { AppDispatch, AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { ISuggestionInstrument } from "@/interfaces/suggestion"
 import { Area } from "@/constants/area"
 import { isInstrumentSuggestionInvalid } from "@/helpers/new-suggestion.helper"
 
@@ -18,7 +18,7 @@ const InstrumentsArea = ({ instrumentList }: InstrumentsAreaProps) => {
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
 
   const onInstrumentSelected = (instrument: Instrument): boolean => {
-    const newItem: NewSuggestionInstrument = {
+    const newItem: ISuggestionInstrument = {
       instrument: instrument,
       description: "",
     }

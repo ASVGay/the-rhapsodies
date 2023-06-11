@@ -1,4 +1,4 @@
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { ISuggestionInstrument } from "@/interfaces/suggestion"
 import InstrumentsListItem from "./instruments-list-item"
 import { AppDispatch, AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
@@ -8,7 +8,7 @@ import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 const InstrumentsList = () => {
   const dispatch: AppDispatch = useDispatch()
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const [instrumentListItems, setInstrumentListItems] = useState<NewSuggestionInstrument[]>(
+  const [instrumentListItems, setInstrumentListItems] = useState<ISuggestionInstrument[]>(
     newSuggestion.instruments
   )
 
@@ -42,7 +42,7 @@ const InstrumentsList = () => {
 
   return (
     <ul data-cy="instrument-edit-list">
-      {instrumentListItems.map((instrumentItem: NewSuggestionInstrument, index) => {
+      {instrumentListItems.map((instrumentItem: ISuggestionInstrument, index) => {
         const key = `${instrumentItem.instrument.id}-${index}`
         return (
           <InstrumentsListItem
