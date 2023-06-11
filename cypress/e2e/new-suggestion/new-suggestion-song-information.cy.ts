@@ -30,7 +30,7 @@ const requiredInputs = [
   },
 ]
 
-describe("when creating a new suggestion, adding song information", () => {
+describe("when creating a new suggestion, adding song information", { keystrokeDelay: 0 }, () => {
   beforeEach(() => {
     cy.login()
     cy.visit(path)
