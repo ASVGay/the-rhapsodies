@@ -1,19 +1,22 @@
 import React from "react"
+import { Song } from "@/types/database-types"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
-import { SongCardProps } from "@/interfaces/song-card-props"
+import Link from "next/link"
 
-const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
+interface RepertoireCardProps {
+  song: Song
+}
+
+const RepertoireCard = ({ song }: RepertoireCardProps) => {
   const checkEmptyDivision = () => song.song_instruments.some((item) => item.division.length === 0)
 
   return (
-    <div
-      onClick={async () => {
-        setShowSpinner(true)
-        await router.push({ pathname: "/repertoire/[song]", query: { song: song.id } })
-      }}
+    <Link
+      href={{ pathname: "/repertoire/[song]", query: { song: song.id } }}
       className={"w-[22rem] cursor-pointer rounded-md bg-neutral-50 drop-shadow-lg"}
       key={song.id}
+
     >
       <div className={"m-2 flex"}>
         <div className={"mb-auto mt-auto flex w-full justify-between"}>
@@ -39,7 +42,7 @@ const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
