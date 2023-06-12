@@ -7,11 +7,9 @@ import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestio
 import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
-import {
-  isSongInformationInvalid,
-  submitSongInformationForm
-} from "@/helpers/new-suggestion.helper"
+import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
+import { SpotifySearchItem } from "@/interfaces/spotify-search-item"
 
 const SongInformationArea = () => {
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -24,8 +22,11 @@ const SongInformationArea = () => {
   } = useFormContext<InputsSongInformation>()
   const [manualInput, setManualInput] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>("")
-  //TODO create a Spotify Song interface
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<SpotifySearchItem[]>([
+    //TODO remove placeholder data
+    { id: "1", title: "Example", artists: ["Jorja Smith", "Frank Ocean"], link: "" },
+    { id: "2", title: "Example", artists: ["Jorja Smith"], link: "" }
+  ])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
   const [fetchingSongs, setFetchingSongs] = useState(false)
@@ -70,10 +71,25 @@ const SongInformationArea = () => {
     }, 100)
   }
 
-  const onSelectSearchResult = () => {
-    //TODO set redux state to selected song
+  const onSelectSearchResult = (item: SpotifySearchItem) => {
+    dispatch(
+      updateNewSuggestion({
+        ...newSuggestion,
+        title: item.title,
+        artist: item.artists,
+        link: item.link
+      })
+    )
+    setManualInput(true)
     setSearchTerm("")
     setSearchResults([])
+    //TODO fill-out values in form
+  }
+
+  const formatArtists = (songId: string, artists: string[]) => {
+    return artists.map((artist, index) => {
+      return artist + (index != artists.length - 1 ? ", " : "")
+    }).flat()
   }
 
   //TODO break-up into components
@@ -133,13 +149,14 @@ const SongInformationArea = () => {
               {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
                   <ul ref={listRef}>
-                    {searchResults.map((value: string) => {
+                    {searchResults.map((item: SpotifySearchItem) => {
                       return <div
-                        key={value}
-                        onClick={() => onSelectSearchResult()}
+                        key={item.id}
+                        onClick={() => onSelectSearchResult(item)}
                         className={"cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"}
                       >
-                        {value}
+                        <b>{item.title}</b>
+                        <p>{formatArtists(item.id, item.artists)}</p>
                       </div>
                     })}
                   </ul>
