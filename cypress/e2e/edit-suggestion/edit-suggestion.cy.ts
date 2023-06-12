@@ -1,3 +1,8 @@
+import {
+  addInstrumentItem,
+  shouldGoToReviewArea,
+} from "../new-suggestion/helpers/new-suggestion.helper"
+
 const userSuggestion = "ca20ae76-f6b3-4224-99af-cac14643a967"
 const userSecondSuggestion = "e743664e-b85b-4164-8163-24c9957f5ffd"
 const notOfUserSuggestion = "f0a04fe5-8290-445b-af94-1b2ae0263431"
@@ -93,6 +98,17 @@ describe("when the user wants to edit a suggestion", () => {
 
       it("should redirect to the suggestion detail page after saving the suggestion", () => {
         cy.data("new-suggestion-progress-bar-review").click()
+        cy.data("submit-suggestion-btn")
+          .click()
+          .then(() => {
+            cy.location("pathname").should("equal", `/suggestions/${userSuggestion}`)
+          })
+      })
+
+      it("should apply changes from instrument after saving the suggestion", () => {
+        cy.data("new-suggestion-progress-bar-instruments").click()
+        addInstrumentItem()
+        shouldGoToReviewArea()
         cy.data("submit-suggestion-btn")
           .click()
           .then(() => {
