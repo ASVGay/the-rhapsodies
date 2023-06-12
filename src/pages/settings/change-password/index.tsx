@@ -8,14 +8,13 @@ import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { verifyPassword } from "@/services/authentication.service"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
+import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
 
 interface FormInputs {
   currentPassword: string
   newPassword: string
   confirmationPassword: string
 }
-
-const signOutError = () => toast.error("Something went wrong while logging out.")
 
 const updatePasswordError = () =>
   toast.error("Something went wrong while changing your password. Please try again.")
@@ -34,39 +33,20 @@ const Index = () => {
     setError,
   } = useForm<FormInputs>()
 
-  const signOut = () => {
-    toast.error("Something went wrong while retrieving your data. Please sign in again.")
-    supabase.auth
-      .signOut()
-      .then(async (response) => {
-        if (response.error) signOutError()
-        else await router.push("/sign-in")
-      })
-      .catch(() => signOutError)
-  }
-
   const updatePassword = async (newPassword: string) => {
     const { error } = await supabase.auth.updateUser({ password: newPassword })
 
-    if (error) {
-      updatePasswordError()
-    } else {
+    if (error) updatePasswordError()
+    else {
       toast.success("Password successfully changed!")
       await router.push("/settings")
     }
   }
 
-  const showIncorrectPassword = () => {
-    toast.error("Please fill in your current password correctly.", {
-      toastId: "incorrect-password",
-    })
-    setError("currentPassword", { type: "custom", message: "Incorrect password" })
-  }
-
   const submitNewPassword = async ({ currentPassword, newPassword }: FormInputs) => {
     setIsLoading(true)
     if (!user) {
-      signOut()
+      handleNoUser(supabase, router)
       setIsLoading(false)
     } else {
       verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
@@ -74,7 +54,7 @@ const Index = () => {
         // check if verify password returns true (correct password)
         if (data) await updatePassword(newPassword)
         // deep check that data returns false and not null or undefined
-        if (data === false) showIncorrectPassword()
+        if (data === false) showIncorrectPassword(setError)
 
         setIsLoading(false)
       })
