@@ -41,6 +41,10 @@
         @apply pb-8;
     }
 
+  .btn {
+     @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
+   }
+
     .page-wrapper {
         @apply mx-auto px-4 pt-6;
     }
@@ -82,12 +86,11 @@
         @apply h-6 w-6 text-gray-400
     }
 
-    .btn {
-        @apply rounded px-4 py-2 font-bold text-white disabled:opacity-25 disabled:bg-gray-500 disabled:text-black bg-moon-500 hover:bg-moon-300
-    }
-
     .btn.songInformation {
         @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300
     }
 
+    .btn.toRepertoire {
+        @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
+    }
 }

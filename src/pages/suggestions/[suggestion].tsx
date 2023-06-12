@@ -1,16 +1,18 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
-import { deleteDivision, getSuggestion, insertDivision, moveSongToRepertoire } from "@/services/suggestion.service"
+import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
+import {DivisionDatabaseOperation, Song, SongInstrument} from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
+import { UserAppMetadata } from "@supabase/gotrue-js"
+import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
@@ -24,11 +26,21 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const supabase = useSupabaseClient<Database>()
+  const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
+  const supabase = useSupabaseClient<Database>()
   const uid = user?.id
   const router = useRouter()
-  const isAdmin = user?.app_metadata.claims_admin
+
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          setRoles(session?.user?.app_metadata)
+        }
+      })
+    }
+  }, [supabase])
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -38,7 +50,16 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
       .catch(() => setShowUpdateError(true))
   }
 
-  const updateOrDeleteDivision = async (exists: boolean, division: DivisionDatabaseOperation) => {
+  const selectInstrument = (songInstrument: SongInstrument) => {
+    if (!uid) return
+
+    const division: DivisionDatabaseOperation = {
+      musician: uid,
+      song_instrument_id: songInstrument.id,
+    }
+
+    // TODO implement error handling and loading (so that users cant click when updating division)
+    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
       deleteDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
@@ -52,33 +73,16 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
     }
   }
 
-
-  const selectInstrument = (songInstrument: SongInstrument) => {
-    if (!uid) return
-
-    setShowSpinner(true)
-
-    const division: DivisionDatabaseOperation = {
-      musician: uid,
-      song_instrument_id: songInstrument.id
-    }
-
-    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
-    updateOrDeleteDivision(exists, division)
-      .catch(() => setShowUpdateError(true))
-      .finally(() => setShowSpinner(false))
-  }
-
   const displayButton = (): boolean => {
     return (
-      isAdmin &&
+      roles?.["claims_admin"] &&
       suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
     )
   }
 
   const addToRepertoire = () => {
     setShowSpinner(true)
-    moveSongToRepertoire(supabase, suggestion.id)
+    createSongFromSuggestion(supabase, suggestion.id)
       .then(() => router.push("/repertoire"))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
@@ -139,10 +143,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                     division={instrument.division}
                     description={instrument.description}
                     uid={uid}
-                    onclick={() => {
-                      if (showSpinner) return
-                      selectInstrument(instrument)
-                    }}
+                    onclick={() => selectInstrument(instrument)}
                   />
                 )
               })}
@@ -151,7 +152,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
           {displayButton() && (
             <div className={"m-8 flex justify-center"}>
-              <button className={"btn px-12 bg-green-500 hover:bg-green-300"} onClick={() => addToRepertoire()}>
+              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
                 Move to repertoire
               </button>
             </div>

@@ -100,9 +100,19 @@ const SongListWrapper = (props: SongListWrapperProps) => {
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
         {searchedSongs.map((song: Song) =>
           props.songType == SongType.Suggestion ? (
-            <SuggestionCard key={song.id} song={song} />
+            <SuggestionCard
+              key={song.id}
+              song={song}
+              setShowSpinner={setShowSpinner}
+              router={router}
+            />
           ) : (
-            <RepertoireCard key={song.id} song={song} />
+            <RepertoireCard
+              key={song.id}
+              song={song}
+              setShowSpinner={setShowSpinner}
+              router={router}
+            />
           )
         )}
       </div>
@@ -138,12 +148,12 @@ const SongListWrapper = (props: SongListWrapperProps) => {
       />
 
       {showSpinner && (
-        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+        <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
           <Spinner size={10} />
         </div>
       )}
 
-      {renderSongs()}
+      {!showSpinner && renderSongs()}
 
       {showLoadingError && (
         <div className={"mt-6"} data-cy="failed-fetching-suggestions">

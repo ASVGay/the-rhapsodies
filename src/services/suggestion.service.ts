@@ -109,13 +109,3 @@ export const deleteSuggestion = async (
     .eq("id", id)
     .eq("inRepertoire", false)
 }
-
-export const moveSongToRepertoire = async (
-  supabaseClient: SupabaseClient<Database>,
-  id: string
-) => {
-  return supabaseClient
-    .from("song")
-    .update({ "inRepertoire": true })
-    .eq("id", id)
-}
