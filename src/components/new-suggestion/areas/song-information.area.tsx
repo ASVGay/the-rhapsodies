@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
@@ -22,6 +22,11 @@ const SongInformationArea = () => {
     watch
   } = useFormContext<InputsSongInformation>()
   const [manualInput, setManualInput] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  //TODO create a Spotify Song interface
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const listRef = useRef<HTMLUListElement>(null)
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
@@ -39,9 +44,30 @@ const SongInformationArea = () => {
     )
   }
 
-  function submitAndGoToInstruments() {
+  const submitAndGoToInstruments = () => {
     submitSongInformationForm()
     if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
+  }
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value)
+
+    //TODO Spotify API call gather songs
+
+    //TODO setSearchResults
+  }
+
+  const handleSearchBlur = () => {
+    // Use setTimeout to allow time for a click event on the list item to be registered
+    setTimeout(() => {
+      setIsSearchFocused(false)
+    }, 100)
+  }
+
+  const onSelectSearchResult = () => {
+    //TODO set redux state to selected song
+    setSearchTerm("")
+    setSearchResults([])
   }
 
   return (
@@ -65,22 +91,55 @@ const SongInformationArea = () => {
             />
           )}
 
-          <div className="input">
-            <input
-              data-cy={"input-title"}
-              type="text"
-              placeholder="Title"
-              className={`${errors.title && "error"}`}
-              {...register("title", {
-                validate: (value) => {
-                  return !!value.trim()
-                }
-              })}
-            />
-            <span>
+          {manualInput
+            ? <div className="input">
+              <input
+                data-cy={"input-title"}
+                type="text"
+                placeholder="Title"
+                className={`${errors.title && "error"}`}
+                {...register("title", {
+                  validate: (value) => !!value.trim()
+                })}
+              />
+              <span>
               <DocumentTextIcon />
             </span>
-          </div>
+            </div>
+            : <div className="input">
+              <input
+                data-cy={"input-title"}
+                type="text"
+                placeholder="Search for a song title"
+                value={searchTerm}
+                className={`${errors.title && "error"}`}
+                {...register("title", {
+                  validate: (value) => !!value.trim(),
+                  onChange: (event) => handleSearch(event.target.value)
+                })}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={handleSearchBlur}
+              />
+              <span>
+              <DocumentTextIcon />
+            </span>
+              {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
+                <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
+                  <ul ref={listRef}>
+                    {searchResults.map((value: string) => {
+                      return <div
+                        key={value}
+                        onClick={() => onSelectSearchResult()}
+                        className={"cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"}
+                      >
+                        {value}
+                      </div>
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
+          }
         </div>
 
         {manualInput && <>
@@ -102,9 +161,7 @@ const SongInformationArea = () => {
                 placeholder="Artist"
                 className={`${errors.artist && "error"}`}
                 {...register("artist", {
-                  validate: (value: string) => {
-                    return !!value.trim()
-                  }
+                  validate: (value: string) => !!value.trim()
                 })}
               />
               <span>
@@ -152,9 +209,7 @@ const SongInformationArea = () => {
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
-                validate: (value) => {
-                  return !!value.trim()
-                }
+                validate: (value) => !!value.trim()
               })}
             />
           </div>
