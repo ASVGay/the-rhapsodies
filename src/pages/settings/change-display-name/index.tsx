@@ -3,7 +3,7 @@ import { Database } from "@/types/database"
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import { ArrowLeftIcon, LockClosedIcon, UserCircleIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, UserCircleIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import {
@@ -14,6 +14,7 @@ import {
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
 import Spinner from "@/components/utils/spinner"
+import CurrentPasswordInput from "@/components/settings/account/current-password-input"
 
 interface FormInputs {
   newDisplayName: string
@@ -148,32 +149,13 @@ const Index = () => {
         </div>
 
         <p>Please enter your password to verify your identity.</p>
-        <div className={"input-container"}>
-          <label htmlFor="currentPassword" className="sr-only">
-            Enter your current password
-          </label>
-          {errors.currentPassword && (
-            <ErrorMessage
-              dataCy={"input-current-password-error"}
-              message={errors.currentPassword.message}
-            />
-          )}
-          <div className="input">
-            <input
-              className={`!p-2.5 !pe-12 ${errors.currentPassword && "error"}`}
-              data-cy={"input-current-password"}
-              type="password"
-              placeholder="Current password"
-              {...register("currentPassword", {
-                required: { value: true, message: "Please provide your current password" },
-              })}
-              disabled={isLoading}
-            />
-            <span>
-              <LockClosedIcon />
-            </span>
-          </div>
-        </div>
+        <CurrentPasswordInput
+          errors={errors}
+          register={register("currentPassword", {
+            required: { value: true, message: "Please provide your current password" },
+          })}
+          disabled={isLoading}
+        />
 
         <button
           data-cy={"button-submit-new-display-name"}
