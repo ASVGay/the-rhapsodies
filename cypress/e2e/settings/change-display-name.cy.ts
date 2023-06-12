@@ -1,14 +1,14 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 
-describe("the change password page", () => {
-  const buttonSubmitNewPassword = "button-submit-new-password"
+describe("the change display name page", () => {
+  const buttonSubmitNewDisplayName = "button-submit-new-display-name"
   const inputCurrentPassword = "input-current-password"
-  const inputNewPassword = "input-new-password"
-  const inputConfirmationPassword = "input-confirmation-password"
-  const errorNewPassword = "input-new-password-error"
-  const errorConfirmationPassword = "input-confirmation-password-error"
   const errorCurrentPassword = "input-current-password-error"
+  const inputNewDisplayName = "input-new-display-name"
+  const errorNewDisplayName = "input-new-display-name-error"
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
+  const displayName = Cypress.env("CYPRESS_OLD_DISPLAY_NAME")
+
   const errorResponse = {
     statusCode: 401,
     body: {
@@ -16,10 +16,9 @@ describe("the change password page", () => {
     },
   }
   const submitCorrectData = () => {
+    cy.data(inputNewDisplayName).type(displayName)
     cy.data(inputCurrentPassword).type(currentPassword)
-    cy.data(inputNewPassword).type(currentPassword)
-    cy.data(inputConfirmationPassword).type(currentPassword)
-    cy.data(buttonSubmitNewPassword).click()
+    cy.data(buttonSubmitNewDisplayName).click()
   }
 
   before(() => {
@@ -30,16 +29,15 @@ describe("the change password page", () => {
 
   beforeEach(() => {
     cy.login()
-    cy.visit("/settings/change-password")
+    cy.visit("/settings/change-display-name")
     cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
     cy.wait("@manifest")
   })
 
   it("should render all form elements correctly", () => {
     cy.data(inputCurrentPassword).should("be.visible")
-    cy.data(inputNewPassword).should("be.visible")
-    cy.data(inputConfirmationPassword).should("be.visible")
-    cy.data(buttonSubmitNewPassword).should("be.visible")
+    cy.data(inputNewDisplayName).should("be.visible")
+    cy.data(buttonSubmitNewDisplayName).should("be.visible")
   })
 
   it("should go back to settings on click of arrow", () => {
@@ -48,39 +46,22 @@ describe("the change password page", () => {
   })
 
   context("with incorrect values", () => {
-    it("should show errors if no password values", () => {
-      cy.data(buttonSubmitNewPassword).click()
-      const inputs = [inputCurrentPassword, inputNewPassword, inputConfirmationPassword]
+    it("should show errors if no entered values", () => {
+      cy.data(buttonSubmitNewDisplayName).click()
+      const inputs = [inputCurrentPassword, inputNewDisplayName]
 
       inputs.forEach((input) => {
         cy.data(input).should("have.css", "outline-color", "rgb(248, 113, 113)")
       })
 
+      cy.data(errorNewDisplayName).should("contain.text", "Please provide a display name")
       cy.data(errorCurrentPassword).should("contain.text", "Please provide your current password")
-      cy.data(errorNewPassword).should("contain.text", "Please provide a password")
-      cy.data(errorConfirmationPassword).should("contain.text", "Please provide your password")
-    })
-
-    it("should show error if new password is too short", () => {
-      cy.data(inputNewPassword).type("12")
-      cy.data(buttonSubmitNewPassword).click()
-      cy.data(inputNewPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
-      cy.data(errorNewPassword).should("contain.text", "six characters")
-    })
-
-    it("should show error if passwords are not equal", () => {
-      cy.data(inputNewPassword).type("12")
-      cy.data(inputConfirmationPassword).type("1")
-      cy.data(buttonSubmitNewPassword).click()
-      cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
-      cy.data(errorConfirmationPassword).should("contain.text", "not match")
     })
 
     it("should show error & toast if current password is not correct", () => {
+      cy.data(inputNewDisplayName).type(displayName)
       cy.data(inputCurrentPassword).type("incorrect")
-      cy.data(inputNewPassword).type(currentPassword)
-      cy.data(inputConfirmationPassword).type(currentPassword)
-      cy.data(buttonSubmitNewPassword).click()
+      cy.data(buttonSubmitNewDisplayName).click()
       cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
       cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
       cy.get(".Toastify")
@@ -101,12 +82,12 @@ describe("the change password page", () => {
         .should("be.visible")
         .should("have.class", "Toastify__toast--success")
         .get(".Toastify__toast-body")
-        .should("have.text", "Password successfully changed!")
+        .should("have.text", `Display name successfully changed to ${displayName}!`)
       cy.location("pathname").should("eq", "/settings")
     })
 
     it("should show toast if unsuccessful update", () => {
-      cy.intercept("/auth/v1/user", errorResponse)
+      cy.intercept(`**/rest/v1/member**`, errorResponse)
       submitCorrectData()
 
       cy.get(".Toastify")
@@ -118,23 +99,21 @@ describe("the change password page", () => {
     })
 
     it("should disable form & show spinner when loading", () => {
-      const interception = interceptIndefinitely("/auth/v1/user", errorResponse)
+      const interception = interceptIndefinitely(`**/rest/v1/member**`, errorResponse)
       submitCorrectData()
-      cy.data("change-password-form")
+      cy.data("change-display-name-form")
         .within(() => {
           cy.data(inputCurrentPassword).should("be.disabled")
-          cy.data(inputNewPassword).should("be.disabled")
-          cy.data(inputConfirmationPassword).should("be.disabled")
-          cy.data(buttonSubmitNewPassword).should("be.disabled")
+          cy.data(inputNewDisplayName).should("be.disabled")
+          cy.data(buttonSubmitNewDisplayName).should("be.disabled")
           cy.data("spinner").should("be.visible")
         })
         .then(() => {
           interception.sendResponse()
 
           cy.data(inputCurrentPassword).should("not.be.disabled")
-          cy.data(inputNewPassword).should("not.be.disabled")
-          cy.data(inputConfirmationPassword).should("not.be.disabled")
-          cy.data(buttonSubmitNewPassword).should("not.be.disabled")
+          cy.data(inputNewDisplayName).should("not.be.disabled")
+          cy.data(buttonSubmitNewDisplayName).should("not.be.disabled")
           cy.data("spinner").should("not.exist")
         })
     })
