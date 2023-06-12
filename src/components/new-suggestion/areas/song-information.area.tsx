@@ -11,6 +11,7 @@ import {
   isSongInformationInvalid,
   submitSongInformationForm
 } from "@/helpers/new-suggestion.helper"
+import Spinner from "@/components/utils/spinner"
 
 const SongInformationArea = () => {
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -27,6 +28,7 @@ const SongInformationArea = () => {
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
+  const [fetchingSongs, setFetchingSongs] = useState(false)
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
@@ -52,7 +54,11 @@ const SongInformationArea = () => {
   const handleSearch = (value: string) => {
     setSearchTerm(value)
 
-    //TODO Spotify API call gather songs
+    setFetchingSongs(true)
+    //TODO replace timeout with Spotify API call to gather songs search results
+    setTimeout(() => {
+      setFetchingSongs(false)
+    }, 300)
 
     //TODO setSearchResults
   }
@@ -70,6 +76,7 @@ const SongInformationArea = () => {
     setSearchResults([])
   }
 
+  //TODO break-up into components
   return (
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
@@ -121,7 +128,7 @@ const SongInformationArea = () => {
                 onBlur={handleSearchBlur}
               />
               <span>
-              <DocumentTextIcon />
+             {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
             </span>
               {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
