@@ -45,6 +45,24 @@ describe("the change display name page", () => {
     cy.location("pathname").should("eq", "/settings")
   })
 
+  it("should display the spinner and then the current display name", () => {
+    const interception = interceptIndefinitely("/rest/v1/member**")
+    cy.data("spinner-display-name").should("be.visible")
+    cy.data("current-display-name").should("not.exist")
+    interception.sendResponse()
+    cy.data("spinner-display-name").should("not.exist")
+    cy.data("current-display-name").should("be.visible")
+  })
+
+  it("should display the spinner and then the error if retrieving display name fails", () => {
+    const interception = interceptIndefinitely("/rest/v1/member**", errorResponse)
+    cy.data("spinner-display-name").should("be.visible")
+    cy.data("error-current-display-name").should("not.exist")
+    interception.sendResponse()
+    cy.data("spinner-display-name").should("not.exist")
+    cy.data("error-current-display-name").should("be.visible")
+  })
+
   context("with incorrect values", () => {
     it("should show errors if no entered values", () => {
       cy.data(buttonSubmitNewDisplayName).click()
