@@ -9,6 +9,7 @@ import { toast } from "react-toastify"
 import { verifyPassword } from "@/services/authentication.service"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
+import CurrentPasswordInput from "@/components/settings/account/current-password-input"
 
 interface FormInputs {
   currentPassword: string
@@ -81,32 +82,13 @@ const Index = () => {
         <p>
           Please enter your <b>current</b> password.
         </p>
-        <div className={"input-container"}>
-          <label htmlFor="currentPassword" className="sr-only">
-            Enter your current password
-          </label>
-          {errors.currentPassword && (
-            <ErrorMessage
-              dataCy={"input-current-password-error"}
-              message={errors.currentPassword.message}
-            />
-          )}
-          <div className="input">
-            <input
-              className={`!p-2.5 !pe-12 ${errors.currentPassword && "error"}`}
-              data-cy={"input-current-password"}
-              type="password"
-              placeholder="Current password"
-              {...register("currentPassword", {
-                required: { value: true, message: "Please provide your current password" },
-              })}
-              disabled={isLoading}
-            />
-            <span>
-              <LockClosedIcon />
-            </span>
-          </div>
-        </div>
+        <CurrentPasswordInput
+          errors={errors}
+          register={register("currentPassword", {
+            required: { value: true, message: "Please provide your current password" },
+          })}
+          disabled={isLoading}
+        />
 
         <p>
           Please enter your <b>new</b> password.
