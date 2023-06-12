@@ -4,12 +4,8 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 import { SongCardProps } from "@/interfaces/song-card-props"
 
 const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
-  const checkEmptyDivision = () => {
-    for (const item of song.song_instruments) {
-      if (item.division.length === 0) return true
-    }
-    return false
-  }
+  const checkEmptyDivision = () => song.song_instruments.some((item) => item.division.length === 0)
+
   return (
     <div
       onClick={async () => {
