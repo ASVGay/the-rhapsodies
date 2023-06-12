@@ -12,6 +12,11 @@ describe("the settings page", () => {
     })
   })
 
+  it("should go to the change display name page", () => {
+    cy.data("change-display-name-button").click()
+    cy.location("pathname").should("eq", "/settings/change-display-name")
+  })
+
   it("should go to the change password page", () => {
     cy.data("change-password-button").click()
     cy.location("pathname").should("eq", "/settings/change-password")
