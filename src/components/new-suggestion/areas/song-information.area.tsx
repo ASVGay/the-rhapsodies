@@ -83,7 +83,6 @@ const SongInformationArea = () => {
           </div>
         </div>
 
-        {/*TODO: toggle if artists fails*/}
         {manualInput && <>
           <div className={`input-container`}>
             {errors.artist && (
@@ -133,7 +132,6 @@ const SongInformationArea = () => {
           </div>
         </>}
 
-
         <div className={"input-container"}>
           {errors.motivation && (
             <ErrorMessage
@@ -162,11 +160,11 @@ const SongInformationArea = () => {
           </div>
         </div>
 
-        {/*TODO prevent errors on toggle manual input*/}
         <div>
           <button
             className={"text-moon-400 mb-6"}
             onClick={() => setManualInput(!manualInput)}
+            type={"button"}
           >
             {manualInput
               ? "Or autofill song information"
