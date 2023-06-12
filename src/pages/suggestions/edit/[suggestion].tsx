@@ -22,7 +22,7 @@ import {
   updateLastEditedUuid,
   setActiveArea,
 } from "@/redux/slices/edit-suggestion.slice"
-import { Song } from "@/types/database-types"
+import { Author, Song } from "@/types/database-types"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
 
-    const author: { id: string } = data?.author as { id: string }
+    const author: Author = data?.author as Author
     // If the user does not match with the author of the suggestion
     if (session?.user.id !== author.id)
       return {
@@ -125,10 +125,6 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
     }
   }
 
-  const callSaveSuggestion = (success: () => void, error: () => void) => {
-    saveSuggestion(success, error).catch(() => {})
-  }
-
   const onInstrumentSubmit = (newInstruments: ISuggestionInstrument[]) => {
     //Add deleted entries to redux to remove on submit.
     const oldIds = newInstruments.map((item) => item.id)
@@ -172,7 +168,11 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
       onCloseClicked={() => {
         router.push(`/suggestions/${props.suggestion.id}`)
       }}
-      onReviewSubmit={callSaveSuggestion}
+      onReviewSubmit={(success, error) => {
+        saveSuggestion(success, error).catch(() => {
+          error()
+        })
+      }}
     />
   )
 }
