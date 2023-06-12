@@ -23,21 +23,21 @@ export const mapInstruments = (
   suggestion: ISuggestion,
   suggestionId: string
 ): SongInstrumentDatabaseOperation[] => {
-  return suggestion.instruments.map(({ instrument, description }) => {
-    return { song_id: suggestionId, instrument_id: instrument.id, description: description }
-  })
+  return suggestion.instruments.map(({ id, instrument, description }) => ({
+    id: id,
+    song_id: suggestionId,
+    instrument_id: instrument.id,
+    description: description,
+  }))
 }
 
 export const mapEditInstruments = (
   suggestion: ISuggestion,
   suggestionId: string
 ): SongInstrumentDatabaseOperation[] => {
-  return suggestion.instruments.map(({ id, instrument, description }) => {
-    return {
-      id: id,
-      song_id: suggestionId,
-      instrument_id: instrument.id,
-      description: description,
-    }
-  })
+  return suggestion.instruments.map(({ instrument, description }) => ({
+    song_id: suggestionId,
+    instrument_id: instrument.id,
+    description: description,
+  }))
 }

@@ -8,7 +8,7 @@ interface InstrumentProps {
   name: string
   division?: Division[]
   description: string | null
-  uid: string | null | undefined
+  uid?: string
   onclick?: () => void
   toggleOpacity?: boolean
 }

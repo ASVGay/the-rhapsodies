@@ -16,13 +16,16 @@ import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 
-interface SuggestionProps {
-  suggestion: Song
+interface SuggestionPageProps {
+  suggestionFromNext: Song
   isEditable: boolean
 }
 
-const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
-  const [suggestion, setSuggestion] = useState<Song>(props.suggestion)
+const SuggestionPage: FC<SuggestionPageProps> = ({
+  suggestionFromNext,
+  isEditable,
+}: SuggestionPageProps) => {
+  const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
@@ -106,7 +109,7 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               </p>
             </div>
             <div className={"flex flex-row gap-2"}>
-              {props.isEditable && (
+              {isEditable && (
                 <PencilSquareIcon
                   className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
                   data-cy="suggestion-edit-icon"

@@ -20,9 +20,7 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
     setShowSpinner(false)
   }
 
-  const handleSuccess = () => {
-    setShowSpinner(false)
-  }
+  const handleSuccess = () => setShowSpinner(false)
 
   const requiredDataIsPresent = () => {
     return (
@@ -78,7 +76,6 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
                   imageURL={instrument.instrument.image_source}
                   name={instrument.instrument.instrument_name}
                   description={instrument.description}
-                  uid={null}
                 />
               )
             })}

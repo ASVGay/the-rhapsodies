@@ -17,7 +17,6 @@ const InstrumentsList = ({ newInstruments, onNewInstrumentsChanged }: Instrument
   const onDescriptionChanged = (index: number, description: string) => {
     const newItems = [...newInstruments]
     newItems[index] = { ...newItems[index], description }
-    newItems[index].description = description
     onNewInstrumentsChanged(newItems)
   }
 

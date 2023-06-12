@@ -55,10 +55,6 @@ const NewSuggestion = () => {
       .catch(() => onError())
   }
 
-  const onAreaSelect = (area: Area) => {
-    dispatch(setActiveArea(area))
-  }
-
   const onInstrumentSubmit = (newInstruments: ISuggestionInstrument[]) => {
     dispatch(
       updateNewSuggestion({
@@ -87,10 +83,8 @@ const NewSuggestion = () => {
       newSuggestion={suggestion}
       startingArea={activeArea}
       onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={onAreaSelect}
-      onInstrumentSubmit={(newInstruments) => {
-        onInstrumentSubmit(newInstruments)
-      }}
+      onAreaSelect={(area) => dispatch(setActiveArea(area))}
+      onInstrumentSubmit={(newInstruments) => onInstrumentSubmit(newInstruments)}
       onReviewSubmit={saveSuggestion}
       onCloseClicked={() => {
         router.push("/suggestions")

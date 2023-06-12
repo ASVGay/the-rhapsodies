@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { mapEditInstruments } from "@/helpers/new-suggestion.helper"
 import {
   updateEditSuggestion,
-  updateDeletedInstrumentUuid,
+  updateDeletedInstrumentUuids,
   updateLastEditedUuid,
   setActiveArea,
 } from "@/redux/slices/edit-suggestion.slice"
@@ -57,22 +57,22 @@ interface EditSuggestionPageProps {
   suggestion: Song
 }
 
-const EditSuggestionPage = (props: EditSuggestionPageProps) => {
+const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
   const dispatch = useDispatch()
 
   const lastEditedUuid = useSelector((state: AppState) => state.editSuggestion.lastEditedUuid)
-  const suggestion = useSelector((state: AppState) => state.editSuggestion.suggestion)
+  const reduxSuggestion = useSelector((state: AppState) => state.editSuggestion.suggestion)
   const activeArea = useSelector((state: AppState) => state.editSuggestion.activeArea)
   const deletedInstruments = useSelector(
     (state: AppState) => state.editSuggestion.deletedInstrumentUuids
   )
 
   //If the user visits a new edit page, clear the previously edited from redux
-  if (props.suggestion.id !== lastEditedUuid) {
+  if (suggestion.id !== lastEditedUuid) {
     const suggestionInstruments: ISuggestionInstrument[] = []
-    props.suggestion.song_instruments.forEach(
+    suggestion.song_instruments.forEach(
       (element: { id: any; description: any; instrument: any }) => {
         suggestionInstruments.push({
           id: element.id,
@@ -84,27 +84,31 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
 
     dispatch(
       updateEditSuggestion({
-        artist: props.suggestion.artist,
-        link: props.suggestion.link,
-        motivation: props.suggestion.motivation,
-        title: props.suggestion.title,
+        artist: suggestion.artist,
+        link: suggestion.link,
+        motivation: suggestion.motivation,
+        title: suggestion.title,
         instruments: suggestionInstruments,
       })
     )
 
-    dispatch(updateDeletedInstrumentUuid([]))
-    dispatch(updateLastEditedUuid(props.suggestion.id))
+    dispatch(updateDeletedInstrumentUuids([]))
+    dispatch(updateLastEditedUuid(suggestion.id))
   }
 
   const saveSuggestion = async (onSuccess: () => void, onError: () => void) => {
     try {
-      const suggestionResponse = await updateSuggestion(supabase, suggestion, lastEditedUuid ?? "")
+      const suggestionResponse = await updateSuggestion(
+        supabase,
+        reduxSuggestion,
+        lastEditedUuid ?? ""
+      )
       if (suggestionResponse.error) throw new Error("Failed to update song")
 
       const suggestionId = suggestionResponse.data.at(0)!.id
       const suggestionInstrumentResponse = await updateSuggestionInstruments(
         supabase,
-        mapEditInstruments(suggestion, suggestionId)
+        mapEditInstruments(reduxSuggestion, suggestionId)
       )
       if (suggestionInstrumentResponse.error) throw Error("Failed to update song_instruments")
 
@@ -118,7 +122,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
         onSuccess()
         dispatch(setActiveArea(Area.SongInformation))
         dispatch(updateLastEditedUuid(""))
-        dispatch(updateDeletedInstrumentUuid([]))
+        dispatch(updateDeletedInstrumentUuids([]))
       })
     } catch (error) {
       onError()
@@ -128,9 +132,9 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   const onInstrumentSubmit = (newInstruments: ISuggestionInstrument[]) => {
     //Add deleted entries to redux to remove on submit.
     const oldIds = newInstruments.map((item) => item.id)
-    const newIds = suggestion.instruments.map((item) => item.id)
+    const newIds = reduxSuggestion.instruments.map((item) => item.id)
     const missingIds = newIds.filter((id) => !oldIds.includes(id)) as string[]
-    dispatch(updateDeletedInstrumentUuid([...deletedInstruments, ...missingIds]))
+    dispatch(updateDeletedInstrumentUuids([...deletedInstruments, ...missingIds]))
 
     dispatch(
       updateEditSuggestion({
@@ -144,7 +148,7 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   const onSongInformationSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
     dispatch(
       updateEditSuggestion({
-        ...suggestion,
+        ...reduxSuggestion,
         title,
         artist: [artist],
         link,
@@ -156,17 +160,13 @@ const EditSuggestionPage = (props: EditSuggestionPageProps) => {
   return (
     <SuggestionPageSection
       title={"Edit Suggestion"}
-      newSuggestion={suggestion}
+      newSuggestion={reduxSuggestion}
       startingArea={activeArea}
       onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={(area) => {
-        dispatch(setActiveArea(area))
-      }}
-      onInstrumentSubmit={(newInstruments) => {
-        onInstrumentSubmit(newInstruments)
-      }}
+      onAreaSelect={(area) => dispatch(setActiveArea(area))}
+      onInstrumentSubmit={onInstrumentSubmit}
       onCloseClicked={() => {
-        router.push(`/suggestions/${props.suggestion.id}`)
+        router.push(`/suggestions/${suggestion.id}`)
       }}
       onReviewSubmit={(success, error) => {
         saveSuggestion(success, error).catch(() => {
