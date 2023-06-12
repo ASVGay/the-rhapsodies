@@ -15,7 +15,12 @@ const Index = () => {
                     Events
                 </div>
             </div>
-            <EventCard/>
+            <div className={"flex flex-wrap justify-center gap-6"}>
+                <EventCard/>
+                <EventCard/>
+                <EventCard/>
+                <EventCard/>
+            </div>
         </div>
     );
 };
