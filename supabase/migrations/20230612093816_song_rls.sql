@@ -1,6 +1,6 @@
-drop policy "Enable delete access for users" on "public"."song";
+drop policy if exists "Enable delete access for users" on "public"."song";
 
-drop policy "Enable update access for users" on "public"."song";
+drop policy if exists "Enable update access for users" on "public"."song";
 
 create policy "Enable delete access for users based on author id"
 on "public"."song"
