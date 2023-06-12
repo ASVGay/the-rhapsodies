@@ -127,9 +127,7 @@ const SuggestionPageSection = ({
                 onInstrumentsChanged={setNewSuggestionInstruments}
                 newSuggestionInstruments={newSuggestionInstruments}
                 instrumentList={instrumentList}
-                onSubmit={() => {
-                  handleAreaChange(Area.Review)
-                }}
+                onSubmit={() => handleAreaChange(Area.Review)}
               />
             )}
             {activeArea == Area.Review && (
