@@ -206,7 +206,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (data == null) return { notFound: true }
     return {
       props: {
-        suggestion: data,
+        suggestionFromNext: data,
         isEditable: (data.author as { id: string }).id === session?.user.id,
       },
     }
