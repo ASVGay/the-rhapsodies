@@ -1,10 +1,15 @@
 interface SpinnerProps {
   size: number
+  dataCy?: string
 }
 
-const Spinner = ({ size }: SpinnerProps) => {
+const Spinner = ({ size, dataCy }: SpinnerProps) => {
   return (
-    <div role="status" className={"flex h-full flex-col items-center justify-center"}>
+    <div
+      role="status"
+      className={"flex h-full flex-col items-center justify-center"}
+      data-cy={dataCy}
+    >
       <svg
         aria-hidden="true"
         className={`inline w-${size} h-${size} animate-spin fill-amber-400 text-gray-200`}
