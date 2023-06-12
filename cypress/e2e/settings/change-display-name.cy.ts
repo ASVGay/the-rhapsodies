@@ -1,5 +1,12 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 
+const errorResponseChangeDisplayName = {
+  statusCode: 401,
+  body: {
+    error: "Error",
+  },
+}
+
 describe("the change display name page", () => {
   const buttonSubmitNewDisplayName = "button-submit-new-display-name"
   const inputCurrentPassword = "input-current-password"
@@ -9,12 +16,6 @@ describe("the change display name page", () => {
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
   const displayName = Cypress.env("CYPRESS_OLD_DISPLAY_NAME")
 
-  const errorResponse = {
-    statusCode: 401,
-    body: {
-      error: "Error",
-    },
-  }
   const submitCorrectData = () => {
     cy.data(inputNewDisplayName).type(displayName)
     cy.data(inputCurrentPassword).type(currentPassword)
@@ -43,24 +44,6 @@ describe("the change display name page", () => {
   it("should go back to settings on click of arrow", () => {
     cy.data("back-to-settings").click()
     cy.location("pathname").should("eq", "/settings")
-  })
-
-  it("should display the spinner and then the current display name", () => {
-    const interception = interceptIndefinitely("/rest/v1/member**")
-    cy.data("spinner-display-name").should("be.visible")
-    cy.data("current-display-name").should("not.exist")
-    interception.sendResponse()
-    cy.data("spinner-display-name").should("not.exist")
-    cy.data("current-display-name").should("be.visible")
-  })
-
-  it("should display the spinner and then the error if retrieving display name fails", () => {
-    const interception = interceptIndefinitely("/rest/v1/member**", errorResponse)
-    cy.data("spinner-display-name").should("be.visible")
-    cy.data("error-current-display-name").should("not.exist")
-    interception.sendResponse()
-    cy.data("spinner-display-name").should("not.exist")
-    cy.data("error-current-display-name").should("be.visible")
   })
 
   context("with incorrect values", () => {
@@ -105,7 +88,7 @@ describe("the change display name page", () => {
     })
 
     it("should show toast if unsuccessful update", () => {
-      cy.intercept(`**/rest/v1/member**`, errorResponse)
+      cy.intercept(`**/rest/v1/member**`, errorResponseChangeDisplayName)
       submitCorrectData()
 
       cy.get(".Toastify")
@@ -117,7 +100,10 @@ describe("the change display name page", () => {
     })
 
     it("should disable form & show spinner when loading", () => {
-      const interception = interceptIndefinitely(`**/rest/v1/member**`, errorResponse)
+      const interception = interceptIndefinitely(
+        `**/rest/v1/member**`,
+        errorResponseChangeDisplayName
+      )
       submitCorrectData()
       cy.data("change-display-name-form")
         .within(() => {
@@ -135,5 +121,29 @@ describe("the change display name page", () => {
           cy.data("spinner").should("not.exist")
         })
     })
+  })
+})
+
+describe("the current display name on the change display name page", () => {
+  it("should display the spinner and then the current display name", () => {
+    const interception = interceptIndefinitely("/rest/v1/member**")
+    cy.login()
+    cy.visit("/settings/change-display-name")
+    cy.data("spinner-display-name").should("be.visible")
+    cy.data("current-display-name").should("not.exist")
+    interception.sendResponse()
+    cy.data("spinner-display-name").should("not.exist")
+    cy.data("current-display-name").should("be.visible")
+  })
+
+  it("should display the spinner and then the error if retrieving display name fails", () => {
+    const interception = interceptIndefinitely("/rest/v1/member**", errorResponseChangeDisplayName)
+    cy.login()
+    cy.visit("/settings/change-display-name")
+    cy.data("spinner-display-name").should("be.visible")
+    cy.data("error-current-display-name").should("not.exist")
+    interception.sendResponse()
+    cy.data("spinner-display-name").should("not.exist")
+    cy.data("error-current-display-name").should("be.visible")
   })
 })
