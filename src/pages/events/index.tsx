@@ -1,13 +1,21 @@
-import React from 'react';
-import {MagnifyingGlassCircleIcon, MagnifyingGlassIcon} from "@heroicons/react/24/outline";
-import {PlusIcon} from "@heroicons/react/24/solid";
-import SearchBar from "@/components/suggestion/search-bar";
-import Spinner from "@/components/utils/spinner";
-import ErrorPopup from "@/components/popups/error-popup";
-import {SongType} from "@/components/wrapper/song-list-wrapper";
+import React, {useEffect} from 'react';
 import EventCard from "@/components/events/event-card";
+import {useSupabaseClient} from "@supabase/auth-helpers-react";
+import {Database} from "@/types/database";
+import {getEvents} from "@/services/event.service";
 
 const Index = () => {
+    const supabaseClient = useSupabaseClient<Database>()
+
+    const fetchEvents = async () => {
+        const data = await getEvents(supabaseClient);
+        console.log(data)
+    }
+
+    useEffect(() => {
+        fetchEvents()
+    })
+
     return (
         <div className={"page-wrapper"}>
             <div className={"flex justify-between"}>
