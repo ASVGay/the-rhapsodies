@@ -43,8 +43,7 @@ const SongPage = (props: SongProps) => {
   }
 
   const handleDivisionOperation = (error: PostgrestError | null, message: string) => {
-    if (error) setShowUpdateError(message)
-    else updateSong()
+    error ? setShowUpdateError(message) : updateSong()
   }
 
   const updateOrDeleteDivision = async (
@@ -80,8 +79,6 @@ const SongPage = (props: SongProps) => {
       .catch(() => setShowUpdateError("Failed to update the instrument division."))
       .finally(() => setShowSpinner(false))
   }
-
-  const displayButton = (): boolean => isAdmin
 
   const moveToSuggestions = () => {
     setShowSpinner(true)
@@ -142,7 +139,7 @@ const SongPage = (props: SongProps) => {
           </div>
         </div>
 
-        {displayButton() && (
+        {isAdmin && (
           <div className={"m-8 flex justify-center"}>
             <button className={"btn toSuggestions"} onClick={() => moveToSuggestions()}>
               Move to suggestions
@@ -181,7 +178,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (data == null) return { notFound: true }
     return { props: { song: data } }
   } catch {
-    return { notFound: true }
+    return {
+      redirect: {
+        destination: "/500",
+        permanent: false
+      }
+    }
   }
 }
 

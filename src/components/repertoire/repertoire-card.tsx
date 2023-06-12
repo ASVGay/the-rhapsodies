@@ -9,12 +9,8 @@ interface RepertoireCardProps {
 }
 
 const RepertoireCard = ({ song }: RepertoireCardProps) => {
-  const checkEmptyDivision = () => {
-    for (const item of song.song_instruments) {
-      if (item.division.length === 0) return true
-    }
-    return false
-  }
+  const checkEmptyDivision = () => song.song_instruments.some((item) => item.division.length === 0)
+
   return (
     <Link
       href={{ pathname: "/repertoire/[song]", query: { song: song.id } }}
