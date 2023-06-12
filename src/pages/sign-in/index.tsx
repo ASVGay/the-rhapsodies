@@ -7,7 +7,7 @@ import { Database } from "@/types/database"
 import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
-import { FormDataItem } from "@/interfaces/form-data-item"
+import { FormDataItem } from "@/interfaces/formdata"
 import Link from "next/link"
 import { toast } from "react-toastify"
 

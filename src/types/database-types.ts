@@ -25,3 +25,7 @@ export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   author: string | DisplayName
 }
 
+export type RepertoireSong = Database["public"]["Tables"]["song"]["Row"] & {
+  song_instruments: SongInstrument[]
+}
+
