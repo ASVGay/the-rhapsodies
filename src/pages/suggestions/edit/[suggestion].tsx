@@ -5,6 +5,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import {
   deleteSuggestionInstruments,
   getSuggestion,
+  insertSuggestionInstruments,
   updateSuggestion,
   updateSuggestionInstruments,
 } from "@/services/suggestion.service"
@@ -15,7 +16,7 @@ import { useRouter } from "next/router"
 import { Area } from "@/constants/area"
 import { AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
-import { mapEditInstruments } from "@/helpers/new-suggestion.helper"
+import { mapEditInstruments, mapInstruments } from "@/helpers/new-suggestion.helper"
 import {
   updateEditSuggestion,
   updateDeletedInstrumentUuids,
@@ -105,12 +106,26 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
       )
       if (suggestionResponse.error) throw new Error("Failed to update song")
 
+      const updateInstrument: ISuggestionInstrument[] = []
+      const insertInstrument: ISuggestionInstrument[] = []
+      reduxSuggestion.instruments.forEach((element) => {
+        if (element.id) updateInstrument.push(element)
+        else insertInstrument.push(element)
+      })
+
       const suggestionId = suggestionResponse.data.at(0)!.id
-      const suggestionInstrumentResponse = await updateSuggestionInstruments(
+
+      const instrumentUpdateResponse = await updateSuggestionInstruments(
         supabase,
-        mapEditInstruments(reduxSuggestion, suggestionId)
+        mapEditInstruments(updateInstrument, suggestionId)
       )
-      if (suggestionInstrumentResponse.error) throw Error("Failed to update song_instruments")
+      if (instrumentUpdateResponse.error) throw Error("Failed to update song_instruments")
+
+      const instrumentInsertResponse = await insertSuggestionInstruments(
+        supabase,
+        mapInstruments(insertInstrument, suggestionId)
+      )
+      if (instrumentInsertResponse.error) throw Error("Failed to insert song_instruments")
 
       const deleteSuggestionResponse = await deleteSuggestionInstruments(
         supabase,
@@ -132,7 +147,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
   const onInstrumentSubmit = (newInstruments: ISuggestionInstrument[]) => {
     //Add deleted entries to redux to remove on submit.
     const oldIds = newInstruments.map((item) => item.id)
-    const newIds = reduxSuggestion.instruments.map((item) => item.id)
+    const newIds = suggestion.song_instruments.map((item) => item.id)
     const missingIds = newIds.filter((id) => !oldIds.includes(id)) as string[]
     dispatch(updateDeletedInstrumentUuids([...deletedInstruments, ...missingIds]))
 

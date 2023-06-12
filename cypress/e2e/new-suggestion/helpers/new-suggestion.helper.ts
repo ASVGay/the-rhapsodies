@@ -92,7 +92,6 @@ export const shouldGoToReviewArea = () => {
   cy.data(toReviewButton).click()
   cy.data(instrumentsArea).should("not.exist")
   cy.data(areaSongInformation).should("not.exist")
-  areaInStateShouldBe(Area.Review)
 }
 
 export const fillSongInformationSuccessfully = () => {

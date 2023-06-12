@@ -37,7 +37,7 @@ const NewSuggestion = () => {
         }
 
         const suggestionId = response.data.at(0)!.id
-        insertSuggestionInstruments(supabase, mapInstruments(suggestion, suggestionId))
+        insertSuggestionInstruments(supabase, mapInstruments(suggestion.instruments, suggestionId))
           .then((response) => {
             if (response.error) {
               onError()

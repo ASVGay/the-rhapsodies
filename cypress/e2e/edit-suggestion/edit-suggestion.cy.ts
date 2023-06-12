@@ -87,7 +87,7 @@ describe("when the user wants to edit a suggestion", () => {
         cy.data("suggestion-edit-icon").click()
         cy.wait(500)
         cy.data("new-suggestion-progress-bar-instruments").click()
-        cy.data("instrument-edit-list").children().should("have.length", 3)
+        cy.data("instrument-edit-list").children().should("have.length", 4)
       })
 
       it("should change to a different suggestion's data when switching between suggestion edits", () => {
@@ -97,6 +97,7 @@ describe("when the user wants to edit a suggestion", () => {
       })
 
       it("should redirect to the suggestion detail page after saving the suggestion", () => {
+        cy.wait(500)
         cy.data("new-suggestion-progress-bar-review").click()
         cy.data("submit-suggestion-btn")
           .click()
@@ -106,6 +107,7 @@ describe("when the user wants to edit a suggestion", () => {
       })
 
       it("should apply changes from instrument after saving the suggestion", () => {
+        cy.wait(500)
         cy.data("new-suggestion-progress-bar-instruments").click()
         addInstrumentItem()
         shouldGoToReviewArea()
