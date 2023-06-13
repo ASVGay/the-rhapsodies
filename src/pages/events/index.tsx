@@ -46,7 +46,7 @@ const Index = () => {
         <div className={"page-header"}>Events</div>
       </div>
 
-      <div className={"flex flex-wrap justify-center gap-6"}>
+      <div data-cy={"event-list"} className={"flex flex-wrap justify-center gap-6"}>
         {showSpinner ? (
           <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
             <Spinner size={10} />
@@ -61,7 +61,7 @@ const Index = () => {
       {errorText.length > 0 && (
         <div
           className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
-          data-cy="no-suggestions-text"
+          data-cy="no-events-text"
         >
           <div>
             <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
