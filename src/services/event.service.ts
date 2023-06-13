@@ -4,5 +4,6 @@ import {Database} from "@/types/database";
 export const getEvents = async (supabase: SupabaseClient<Database>) => {
     return supabase
         .from('event')
-        .select();
+        .select()
+        .order('event_start_time');
 }
