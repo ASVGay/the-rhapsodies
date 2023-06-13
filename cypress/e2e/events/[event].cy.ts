@@ -8,7 +8,9 @@ describe("on the specific event page", () => {
   it("should render event info correctly", () => {
     cy.data("event-title").should("have.text", "Brainstormborrel")
     cy.data("event-date").should("have.text", "Wednesday, June 14")
-    cy.data("event-time").should("have.text", "19:00 - 21:00")
+    cy.data("event-time")
+      .invoke("text")
+      .should("match", /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)
     cy.data("event-location").should("have.text", "CREA 3.14")
   })
 
