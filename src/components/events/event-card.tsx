@@ -9,36 +9,13 @@ import {DayMapper, EventType, MonthMapper} from "@/enums/event.enum";
 interface EventCardProps {
   event: Event
 }
-
-const EventCardImage = (path: string) => {
-  return (
-      <Image
-          style={{
-            objectFit: "cover",
-            height: "120px",
-            width: "100%",
-            objectPosition: "bottom",
-          }}
-          src={path}
-          alt={"Brainstorm Image"}
-          width={358}
-          height={121}
-      />
-  )
-}
-
 const EventCard = ({ event }: EventCardProps) => {
-
   const getEventImage = (eventType: EventType) => {
     switch (eventType) {
       case EventType.Brainstormborrel:
-        return EventCardImage(
-          "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318105/event-banners/brainstorm.jpg"
-        )
+        return "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318105/event-banners/brainstorm.jpg"
       case EventType.Rehearsal:
-        return EventCardImage(
-          "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318116/event-banners/rehearsal.jpg"
-        )
+        return "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318116/event-banners/rehearsal.jpg"
     }
   }
   const getDayAndMonth = (timestamp: string) => {
@@ -62,7 +39,7 @@ const EventCard = ({ event }: EventCardProps) => {
 
   return (
     <div className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg">
-      <div className="w-full pb-1">{getEventImage(EventType[event.event_type])}</div>
+      <div className="w-full pb-1"><Image className={"object-cover object-bottom h-[120px]"} src={getEventImage(EventType[event.event_type])} alt={"Event Image"} width={358} height={121}/></div>
       <div className={"flex flex-col p-2"}>
         <div className={"flex flex-row justify-between gap-1"}>
           <span className={"text-lg leading-8 font-medium"}>{event.event_type}</span>
