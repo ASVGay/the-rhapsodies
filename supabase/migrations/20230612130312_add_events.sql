@@ -9,7 +9,7 @@
       id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
       event_type EVENT_TYPE NOT NULL,
       start_time TIMESTAMP WITH TIME ZONE NOT NULL,
-      end_time TIMESTAMP WITH TIME ZONE,
+      end_time TIMESTAMP WITH TIME ZONE not null,
       location TEXT NOT NULL
     );
 

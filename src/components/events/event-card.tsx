@@ -6,30 +6,12 @@ import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import {  CalendarIcon } from "@heroicons/react/24/solid"
 import {DayMapper, MonthMapper} from "@/enums/event.enum";
 import {getEventImage} from "@/helpers/event.helper";
+import {format} from "date-fns";
 
 interface EventCardProps {
   event: Event
 }
 const EventCard = ({ event }: EventCardProps) => {
-  const getDayAndMonth = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return `${DayMapper[date.getDay()]}, ${MonthMapper[date.getMonth()]} ${date.getDate()}`
-  }
-
-  const getStartAndEndTime = (startTimeStamp: string, endTimeStamp: string | null) => {
-    let endDate
-    const startDate = new Date(startTimeStamp)
-    const startDateTime = startDate.getHours() + ":" + startDate.getMinutes()
-
-    if (endTimeStamp != null) {
-      endDate = new Date(endTimeStamp)
-      const endDateTime = endDate.getHours() + ":" + endDate.getMinutes()
-      return `${startDateTime} - ${endDateTime}`
-    }
-
-    return startDateTime
-  }
-
   return (
     <div className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg">
       <div className="w-full pb-1">
@@ -44,13 +26,14 @@ const EventCard = ({ event }: EventCardProps) => {
           <div className={"flex flex-row gap-2"}>
             <CalendarIcon height={20} width={20} color={"#EEC73F"} />
             <span className={"text-base leading-5 font-light text-zinc-400"}>
-              {getDayAndMonth(event.start_time)}
+               {format(new Date(event.start_time), "cccc, LLLL d")}
             </span>
           </div>
           <div className={"flex flex-row gap-2"}>
             <ClockIcon height={20} width={20} color={"#EEC73F"} />
             <span className={"text-base leading-5 font-light text-zinc-400"}>
-              {getStartAndEndTime(event.start_time, event.end_time)}
+              {format(new Date(event.start_time), "HH:mm")} -{" "}
+              {format(new Date(event.end_time), "HH:mm")}
             </span>
           </div>
           <div className={"flex flex-row gap-2"}>

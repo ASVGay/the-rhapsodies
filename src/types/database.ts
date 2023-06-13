@@ -36,22 +36,22 @@ export interface Database {
     Tables: {
       attendee: {
         Row: {
-          attending: Database["public"]["Enums"]["attending"] | null
-          event_id: string | null
+          attending: Database["public"]["Enums"]["attending"]
+          event_id: string
           remark: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
-          attending?: Database["public"]["Enums"]["attending"] | null
-          event_id?: string | null
+          attending: Database["public"]["Enums"]["attending"]
+          event_id: string
           remark?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
-          attending?: Database["public"]["Enums"]["attending"] | null
-          event_id?: string | null
+          attending?: Database["public"]["Enums"]["attending"]
+          event_id?: string
           remark?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -98,25 +98,25 @@ export interface Database {
       }
       event: {
         Row: {
-          end_time: string | null
-          start_time: string
+          end_time: string
           event_type: Database["public"]["Enums"]["event_type"]
           id: string
-          location: string | null
+          location: string
+          start_time: string
         }
         Insert: {
-          end_time?: string | null
-          start_time: string
+          end_time: string
           event_type: Database["public"]["Enums"]["event_type"]
           id?: string
-          location?: string | null
+          location: string
+          start_time: string
         }
         Update: {
-          end_time?: string | null
-          start_time?: string
+          end_time?: string
           event_type?: Database["public"]["Enums"]["event_type"]
           id?: string
-          location?: string | null
+          location?: string
+          start_time?: string
         }
         Relationships: []
       }
