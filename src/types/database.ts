@@ -98,22 +98,22 @@ export interface Database {
       }
       event: {
         Row: {
-          event_end_time: string | null
-          event_start_time: string
+          end_time: string | null
+          start_time: string
           event_type: Database["public"]["Enums"]["event_type"]
           id: string
           location: string | null
         }
         Insert: {
-          event_end_time?: string | null
-          event_start_time: string
+          end_time?: string | null
+          start_time: string
           event_type: Database["public"]["Enums"]["event_type"]
           id?: string
           location?: string | null
         }
         Update: {
-          event_end_time?: string | null
-          event_start_time?: string
+          end_time?: string | null
+          start_time?: string
           event_type?: Database["public"]["Enums"]["event_type"]
           id?: string
           location?: string | null

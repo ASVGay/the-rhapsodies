@@ -49,13 +49,13 @@ const EventCard = ({ event }: EventCardProps) => {
           <div className={"flex flex-row gap-2"}>
             <CalendarIcon height={20} width={20} color={"#EEC73F"} />
             <span className={"text-base leading-5 font-light text-zinc-400"}>
-              {getDayAndMonth(event.event_start_time)}
+              {getDayAndMonth(event.start_time)}
             </span>
           </div>
           <div className={"flex flex-row gap-2"}>
             <ClockIcon height={20} width={20} color={"#EEC73F"} />
             <span className={"text-base leading-5 font-light text-zinc-400"}>
-              {getStartAndEndTime(event.event_start_time, event.event_end_time)}
+              {getStartAndEndTime(event.start_time, event.end_time)}
             </span>
           </div>
           <div className={"flex flex-row gap-2"}>

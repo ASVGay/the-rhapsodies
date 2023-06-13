@@ -12,5 +12,5 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
                 "attending"
             )
         `)
-        .order('event_start_time');
+        .order('start_time');
 }
