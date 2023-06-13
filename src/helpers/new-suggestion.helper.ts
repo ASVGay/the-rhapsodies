@@ -1,5 +1,5 @@
 import { UseFormWatch } from "react-hook-form"
-import { InputsSongInformation, ISuggestion, ISuggestionInstrument } from "@/interfaces/suggestion"
+import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
 import { SongInstrumentDatabaseOperation } from "@/types/database-types"
 
 export function submitSongInformationForm() {

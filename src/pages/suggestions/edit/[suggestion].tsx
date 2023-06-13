@@ -145,10 +145,10 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
   }
 
   const onInstrumentSubmit = (newInstruments: ISuggestionInstrument[]) => {
-    //Add deleted entries to redux to remove on submit.
+    // Add deleted entries to redux to remove on submit.
     const oldIds = newInstruments.map((item) => item.id)
     const newIds = suggestion.song_instruments.map((item) => item.id)
-    const missingIds = newIds.filter((id) => !oldIds.includes(id)) as string[]
+    const missingIds = newIds.filter((id) => !oldIds.includes(id))
     dispatch(updateDeletedInstrumentUuids([...deletedInstruments, ...missingIds]))
 
     dispatch(
