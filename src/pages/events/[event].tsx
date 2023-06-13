@@ -5,8 +5,7 @@ import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { getEvent } from "@/services/event.service"
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { format } from "date-fns"
-import { getTitle } from "@/helpers/event.helper"
+import EventInfoCard from "@/components/events/event-info-card"
 
 interface EventPageProps {
   event: Event
@@ -25,12 +24,7 @@ const EventPage = ({ event }: EventPageProps) => {
           onClick={() => router.push("/events")}
         />
       </div>
-      <p data-cy={"event-title"}>{getTitle(event.event_type)}</p>
-      <p data-cy={"event-date"}>{format(new Date(event.start_time), "cccc, LLLL d")}</p>
-      <p data-cy={"event-time"}>
-        {format(new Date(event.start_time), "HH:mm")} - {format(new Date(event.end_time), "HH:mm")}
-      </p>
-      <p data-cy={"event-location"}>{event.location}</p>
+      <EventInfoCard event={event} />
     </div>
   )
 }
