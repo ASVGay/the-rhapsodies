@@ -1,20 +1,16 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import { ArrowLeftIcon, UserCircleIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
-import {
-  getDisplayName,
-  updateDisplayName,
-  verifyPassword,
-} from "@/services/authentication.service"
+import { updateDisplayName, verifyPassword } from "@/services/authentication.service"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
-import Spinner from "@/components/utils/spinner"
 import CurrentPasswordInput from "@/components/settings/account/current-password-input"
+import CurrentDisplayName from "@/components/settings/account/change-display-name/current-display-name"
 
 interface FormInputs {
   newDisplayName: string
@@ -29,11 +25,6 @@ const Index = () => {
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const [isLoadingDisplayName, setIsLoadingDisplayName] = useState<boolean>(false)
-  const [displayName, setDisplayName] = useState<string>("")
-  const hasSuccessfullyLoadedDisplayName = !isLoadingDisplayName && displayName
-  const hasFailedLoadingDisplayName = !isLoadingDisplayName && !displayName
 
   const {
     handleSubmit,
@@ -69,21 +60,6 @@ const Index = () => {
     }
   }
 
-  useEffect(() => {
-    const retrieveCurrentDisplayName = () => {
-      setIsLoadingDisplayName(true)
-      if (uid) {
-        getDisplayName(supabase, uid).then(({ data, error }) => {
-          if (error) setDisplayName("")
-          if (data) setDisplayName(data.display_name)
-          setIsLoadingDisplayName(false)
-        })
-      }
-    }
-
-    retrieveCurrentDisplayName()
-  }, [uid, supabase, router])
-
   return (
     <div className={"page-wrapper lg:w-3/5"}>
       <h1 className={"page-header flex items-center lg:justify-between lg:text-center"}>
@@ -102,20 +78,7 @@ const Index = () => {
         onSubmit={handleSubmit(submitNewDisplayName)}
         data-cy={"change-display-name-form"}
       >
-        {isLoadingDisplayName && <Spinner size={6} dataCy={"spinner-display-name"} />}
-        {hasSuccessfullyLoadedDisplayName && (
-          <p data-cy={"current-display-name"}>
-            Your current display name is{" "}
-            <span className={"font-bold text-moon"}>{displayName}</span>.
-          </p>
-        )}
-        {hasFailedLoadingDisplayName && (
-          <p className={"text-xs italic"} data-cy={"error-current-display-name"}>
-            Your current display name could not be retrieved. Try opening this setting again if you
-            want to view it.
-          </p>
-        )}
-
+        <CurrentDisplayName />
         <p>
           Please enter your <b>new</b> display name.
         </p>
