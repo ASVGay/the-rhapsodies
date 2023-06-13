@@ -1,64 +1,10 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
-import { Database } from "@/types/database"
-import React, { useState } from "react"
-import { useForm } from "react-hook-form"
-import ErrorMessage from "@/components/error/error-message"
-import { ArrowLeftIcon, UserCircleIcon } from "@heroicons/react/24/outline"
+import React from "react"
+import { ArrowLeftIcon } from "@heroicons/react/24/outline"
+import ChangeDisplayNameForm from "@/components/settings/account/change-display-name/change-display-name-form"
 import { useRouter } from "next/router"
-import { toast } from "react-toastify"
-import { updateDisplayName, verifyPassword } from "@/services/authentication.service"
-import SpinnerStripes from "@/components/utils/spinner-stripes"
-import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
-import CurrentPasswordInput from "@/components/settings/account/current-password-input"
-import CurrentDisplayName from "@/components/settings/account/change-display-name/current-display-name"
-
-interface FormInputs {
-  newDisplayName: string
-  currentPassword: string
-}
-
-const updateDisplayNameError = () =>
-  toast.error("Something went wrong while changing your display name. Please try again.")
 
 const Index = () => {
-  const uid = useUser()?.id
-  const supabase = useSupabaseClient<Database>()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    setError,
-  } = useForm<FormInputs>()
-  const updateNewDisplayName = async (newDisplayName: string, uid: string) => {
-    const { data, error } = await updateDisplayName(supabase, newDisplayName.trim(), uid)
-
-    if (error) updateDisplayNameError()
-    else if (data) {
-      toast.success(`Display name successfully changed to ${data.display_name}!`)
-      await router.push("/settings")
-    }
-  }
-
-  const submitNewDisplayName = async ({ currentPassword, newDisplayName }: FormInputs) => {
-    setIsLoading(true)
-    if (!uid) {
-      handleNoUser(supabase, router)
-      setIsLoading(false)
-    } else {
-      verifyPassword(supabase, currentPassword).then(async ({ error, data }) => {
-        if (error) updateDisplayNameError()
-        // check if verify password returns true (correct password)
-        if (data) await updateNewDisplayName(newDisplayName, uid)
-        // deep check that data returns false and not null or undefined
-        if (data === false) showIncorrectPassword(setError)
-
-        setIsLoading(false)
-      })
-    }
-  }
 
   return (
     <div className={"page-wrapper lg:w-3/5"}>
@@ -72,63 +18,7 @@ const Index = () => {
         {/*Empty span to center text on lg screen*/}
         <span />
       </h1>
-
-      <form
-        className={"flex flex-col gap-4 text-zinc-400"}
-        onSubmit={handleSubmit(submitNewDisplayName)}
-        data-cy={"change-display-name-form"}
-      >
-        <CurrentDisplayName />
-        <p>
-          Please enter your <b>new</b> display name.
-        </p>
-        <div className={"input-container"}>
-          <label htmlFor="newDisplayName" className="sr-only">
-            Enter your new display name
-          </label>
-          {errors.newDisplayName && (
-            <ErrorMessage
-              dataCy={"input-new-display-name-error"}
-              message="Please provide a display name"
-            />
-          )}
-          <div className="input">
-            <input
-              className={`!p-2.5 !pe-12 ${errors.newDisplayName && "error"}`}
-              data-cy={"input-new-display-name"}
-              type="text"
-              placeholder="New display name"
-              {...register("newDisplayName", {
-                validate: (value) => {
-                  return !!value.trim()
-                },
-              })}
-              disabled={isLoading}
-            />
-            <span>
-              <UserCircleIcon />
-            </span>
-          </div>
-        </div>
-
-        <p>Please enter your password to verify your identity.</p>
-        <CurrentPasswordInput
-          errors={errors}
-          register={register("currentPassword", {
-            required: { value: true, message: "Please provide your current password" },
-          })}
-          disabled={isLoading}
-        />
-
-        <button
-          data-cy={"button-submit-new-display-name"}
-          type={"submit"}
-          className={"btn flex w-full justify-center gap-2 rounded-lg p-2.5"}
-          disabled={isLoading}
-        >
-          {isLoading ? <SpinnerStripes dataCy={"spinner"} /> : "Update name"}
-        </button>
-      </form>
+      <ChangeDisplayNameForm />
     </div>
   )
 }
