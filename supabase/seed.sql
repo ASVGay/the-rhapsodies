@@ -51,17 +51,12 @@ INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'absent');
 INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-
-
 INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
-
 INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'absent');
-
 INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'undecided');
-
 INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
 VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
 
