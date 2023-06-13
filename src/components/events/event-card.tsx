@@ -43,7 +43,7 @@ const EventCard = ({ event }: EventCardProps) => {
       <div className={"flex flex-col p-2"}>
         <div className={"flex flex-row justify-between gap-1"}>
           <span className={"text-lg leading-8 font-medium"}>{event.event_type}</span>
-          <AttendanceCard />
+          <AttendanceCard attendees={event.attendees} />
         </div>
         <div className={"flex flex-col"}>
           <div className={"flex flex-row gap-2"}>

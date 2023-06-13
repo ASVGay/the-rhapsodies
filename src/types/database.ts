@@ -34,6 +34,40 @@ export interface Database {
   }
   public: {
     Tables: {
+      attendee: {
+        Row: {
+          attending: Database["public"]["Enums"]["attending"] | null
+          event_id: string | null
+          remark: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attending?: Database["public"]["Enums"]["attending"] | null
+          event_id?: string | null
+          remark?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attending?: Database["public"]["Enums"]["attending"] | null
+          event_id?: string | null
+          remark?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendee_event_id_fkey"
+            columns: ["event_id"]
+            referencedRelation: "event"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendee_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "member"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       division: {
         Row: {
           musician: string
@@ -255,6 +289,7 @@ export interface Database {
       }
     }
     Enums: {
+      attending: "present" | "absent" | "undecided"
       event_type: "Brainstormborrel" | "Rehearsal"
     }
     CompositeTypes: {

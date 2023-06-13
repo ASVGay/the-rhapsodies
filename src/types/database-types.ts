@@ -25,5 +25,9 @@ export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   author: string | DisplayName
 }
 
-export type Event = Database["public"]["Tables"]["event"]["Row"]
+export type Attendee = Database["public"]["Tables"]["attendee"]["Row"]
+
+export type Event = Database["public"]["Tables"]["event"]["Row"] & {
+    attendees: Attendee[]
+}
 
