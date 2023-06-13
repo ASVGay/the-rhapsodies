@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   const { params } = context
   try {
-    let { data, error } = await getEvent(supabase, params?.event as string)
+    let { data } = await getEvent(supabase, params?.event as string)
     if (data == null) return { notFound: true }
     return { props: { event: data } }
   } catch {
