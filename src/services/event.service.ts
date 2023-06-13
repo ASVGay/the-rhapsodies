@@ -14,9 +14,3 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
         `)
         .order('event_start_time');
 }
-export const getAttendees = async (supabase: SupabaseClient, eventId: string) => {
-    return supabase
-        .from("attendees")
-        .select()
-        .eq("event_id", eventId)
-}
