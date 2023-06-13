@@ -1,12 +1,6 @@
 import {SupabaseClient} from "@supabase/supabase-js";
 import {Database} from "@/types/database";
 
-export const getEvents = async (supabase: SupabaseClient<Database>) => {
-    return supabase
-        .from('event')
-        .select()
-        .order('event_start_time');
-}
 
 export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>) => {
     return supabase
