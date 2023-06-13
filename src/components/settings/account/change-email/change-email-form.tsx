@@ -113,12 +113,7 @@ const ChangeEmailForm = ({ setEmailIsSent }: ChangeEmailFormProps) => {
         disabled={isLoading}
       />
 
-      <button
-        data-cy={"button-submit-new-email"}
-        type={"submit"}
-        className={"btn flex w-full justify-center gap-2 rounded-lg p-2.5"}
-        disabled={isLoading}
-      >
+      <button data-cy={"button-submit-new-email"} className={"btn submit"} disabled={isLoading}>
         {isLoading ? <SpinnerStripes dataCy={"spinner"} /> : "Update email"}
       </button>
     </form>
