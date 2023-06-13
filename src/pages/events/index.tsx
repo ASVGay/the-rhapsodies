@@ -1,20 +1,42 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import EventCard from "@/components/events/event-card";
 import {useSupabaseClient} from "@supabase/auth-helpers-react";
-import {Database} from "@/types/database";
+import { Event } from "@/types/database-types";
 import {getEvents} from "@/services/event.service";
+import {Database} from "@/types/database";
 
 const Index = () => {
     const supabaseClient = useSupabaseClient<Database>()
+    const [events, setEvents] = useState<Event[]>();
+    const [showSpinner, setShowSpinner] = useState<boolean>()
+    const fetchEvents = () => {
+        setShowSpinner(true)
 
-    const fetchEvents = async () => {
-        const data = await getEvents(supabaseClient);
-        console.log(data)
+        const events = getEvents(supabaseClient);
+
+        events.then((res) => {
+            if(res.error) {
+                //cant load
+                return
+            }
+
+            if(res.data?.length > 0) {
+                setEvents(res.data as Event[])
+            } else {
+                //no events yet
+            }
+        })
+            .catch(() => {
+                //loading error
+            })
+            .finally(() => {
+                console.log("hi")
+            })
     }
 
     useEffect(() => {
         fetchEvents()
-    })
+    },[])
 
     return (
         <div className={"page-wrapper"}>
@@ -24,10 +46,9 @@ const Index = () => {
                 </div>
             </div>
             <div className={"flex flex-wrap justify-center gap-6"}>
-                <EventCard/>
-                <EventCard/>
-                <EventCard/>
-                <EventCard/>
+                {events?.map((event: Event) => {
+                    return <EventCard key={event.id} event={event}/>
+                })}
             </div>
         </div>
     );

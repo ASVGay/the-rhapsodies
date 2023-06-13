@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[]
 
 export interface Database {
   graphql_public: {
@@ -55,6 +61,30 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      event: {
+        Row: {
+          event_end_time: string | null
+          event_start_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          location: string | null
+        }
+        Insert: {
+          event_end_time?: string | null
+          event_start_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+        }
+        Update: {
+          event_end_time?: string | null
+          event_start_time?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+        }
+        Relationships: []
       }
       instrument: {
         Row: {
@@ -225,7 +255,7 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      event_type: "BrainstormBorrel" | "Rehearsal"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -417,3 +447,4 @@ export interface Database {
     }
   }
 }
+

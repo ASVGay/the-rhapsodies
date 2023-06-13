@@ -3,6 +3,6 @@ import {Database} from "@/types/database";
 
 export const getEvents = async (supabase: SupabaseClient<Database>) => {
     return supabase
-        .from('events')
+        .from('event')
         .select();
 }
