@@ -41,9 +41,9 @@
         @apply pb-8;
     }
 
-  .btn {
-     @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
-   }
+    .btn {
+        @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
+    }
 
     .page-wrapper {
         @apply mx-auto px-4 pt-6;
@@ -92,5 +92,13 @@
 
     .btn.toRepertoire {
         @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
+    }
+
+    .info-item {
+        @apply flex items-center gap-2
+    }
+
+    .info-item > svg {
+        @apply text-moon h-5
     }
 }

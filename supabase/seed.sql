@@ -99,4 +99,5 @@ INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('df89
 INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 
-
+-- Insert event for testing
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location") VALUES ('0b5fb485-fc2a-4acc-8fd7-64f008c3089e', 'brainstormborrel', '2023-06-14 17:00:00+00', '2023-06-14 19:00:00+00', 'CREA 3.14');

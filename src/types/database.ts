@@ -56,6 +56,30 @@ export interface Database {
           }
         ]
       }
+      event: {
+        Row: {
+          end_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          location: string
+          start_time: string
+        }
+        Insert: {
+          end_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location: string
+          start_time: string
+        }
+        Update: {
+          end_time?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string
+          start_time?: string
+        }
+        Relationships: []
+      }
       instrument: {
         Row: {
           id: string
@@ -225,7 +249,7 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      event_type: "brainstormborrel" | "rehearsal"
     }
     CompositeTypes: {
       [_ in never]: never
