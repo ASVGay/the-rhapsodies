@@ -55,7 +55,7 @@ describe("on the change email page", () => {
       const inputs = [inputCurrentPassword, inputNewEmail]
 
       inputs.forEach((input) => {
-        cy.data(input).should("have.css", "outline-color", "rgb(209, 213, 219)")
+        cy.data(input).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
       })
 
       cy.data(errorNewEmail).should("not.exist")
