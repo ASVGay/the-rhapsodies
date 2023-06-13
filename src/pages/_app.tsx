@@ -50,7 +50,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <link rel="manifest" href="/images/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name="application-name" content="The Rhapsodies" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="The Rhapsodies" />
