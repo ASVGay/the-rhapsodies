@@ -17,6 +17,7 @@ export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
     `
     )
     .eq("inRepertoire", false)
+    .order("created_at", { ascending: false })
 }
 
 export const getRepertoireSongs = async (supabase: SupabaseClient<Database>) => {
@@ -33,6 +34,7 @@ export const getRepertoireSongs = async (supabase: SupabaseClient<Database>) => 
     `
     )
     .eq("inRepertoire", true)
+    .order("artist")
 }
 
 export const getSuggestion = async (supabase: SupabaseClient<Database>, id: string) => {

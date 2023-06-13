@@ -26,3 +26,6 @@ export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   song_instruments: SongInstrument[]
   author: string | DisplayName | Author
 }
+
+export type Event = Database["public"]["Tables"]["event"]["Insert"]
+export type EventType = Database["public"]["Enums"]["event_type"]
