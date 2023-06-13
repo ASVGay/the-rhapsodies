@@ -6,7 +6,8 @@ export type Instrument = Database["public"]["Tables"]["instrument"]["Row"]
 
 export type DivisionDatabaseOperation = Database["public"]["Tables"]["division"]["Insert"]
 
-export type SongInstrumentDatabaseOperation = Database["public"]["Tables"]["song_instrument"]["Insert"]
+export type SongInstrumentDatabaseOperation =
+  Database["public"]["Tables"]["song_instrument"]["Insert"]
 
 export type Division = Database["public"]["Tables"]["division"]["Row"] & {
   musician: {
@@ -25,3 +26,5 @@ export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   author: string | DisplayName
 }
 
+export type Event = Database["public"]["Tables"]["event"]["Insert"]
+export type EventType = Database["public"]["Enums"]["event_type"]
