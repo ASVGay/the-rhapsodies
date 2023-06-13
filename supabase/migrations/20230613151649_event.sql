@@ -1,3 +1,5 @@
+drop type if exists "public"."event_type";
+
 create type "public"."event_type" as enum ('brainstormborrel', 'rehearsal');
 
 create table "public"."event" (
