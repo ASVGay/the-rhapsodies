@@ -1,12 +1,12 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import { ArrowLeftIcon, EnvelopeIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
-import { verifyPassword } from "@/services/authentication.service"
+import { sendChangeEmailRequest, verifyPassword } from "@/services/authentication.service"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 import { handleNoUser, showIncorrectPassword } from "@/helpers/account-settings"
 import CurrentPasswordInput from "@/components/settings/account/current-password-input"
@@ -25,15 +25,36 @@ const Index = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  useEffect(() => {
+    const hash = (router.asPath as string).split("#")[1]
+    const parsedHash = new URLSearchParams(hash)
+    const refreshToken = parsedHash.get("refresh_token")
+    const error = parsedHash.get("error")
+    if (error) router.push("/sign-in")
+    if (refreshToken)
+      supabase.auth.refreshSession({ refresh_token: refreshToken }).then(() => {
+        toast.success(`Your email has successfully been updated!`, {
+          toastId: "update-success",
+        })
+        history.pushState("", document.title, window.location.pathname)
+      })
+  })
+
   const {
     handleSubmit,
     register,
     formState: { errors },
     setError,
   } = useForm<FormInputs>()
+
   const sendChangeEmail = async (email: string) => {
-    toast.success(`Email is sent!`)
-    await router.push("/settings")
+    const isEmailSent = await sendChangeEmailRequest(supabase, email)
+
+    if (isEmailSent) {
+      // TODO don't redirect but show user instructions
+      toast.success(`Email is sent!`)
+      await router.push("/settings")
+    }
   }
 
   const submitNewEmail = async ({ currentPassword, newEmailAddress }: FormInputs) => {

@@ -46,3 +46,16 @@ export const updateDisplayName = (
 export const getDisplayName = (supabaseClient: SupabaseClient<Database>, uid: string) => {
   return supabaseClient.from("member").select("display_name").eq("id", uid).limit(1).single()
 }
+
+export const sendChangeEmailRequest = async (supabase: SupabaseClient, email: string) => {
+  const { error } = await supabase.auth.updateUser(
+    { email },
+    { emailRedirectTo: `${window.location.origin}/settings/change-email` }
+  )
+  if (error) {
+    toast.error(error.message)
+    return false
+  } else {
+    return true
+  }
+}

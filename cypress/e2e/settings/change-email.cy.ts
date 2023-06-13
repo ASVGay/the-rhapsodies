@@ -1,4 +1,5 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
+import { getSbToken } from "../../support/commands"
 
 const errorResponseChangeEmail = {
   statusCode: 401,
@@ -145,5 +146,31 @@ describe("on the change email page", () => {
       cy.data("current-email").should("not.exist")
       cy.data("error-current-email").should("be.visible")
     })
+  })
+})
+
+describe("on change email page with hash params", () => {
+  it("should show toast if going to page with refresh token", () => {
+    cy.login()
+    cy.wait(300) // wait for login to complete
+    cy.getCookie(getSbToken()).then((cookie) => {
+      const refreshToken = JSON.parse(decodeURIComponent(cookie.value))[1]
+      cy.visit(`/settings/change-email#refresh_token=${refreshToken}`)
+      cy.get(".Toastify")
+        .get("#update-success")
+        .get(".Toastify__toast-body")
+        .should("have.text", "Your email has successfully been updated!")
+    })
+  })
+
+  it("should show redirect to sign in if going to page with error hash", () => {
+    cy.visit(
+      "/settings/change-email#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired"
+    )
+    cy.location("pathname").should("eq", "/sign-in")
+    cy.get(".Toastify")
+      .get("#error_description")
+      .get(".Toastify__toast-body")
+      .should("have.text", "Email link is invalid or has expired")
   })
 })
