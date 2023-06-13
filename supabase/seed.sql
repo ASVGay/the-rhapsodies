@@ -33,19 +33,13 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Rens', 'de315267-9
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Marcel', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Feryll', '1ce835c1-a708-4e73-a808-334e982dfe3d');
 
-INSERT INTO "public"."events" ("event_type", "event_date", "location")
+INSERT INTO "public"."event" ("event_type", "event_date", "location")
 VALUES ('BrainstormBorrel', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)), 'Studio');
-
-
-INSERT INTO "public"."events" ("event_type", "event_date", "location")
+INSERT INTO "public"."event" ("event_type", "event_date", "location")
 VALUES ('Rehearsal', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)), 'Studio');
-
-
-INSERT INTO "public"."events" ("event_type", "event_date", "location")
+INSERT INTO "public"."event" ("event_type", "event_date", "location")
 VALUES ('BrainstormBorrel', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)), 'Studio');
-
-
-INSERT INTO "public"."events" ("event_type", "event_date", "location")
+INSERT INTO "public"."event" ("event_type", "event_date", "location")
 VALUES ('Rehearsal', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)), 'Studio');
 
 

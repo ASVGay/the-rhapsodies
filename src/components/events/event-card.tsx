@@ -28,13 +28,13 @@ const EventCard = () => {
     const getEventImage = (eventType: EventType) => {
         switch (eventType) {
             case EventType.BrainstormBorrel:
-                return EventCardImage("/images/events/brainstorm-borrel.png")
+                return EventCardImage("https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318105/event-banners/brainstorm.jpg")
             case EventType.Rehearsal:
-                return EventCardImage("/images/events/rehearsal.png")
+                return EventCardImage("https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318116/event-banners/rehearsal.jpg")
         }
     }
     return (
-        <div className="max-w-[22rem] h-fit cursor-pointer rounded-md bg-white drop-shadow-lg overflow-hidden">
+        <div className="w-[22rem] h-fit cursor-pointer rounded-md bg-white drop-shadow-lg overflow-hidden">
             <div className="h-1/2 w-full">
                 {getEventImage(EventType.BrainstormBorrel)}
             </div>
