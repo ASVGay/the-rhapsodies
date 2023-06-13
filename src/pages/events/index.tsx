@@ -4,7 +4,6 @@ import {useSupabaseClient} from "@supabase/auth-helpers-react";
 import { Event } from "@/types/database-types";
 import {getEvents} from "@/services/event.service";
 import {Database} from "@/types/database";
-import ErrorPopup from "@/components/popups/error-popup";
 import {MagnifyingGlassCircleIcon} from "@heroicons/react/24/outline";
 import Spinner from "@/components/utils/spinner";
 
