@@ -255,7 +255,7 @@ export interface Database {
       }
     }
     Enums: {
-      event_type: "BrainstormBorrel" | "Rehearsal"
+      event_type: "Brainstormborrel" | "Rehearsal"
     }
     CompositeTypes: {
       [_ in never]: never

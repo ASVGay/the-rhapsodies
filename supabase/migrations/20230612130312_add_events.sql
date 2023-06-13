@@ -1,4 +1,4 @@
-CREATE TYPE EVENT_TYPE AS ENUM ('BrainstormBorrel', 'Rehearsal');
+CREATE TYPE EVENT_TYPE AS ENUM ('Brainstormborrel', 'Rehearsal');
 
 
 CREATE TABLE event (

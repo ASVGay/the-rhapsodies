@@ -3,9 +3,9 @@ import {CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon} from "@heroicons/r
 
 const AttendanceCard = () => {
     const data = {
-        isAttending: 12,
+        isAttending: 3,
         isNotAttending: 5,
-        noInfo: 2
+        noInfo: 10
     }
     return (
         <div className={"w-fit h-[1.75rem] color bg-zinc-100 rounded flex flex-row justify-between items-center gap-1 pr-2 pl-2"}>

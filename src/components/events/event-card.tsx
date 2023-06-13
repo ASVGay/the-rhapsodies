@@ -1,115 +1,92 @@
-import React from 'react';
+import React from "react"
 import Image from "next/image"
-import {Event} from "@/types/database-types";
-import AttendanceCard from "@/components/events/attendance-card";
-import {ClockIcon, CalendarIcon, MapPinIcon} from "@heroicons/react/24/outline";
+import { Event } from "@/types/database-types"
+import AttendanceCard from "@/components/events/attendance-card"
+import { ClockIcon, CalendarIcon, MapPinIcon } from "@heroicons/react/24/outline"
+import {DayMapper, EventType, MonthMapper} from "@/enums/event.enum";
 
 interface EventCardProps {
-    event: Event
+  event: Event
 }
 
-enum DayMapper {
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday
-}
+const EventCard = ({ event }: EventCardProps) => {
+  const EventCardImage = (path: string) => {
+    return (
+      <Image
+        style={{
+          objectFit: "cover",
+          height: "120px",
+          width: "100%",
+          objectPosition: "bottom",
+        }}
+        src={path}
+        alt={"Brainstorm Image"}
+        width={358}
+        height={121}
+      />
+    )
+  }
 
-enum MonthMapper {
-    January,
-    February,
-    March,
-    April,
-    May,
-    June,
-    July,
-    August,
-    September,
-    October,
-    November,
-    December
-}
-
-enum EventType {
-    BrainstormBorrel,
-    Rehearsal,
-}
-
-const EventCard = ({event}: EventCardProps) => {
-    const EventCardImage = (path: string) => {
-        return (
-            <Image
-                style={{
-                    objectFit: "cover",
-                    height: "120px",
-                    width: "100%",
-                    objectPosition: "bottom"
-                }}
-                src={path}
-                alt={"Brainstorm Image"}
-                width={358}
-                height={121}/>
+  const getEventImage = (eventType: EventType) => {
+    switch (eventType) {
+      case EventType.Brainstormborrel:
+        return EventCardImage(
+          "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318105/event-banners/brainstorm.jpg"
+        )
+      case EventType.Rehearsal:
+        return EventCardImage(
+          "https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318116/event-banners/rehearsal.jpg"
         )
     }
+  }
+  const getDayAndMonth = (timestamp: string) => {
+    const date = new Date(timestamp)
+    return `${DayMapper[date.getDay()]}, ${MonthMapper[date.getMonth()]} ${date.getDate()}`
+  }
 
-    const getEventImage = (eventType: EventType) => {
-        switch (eventType) {
-            case EventType.BrainstormBorrel:
-                return EventCardImage("https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318105/event-banners/brainstorm.jpg")
-            case EventType.Rehearsal:
-                return EventCardImage("https://res.cloudinary.com/dzpeu56zp/image/upload/v1686318116/event-banners/rehearsal.jpg")
-        }
+  const getStartAndEndTime = (startTimeStamp: string, endTimeStamp: string | null) => {
+    let endDate
+    const startDate = new Date(startTimeStamp)
+    const startDateTime = startDate.getHours() + ":" + startDate.getMinutes()
+
+    if (endTimeStamp != null) {
+      endDate = new Date(endTimeStamp)
+      const endDateTime = endDate.getHours() + ":" + endDate.getMinutes()
+      return `${startDateTime} - ${endDateTime}`
     }
-    const getDayAndMonth = (timestamp: string) => {
-        const date = new Date(timestamp);
-        return `${DayMapper[date.getDay()]}, ${MonthMapper[date.getMonth()]} ${date.getDate()}`
-    }
 
-    const getStartAndEndTime = (startTimeStamp: string, endTimeStamp: string | null) => {
-        let endDate;
-        const startDate = new Date(startTimeStamp)
-        const startDateTime  = startDate.getHours() + ':' + startDate.getMinutes();
+    return startDateTime
+  }
 
-        if (endTimeStamp != null) {
-            endDate = new Date(endTimeStamp)
-            const endDateTime  = endDate.getHours() + ':' + endDate.getMinutes();
-            return `${startDateTime} - ${endDateTime}`
-        }
-
-        return startDateTime
-    }
-    return (
-        <div className="w-[22rem] h-fit cursor-pointer rounded-md bg-white drop-shadow-lg overflow-hidden">
-            <div className="h-1/2 w-full">
-                {getEventImage(EventType[event.event_type])}
-            </div>
-            <div className={"flex flex-col p-2 gap-1"}>
-                <div className={"flex flex-row justify-between gap-0.5"}>
-                    <span className={"text-lg leading-8"}>Brainstormborrel</span>
-                    <AttendanceCard/>
-                </div>
-                <div className={"flex flex-col"}>
-                    <div className={"flex flex-row gap-2"}>
-                        <CalendarIcon height={20} width={20} color={"#EEC73F"}/>
-                        <span
-                            className={"text-base leading-5 text-zinc-400"}>{getDayAndMonth(event.event_start_time)}</span>
-                    </div>
-                    <div className={"flex flex-row gap-2"}>
-                        <ClockIcon height={20} width={20} color={"#EEC73F"}/>
-                        <span
-                            className={"text-base leading-5 text-zinc-400"}>{getStartAndEndTime(event.event_start_time, event.event_end_time)}</span>
-                    </div>
-                    <div className={"flex flex-row gap-2"}>
-                        <MapPinIcon height={20} width={20} color={"#EEC73F"}/>
-                        <span className={"text-base leading-5 text-zinc-400"}>{event.location}</span>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg">
+      <div className="h-1/2 w-full">{getEventImage(EventType[event.event_type])}</div>
+      <div className={"flex flex-col gap-1 p-2"}>
+        <div className={"flex flex-row justify-between gap-0.5"}>
+          <span className={"text-lg leading-8"}>{event.event_type}</span>
+          <AttendanceCard />
         </div>
-    );
-};
+        <div className={"flex flex-col"}>
+          <div className={"flex flex-row gap-2"}>
+            <CalendarIcon height={20} width={20} color={"#EEC73F"} />
+            <span className={"text-base leading-5 text-zinc-400"}>
+              {getDayAndMonth(event.event_start_time)}
+            </span>
+          </div>
+          <div className={"flex flex-row gap-2"}>
+            <ClockIcon height={20} width={20} color={"#EEC73F"} />
+            <span className={"text-base leading-5 text-zinc-400"}>
+              {getStartAndEndTime(event.event_start_time, event.event_end_time)}
+            </span>
+          </div>
+          <div className={"flex flex-row gap-2"}>
+            <MapPinIcon height={20} width={20} color={"#EEC73F"} />
+            <span className={"text-base leading-5 text-zinc-400"}>{event.location}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-export default EventCard;
+export default EventCard

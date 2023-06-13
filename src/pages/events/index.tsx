@@ -4,33 +4,35 @@ import {useSupabaseClient} from "@supabase/auth-helpers-react";
 import { Event } from "@/types/database-types";
 import {getEvents} from "@/services/event.service";
 import {Database} from "@/types/database";
+import ErrorPopup from "@/components/popups/error-popup";
+import {MagnifyingGlassCircleIcon} from "@heroicons/react/24/outline";
+import Spinner from "@/components/utils/spinner";
 
 const Index = () => {
     const supabaseClient = useSupabaseClient<Database>()
     const [events, setEvents] = useState<Event[]>();
-    const [showSpinner, setShowSpinner] = useState<boolean>()
+    const [showSpinner, setShowSpinner] = useState<boolean>(true)
+    const [errorText, setErrorText] = useState("")
     const fetchEvents = () => {
         setShowSpinner(true)
-
         const events = getEvents(supabaseClient);
-
         events.then((res) => {
             if(res.error) {
-                //cant load
+                setErrorText("Failed to load events, try refreshing the page.")
                 return
             }
 
             if(res.data?.length > 0) {
                 setEvents(res.data as Event[])
             } else {
-                //no events yet
+                setErrorText("No Events have been added yet.")
             }
         })
             .catch(() => {
-                //loading error
+                setErrorText("Failed to load events, try refreshing the page.")
             })
             .finally(() => {
-                console.log("hi")
+                setShowSpinner(false)
             })
     }
 
@@ -45,11 +47,31 @@ const Index = () => {
                     Events
                 </div>
             </div>
+
             <div className={"flex flex-wrap justify-center gap-6"}>
-                {events?.map((event: Event) => {
-                    return <EventCard key={event.id} event={event}/>
-                })}
+                {
+                    showSpinner ?
+                        <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
+                            <Spinner size={10} />
+                        </div>
+                        :
+                        events?.map((event: Event) => {
+                            return <EventCard key={event.id} event={event}/>
+                        })
+                }
             </div>
+
+            {errorText.length > 0 && (
+                <div
+                    className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}
+                    data-cy="no-suggestions-text"
+                >
+                    <div>
+                        <MagnifyingGlassCircleIcon className={"h-[50px] w-[50px]"} />
+                    </div>
+                    <p>{errorText}</p>
+                </div>
+            )}
         </div>
     );
 };
