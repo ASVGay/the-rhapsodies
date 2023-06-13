@@ -10,23 +10,24 @@ interface EventCardProps {
   event: Event
 }
 
-const EventCard = ({ event }: EventCardProps) => {
-  const EventCardImage = (path: string) => {
-    return (
+const EventCardImage = (path: string) => {
+  return (
       <Image
-        style={{
-          objectFit: "cover",
-          height: "120px",
-          width: "100%",
-          objectPosition: "bottom",
-        }}
-        src={path}
-        alt={"Brainstorm Image"}
-        width={358}
-        height={121}
+          style={{
+            objectFit: "cover",
+            height: "120px",
+            width: "100%",
+            objectPosition: "bottom",
+          }}
+          src={path}
+          alt={"Brainstorm Image"}
+          width={358}
+          height={121}
       />
-    )
-  }
+  )
+}
+
+const EventCard = ({ event }: EventCardProps) => {
 
   const getEventImage = (eventType: EventType) => {
     switch (eventType) {
