@@ -38,7 +38,7 @@ export function ForgotPasswordConfirmation() {
       </p>
       <div className={"flex justify-between"}>
         <div
-          className={"text-center text-sm text-moon-500"}
+          className={"cursor-pointer text-center text-sm text-moon-500"}
           data-cy={"try-again"}
           onClick={resendEmail}
         >

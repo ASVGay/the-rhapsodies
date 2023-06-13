@@ -8,12 +8,14 @@ const errorResponseChangeEmail = {
   },
 }
 
+const changeEmailForm = "change-email-form"
 describe("on the change email page", () => {
   const buttonSubmitNewEmail = "button-submit-new-email"
   const inputCurrentPassword = "input-current-password"
   const errorCurrentPassword = "input-current-password-error"
   const inputNewEmail = "input-new-email"
   const errorNewEmail = "input-new-email-error"
+  const changeEmailConfirmation = "change-email-confirmation"
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
   const emailAddress = Cypress.env("CYPRESS_OLD_EMAIL")
 
@@ -83,30 +85,16 @@ describe("on the change email page", () => {
   })
 
   context("with correct values", () => {
-    it("should redirect & show toast if successful update", () => {
+    it("should show toast if email could not be sent", () => {
+      cy.intercept(`**/auth/v1/user**`, errorResponseChangeEmail)
       submitCorrectData()
 
       cy.get(".Toastify")
         .get("#1")
         .should("be.visible")
-        .should("have.class", "Toastify__toast--success")
+        .should("have.class", "Toastify__toast--error")
         .get(".Toastify__toast-body")
-        .should("have.text", `Email is sent!`)
-      cy.location("pathname").should("eq", "/settings")
-    })
-
-    it("should show toast if unsuccessful update", () => {
-      // TODO
-      // cy.intercept("*")
-      // cy.intercept(`**/auth/v1/user**`, errorResponseChangeEmail)
-      // submitCorrectData()
-      //
-      // cy.get(".Toastify")
-      //   .get("#1")
-      //   .should("be.visible")
-      //   .should("have.class", "Toastify__toast--error")
-      //   .get(".Toastify__toast-body")
-      //   .should("contain.text", "Something went wrong")
+        .should("contain.text", "Error")
     })
 
     it("should disable form & show spinner when loading", () => {
@@ -115,7 +103,7 @@ describe("on the change email page", () => {
         errorResponseChangeEmail
       )
       submitCorrectData()
-      cy.data("change-email-form")
+      cy.data(changeEmailForm)
         .within(() => {
           cy.data(inputCurrentPassword).should("be.disabled")
           cy.data(inputNewEmail).should("be.disabled")
@@ -130,6 +118,35 @@ describe("on the change email page", () => {
           cy.data(buttonSubmitNewEmail).should("not.be.disabled")
           cy.data("spinner").should("not.exist")
         })
+    })
+
+    it("should show change email confirmation if email is sent", () => {
+      cy.data(changeEmailConfirmation).should("not.exist")
+      submitCorrectData()
+      cy.data(changeEmailConfirmation).should("exist")
+    })
+
+    context("on the confirmation page", () => {
+      beforeEach(() => {
+        submitCorrectData()
+      })
+      it("should contain the email and resend email on click", () => {
+        cy.data("email-value").should("have.text", emailAddress)
+        cy.data("resend-email").click()
+        cy.get(".Toastify")
+          .get("#1")
+          .get(".Toastify__toast-body")
+          .should(
+            "have.text",
+            "An email has been sent. Check your spam folder if you cannot find it."
+          )
+      })
+
+      it("should show the form on click of change email", () => {
+        cy.data(changeEmailForm).should("not.exist")
+        cy.data("edit-email").click()
+        cy.data(changeEmailForm).should("exist")
+      })
     })
   })
 
