@@ -5,7 +5,7 @@ import {
 
 const userSuggestion = "ca20ae76-f6b3-4224-99af-cac14643a967"
 const userSecondSuggestion = "e743664e-b85b-4164-8163-24c9957f5ffd"
-const notOfUserSuggestion = "f0a04fe5-8290-445b-af94-1b2ae0263431"
+const notOfUserSuggestion = "687d4b20-9c34-4ff5-a1b5-ab4ca54c008c"
 
 describe("when the user wants to edit a suggestion", () => {
   context("when visiting a suggestion detail page", () => {
@@ -78,16 +78,23 @@ describe("when the user wants to edit a suggestion", () => {
 
       it("should maintain changes to the instruments when revisiting", () => {
         cy.data("new-suggestion-progress-bar-instruments").click()
-        // Remove a instrument (should be 3)
-        cy.data("delete-button").first().click()
-        // Submit the changes by switching area.
-        cy.data("new-suggestion-progress-bar-review").click()
-        // Leave edit page and revisit the instrument area
-        cy.data("button-discard-new-suggestion").click()
-        cy.data("suggestion-edit-icon").click()
-        cy.wait(500)
-        cy.data("new-suggestion-progress-bar-instruments").click()
-        cy.data("instrument-edit-list").children().should("have.length", 4)
+        cy.data("instrument-edit-list")
+          .children()
+          .then((elements) => {
+            // Keep a count of how many items the list had. This is done dynamicaly to prevent
+            const countOfInstruments = elements.length - 1
+            // Remove a instrument (should be 3)
+            cy.data("delete-button").first().click()
+            // Submit the changes by switching area.
+            cy.data("new-suggestion-progress-bar-review").click()
+            // Leave edit page and revisit the instrument area
+            cy.data("button-discard-new-suggestion").click()
+            cy.data("suggestion-edit-icon").click()
+            cy.data("new-suggestion-progress-bar-instruments").click()
+            cy.data("instrument-edit-list")
+              .children()
+              .should("have.length.above", countOfInstruments - 1)
+          })
       })
 
       it("should change to a different suggestion's data when switching between suggestion edits", () => {

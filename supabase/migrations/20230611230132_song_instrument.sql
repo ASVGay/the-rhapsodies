@@ -36,11 +36,15 @@ on "public"."song_instrument"
 as permissive
 for delete
 to authenticated
-using (true);
+using (auth.uid() IN ( SELECT song.author
+   FROM song
+  WHERE (song.id = song_instrument.song_id)));
 
 create policy "Enable update for authenticated users based on author in song"
 on "public"."song_instrument"
 as permissive
 for update
 to authenticated
-using (true);
+using (auth.uid() IN ( SELECT song.author
+   FROM song
+  WHERE (song.id = song_instrument.song_id)));
