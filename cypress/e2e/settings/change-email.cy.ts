@@ -8,7 +8,11 @@ const errorResponseChangeEmail = {
   },
 }
 
-const changeEmailForm = "change-email-form"
+const successResponseChangeEmail = {
+  statusCode: 200,
+  body: {},
+}
+
 describe("on the change email page", () => {
   const buttonSubmitNewEmail = "button-submit-new-email"
   const inputCurrentPassword = "input-current-password"
@@ -16,6 +20,7 @@ describe("on the change email page", () => {
   const inputNewEmail = "input-new-email"
   const errorNewEmail = "input-new-email-error"
   const changeEmailConfirmation = "change-email-confirmation"
+  const changeEmailForm = "change-email-form"
   const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
   const emailAddress = Cypress.env("CYPRESS_OLD_EMAIL")
 
@@ -122,12 +127,14 @@ describe("on the change email page", () => {
 
     it("should show change email confirmation if email is sent", () => {
       cy.data(changeEmailConfirmation).should("not.exist")
+      cy.intercept(`**/auth/v1/user**`, successResponseChangeEmail)
       submitCorrectData()
       cy.data(changeEmailConfirmation).should("exist")
     })
 
     context("on the confirmation page", () => {
       beforeEach(() => {
+        cy.intercept(`**/auth/v1/user**`, successResponseChangeEmail)
         submitCorrectData()
       })
       it("should contain the email and resend email on click", () => {
