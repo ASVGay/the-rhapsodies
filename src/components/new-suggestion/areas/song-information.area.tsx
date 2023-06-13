@@ -20,16 +20,20 @@ const SongInformationArea = () => {
     formState: { errors },
     watch
   } = useFormContext<InputsSongInformation>()
+
   const [manualInput, setManualInput] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string>("")
   const [searchResults, setSearchResults] = useState<SpotifySearchItem[]>([
     //TODO remove placeholder data
-    { id: "1", title: "Example", artists: ["Jorja Smith", "Frank Ocean"], link: "" },
-    { id: "2", title: "Example", artists: ["Jorja Smith"], link: "" }
-  ])
+    { id: "1", title: "Example", artists: ["Jorja Smith", "Frank Ocean"], link: "example.com" },
+    { id: "2", title: "Example", artists: ["Jorja Smith"], link: "example.song.com" }]
+  )
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
   const [fetchingSongs, setFetchingSongs] = useState(false)
+
+  const [title, setTitle] = useState<string>()
+  const [artists, setArtists] = useState<string[]>()
+  const [link, setLink] = useState<string>()
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
@@ -40,7 +44,7 @@ const SongInformationArea = () => {
       updateNewSuggestion({
         ...newSuggestion,
         title,
-        artist: [artist],
+        artist: artist.split(", "),
         link,
         motivation
       })
@@ -53,19 +57,17 @@ const SongInformationArea = () => {
   }
 
   const handleSearch = (value: string) => {
-    setSearchTerm(value)
+    setTitle(value)
 
     setFetchingSongs(true)
     //TODO replace timeout with Spotify API call to gather songs search results
     setTimeout(() => {
       setFetchingSongs(false)
     }, 300)
-
-    //TODO setSearchResults
+    //TODO setSearchResults as result from Spotify API call
   }
 
   const handleSearchBlur = () => {
-    // Use setTimeout to allow time for a click event on the list item to be registered
     setTimeout(() => {
       setIsSearchFocused(false)
     }, 100)
@@ -81,18 +83,15 @@ const SongInformationArea = () => {
       })
     )
     setManualInput(true)
-    setSearchTerm("")
+    setTitle(item.title)
+    setArtists(item.artists)
+    setLink(item.link)
     setSearchResults([])
-    //TODO fill-out values in form
   }
 
-  const formatArtists = (songId: string, artists: string[]) => {
-    return artists.map((artist, index) => {
-      return artist + (index != artists.length - 1 ? ", " : "")
-    }).flat()
-  }
+  //TODO break-up UI into components
 
-  //TODO break-up into components
+  //TODO fix: still triggers error handling after auto-filling data on author (bc it hasn't been clicked)
   return (
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
@@ -120,6 +119,7 @@ const SongInformationArea = () => {
                 data-cy={"input-title"}
                 type="text"
                 placeholder="Title"
+                value={title}
                 className={`${errors.title && "error"}`}
                 {...register("title", {
                   validate: (value) => !!value.trim()
@@ -134,11 +134,11 @@ const SongInformationArea = () => {
                 data-cy={"input-title"}
                 type="text"
                 placeholder="Search for a song title"
-                value={searchTerm}
+                value={title}
                 className={`${errors.title && "error"}`}
                 {...register("title", {
-                  validate: (value) => !!value.trim(),
-                  onChange: (event) => handleSearch(event.target.value)
+                  onChange: (event) => handleSearch(event.target.value),
+                  validate: (value) => !!value.trim()
                 })}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={handleSearchBlur}
@@ -146,7 +146,7 @@ const SongInformationArea = () => {
               <span>
              {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
             </span>
-              {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
+              {isSearchFocused && title?.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
                   <ul ref={listRef}>
                     {searchResults.map((item: SpotifySearchItem) => {
@@ -156,7 +156,7 @@ const SongInformationArea = () => {
                         className={"cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"}
                       >
                         <b>{item.title}</b>
-                        <p>{formatArtists(item.id, item.artists)}</p>
+                        <p>{item.artists.join(", ")}</p>
                       </div>
                     })}
                   </ul>
@@ -183,10 +183,13 @@ const SongInformationArea = () => {
                 data-cy={"input-artist"}
                 type="text"
                 placeholder="Artist"
+                value={artists?.join(", ") ?? undefined}
                 className={`${errors.artist && "error"}`}
                 {...register("artist", {
+                  onChange: (event) => setArtists(event.target.value.split(", ")),
                   validate: (value: string) => !!value.trim()
                 })}
+
               />
               <span>
               <UserIcon />
@@ -204,7 +207,10 @@ const SongInformationArea = () => {
                 data-cy={"input-link"}
                 type="url"
                 placeholder="Link to the song (optional)"
-                {...register("link")}
+                value={link ?? undefined}
+                {...register("link", {
+                  onChange: (event) => setLink(event.target.value)
+                })}
               />
               <span>
               <LinkIcon />
