@@ -4,7 +4,6 @@ import { Event } from "@/types/database-types"
 import AttendanceCard from "@/components/events/attendance-card"
 import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import {  CalendarIcon } from "@heroicons/react/24/solid"
-import {DayMapper, MonthMapper} from "@/enums/event.enum";
 import {getEventImage} from "@/helpers/event.helper";
 import {format} from "date-fns";
 
