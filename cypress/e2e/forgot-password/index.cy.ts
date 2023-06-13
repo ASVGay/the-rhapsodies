@@ -10,13 +10,22 @@ describe("the forgot password page", () => {
   const testEmail = "em@il"
   const emailValue = "email-value"
   const successMessage = "An email has been sent. Check your spam folder if you cannot find it."
-  const errorLink = {
-    code: 429,
-    msg: "For security purposes, you can only request this once every 60 seconds",
+  const errorBodyForgotPassword = {
+    statusCode: 429,
+    body: {
+      ...{
+        code: 429,
+        msg: "For security purposes, you can only request this once every 60 seconds",
+      },
+    },
   }
 
   // -------------------------------------------------------------- Tests
   beforeEach(() => {
+    cy.intercept("POST", "/auth/v1/recover*", {
+      statusCode: 200,
+      body: {},
+    }).as("link-request")
     cy.logout()
     cy.visit("/forgot-password")
   })
@@ -48,12 +57,15 @@ describe("the forgot password page", () => {
 
   it("should show error toast on error of request", () => {
     cy.data(inputEmail).type(testEmail)
-    cy.intercept("POST", "/auth/v1/recover*", {
-      statusCode: 429,
-      body: { ...errorLink },
-    })
+    cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword)
     cy.data(buttonSubmit).click()
-    cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should("have.text", errorLink.msg)
+    cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+      "have.text",
+      {
+        code: 429,
+        msg: "For security purposes, you can only request this once every 60 seconds",
+      }.msg
+    )
   })
 
   context("on submit", () => {
@@ -79,32 +91,27 @@ describe("the forgot password page", () => {
     })
 
     it("should re-request link with correct email on try again", () => {
-      cy.intercept("POST", "/auth/v1/recover*", {
-        statusCode: 200,
-        body: {},
-      }).as("link-request")
       cy.data(tryAgain).click()
       cy.wait("@link-request").its("request.body.email").should("include", testEmail)
     })
 
     it("should show toast on succes of try again", () => {
-      cy.intercept("POST", "/auth/v1/recover*", {
-        statusCode: 200,
-        body: {},
-      }).as("link-request")
       cy.data(tryAgain).click()
       cy.wait("@link-request")
       cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should("have.text", successMessage)
     })
 
     it("should show toast on error of try again", () => {
-      cy.intercept("POST", "/auth/v1/recover*", {
-        statusCode: 429,
-        body: { ...errorLink },
-      }).as("link-request")
+      cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword).as("link-request")
       cy.data(tryAgain).click()
       cy.wait("@link-request")
-      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should("have.text", errorLink.msg)
+      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+        "have.text",
+        {
+          code: 429,
+          msg: "For security purposes, you can only request this once every 60 seconds",
+        }.msg
+      )
     })
   })
 })
