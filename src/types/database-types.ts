@@ -31,3 +31,4 @@ export type Event = Database["public"]["Tables"]["event"]["Row"] & {
     attendees: Attendee[]
 }
 
+export type EventType = Database["public"]["Enums"]["event_type"]

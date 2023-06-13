@@ -1,8 +1,3 @@
-export enum EventType {
-    Brainstormborrel,
-    Rehearsal,
-}
-
 export enum DayMapper {
     Monday,
     Tuesday,

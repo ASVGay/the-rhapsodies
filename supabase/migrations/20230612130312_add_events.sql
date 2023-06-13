@@ -1,5 +1,5 @@
     drop type if exists "public"."event_type";
-    
+
     CREATE TYPE EVENT_TYPE AS ENUM ('Brainstormborrel', 'Rehearsal');
     CREATE TYPE ATTENDING AS ENUM ('present', 'absent', 'undecided');
 
