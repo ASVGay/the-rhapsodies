@@ -9,12 +9,12 @@
       event_type EVENT_TYPE NOT NULL,
       start_time TIMESTAMP WITH TIME ZONE NOT NULL,
       end_time TIMESTAMP WITH TIME ZONE,
-      location TEXT
+      location TEXT NOT NULL
     );
 
     CREATE TABLE attendee (
-        event_id UUID REFERENCES event(id),
-        user_id UUID REFERENCES member(id),
-        attending ATTENDING,
+        event_id UUID REFERENCES event(id) NOT NULL,
+        user_id UUID REFERENCES member(id) NOT NULL,
+        attending ATTENDING NOT NULL,
         remark TEXT
     )
