@@ -33,7 +33,7 @@ const EventCard = ({ event }: EventCardProps) => {
   return (
     <div className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg">
       <div className="w-full pb-1">
-        <Image className={"object-cover object-bottom h-[120px]"} src={getEventImage(event.event_type)} alt={"Event Image"} width={358} height={121}/>
+        <Image className={"object-cover h-[120px]"} src={getEventImage(event.event_type)} alt={"Event Image"} width={358} height={121}/>
       </div>
       <div className={"flex flex-col p-2"}>
         <div className={"flex flex-row justify-between gap-1"}>

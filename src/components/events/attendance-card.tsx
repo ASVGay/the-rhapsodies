@@ -1,5 +1,5 @@
 import React from 'react';
-import {CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon} from "@heroicons/react/24/solid";
+import {CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon} from "@heroicons/react/20/solid";
 import {Attendee} from "@/types/database-types";
 
 interface AttendanceCardProps {

@@ -14,18 +14,17 @@ const Index = () => {
   const [errorText, setErrorText] = useState("")
   const fetchEvents = () => {
     setShowSpinner(true)
-    const events = getEventsWithAttendees(supabaseClient)
-    events
+    getEventsWithAttendees(supabaseClient)
       .then((res) => {
         if (res.error) {
-          setErrorText("Failed to load events, try refreshing the page.")
+          setErrorText("Failed to load events.")
           return
         }
 
         if (res.data?.length > 0) {
           setEvents(res.data as Event[])
         } else {
-          setErrorText("No Events have been added yet.")
+          setErrorText("No events have been added yet.")
         }
       })
       .catch(() => {
