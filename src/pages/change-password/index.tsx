@@ -7,12 +7,15 @@ import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
+import TermsAndConditions from "@/components/overlays/terms-and-conditions"
+import { createPortal } from "react-dom"
 
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
+  const [showTerms, setShowTerms] = useState(false)
   const {
     handleSubmit,
     register,
@@ -107,9 +110,23 @@ const Index = () => {
                 </div>
               )
             })}
-            <button className={"btn"} data-cy={"submit-password-btn"}>
-              Submit
-            </button>
+            <div>
+              <label className="flex items-center">
+                <input type="checkbox" className="mr-2" />
+                <span>
+                  I agree to the{" "}
+                  <a onClick={() => setShowTerms(true)} className="text-moon-500">
+                    Terms and Conditions
+                  </a>
+                  .
+                </span>
+              </label>
+            </div>
+            {showTerms &&
+              createPortal(
+                <TermsAndConditions onClose={() => setShowTerms(false)} />,
+                document.getElementById("overlay-container") as Element | DocumentFragment
+              )}
             {errorMessage !== "" && (
               <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
             )}
