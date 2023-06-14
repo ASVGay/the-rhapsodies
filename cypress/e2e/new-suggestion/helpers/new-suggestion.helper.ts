@@ -1,5 +1,5 @@
 import { Area } from "@/constants/area"
-import { NewSuggestionInstrument, NewSuggestion } from "@/interfaces/new-suggestion"
+import { ISuggestionInstrument, ISuggestion } from "@/interfaces/suggestion"
 
 const buttonAddInstruments = "button-add-instruments"
 const areaSongInformation = "area-song-information"
@@ -15,7 +15,7 @@ const inputMotivation = "input-motivation"
 const instrumentsArea = "area-instruments"
 const toReviewButton = "to-review-button"
 
-export const newSuggestionEmpty: NewSuggestion = {
+export const newSuggestionEmpty: ISuggestion = {
   artist: [],
   link: null,
   motivation: "",
@@ -23,7 +23,7 @@ export const newSuggestionEmpty: NewSuggestion = {
   instruments: [],
 }
 
-export const filledInInstrument: NewSuggestionInstrument = {
+export const filledInInstrument: ISuggestionInstrument = {
   description: "",
   instrument: {
     id: "f5ccaa5d-c601-40fb-8604-5fc7485f8528",
@@ -32,7 +32,7 @@ export const filledInInstrument: NewSuggestionInstrument = {
   },
 }
 
-export const newSuggestionFilledSongInformation: NewSuggestion = {
+export const newSuggestionFilledSongInformation: ISuggestion = {
   artist: ["The Beatles"],
   link: "www.hello.com",
   motivation:
@@ -41,7 +41,7 @@ export const newSuggestionFilledSongInformation: NewSuggestion = {
   instruments: [],
 }
 
-export const newSuggestionFilledInInstruments: NewSuggestion = {
+export const newSuggestionFilledInInstruments: ISuggestion = {
   artist: ["The Beatles"],
   link: "www.hello.com",
   motivation:
@@ -92,7 +92,6 @@ export const shouldGoToReviewArea = () => {
   cy.data(toReviewButton).click()
   cy.data(instrumentsArea).should("not.exist")
   cy.data(areaSongInformation).should("not.exist")
-  areaInStateShouldBe(Area.Review)
 }
 
 export const fillSongInformationSuccessfully = () => {

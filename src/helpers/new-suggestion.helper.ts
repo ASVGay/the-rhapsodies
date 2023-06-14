@@ -1,5 +1,6 @@
 import { UseFormWatch } from "react-hook-form"
-import { InputsSongInformation, NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
+import { SongInstrumentDatabaseOperation } from "@/types/database-types"
 
 export function submitSongInformationForm() {
   document
@@ -14,6 +15,29 @@ export function isSongInformationInvalid<TFieldNames, TFieldName>(
   return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
 }
 
-export function isInstrumentSuggestionInvalid(instruments: NewSuggestionInstrument[]) {
+export function isInstrumentSuggestionInvalid(instruments: ISuggestionInstrument[]) {
   return instruments.length < 1
+}
+
+export const mapInstruments = (
+  instruments: ISuggestionInstrument[],
+  suggestionId: string
+): SongInstrumentDatabaseOperation[] => {
+  return instruments.map(({ instrument, description }) => ({
+    song_id: suggestionId,
+    instrument_id: instrument.id,
+    description: description,
+  }))
+}
+
+export const mapEditInstruments = (
+  instruments: ISuggestionInstrument[],
+  suggestionId: string
+): SongInstrumentDatabaseOperation[] => {
+  return instruments.map(({ id, instrument, description }) => ({
+    id: id,
+    song_id: suggestionId,
+    instrument_id: instrument.id,
+    description: description,
+  }))
 }

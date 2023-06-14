@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
-import Link from "next/link"
+import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import {DivisionDatabaseOperation, Song, SongInstrument} from "@/types/database-types"
+import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
@@ -17,12 +16,16 @@ import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 
-interface SuggestionProps {
-  suggestion: Song
+interface SuggestionPageProps {
+  suggestionFromNext: Song
+  isEditable: boolean
 }
 
-const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
-  const [suggestion, setSuggestion] = useState<Song>(props.suggestion)
+const SuggestionPage: FC<SuggestionPageProps> = ({
+  suggestionFromNext,
+  isEditable,
+}: SuggestionPageProps) => {
+  const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
@@ -105,9 +108,20 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
-            </Link>
+            <div className={"flex flex-row gap-2"}>
+              {isEditable && (
+                <PencilSquareIcon
+                  className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                  data-cy="suggestion-edit-icon"
+                  onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
+                />
+              )}
+              <XMarkIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-x-icon"
+                onClick={() => router.push("/suggestions")}
+              />
+            </div>
           </div>
 
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
@@ -183,11 +197,19 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
   const { params } = context
   try {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
-    return { props: { suggestion: data } }
+    return {
+      props: {
+        suggestionFromNext: data,
+        isEditable: (data.author as { id: string }).id === session?.user.id,
+      },
+    }
   } catch {
     return { notFound: true }
   }

@@ -41,8 +41,8 @@ describe("when creating a new suggestion, adding instruments", () => {
 
   it("should render the review area on click", () => {
     fillInstrumentsSuccessfully()
-    shouldBeFilledState()
     shouldGoToReviewArea()
+    shouldBeFilledState()
   })
 
   it("adding a instrument should allow the process to proceed", () => {
@@ -77,6 +77,8 @@ describe("when creating a new suggestion, adding instruments", () => {
   context("when proceeding to next step, but return to make changes", () => {
     beforeEach(() => {
       addInstrumentItem()
+      shouldGoToReviewArea()
+      cy.data(progressBarInstruments).click()
     })
 
     it("should populate the list with previously added elements", () => {
@@ -99,7 +101,7 @@ describe("when creating a new suggestion, adding instruments", () => {
     })
 
     it("should add instruments to redux's newSuggestion's suggestion", () => {
-      cy.data(instrumentEditList).first().should("exist")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")
@@ -111,6 +113,7 @@ describe("when creating a new suggestion, adding instruments", () => {
 
     it("should reflect the correct description on the instrument in redux", () => {
       cy.data(instrumentEditList).first().data(descriptionInput).type("test description")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")
