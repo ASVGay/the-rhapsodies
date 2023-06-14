@@ -7,7 +7,10 @@ interface TermsAndConditionsProps {
 
 const TermsAndConditions = ({ onClose }: TermsAndConditionsProps) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+      onClick={onClose}
+    >
       <div className="rounded-lg bg-white p-6 shadow-md">
         <h2 className="mb-4 text-xl font-bold">Terms and Conditions</h2>
         <p className="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>

@@ -9,6 +9,7 @@ import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
 import TermsAndConditions from "@/components/overlays/terms-and-conditions"
 import { createPortal } from "react-dom"
+import { CheckIcon } from "@heroicons/react/24/solid"
 
 const Index = () => {
   const supabase = useSupabaseClient<Database>()
@@ -16,6 +17,8 @@ const Index = () => {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
   const [showTerms, setShowTerms] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+
   const {
     handleSubmit,
     register,
@@ -58,6 +61,7 @@ const Index = () => {
       },
     },
   ]
+
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
 
@@ -111,17 +115,32 @@ const Index = () => {
               )
             })}
             <div>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
+                  className="sr-only"
+                />
+                <div
+                  onClick={() => setIsChecked(!isChecked)}
+                  aria-checked={true}
+                  className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
+                  ${isChecked && "border-none bg-moon-500"}`}
+                >
+                  {isChecked && <CheckIcon className="absolute h-5 w-5 text-white" />}
+                </div>
                 <span>
                   I agree to the{" "}
-                  <a onClick={() => setShowTerms(true)} className="text-moon-500">
-                    Terms and Conditions
+                  <a onClick={() => setShowTerms(true)} className="cursor-pointer text-moon-500">
+                    Terms and Conditions.
                   </a>
-                  .
                 </span>
-              </label>
+              </div>
             </div>
+            <button className={"btn"} data-cy={"submit-password-btn"}>
+              Submit
+            </button>
             {showTerms &&
               createPortal(
                 <TermsAndConditions onClose={() => setShowTerms(false)} />,
