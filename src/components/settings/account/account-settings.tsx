@@ -18,6 +18,12 @@ const AccountSettings = () => {
       />
       <SettingsButton
         disabled={false}
+        onClick={async () => await router.push("/settings/change-email")}
+        text={"Change email address"}
+        dataCy={"change-email-button"}
+      />
+      <SettingsButton
+        disabled={false}
         onClick={async () => await router.push("/settings/change-password")}
         text={"Change password"}
         dataCy={"change-password-button"}

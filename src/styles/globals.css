@@ -94,6 +94,10 @@
         @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
     }
 
+    .btn.submit {
+        @apply flex w-full justify-center gap-2 rounded-lg p-2.5
+    }
+    
     .info-item {
         @apply flex items-center gap-2
     }
