@@ -10,8 +10,30 @@ import ErrorMessage from "@/components/error/error-message"
 import TermsAndConditions from "@/components/overlays/terms-and-conditions"
 import { createPortal } from "react-dom"
 import { CheckIcon } from "@heroicons/react/24/solid"
+import { getMarkdownData } from "@/helpers/markdown.helper"
+import { OverlayContent } from "@/interfaces/overlay-content"
 
-const Index = () => {
+export async function getStaticProps() {
+  const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
+  const overlayContent: OverlayContent = {
+    title: "Terms and Conditions",
+    content: markdownData,
+    footer: "By accepting, you agree to our terms and conditions.",
+    buttonText: "Close",
+  }
+
+  return {
+    props: {
+      overlayContent,
+    },
+  }
+}
+
+interface ChangePasswordProps {
+  overlayContent: OverlayContent
+}
+
+const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
@@ -151,7 +173,10 @@ const Index = () => {
           </form>
           {showTerms &&
             createPortal(
-              <TermsAndConditions onClose={() => setShowTerms(false)} />,
+              <TermsAndConditions
+                overlayContent={overlayContent}
+                onClose={() => setShowTerms(false)}
+              />,
               document.getElementById("overlay-container") as Element | DocumentFragment
             )}
         </div>
@@ -160,4 +185,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default ChangePassword

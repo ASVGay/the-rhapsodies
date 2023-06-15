@@ -12,7 +12,7 @@ const OverlayContainer = ({ animationActive, children }: TermsAndConditionsProps
       ${animationActive ? "opacity-100" : "opacity-0"}`}
     >
       <div
-        className={`max-h-full min-h-fit w-[900px] rounded-lg bg-white p-4 shadow-md transition-all duration-300 sm:max-md:w-full 
+        className={`max-h-full min-h-fit rounded-lg bg-white p-4 shadow-md transition-all duration-300 sm:max-md:w-full 
         ${animationActive ? "translate-y-0" : "translate-y-[-24px]"}`}
       >
         {children}
