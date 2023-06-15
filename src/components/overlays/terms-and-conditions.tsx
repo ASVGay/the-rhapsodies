@@ -29,7 +29,7 @@ const TermsAndConditions = ({ overlayContent, onClose }: TermsAndConditionsProps
         </div>
         <p className="mb-2 ">{overlayContent.footer}</p>
         <div className="flex justify-end">
-          <button className="btn" onClick={waitForTransition}>
+          <button className="btn-secondary" onClick={waitForTransition}>
             {overlayContent.buttonText}
           </button>
         </div>
