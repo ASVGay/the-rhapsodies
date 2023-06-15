@@ -3,6 +3,7 @@ import { getEventImage, getTitle } from "@/helpers/event.helper"
 import { CalendarIcon, ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import { format } from "date-fns"
 import { Event } from "@/types/database-types"
+import Image from "next/image"
 
 interface EventInfoCardProps {
   event: Event
@@ -13,13 +14,18 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
 
   return (
     <div>
-      <div className={"relative text-center"}>
-        <img
+      <div className={"relative h-32 w-full text-center"}>
+        <Image
           src={getEventImage(event.event_type)}
           alt={`Background image ${title}`}
-          className={"h-32 w-full rounded-lg object-cover brightness-[30%] filter"}
+          fill={true}
+          className={"rounded-lg object-cover brightness-[30%] filter"}
+          placeholder={"blur"}
+          blurDataURL={
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMT0+uBwAEIAGyKWedwwAAAABJRU5ErkJggg=="
+          }
         />
-        <div className="content absolute left-1/2 top-1/2 w-max -translate-x-1/2 -translate-y-1/2 text-neutral-200">
+        <div className="absolute left-1/2 top-1/2 w-max -translate-x-1/2 -translate-y-1/2 text-neutral-200">
           <p data-cy={"event-title"} className={"text-lg font-bold text-white"}>
             {title}
           </p>
