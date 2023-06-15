@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import OverlayContainer from "./overlay-container"
 
 interface TermsAndConditionsProps {
   onClose: () => void
@@ -13,22 +14,15 @@ const TermsAndConditions = ({ onClose }: TermsAndConditionsProps) => {
   const waitForTransition = () => {
     setAnimationActive(false)
     setTimeout(() => {
-      console.log("call")
       onClose()
     }, 300)
   }
 
   return (
-    <div
-      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 p-4 transition-all duration-300 
-      ${animationActive ? "opacity-100" : "opacity-0"}`}
-    >
-      <div
-        className={`max-h-full min-h-fit w-[900px] rounded-lg bg-white p-4 shadow-md transition-all duration-300 sm:max-md:w-full 
-        ${animationActive ? "translate-y-0 opacity-100" : "translate-y-[-24px] opacity-0"}`}
-      >
+    <OverlayContainer animationActive={animationActive}>
+      <>
         <h2 className="mb-4 text-xl font-bold">Terms and Conditions</h2>
-        <div className="mb-2 max-h-[400px] overflow-scroll overflow-x-hidden">
+        <div className="mb-2 max-h-[400px] overflow-scroll overflow-x-hidden p-2">
           <p className="mb-2">{`These Terms and Conditions ("Agreement") govern your access to and use of the 
           The Rhapsodies mobile application ("App") provided by ASVGay ("Company"). By using the App, you agree 
           to be bound by this Agreement. If you do not agree with any part of this Agreement, you must not use the App.`}</p>
@@ -88,8 +82,8 @@ const TermsAndConditions = ({ onClose }: TermsAndConditionsProps) => {
             Close
           </button>
         </div>
-      </div>
-    </div>
+      </>
+    </OverlayContainer>
   )
 }
 
