@@ -40,8 +40,6 @@ const SongInformationArea = () => {
 
   //TODO write tests
 
-  //TODO add secrets to doppler
-
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
 
@@ -68,7 +66,6 @@ const SongInformationArea = () => {
     if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
   }
 
-  //TODO fix: function doesn't trigger anymore after a search result has been selected
   const handleSearch = (value: string) => {
     setValue("title", value)
 
@@ -97,19 +94,9 @@ const SongInformationArea = () => {
   }
 
   const onSelectSearchResult = (item: SearchItem) => {
-    dispatch(
-      updateNewSuggestion({
-        ...newSuggestion,
-        title: item.title,
-        artist: item.artists,
-        link: item.link
-      })
-    )
-
     setValue("title", item.title)
     setValue("artist", item.artists.join(", "))
     setValue("link", item.link)
-    setManualInput(true)
     setSearchResults([])
   }
 
