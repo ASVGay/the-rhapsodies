@@ -18,7 +18,9 @@ const SongInformationArea = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
+    setValue,
+    getValues
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
@@ -30,10 +32,6 @@ const SongInformationArea = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
   const [fetchingSongs, setFetchingSongs] = useState(false)
-
-  const [title, setTitle] = useState<string>()
-  const [artists, setArtists] = useState<string[]>()
-  const [link, setLink] = useState<string>()
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
@@ -57,7 +55,7 @@ const SongInformationArea = () => {
   }
 
   const handleSearch = (value: string) => {
-    setTitle(value)
+    setValue("title", value)
 
     setFetchingSongs(true)
     //TODO replace timeout with Spotify API call to gather songs search results
@@ -83,15 +81,14 @@ const SongInformationArea = () => {
       })
     )
     setManualInput(true)
-    setTitle(item.title)
-    setArtists(item.artists)
-    setLink(item.link)
+
+    setValue("title", item.title)
+    setValue("artist", item.artists.join(", "))
+    setValue("link", item.link)
+
     setSearchResults([])
   }
 
-  //TODO break-up UI into components
-
-  //TODO fix: still triggers error handling after auto-filling data on author (bc it hasn't been clicked)
   return (
     <div data-cy="area-song-information">
       <h2 className={"area-header"}>Song information</h2>
@@ -119,7 +116,6 @@ const SongInformationArea = () => {
                 data-cy={"input-title"}
                 type="text"
                 placeholder="Title"
-                value={title}
                 className={`${errors.title && "error"}`}
                 {...register("title", {
                   validate: (value) => !!value.trim()
@@ -134,7 +130,6 @@ const SongInformationArea = () => {
                 data-cy={"input-title"}
                 type="text"
                 placeholder="Search for a song title"
-                value={title}
                 className={`${errors.title && "error"}`}
                 {...register("title", {
                   onChange: (event) => handleSearch(event.target.value),
@@ -146,7 +141,7 @@ const SongInformationArea = () => {
               <span>
              {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
             </span>
-              {isSearchFocused && title?.length !== 0 && searchResults.length > 0 && (
+              {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
                   <ul ref={listRef}>
                     {searchResults.map((item: SpotifySearchItem) => {
@@ -166,58 +161,54 @@ const SongInformationArea = () => {
           }
         </div>
 
-        {manualInput && <>
-          <div className={`input-container`}>
-            {errors.artist && (
-              <ErrorMessage
-                dataCy={"input-artist-error"}
-                message={"One or more artists are required for a suggestion"}
-              />
-            )}
-            <label htmlFor="artist" className="sr-only">
-              Artist(s)
-            </label>
+        <div className={`input-container`} hidden={!manualInput}>
+          {errors.artist && (
+            <ErrorMessage
+              dataCy={"input-artist-error"}
+              message={"One or more artists are required for a suggestion"}
+            />
+          )}
+          <label htmlFor="artist" className="sr-only">
+            Artist(s)
+          </label>
 
-            <div className="input">
-              <input
-                data-cy={"input-artist"}
-                type="text"
-                placeholder="Artist"
-                value={artists?.join(", ") ?? undefined}
-                className={`${errors.artist && "error"}`}
-                {...register("artist", {
-                  onChange: (event) => setArtists(event.target.value.split(", ")),
-                  validate: (value: string) => !!value.trim()
-                })}
+          <div className="input">
+            <input
+              data-cy={"input-artist"}
+              type="text"
+              placeholder="Artist"
+              className={`${errors.artist && "error"}`}
+              {...register("artist", {
+                onChange: (event) => setValue("artist", event.target.value),
+                validate: (value: string) => !!value.trim()
+              })}
 
-              />
-              <span>
+            />
+            <span>
               <UserIcon />
             </span>
-            </div>
           </div>
+        </div>
 
-          <div className={"input-container"}>
-            <label htmlFor="link" className="sr-only">
-              Link to the song (optional)
-            </label>
+        <div className={"input-container"} hidden={!manualInput}>
+          <label htmlFor="link" className="sr-only">
+            Link to the song (optional)
+          </label>
 
-            <div className="input">
-              <input
-                data-cy={"input-link"}
-                type="url"
-                placeholder="Link to the song (optional)"
-                value={link ?? undefined}
-                {...register("link", {
-                  onChange: (event) => setLink(event.target.value)
-                })}
-              />
-              <span>
+          <div className="input">
+            <input
+              data-cy={"input-link"}
+              type="url"
+              placeholder="Link to the song (optional)"
+              {...register("link", {
+                onChange: (event) => setValue("link", event.target.value)
+              })}
+            />
+            <span>
               <LinkIcon />
             </span>
-            </div>
           </div>
-        </>}
+        </div>
 
         <div className={"input-container"}>
           {errors.motivation && (
