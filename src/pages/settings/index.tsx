@@ -1,5 +1,6 @@
 import NotificationSettings from "@/components/settings/notifications/notification-settings"
 import AccountSettings from "@/components/settings/account/account-settings"
+import TermsAndPoliciesSettings from "@/components/settings/terms-and-policies/terms-and-policies-settings"
 
 export default function Settings() {
   return (
@@ -7,6 +8,7 @@ export default function Settings() {
       <h1 className={"page-header lg:text-center"}>Settings</h1>
       <AccountSettings />
       <NotificationSettings />
+      <TermsAndPoliciesSettings />
       <p className={"bottom-0 pt-6 text-center italic text-zinc-300"}>
         Icons by{" "}
         <a href={"https://icons8.com"} className={"underline"}>
