@@ -124,7 +124,7 @@ const Index = () => {
                 />
                 <div
                   onClick={() => setIsChecked(!isChecked)}
-                  aria-checked={true}
+                  data-cy="terms-conditions-checkbox"
                   className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
                   ${isChecked && "border-none bg-moon-500"}`}
                 >
@@ -132,7 +132,11 @@ const Index = () => {
                 </div>
                 <span>
                   I agree to the{" "}
-                  <a onClick={() => setShowTerms(true)} className="cursor-pointer text-moon-500">
+                  <a
+                    data-cy="terms-conditions-link"
+                    onClick={() => setShowTerms(true)}
+                    className="cursor-pointer text-moon-500"
+                  >
                     Terms and Conditions.
                   </a>
                 </span>

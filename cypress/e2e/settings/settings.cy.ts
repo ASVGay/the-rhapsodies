@@ -21,4 +21,9 @@ describe("the settings page", () => {
     cy.data("change-password-button").click()
     cy.location("pathname").should("eq", "/settings/change-password")
   })
+
+  it("should open the terms and conditions overlay", () => {
+    cy.data("terms-conditions-button").click()
+    cy.data("terms-and-conditions").should("exist")
+  })
 })

@@ -20,7 +20,7 @@ const TermsAndConditions = ({ onClose }: TermsAndConditionsProps) => {
 
   return (
     <OverlayContainer animationActive={animationActive}>
-      <>
+      <div data-cy="terms-and-conditions">
         <h2 className="mb-4 text-xl font-bold">Terms and Conditions</h2>
         <div className="mb-2 max-h-[400px] overflow-scroll overflow-x-hidden p-2">
           <p className="mb-2">{`These Terms and Conditions ("Agreement") govern your access to and use of the 
@@ -82,7 +82,7 @@ const TermsAndConditions = ({ onClose }: TermsAndConditionsProps) => {
             Close
           </button>
         </div>
-      </>
+      </div>
     </OverlayContainer>
   )
 }

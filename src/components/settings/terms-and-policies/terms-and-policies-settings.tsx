@@ -14,7 +14,7 @@ const TermsAndPoliciesSettings = () => {
         disabled={false}
         onClick={() => setShowTerms(true)}
         text={"View Terms and Conditions"}
-        dataCy={"change-display-name-button"}
+        dataCy={"terms-conditions-button"}
       />
       {showTerms &&
         createPortal(
