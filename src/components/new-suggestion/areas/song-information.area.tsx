@@ -10,8 +10,15 @@ import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
 import { SpotifySearchItem } from "@/interfaces/spotify-search-item"
+import { useRouter } from "next/router"
+import {
+  getSpotifySearchResults,
+  requestSpotifyAccessToken, setSpotifyAccessToken
+} from "@/services/spotify.service"
 
 const SongInformationArea = () => {
+  const { basePath } = useRouter()
+
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
   const dispatch: AppDispatch = useDispatch()
   const {
@@ -24,17 +31,18 @@ const SongInformationArea = () => {
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
-  const [searchResults, setSearchResults] = useState<SpotifySearchItem[]>([
-    //TODO remove placeholder data
-    { id: "1", title: "Example", artists: ["Jorja Smith", "Frank Ocean"], link: "example.com" },
-    { id: "2", title: "Example", artists: ["Jorja Smith"], link: "example.song.com" }]
-  )
+  const [searchResults, setSearchResults] = useState<SpotifySearchItem[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
   const [fetchingSongs, setFetchingSongs] = useState(false)
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
+
+    requestSpotifyAccessToken(basePath)
+      .then(async (response) => {
+        setSpotifyAccessToken(await response.json())
+      })
   }, [])
 
   const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
@@ -58,11 +66,22 @@ const SongInformationArea = () => {
     setValue("title", value)
 
     setFetchingSongs(true)
-    //TODO replace timeout with Spotify API call to gather songs search results
-    setTimeout(() => {
-      setFetchingSongs(false)
-    }, 300)
-    //TODO setSearchResults as result from Spotify API call
+
+    getSpotifySearchResults(basePath, getValues().title)
+      .then(async (response) => {
+        const data = await response.json()
+        const items = (data.tracks.items as any[]).map((item) => ({
+          id: item.id,
+          title: item.name,
+          artists: (item.artists as any[]).map((artist) => artist.name),
+          link: item.external_urls.spotify
+        }))
+        setSearchResults(items)
+      })
+      .catch(() => {
+        //TODO handle
+      })
+      .finally(() => setFetchingSongs(false))
   }
 
   const handleSearchBlur = () => {
@@ -80,13 +99,11 @@ const SongInformationArea = () => {
         link: item.link
       })
     )
-    setManualInput(true)
 
     setValue("title", item.title)
     setValue("artist", item.artists.join(", "))
     setValue("link", item.link)
-
-    setSearchResults([])
+    setManualInput(true)
   }
 
   return (
