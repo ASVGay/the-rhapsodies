@@ -1,7 +1,6 @@
 import React from "react"
-import { getEventImage, getTitle } from "@/helpers/event.helper"
+import { getEventDate, getEventImage, getEventTime, getEventTitle } from "@/helpers/event.helper"
 import { CalendarIcon, ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
-import { format } from "date-fns"
 import { Event } from "@/types/database-types"
 import Image from "next/image"
 
@@ -10,7 +9,7 @@ interface EventInfoCardProps {
 }
 
 const EventInfoCard = ({ event }: EventInfoCardProps) => {
-  const title = getTitle(event.event_type)
+  const title = getEventTitle(event.event_type)
 
   return (
     <div>
@@ -31,12 +30,11 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
           </p>
           <p data-cy={"event-date"} className={"info-item"}>
             <CalendarIcon />
-            {format(new Date(event.start_time), "cccc, LLLL d")}
+            {getEventDate(event.start_time)}
           </p>
           <p data-cy={"event-time"} className={"info-item"}>
             <ClockIcon />
-            {format(new Date(event.start_time), "HH:mm")} -{" "}
-            {format(new Date(event.end_time), "HH:mm")}
+            {getEventTime(event.start_time, event.end_time)}
           </p>
           <p data-cy={"event-location"} className={"info-item"}>
             <MapPinIcon />
