@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import SettingsWrapper from "@/components/settings/settings-wrapper"
 import { BookOpenIcon } from "@heroicons/react/24/outline"
 import SettingsButton from "../controls/settings-button"
-import { createPortal } from "react-dom"
 import TermsAndConditions from "@/components/overlays/terms-and-conditions"
 import { OverlayContent } from "@/interfaces/overlay-content"
+import { getOverlay } from "@/helpers/overlay.helper"
 
 interface TermsAndPoliciesSettingsProps {
   overlayContent: OverlayContent
@@ -22,12 +22,8 @@ const TermsAndPoliciesSettings = ({ overlayContent }: TermsAndPoliciesSettingsPr
         dataCy={"terms-conditions-button"}
       />
       {showTerms &&
-        createPortal(
-          <TermsAndConditions
-            overlayContent={overlayContent}
-            onClose={() => setShowTerms(false)}
-          />,
-          document.getElementById("overlay-container") as Element | DocumentFragment
+        getOverlay(
+          <TermsAndConditions overlayContent={overlayContent} onClose={() => setShowTerms(false)} />
         )}
     </SettingsWrapper>
   )

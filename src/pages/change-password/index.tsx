@@ -8,10 +8,10 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
 import TermsAndConditions from "@/components/overlays/terms-and-conditions"
-import { createPortal } from "react-dom"
 import { CheckIcon } from "@heroicons/react/24/solid"
 import { getMarkdownData } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
+import { getOverlay } from "@/helpers/overlay.helper"
 
 export async function getStaticProps() {
   const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
@@ -172,12 +172,11 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
             )}
           </form>
           {showTerms &&
-            createPortal(
+            getOverlay(
               <TermsAndConditions
                 overlayContent={overlayContent}
                 onClose={() => setShowTerms(false)}
-              />,
-              document.getElementById("overlay-container") as Element | DocumentFragment
+              />
             )}
         </div>
       </div>
