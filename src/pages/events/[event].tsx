@@ -25,8 +25,10 @@ const EventPage = ({ event }: EventPageProps) => {
           onClick={() => router.push("/events")}
         />
       </div>
-      <EventInfoCard event={event} />
-      <AttendanceButton eventId={event.id} />
+      <div className="flex flex-col gap-4">
+        <EventInfoCard event={event} />
+        <AttendanceButton eventId={event.id} />
+      </div>
     </div>
   )
 }

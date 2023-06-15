@@ -27,19 +27,42 @@ describe("on the specific event page", () => {
     cy.get("h1").should("contain.text", "404")
   })
 
-  context.only("the attendance button", () => {
+  context("the attendance button", () => {
     it("should show undecided if empty database", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
-      cy.data("user-attendance").should("have.text", "undecided")
+      cy.get("#undecided").should("be.checked")
     })
 
     attending.forEach((attendance) => {
       it(`should show the ${attendance} state if attending is ${attendance}`, () => {
         cy.intercept("/rest/v1/attendee*", [{ attending: attendance }]).as("attendance")
         cy.wait("@attendance")
-        cy.data("user-attendance").should("have.text", attendance)
+        cy.get(`#${attendance}`).should("be.checked")
       })
+    })
+
+    it("should stay checked if attendance update succeeds", () => {
+      cy.intercept("/rest/v1/attendee*", []).as("attendance")
+      cy.wait("@attendance")
+      cy.get("#undecided").should("be.checked")
+      cy.intercept("/rest/v1/attendee*", { attending: "present" }).as("attendance-update")
+      cy.get("#present").parent().click()
+      cy.wait("@attendance-update")
+      cy.get(`#present`).should("be.checked")
+    })
+
+    it("should show toast and check previous if attendance update fails", () => {
+      cy.intercept("/rest/v1/attendee*", []).as("attendance")
+      cy.wait("@attendance")
+      cy.get("#undecided").should("be.checked")
+      cy.intercept("/rest/v1/attendee*", {
+        statusCode: 400,
+        body: { error: "error" },
+      })
+      cy.get("#present").parent().click()
+      cy.get(`#present`).should("not.be.checked")
+      cy.get(`#undecided`).should("be.checked")
     })
   })
 })

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { Attending } from "@/types/database-types"
-import { getAttendance } from "@/services/event.service"
+import { getAttendance, updateAttendance } from "@/services/event.service"
 import { toast } from "react-toastify"
 import { CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "@heroicons/react/20/solid"
 import { useForm } from "react-hook-form"
@@ -18,32 +18,45 @@ interface AttendanceButtonInputs {
 const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const supabase = useSupabaseClient<Database>()
   const uid = useUser()?.id
-  const [attendance, setAttendance] = useState<Attending>()
-  const { register, watch } = useForm<AttendanceButtonInputs>()
+  const { register, watch, getValues, setValue } = useForm<AttendanceButtonInputs>()
+  const currentValue = watch("attending")
 
   useEffect(() => {
     if (uid) {
       getAttendance(supabase, eventId, uid).then(({ data, error }) => {
-        if (error) {
-          toast.error("Something went wrong while retrieving your attendance.")
-          return
-        } else if (data) {
+        if (error)
+          toast.error("Something went wrong while retrieving your attendance.", {
+            toastId: "presence-error",
+          })
+
+        if (data) {
           const attendance = data[0]
-          if (attendance == null) setAttendance("undecided")
-          else setAttendance(attendance.attending)
+          if (attendance == null) setValue("attending", "undecided")
+          else setValue("attending", attendance.attending)
         }
       })
     }
-  })
+  }, [eventId, setValue, supabase, uid])
 
-  const isChecked = (status: Attending) => watch("attending") === status
+  const changeAttendance = () => {
+    const previousValue = currentValue
+    if (uid) {
+      updateAttendance(supabase, eventId, uid, getValues("attending")).then(({ data, error }) => {
+        if (error) {
+          setValue("attending", previousValue)
+
+          toast.error("Something went wrong while updating your presence. Please try again.", {
+            toastId: "presence-error",
+          })
+        }
+      })
+    }
+  }
+
+  const isChecked = (status: Attending) => currentValue === status
 
   return (
     <div>
-      <p>
-        Current status: <span data-cy={"user-attendance"}>{attendance}</span>
-      </p>
-
       <form>
         <ul className="grid w-full grid-cols-3">
           <li>
@@ -52,7 +65,9 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
               id={"present"}
               defaultValue="present"
               className="peer hidden"
-              {...register("attending")}
+              {...register("attending", {
+                onChange: changeAttendance,
+              })}
             />
             <label htmlFor="present" className="attendanceButtonItem rounded-l-lg">
               <div className="block">
@@ -69,7 +84,9 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
               id="absent"
               defaultValue="absent"
               className="peer hidden"
-              {...register("attending")}
+              {...register("attending", {
+                onChange: changeAttendance,
+              })}
             />
             <label htmlFor="absent" className="attendanceButtonItem">
               <div className="block">
@@ -82,7 +99,9 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
           </li>
           <li>
             <input
-              {...register("attending")}
+              {...register("attending", {
+                onChange: changeAttendance,
+              })}
               type="radio"
               id="undecided"
               defaultValue="undecided"
