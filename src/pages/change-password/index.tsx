@@ -138,18 +138,18 @@ const Index = () => {
                 </span>
               </div>
             </div>
-            <button className={"btn"} data-cy={"submit-password-btn"}>
+            <button disabled={!isChecked} className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
-            {showTerms &&
-              createPortal(
-                <TermsAndConditions onClose={() => setShowTerms(false)} />,
-                document.getElementById("overlay-container") as Element | DocumentFragment
-              )}
             {errorMessage !== "" && (
               <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
             )}
           </form>
+          {showTerms &&
+            createPortal(
+              <TermsAndConditions onClose={() => setShowTerms(false)} />,
+              document.getElementById("overlay-container") as Element | DocumentFragment
+            )}
         </div>
       </div>
     </div>
