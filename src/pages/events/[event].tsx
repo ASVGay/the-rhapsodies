@@ -6,6 +6,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { getEvent } from "@/services/event.service"
 import { XMarkIcon } from "@heroicons/react/24/solid"
 import EventInfoCard from "@/components/events/event-info-card"
+import AttendanceButton from "@/components/events/attendance-button"
 
 interface EventPageProps {
   event: Event
@@ -25,6 +26,7 @@ const EventPage = ({ event }: EventPageProps) => {
         />
       </div>
       <EventInfoCard event={event} />
+      <AttendanceButton eventId={event.id} />
     </div>
   )
 }

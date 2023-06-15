@@ -1,5 +1,7 @@
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
+  const attending = ["present", "absent", "undecided"]
+
   beforeEach(() => {
     cy.login()
     cy.visit(`/events/${eventId}`)
@@ -23,5 +25,21 @@ describe("on the specific event page", () => {
   it("should show 404 with not existing event id", () => {
     cy.visit(`/events/2c5b40c0-983e-44c1-a056-9981a0a84bac`, { failOnStatusCode: false })
     cy.get("h1").should("contain.text", "404")
+  })
+
+  context.only("the attendance button", () => {
+    it("should show undecided if empty database", () => {
+      cy.intercept("/rest/v1/attendee*", []).as("attendance")
+      cy.wait("@attendance")
+      cy.data("user-attendance").should("have.text", "undecided")
+    })
+
+    attending.forEach((attendance) => {
+      it(`should show the ${attendance} state if attending is ${attendance}`, () => {
+        cy.intercept("/rest/v1/attendee*", [{ attending: attendance }]).as("attendance")
+        cy.wait("@attendance")
+        cy.data("user-attendance").should("have.text", attendance)
+      })
+    })
   })
 })
