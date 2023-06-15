@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
@@ -9,12 +9,13 @@ import ErrorMessage from "@/components/error/error-message"
 import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
-import { SpotifySearchItem } from "@/interfaces/spotify-search-item"
+import { SearchItem, SpotifySearchItem } from "@/interfaces/spotify-search-item"
 import { useRouter } from "next/router"
 import {
   getSpotifySearchResults,
   requestSpotifyAccessToken, setSpotifyAccessToken
 } from "@/services/spotify.service"
+import ErrorPopup from "@/components/popups/error-popup"
 
 const SongInformationArea = () => {
   const { basePath } = useRouter()
@@ -31,10 +32,15 @@ const SongInformationArea = () => {
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
-  const [searchResults, setSearchResults] = useState<SpotifySearchItem[]>([])
+  const [searchResults, setSearchResults] = useState<SearchItem[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const listRef = useRef<HTMLUListElement>(null)
   const [fetchingSongs, setFetchingSongs] = useState(false)
+
+  const [showSearchError, setShowSearchError] = useState<boolean>(false)
+
+  //TODO write tests
+
+  //TODO add secrets to doppler
 
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
@@ -62,25 +68,25 @@ const SongInformationArea = () => {
     if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
   }
 
+  //TODO fix: function doesn't trigger anymore after a search result has been selected
   const handleSearch = (value: string) => {
     setValue("title", value)
 
     setFetchingSongs(true)
 
+    //TODO reduce the amount of calls
     getSpotifySearchResults(basePath, getValues().title)
       .then(async (response) => {
-        const data = await response.json()
-        const items = (data.tracks.items as any[]).map((item) => ({
+        const data: SpotifySearchItem[] = ((await response.json()).tracks.items)
+        const items: SearchItem[] = data.map((item) => ({
           id: item.id,
           title: item.name,
-          artists: (item.artists as any[]).map((artist) => artist.name),
+          artists: item.artists.map((artist): string => artist.name),
           link: item.external_urls.spotify
         }))
         setSearchResults(items)
       })
-      .catch(() => {
-        //TODO handle
-      })
+      .catch(() => setShowSearchError(true))
       .finally(() => setFetchingSongs(false))
   }
 
@@ -90,7 +96,7 @@ const SongInformationArea = () => {
     }, 100)
   }
 
-  const onSelectSearchResult = (item: SpotifySearchItem) => {
+  const onSelectSearchResult = (item: SearchItem) => {
     dispatch(
       updateNewSuggestion({
         ...newSuggestion,
@@ -104,6 +110,7 @@ const SongInformationArea = () => {
     setValue("artist", item.artists.join(", "))
     setValue("link", item.link)
     setManualInput(true)
+    setSearchResults([])
   }
 
   return (
@@ -160,8 +167,8 @@ const SongInformationArea = () => {
             </span>
               {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
-                  <ul ref={listRef}>
-                    {searchResults.map((item: SpotifySearchItem) => {
+                  <ul>
+                    {searchResults.map((item: SearchItem) => {
                       return <div
                         key={item.id}
                         onClick={() => onSelectSearchResult(item)}
@@ -275,6 +282,15 @@ const SongInformationArea = () => {
           Add instruments
         </button>
       </form>
+
+      {showSearchError && (
+        <div className={"mt-6"}>
+          <ErrorPopup
+            text={"Failed to fetch song search results."}
+            closePopup={() => setShowSearchError(false)}
+          />
+        </div>
+      )}
     </div>
   )
 }
