@@ -27,23 +27,26 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
     const retrieveAttendance = () => {
       setIsLoading(true)
       setTimeout(() => {
-        getAttendance(supabase, eventId, uid!!).then(({ data, error }) => {
-          if (error)
-            toast.error("Something went wrong while retrieving your attendance.", {
-              toastId: "presence-error",
-            })
+        if (uid != null) {
+          getAttendance(supabase, eventId, uid).then(({ data, error }) => {
+            if (error)
+              toast.error("Something went wrong while retrieving your attendance.", {
+                toastId: "presence-error",
+              })
 
-          if (data) {
-            const attendance = data[0]
-            if (attendance == null) setValue("attending", "undecided")
-            else setValue("attending", attendance.attending)
-          }
-          setIsLoading(false)
-        })
+            if (data) {
+              const attendance = data[0]
+              attendance == null
+                ? setValue("attending", "undecided")
+                : setValue("attending", attendance.attending)
+            }
+            setIsLoading(false)
+          })
+        }
       }, 500)
     }
 
-    if (uid) retrieveAttendance()
+    retrieveAttendance()
   }, [eventId, setValue, supabase, uid])
 
   const changeAttendance = () => {
