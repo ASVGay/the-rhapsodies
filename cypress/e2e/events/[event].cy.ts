@@ -96,6 +96,8 @@ describe("on the specific event page", () => {
 
     it("should update the data on successful attendance update", () => {})
 
-    it("should show a toast if fetching data went wrong", () => {})
+    it("should show a toast & error text if fetching data went wrong", () => {})
+
+    it("should show text with explanation if no members for an attending status")
   })
 })
