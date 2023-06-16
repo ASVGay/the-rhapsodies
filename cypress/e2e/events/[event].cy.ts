@@ -1,3 +1,5 @@
+import { interceptIndefinitely } from "../helpers/interception.helper"
+
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
   const attending = ["present", "absent", "undecided"]
@@ -28,6 +30,13 @@ describe("on the specific event page", () => {
   })
 
   context("the attendance button", () => {
+    it("should show the loading state while retrieving data on page load", () => {
+      const interception = interceptIndefinitely("/rest/v1/attendee*", { body: [] })
+      cy.data("loading").should("be.visible")
+      interception.sendResponse()
+      cy.data("loading").should("not.be.visible")
+    })
+
     it("should show undecided if empty database", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
@@ -42,6 +51,20 @@ describe("on the specific event page", () => {
       })
     })
 
+    it("should show loader when updating attendance", () => {
+      cy.intercept("/rest/v1/attendee*", []).as("attendance")
+      cy.wait("@attendance")
+      const interception = interceptIndefinitely("/rest/v1/attendee*", {
+        body: { attending: "present" },
+      })
+      cy.get("#present").parent().click()
+      cy.data("loading")
+        .should("be.visible")
+        .then(() => {
+          interception.sendResponse()
+          cy.data("loading").should("not.be.visible")
+        })
+    })
     it("should stay checked if attendance update succeeds", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
