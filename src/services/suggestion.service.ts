@@ -42,14 +42,14 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .from("song")
     .select(
       `*,
-        author (display_name, id),
+        author:member (display_name, id),
         song_instruments:song_instrument (
           id,
           description,
           instrument (*),
           division (
             *,
-            musician (display_name, id)
+            musician:member(display_name, id)
           )
         )`
     )

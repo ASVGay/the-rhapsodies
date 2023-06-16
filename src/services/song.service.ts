@@ -24,13 +24,13 @@ export const getSong = async (supabase: SupabaseClient<Database>, id: string) =>
       artist,
       link,
       title,
-      song_instruments:song_instrument (
+      song_instruments:song_instrument(
         id,
         description,
         instrument (*),
         division (
           *,
-          musician (display_name, id)
+          musician:member (display_name, id)
         )
       )
         `
