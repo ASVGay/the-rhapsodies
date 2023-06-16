@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import { Attending, AttendingMember } from "@/types/database-types"
+import { Attending } from "@/types/database-types"
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
@@ -24,12 +24,11 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
     .gte("end_time", currentTimestamp)
 }
 
-export const getAllAttendanceForEvent = (supabase: SupabaseClient<Database>, eventId: string) => {
-  return supabase
-    .from("attendee")
-    .select("member(id, display_name), attending")
-    .eq("event_id", eventId)
-    .returns<AttendingMember[]>()
+export const getAttendingMembersForEvent = (
+  supabase: SupabaseClient<Database>,
+  eventId: string
+) => {
+  return supabase.rpc("get_members_by_event", { event_id: eventId })
 }
 
 export const getAttendanceForEventOfUser = (

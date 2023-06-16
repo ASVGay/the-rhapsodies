@@ -250,6 +250,16 @@ export interface Database {
         }
         Returns: Json
       }
+      get_members_by_event: {
+        Args: {
+          event_id: string
+        }
+        Returns: {
+          id: string
+          display_name: string
+          attending: Database["public"]["Enums"]["attending"]
+        }[]
+      }
       get_my_claim: {
         Args: {
           claim: string

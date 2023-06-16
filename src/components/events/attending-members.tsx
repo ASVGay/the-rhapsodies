@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Attending, AttendingMember, Member } from "@/types/database-types"
-import { createAttendeeChannel, getAllAttendanceForEvent } from "@/services/event.service"
+import { Attending, AttendingMembers } from "@/types/database-types"
+import { createAttendeeChannel, getAttendingMembersForEvent } from "@/services/event.service"
 import { toast } from "react-toastify"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 import { CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "@heroicons/react/20/solid"
@@ -19,19 +19,19 @@ interface AttendingListInputs {
 const AttendingMembers = ({ eventId }: AttendingListProps) => {
   const supabase = useSupabaseClient<Database>()
   const uid = useUser()?.id
-  const attendance: Attending[] = ["present", "absent", "undecided"]
-  const [attendingMembers, setAttendingMembers] = useState<AttendingMember[]>([])
+  const [attendingMembers, setAttendingMembers] = useState<AttendingMembers>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [failedToRetrieve, setFailedToRetrieve] = useState<boolean>(false)
+
   const { register, watch } = useForm<AttendingListInputs>({
     defaultValues: { attendingMembers: "present" },
   })
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [failedToRetrieve, setFailedToRetrieve] = useState<boolean>(false)
   const isChecked = (status: Attending) => watch("attendingMembers") === status
 
   useEffect(() => {
     const fetchAttendance = () => {
       if (attendingMembers.length === 0) setIsLoading(true)
-      getAllAttendanceForEvent(supabase, eventId).then(({ data, error }) => {
+      getAttendingMembersForEvent(supabase, eventId).then(({ data, error }) => {
         if (data) {
           setAttendingMembers(data)
           setFailedToRetrieve(false)
@@ -59,13 +59,7 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
 
   const getCountFor = (attendance: Attending) => getMembersFor(attendance).length
 
-  const getName = ({ display_name, id }: Member) => (
-    <li key={id} className={`${id === uid && "font-bold text-moon"}`}>
-      {display_name}
-    </li>
-  )
-
-  function showNoMembersFor(attendance: Attending) {
+  function displayNoMembers(attendance: Attending) {
     if (failedToRetrieve) {
       return <p className={"py-2 italic text-red-400"}>Failed to retrieve attending members.</p>
     }
@@ -78,12 +72,26 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
     )
   }
 
+  function displayAttendingMembers(members: AttendingMembers) {
+    return (
+      <ol>
+        {members
+          .sort((a, b) => a.display_name.localeCompare(b.display_name))
+          .map(({ display_name, id }) => (
+            <li key={id} className={`${id === uid && "font-bold text-moon"}`}>
+              {display_name}
+            </li>
+          ))}
+      </ol>
+    )
+  }
+
   return (
     <div className={"rounded-lg shadow"}>
       <form>
         <div
           data-cy={"loading"}
-          className={`loading duration-2000 opacity-1 absolute z-50 flex h-14 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-300 lg:w-[calc(60%-2rem)] 
+          className={`loading duration-2000 opacity-1 absolute z-50 flex h-20 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-300 lg:w-[calc(60%-2rem)] 
           ${!isLoading && "!h-0 opacity-0"}`}
         >
           <SpinnerStripes />
@@ -149,19 +157,11 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
         </ul>
       </form>
 
-      {attendance.map((attendance) => {
+      {(["present", "absent", "undecided"] as Attending[]).map((attendance) => {
         const members = getMembersFor(attendance)
         return (
           <div hidden={!isChecked(attendance)} className={"text-center leading-8"} key={attendance}>
-            {members.length > 0 ? (
-              <ol>
-                {members
-                  .sort((a, b) => a.member.display_name.localeCompare(b.member.display_name))
-                  .map(({ member }) => getName(member))}
-              </ol>
-            ) : (
-              showNoMembersFor(attendance)
-            )}
+            {members.length > 0 ? displayAttendingMembers(members) : displayNoMembers(attendance)}
           </div>
         )
       })}
