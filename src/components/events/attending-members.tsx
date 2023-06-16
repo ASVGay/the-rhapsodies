@@ -49,9 +49,9 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
 
   const getCountFor = (attendance: Attending) => getMembersFor(attendance).length
 
-  const getName = (member: Member | null) => (
-    <li key={member?.id} className={`${member?.id === uid && "font-bold text-moon"}`}>
-      {member?.display_name}
+  const getName = ({ display_name, id }: Member) => (
+    <li key={id} className={`${id === uid && "font-bold text-moon"}`}>
+      {display_name}
     </li>
   )
 
@@ -130,9 +130,7 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
         return (
           <ol key={attendance} hidden={!isChecked(attendance)} className={"text-center leading-8"}>
             {getMembersFor(attendance)
-              .sort(
-                (a, b) => a.member?.display_name.localeCompare(b.member?.display_name || "") || 0
-              )
+              .sort((a, b) => a.member.display_name.localeCompare(b.member.display_name))
               .map(({ member }) => getName(member))}
           </ol>
         )

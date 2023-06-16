@@ -35,6 +35,6 @@ export type EventType = Database["public"]["Enums"]["event_type"]
 export type Attending = Database["public"]["Enums"]["attending"]
 
 export type AttendingMember = {
-  member: Member | null
+  member: Member
   attending: Attending
 }

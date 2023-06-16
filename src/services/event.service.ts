@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import { Attending } from "@/types/database-types"
+import { Attending, AttendingMember } from "@/types/database-types"
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
@@ -29,6 +29,7 @@ export const getAllAttendanceForEvent = (supabase: SupabaseClient<Database>, eve
     .from("attendee")
     .select("member(id, display_name), attending")
     .eq("event_id", eventId)
+    .returns<AttendingMember[]>()
 }
 
 export const getAttendanceForEventOfUser = (
