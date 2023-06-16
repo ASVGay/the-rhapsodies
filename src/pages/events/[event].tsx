@@ -7,6 +7,7 @@ import { getEvent } from "@/services/event.service"
 import { XMarkIcon } from "@heroicons/react/24/solid"
 import EventInfoCard from "@/components/events/event-info-card"
 import AttendanceButton from "@/components/events/attendance-button"
+import AttendingList from "@/components/events/attending-list"
 
 interface EventPageProps {
   event: Event
@@ -28,6 +29,7 @@ const EventPage = ({ event }: EventPageProps) => {
       <div className="flex flex-col gap-4">
         <EventInfoCard event={event} />
         <AttendanceButton eventId={event.id} />
+        <AttendingList eventId={event.id} />
       </div>
     </div>
   )

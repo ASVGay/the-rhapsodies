@@ -88,4 +88,14 @@ describe("on the specific event page", () => {
       cy.get(`#undecided`).should("be.checked")
     })
   })
+
+  context("the attending list", () => {
+    it("should display the data correctly", () => {})
+
+    it("should show the loading state when fetching data", () => {})
+
+    it("should update the data on successful attendance update", () => {})
+
+    it("should show a toast if fetching data went wrong", () => {})
+  })
 })

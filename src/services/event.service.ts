@@ -24,7 +24,14 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
     .gte("end_time", currentTimestamp)
 }
 
-export const getAttendance = (
+export const getAllAttendanceForEvent = (supabase: SupabaseClient<Database>, eventId: string) => {
+  return supabase
+    .from("attendee")
+    .select("member(id, display_name), attending")
+    .eq("event_id", eventId)
+}
+
+export const getAttendanceForEventOfUser = (
   supabase: SupabaseClient<Database>,
   eventId: string,
   memberId: string
@@ -48,4 +55,13 @@ export const updateAttendance = (
     .upsert({ event_id: eventId, member_id: memberId, attending })
     .select("attending")
     .single()
+}
+
+export const createAttendeeChannel = (supabase: SupabaseClient<Database>, callback: () => void) => {
+  return supabase
+    .channel("realtime attendee")
+    .on("postgres_changes", { event: "*", schema: "public", table: "attendee" }, () => {
+      callback()
+    })
+    .subscribe()
 }

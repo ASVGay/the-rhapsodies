@@ -32,5 +32,9 @@ export type Event = Database["public"]["Tables"]["event"]["Row"] & {
 }
 export type EventType = Database["public"]["Enums"]["event_type"]
 
-export type Attendee = Database["public"]["Tables"]["attendee"]["Row"]
 export type Attending = Database["public"]["Enums"]["attending"]
+
+export type AttendingMember = {
+  member: Member | null
+  attending: Attending
+}
