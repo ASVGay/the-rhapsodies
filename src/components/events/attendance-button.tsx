@@ -24,10 +24,9 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    setIsLoading(true)
-
     const retrieveAttendance = () => {
       if (uid != null) {
+        setIsLoading(true)
         getAttendance(supabase, eventId, uid).then(({ data, error }) => {
           if (error)
             toast.error("Something went wrong while retrieving your attendance.", {
