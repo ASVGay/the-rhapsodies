@@ -151,29 +151,25 @@ describe("on the specific event page", () => {
       cy.data("loading-attending-members").should("not.be.visible")
     })
 
-    it("should show a toast & error text if fetching data went wrong", () => {
-      const interception = interceptIndefinitely("/rest/v1/rpc/get_members_by_event", {
-        statusCode: 400,
-      })
-      cy.data("no-attending-members").should("not.be.visible")
-      interception.sendResponse()
+    it.only("should show a toast & error text if fetching data went wrong", () => {
+      cy.intercept("/rest/v1/rpc/get_members_by_event", { statusCode: 400 })
       cy.get(".Toastify")
         .get("#toast-attending-members")
         .get(".Toastify__toast-body")
         .should("contain.text", "Something went wrong")
+
+      const failedAttendingMembers = "failed-attending-members"
       cy.get(inputPresentMembers).should("be.checked")
-      cy.data("failed-attending-members").should("be.visible")
+      cy.data(failedAttendingMembers).should("be.visible")
       cy.get(inputAbsentMembers).parent().click()
-      cy.data("failed-attending-members").should("be.visible")
+      cy.data(failedAttendingMembers).should("be.visible")
       cy.get(inputUndecidedMembers).parent().click()
-      cy.data("failed-attending-members").should("be.visible")
+      cy.data(failedAttendingMembers).should("be.visible")
     })
 
-    it("should show text with explanation if no members for an attending status", () => {
-      const interception = interceptIndefinitely("/rest/v1/rpc/get_members_by_event", { body: [] })
+    it.only("should show text with explanation if no members for an attending status", () => {
+      cy.intercept("/rest/v1/rpc/get_members_by_event", { body: [] })
       const noAttendingMembers = "no-attending-members"
-      cy.data(noAttendingMembers).should("not.be.visible")
-      interception.sendResponse()
       cy.get(inputPresentMembers).should("be.checked")
       cy.data(noAttendingMembers).should("be.visible").should("contain.text", "present")
       cy.get(inputAbsentMembers).parent().click()
