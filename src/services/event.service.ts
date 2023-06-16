@@ -16,6 +16,7 @@ export const getAttendance = (
     .select("attending")
     .eq("event_id", eventId)
     .eq("member_id", memberId)
+    .maybeSingle()
 }
 
 export const updateAttendance = (

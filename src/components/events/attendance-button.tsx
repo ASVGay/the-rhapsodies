@@ -24,29 +24,24 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    const retrieveAttendance = () => {
-      setIsLoading(true)
-      setTimeout(() => {
-        if (uid != null) {
-          getAttendance(supabase, eventId, uid).then(({ data, error }) => {
-            if (error)
-              toast.error("Something went wrong while retrieving your attendance.", {
-                toastId: "presence-error",
-              })
+    setIsLoading(true)
 
-            if (data) {
-              const attendance = data[0]
-              attendance == null
-                ? setValue("attending", "undecided")
-                : setValue("attending", attendance.attending)
-            }
-            setIsLoading(false)
-          })
-        }
-      }, 500)
+    const retrieveAttendance = () => {
+      if (uid != null) {
+        getAttendance(supabase, eventId, uid).then(({ data, error }) => {
+          if (error)
+            toast.error("Something went wrong while retrieving your attendance.", {
+              toastId: "presence-error",
+            })
+          data ? setValue("attending", data.attending) : setValue("attending", "undecided")
+          setIsLoading(false)
+        })
+      }
     }
 
-    retrieveAttendance()
+    setTimeout(() => {
+      retrieveAttendance()
+    }, 500)
   }, [eventId, setValue, supabase, uid])
 
   const changeAttendance = () => {
