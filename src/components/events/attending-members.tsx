@@ -25,14 +25,24 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
     defaultValues: { attendingMembers: "present" },
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [failedToRetrieve, setFailedToRetrieve] = useState<boolean>(false)
   const isChecked = (status: Attending) => watch("attendingMembers") === status
 
   useEffect(() => {
     const fetchAttendance = () => {
       if (attendingMembers.length === 0) setIsLoading(true)
       getAllAttendanceForEvent(supabase, eventId).then(({ data, error }) => {
-        if (data) setAttendingMembers(data)
-        if (error) toast.error("Something went wrong while retrieving the attendance")
+        if (data) {
+          setAttendingMembers(data)
+          setFailedToRetrieve(false)
+        }
+
+        if (error) {
+          toast.error("Something went wrong while retrieving the attending members.", {
+            toastId: "attending-members",
+          })
+          setFailedToRetrieve(true)
+        }
         setIsLoading(false)
       })
     }
@@ -54,6 +64,19 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
       {display_name}
     </li>
   )
+
+  function showNoMembersFor(attendance: Attending) {
+    if (failedToRetrieve) {
+      return <p className={"py-2 italic text-red-400"}>Failed to retrieve attending members.</p>
+    }
+
+    return (
+      <p className={"py-2 italic text-zinc-400"}>
+        No members have marked themselves <span className={"font-semibold"}>{attendance}</span> for
+        this event.
+      </p>
+    )
+  }
 
   return (
     <div className={"rounded-lg shadow"}>
@@ -127,12 +150,19 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
       </form>
 
       {attendance.map((attendance) => {
+        const members = getMembersFor(attendance)
         return (
-          <ol key={attendance} hidden={!isChecked(attendance)} className={"text-center leading-8"}>
-            {getMembersFor(attendance)
-              .sort((a, b) => a.member.display_name.localeCompare(b.member.display_name))
-              .map(({ member }) => getName(member))}
-          </ol>
+          <div hidden={!isChecked(attendance)} className={"text-center leading-8"} key={attendance}>
+            {members.length > 0 ? (
+              <ol>
+                {members
+                  .sort((a, b) => a.member.display_name.localeCompare(b.member.display_name))
+                  .map(({ member }) => getName(member))}
+              </ol>
+            ) : (
+              showNoMembersFor(attendance)
+            )}
+          </div>
         )
       })}
     </div>
