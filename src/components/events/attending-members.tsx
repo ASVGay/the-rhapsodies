@@ -39,7 +39,7 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
 
         if (error) {
           toast.error("Something went wrong while retrieving the attending members.", {
-            toastId: "attending-members",
+            toastId: "toast-attending-members",
           })
           setFailedToRetrieve(true)
         }
@@ -61,20 +61,24 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
 
   function displayNoMembers(attendance: Attending) {
     if (failedToRetrieve) {
-      return <p className={"py-2 italic text-red-400"}>Failed to retrieve attending members.</p>
+      return (
+        <p className={"py-2 italic text-red-400"} data-cy={"failed-attending-members"}>
+          Failed to retrieve attending members.
+        </p>
+      )
     }
 
     return (
-      <p className={"py-2 italic text-zinc-400"}>
+      <p className={"py-2 italic text-zinc-400"} data-cy={"no-attending-members"}>
         No members have marked themselves <span className={"font-semibold"}>{attendance}</span> for
         this event.
       </p>
     )
   }
 
-  function displayAttendingMembers(members: AttendingMembers) {
+  function displayAttendingMembers(attendance: Attending, members: AttendingMembers) {
     return (
-      <ol>
+      <ol data-cy={`${attendance}-members-list`}>
         {members
           .sort((a, b) => a.display_name.localeCompare(b.display_name))
           .map(({ display_name, id }) => (
@@ -90,8 +94,8 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
     <div className={"rounded-lg shadow"}>
       <form>
         <div
-          data-cy={"loading"}
-          className={`loading duration-2000 opacity-1 absolute z-50 flex h-20 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-300 lg:w-[calc(60%-2rem)] 
+          data-cy={"loading-attending-members"}
+          className={`loading duration-2000 opacity-1 absolute z-50 flex h-32 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-300 lg:w-[calc(60%-2rem)] 
           ${!isLoading && "!h-0 opacity-0"}`}
         >
           <SpinnerStripes />
@@ -161,7 +165,9 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
         const members = getMembersFor(attendance)
         return (
           <div hidden={!isChecked(attendance)} className={"text-center leading-8"} key={attendance}>
-            {members.length > 0 ? displayAttendingMembers(members) : displayNoMembers(attendance)}
+            {members.length > 0
+              ? displayAttendingMembers(attendance, members)
+              : displayNoMembers(attendance)}
           </div>
         )
       })}

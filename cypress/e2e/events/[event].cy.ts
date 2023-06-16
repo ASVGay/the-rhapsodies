@@ -1,8 +1,14 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
+import { mockGetMembersByEvent } from "../../fixtures/mock-get-members-by-event"
 
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
   const attending = ["present", "absent", "undecided"]
+  const inputPresentMembers = "#present-members"
+  const inputAbsentMembers = "#absent-members"
+  const inputUndecidedMembers = "#undecided-members"
+  const inputPresent = "#present"
+  const inputUndecided = `#undecided`
 
   beforeEach(() => {
     cy.login()
@@ -40,7 +46,7 @@ describe("on the specific event page", () => {
     it("should show undecided if empty database", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
-      cy.get("#undecided").should("be.checked")
+      cy.get(inputUndecided).should("be.checked")
     })
 
     attending.forEach((attendance) => {
@@ -57,7 +63,7 @@ describe("on the specific event page", () => {
       const interception = interceptIndefinitely("/rest/v1/attendee*", {
         body: { attending: "present" },
       })
-      cy.get("#present").parent().click()
+      cy.get(inputPresent).parent().click()
       cy.data("loading")
         .should("be.visible")
         .then(() => {
@@ -68,36 +74,112 @@ describe("on the specific event page", () => {
     it("should stay checked if attendance update succeeds", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
-      cy.get("#undecided").should("be.checked")
+      cy.get(inputUndecided).should("be.checked")
       cy.intercept("/rest/v1/attendee*", { attending: "present" }).as("attendance-update")
-      cy.get("#present").parent().click()
+      cy.get(inputPresent).parent().click()
       cy.wait("@attendance-update")
-      cy.get(`#present`).should("be.checked")
+      cy.get(inputPresent).should("be.checked")
     })
 
     it("should show toast and check previous if attendance update fails", () => {
       cy.intercept("/rest/v1/attendee*", []).as("attendance")
       cy.wait("@attendance")
-      cy.get("#undecided").should("be.checked")
+      cy.get(inputUndecided).should("be.checked")
       cy.intercept("/rest/v1/attendee*", {
         statusCode: 400,
         body: { error: "error" },
       })
-      cy.get("#present").parent().click()
-      cy.get(`#present`).should("not.be.checked")
-      cy.get(`#undecided`).should("be.checked")
+      cy.get(inputPresent).parent().click()
+      cy.get(inputPresent).should("not.be.checked")
+      cy.get(inputUndecided).should("be.checked")
     })
   })
 
   context("the attending list", () => {
-    it("should display the data correctly", () => {})
+    it("should display the data correctly", () => {
+      const presentMembersList = "present-members-list"
+      const absentMembersList = "absent-members-list"
+      const undecidedMembersList = "undecided-members-list"
+      cy.intercept("/rest/v1/rpc/get_members_by_event", { body: mockGetMembersByEvent })
+      cy.log("Check present members")
+      cy.get(inputPresentMembers).should("be.checked")
+      cy.data(absentMembersList).should("not.be.visible")
+      cy.data(undecidedMembersList).should("not.be.visible")
+      cy.data(presentMembersList)
+        .should("be.visible")
+        .children()
+        .should("have.length", 1)
+        .should("have.text", "Feryll")
 
-    it("should show the loading state when fetching data", () => {})
+      cy.log("Check absent members")
+      cy.get(inputAbsentMembers).parent().click()
+      cy.data(presentMembersList).should("not.be.visible")
+      cy.data(undecidedMembersList).should("not.be.visible")
+      cy.data(absentMembersList)
+        .should("be.visible")
+        .children()
+        .should("have.length", 1)
+        .should("have.text", "Kevin")
 
-    it("should update the data on successful attendance update", () => {})
+      cy.log("Check undecided members")
+      cy.get(inputUndecidedMembers).parent().click()
+      cy.data(presentMembersList).should("not.be.visible")
+      cy.data(absentMembersList).should("not.be.visible")
+      cy.data(undecidedMembersList)
+        .should("be.visible")
+        .within(() => {
+          cy.get("li").each(($child, index) => {
+            switch (index) {
+              case 0:
+                cy.wrap($child).should("have.text", "Marcel")
+                break
+              case 1:
+                cy.wrap($child).should("have.text", "Old").should("have.class", "text-moon")
+                break
+              case 2:
+                cy.wrap($child).should("have.text", "Rens")
+                break
+            }
+          })
+        })
+    })
 
-    it("should show a toast & error text if fetching data went wrong", () => {})
+    it("should show the loading state when fetching data after page load", () => {
+      const interception = interceptIndefinitely("/rest/v1/rpc/get_members_by_event", { body: [] })
+      cy.data("loading-attending-members").should("be.visible")
+      interception.sendResponse()
+      cy.data("loading-attending-members").should("not.be.visible")
+    })
 
-    it("should show text with explanation if no members for an attending status")
+    it("should show a toast & error text if fetching data went wrong", () => {
+      const interception = interceptIndefinitely("/rest/v1/rpc/get_members_by_event", {
+        statusCode: 400,
+      })
+      cy.data("no-attending-members").should("not.be.visible")
+      interception.sendResponse()
+      cy.get(".Toastify")
+        .get("#toast-attending-members")
+        .get(".Toastify__toast-body")
+        .should("contain.text", "Something went wrong")
+      cy.get(inputPresentMembers).should("be.checked")
+      cy.data("failed-attending-members").should("be.visible")
+      cy.get(inputAbsentMembers).parent().click()
+      cy.data("failed-attending-members").should("be.visible")
+      cy.get(inputUndecidedMembers).parent().click()
+      cy.data("failed-attending-members").should("be.visible")
+    })
+
+    it("should show text with explanation if no members for an attending status", () => {
+      const interception = interceptIndefinitely("/rest/v1/rpc/get_members_by_event", { body: [] })
+      const noAttendingMembers = "no-attending-members"
+      cy.data(noAttendingMembers).should("not.be.visible")
+      interception.sendResponse()
+      cy.get(inputPresentMembers).should("be.checked")
+      cy.data(noAttendingMembers).should("be.visible").should("contain.text", "present")
+      cy.get(inputAbsentMembers).parent().click()
+      cy.data(noAttendingMembers).should("be.visible").should("contain.text", "absent")
+      cy.get(inputUndecidedMembers).parent().click()
+      cy.data(noAttendingMembers).should("be.visible").should("contain.text", "undecided")
+    })
   })
 })
