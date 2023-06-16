@@ -97,12 +97,24 @@
     .btn.submit {
         @apply flex w-full justify-center gap-2 rounded-lg p-2.5
     }
-    
+
     .info-item {
         @apply flex items-center gap-2
     }
 
     .info-item > svg {
         @apply text-moon h-5
+    }
+
+    .attendanceButtonItem {
+        @apply
+        inline-flex w-full cursor-pointer items-center justify-center
+        bg-zinc-100 p-2 text-sm text-zinc-500
+        peer-checked:font-medium peer-checked:text-zinc-700 peer-checked:bg-zinc-300
+        hover:bg-zinc-300 hover:text-gray-600
+    }
+
+    .attendanceButtonItem svg {
+        @apply mx-auto
     }
 }
