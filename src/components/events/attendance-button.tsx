@@ -68,78 +68,74 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const isChecked = (status: Attending) => currentValue === status
 
   return (
-    <>
-      <div>
-        <form>
-          <div
-            data-cy={"loading"}
-            className={`loading duration-2000 opacity-1 absolute z-50 flex h-14 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-600 bg-opacity-70 lg:w-[calc(60%-2rem)] 
-            ${!isLoading && "!h-0 opacity-0"}`}
-          >
-            <SpinnerStripes />
-          </div>
-          <ul className="grid w-full grid-cols-3">
-            <li>
-              <input
-                type="radio"
-                id={"present"}
-                defaultValue="present"
-                className="peer hidden"
-                {...register("attending", {
-                  onChange: changeAttendance,
-                })}
-              />
-              <label htmlFor="present" className="attendanceButtonItem rounded-l-lg">
-                <div className="block">
-                  <CheckCircleIcon
-                    className={`h-5 text-green-400 ${isChecked("present") && "text-green-500"}`}
-                  />
-                  <p>Present</p>
-                </div>
-              </label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                id="absent"
-                defaultValue="absent"
-                className="peer hidden"
-                {...register("attending", {
-                  onChange: changeAttendance,
-                })}
-              />
-              <label htmlFor="absent" className="attendanceButtonItem">
-                <div className="block">
-                  <XCircleIcon
-                    className={`h-5 text-red-400 ${isChecked("absent") && "text-red-500"}`}
-                  />
-                  <p>Absent</p>
-                </div>
-              </label>
-            </li>
-            <li>
-              <input
-                {...register("attending", {
-                  onChange: changeAttendance,
-                })}
-                type="radio"
-                id="undecided"
-                defaultValue="undecided"
-                className="peer hidden"
-              />
-              <label htmlFor="undecided" className="attendanceButtonItem rounded-r-lg">
-                <div className="block">
-                  <QuestionMarkCircleIcon
-                    className={`h-5 text-orange-300 ${isChecked("undecided") && "text-orange-400"}`}
-                  />
-                  <p>Undecided</p>
-                </div>
-              </label>
-            </li>
-          </ul>
-        </form>
+    <form>
+      <div
+        data-cy={"loading"}
+        className={`loading duration-2000 opacity-1 absolute z-50 flex h-14 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-600 bg-opacity-70 lg:w-[calc(60%-2rem)] 
+          ${!isLoading && "!h-0 opacity-0"}`}
+      >
+        <SpinnerStripes />
       </div>
-    </>
+      <ul className="grid w-full grid-cols-3">
+        <li>
+          <input
+            type="radio"
+            id={"present"}
+            defaultValue="present"
+            className="peer hidden"
+            {...register("attending", {
+              onChange: changeAttendance,
+            })}
+          />
+          <label htmlFor="present" className="attendanceButtonItem rounded-l-lg">
+            <div className="block">
+              <CheckCircleIcon
+                className={`h-5 text-green-400 ${isChecked("present") && "text-green-500"}`}
+              />
+              <p>Present</p>
+            </div>
+          </label>
+        </li>
+        <li>
+          <input
+            type="radio"
+            id="absent"
+            defaultValue="absent"
+            className="peer hidden"
+            {...register("attending", {
+              onChange: changeAttendance,
+            })}
+          />
+          <label htmlFor="absent" className="attendanceButtonItem">
+            <div className="block">
+              <XCircleIcon
+                className={`h-5 text-red-400 ${isChecked("absent") && "text-red-500"}`}
+              />
+              <p>Absent</p>
+            </div>
+          </label>
+        </li>
+        <li>
+          <input
+            {...register("attending", {
+              onChange: changeAttendance,
+            })}
+            type="radio"
+            id="undecided"
+            defaultValue="undecided"
+            className="peer hidden"
+          />
+          <label htmlFor="undecided" className="attendanceButtonItem rounded-r-lg">
+            <div className="block">
+              <QuestionMarkCircleIcon
+                className={`h-5 text-orange-300 ${isChecked("undecided") && "text-orange-400"}`}
+              />
+              <p>Undecided</p>
+            </div>
+          </label>
+        </li>
+      </ul>
+    </form>
   )
 }
 
