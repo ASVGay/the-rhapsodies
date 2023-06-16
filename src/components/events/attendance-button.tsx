@@ -24,38 +24,44 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    if (uid) {
+    const retrieveAttendance = () => {
       setIsLoading(true)
-      getAttendance(supabase, eventId, uid).then(({ data, error }) => {
-        if (error)
-          toast.error("Something went wrong while retrieving your attendance.", {
-            toastId: "presence-error",
-          })
+      setTimeout(() => {
+        getAttendance(supabase, eventId, uid!!).then(({ data, error }) => {
+          if (error)
+            toast.error("Something went wrong while retrieving your attendance.", {
+              toastId: "presence-error",
+            })
 
-        if (data) {
-          const attendance = data[0]
-          if (attendance == null) setValue("attending", "undecided")
-          else setValue("attending", attendance.attending)
-        }
-        setIsLoading(false)
-      })
+          if (data) {
+            const attendance = data[0]
+            if (attendance == null) setValue("attending", "undecided")
+            else setValue("attending", attendance.attending)
+          }
+          setIsLoading(false)
+        })
+      }, 500)
     }
+
+    if (uid) retrieveAttendance()
   }, [eventId, setValue, supabase, uid])
 
   const changeAttendance = () => {
     const previousValue = currentValue
     if (uid) {
       setIsLoading(true)
-      updateAttendance(supabase, eventId, uid, getValues("attending")).then(({ error }) => {
-        if (error) {
-          setValue("attending", previousValue)
+      setTimeout(() => {
+        updateAttendance(supabase, eventId, uid, getValues("attending")).then(({ error }) => {
+          if (error) {
+            setValue("attending", previousValue)
 
-          toast.error("Something went wrong while updating your presence. Please try again.", {
-            toastId: "presence-error",
-          })
-        }
-        setIsLoading(false)
-      })
+            toast.error("Something went wrong while updating your presence. Please try again.", {
+              toastId: "presence-error",
+            })
+          }
+          setIsLoading(false)
+        })
+      }, 500)
     }
   }
 
@@ -68,7 +74,7 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
           <div
             data-cy={"loading"}
             className={`loading duration-2000 opacity-1 absolute z-50 flex h-14 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-600 bg-opacity-70 lg:w-[calc(60%-2rem)] 
-            ${!isLoading ? "!h-0 opacity-0" : ""}`}
+            ${!isLoading && "!h-0 opacity-0"}`}
           >
             <SpinnerStripes />
           </div>
