@@ -33,6 +33,19 @@
         @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-sm
     }
 
+    .styled-checkbox:checked::before {
+      content: '\2713'; /*unicode for checkmark*/
+      color: white;
+      background-color: #EBBC19; /* Optionally change the background color when checked */
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-top: 2px;
+      height: 28px;
+      display:flex;
+    }
+      
     .settings-wrapper p {
         @apply py-2 text-base;
     }
@@ -50,7 +63,7 @@
     }
 
     .page-wrapper {
-        @apply mx-auto px-4 pt-6;
+        @apply px-4 pt-6 mx-auto;
     }
 
     .page-header {
