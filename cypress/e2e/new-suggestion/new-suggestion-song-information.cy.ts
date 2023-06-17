@@ -106,12 +106,14 @@ describe("when creating a new suggestion, adding song information", () => {
 
     it("should display results when searching a song", () => {
       cy.data(inputTitle).type("A").then(() => {
+        wait(500)
         cy.data("song-information-dropdown").should("be.visible")
       })
     })
 
     it("should auto-fill song info", () => {
       cy.data(inputTitle).type("A").then(() => {
+        wait(500)
         cy.data("song-information-dropdown").children().first().click()
           .then(() => {
             wait(100)

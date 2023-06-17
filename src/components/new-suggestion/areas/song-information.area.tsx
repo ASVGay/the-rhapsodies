@@ -16,6 +16,7 @@ import {
   requestSpotifyAccessToken, setSpotifyAccessToken
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
+import { debounce } from "debounce"
 
 const SongInformationArea = () => {
   const { basePath } = useRouter()
@@ -64,13 +65,10 @@ const SongInformationArea = () => {
     if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
   }
 
-  const handleSearch = (value: string) => {
-    setValue("title", value)
-
+  const debouncedHandleSearch = debounce((value: string) => {
     if (value.length == 0) return
 
     setFetchingSongs(true)
-
     getSpotifySearchResults(basePath, getValues().title)
       .then(async (response) => {
         const data: SpotifySearchItem[] = ((await response.json()).tracks.items)
@@ -84,6 +82,11 @@ const SongInformationArea = () => {
       })
       .catch(() => setShowSearchError(true))
       .finally(() => setFetchingSongs(false))
+  }, 400)
+
+  const handleSearch = (value: string) => {
+    setValue("title", value)
+    debouncedHandleSearch(value)
   }
 
   const handleSearchBlur = () => {
@@ -142,11 +145,13 @@ const SongInformationArea = () => {
                 placeholder="Search for a song title"
                 className={`${errors.title && "error"}`}
                 {...register("title", {
-                  onChange: (event) => handleSearch(event.target.value),
                   validate: (value) => !!value.trim()
                 })}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={handleSearchBlur}
+                onChange={(event) => {
+                  handleSearch(event.target.value)
+                }}
               />
               <span>
              {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
@@ -281,5 +286,6 @@ const SongInformationArea = () => {
     </div>
   )
 }
+
 
 export default SongInformationArea
