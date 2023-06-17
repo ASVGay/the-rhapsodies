@@ -32,6 +32,7 @@
     "next-redux-wrapper": "^8.1.0",
     "postcss": "8.4.24",
     "react": "18.2.0",
+    "react-datepicker": "^4.14.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-onesignal": "^2.0.4",
