@@ -71,7 +71,6 @@ const SongInformationArea = () => {
 
     setFetchingSongs(true)
 
-    //TODO reduce the amount of calls
     getSpotifySearchResults(basePath, getValues().title)
       .then(async (response) => {
         const data: SpotifySearchItem[] = ((await response.json()).tracks.items)

@@ -9,7 +9,7 @@ export interface SpotifyArtist {
   name: string
 }
 
-export interface external_urls {
+export interface ExternalUrls {
   spotify: string
 }
 
@@ -17,5 +17,5 @@ export interface SpotifySearchItem {
   id: string
   name: string
   artists: SpotifyArtist[]
-  external_urls: external_urls
+  external_urls: ExternalUrls
 }
