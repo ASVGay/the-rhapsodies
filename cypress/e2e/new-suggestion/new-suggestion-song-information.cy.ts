@@ -4,7 +4,6 @@ import {
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState
 } from "./helpers/new-suggestion.helper"
-import { wait } from "next/dist/build/output/log"
 
 const path = "/suggestions/new"
 const buttonAddInstruments = "button-add-instruments"
@@ -106,17 +105,17 @@ describe("when creating a new suggestion, adding song information", () => {
 
     it("should display results when searching a song", () => {
       cy.data(inputTitle).type("A").then(() => {
-        wait(500)
+        cy.wait(500)
         cy.data("song-information-dropdown").should("be.visible")
       })
     })
 
     it("should auto-fill song info", () => {
       cy.data(inputTitle).type("A").then(() => {
-        wait(500)
+        cy.wait(500)
         cy.data("song-information-dropdown").children().first().click()
           .then(() => {
-            wait(100)
+            cy.wait(100)
             cy.data("manual-input-btn").click()
           })
           .then(() => {
