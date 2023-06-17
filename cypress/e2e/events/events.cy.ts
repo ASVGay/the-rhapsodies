@@ -1,4 +1,4 @@
-import { interceptIndefinitely } from "./helpers/interception.helper"
+import { interceptIndefinitely } from "../helpers/interception.helper"
 
 describe("events page", () => {
   beforeEach(() => {
@@ -24,13 +24,13 @@ describe("events page", () => {
     cy.intercept("GET", "/rest/v1/event*", {
       forceNetworkError: true,
     })
-    cy.data("no-events-text").contains("Failed to load events, try refreshing the page.")
+    cy.data("no-events-text").contains("Failed to load events.")
   })
 
   it("should display correct error message when there are no events yet", () => {
     cy.intercept("GET", "/rest/v1/event*", []).as("mockedRequest")
     cy.wait("@mockedRequest")
     cy.wait(1000)
-    cy.data("no-events-text").contains("No Events have been added yet.")
+    cy.data("no-events-text").contains("No events have been added yet.")
   })
 })
