@@ -38,8 +38,6 @@ const SongInformationArea = () => {
 
   const [showSearchError, setShowSearchError] = useState<boolean>(false)
 
-  //TODO write tests
-
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
 
@@ -252,6 +250,7 @@ const SongInformationArea = () => {
             className={"text-moon-400 mb-6"}
             onClick={() => setManualInput(!manualInput)}
             type={"button"}
+            data-cy="manual-input-btn"
           >
             {manualInput
               ? "Or autofill song information"
