@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, AppState } from "@/redux/store"
-import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
-import { Area } from "@/constants/area"
+import { useSelector } from "react-redux"
+import { AppState } from "@/redux/store"
 import ErrorMessage from "@/components/error/error-message"
 import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
@@ -20,6 +18,7 @@ import { InputsSongInformation } from "@/interfaces/suggestion"
 
 interface SongInformationAreaProps {
   onFormSuccess(songInformation: InputsSongInformation): void
+
   proceedToNextArea(): void
 }
 
@@ -27,7 +26,6 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
   const { basePath } = useRouter()
 
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const dispatch: AppDispatch = useDispatch()
   const {
     register,
     handleSubmit,
