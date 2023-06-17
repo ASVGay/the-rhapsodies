@@ -33,31 +33,31 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Rens', 'de315267-9
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Marcel', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Feryll', '1ce835c1-a708-4e73-a808-334e982dfe3d');
 
-INSERT INTO "public"."event" ( "id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'Brainstormborrel', to_timestamp(EXTRACT(EPOCH FROM current_timestamp))  + INTERVAL '1 hour',to_timestamp(EXTRACT(EPOCH FROM current_timestamp)) + INTERVAL '2 hour', 'Studio');
 INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7','Rehearsal', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)) + INTERVAL '14 hour',to_timestamp(EXTRACT(EPOCH FROM current_timestamp)) + INTERVAL '19 hour', 'Studio');
+VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'brainstormborrel', (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '2 hours') + (random() * INTERVAL '7 days'), 'Studio');
 INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'Brainstormborrel', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)),to_timestamp(EXTRACT(EPOCH FROM current_timestamp)) + INTERVAL '1 hour', 'Studio');
-INSERT INTO "public"."event" ("id","event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7','Rehearsal', to_timestamp(EXTRACT(EPOCH FROM current_timestamp)), to_timestamp(EXTRACT(EPOCH FROM current_timestamp)) + INTERVAL '1 hour', 'Studio');
+VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'rehearsal', (current_timestamp + INTERVAL '14 hours') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '19 hours') + (random() * INTERVAL '7 days'), 'Studio');
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'brainstormborrel', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'Studio');
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'rehearsal', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'Studio');
 
 
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'absent');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'absent');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'undecided');
-INSERT INTO "public"."attendee" ("event_id", "user_id", "attending")
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
 VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
 
 
