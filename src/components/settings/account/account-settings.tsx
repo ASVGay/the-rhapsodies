@@ -2,12 +2,32 @@ import React from "react"
 import SettingsWrapper from "@/components/settings/settings-wrapper"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import SignOut from "@/components/settings/account/sign-out"
-import ChangePasswordButton from "@/components/settings/account/change-password-button"
+import SettingsButton from "@/components/settings/controls/settings-button"
+import { useRouter } from "next/router"
 
 const AccountSettings = () => {
+  const router = useRouter()
+
   return (
     <SettingsWrapper category={"Account"} icon={UserCircleIcon}>
-      <ChangePasswordButton />
+      <SettingsButton
+        disabled={false}
+        onClick={async () => await router.push("/settings/change-display-name")}
+        text={"Change display name"}
+        dataCy={"change-display-name-button"}
+      />
+      <SettingsButton
+        disabled={false}
+        onClick={async () => await router.push("/settings/change-email")}
+        text={"Change email address"}
+        dataCy={"change-email-button"}
+      />
+      <SettingsButton
+        disabled={false}
+        onClick={async () => await router.push("/settings/change-password")}
+        text={"Change password"}
+        dataCy={"change-password-button"}
+      />
       <SignOut />
     </SettingsWrapper>
   )

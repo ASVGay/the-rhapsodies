@@ -1,14 +1,14 @@
 import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import React from "react"
 
-interface NotificationButtonProps {
+interface SettingsButtonProps {
   dataCy?: string
   disabled: boolean
-  onClick: () => void
+  onClick: () => void | Promise<boolean>
   text: string
 }
 
-const SettingsButton = ({ dataCy, disabled, onClick, text }: NotificationButtonProps) => (
+const SettingsButton = ({ dataCy, disabled, onClick, text }: SettingsButtonProps) => (
   <button
     type={"button"}
     className={`group flex w-full items-center justify-between hover:cursor-pointer disabled:cursor-not-allowed 

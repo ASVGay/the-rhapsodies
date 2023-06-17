@@ -1,14 +1,15 @@
 import { Instrument } from "@/types/database-types"
 
-export interface NewSuggestion {
+export interface ISuggestion {
   artist: string[]
   link: string | null
   motivation: string
   title: string
-  instruments: NewSuggestionInstrument[]
+  instruments: ISuggestionInstrument[]
 }
 
-export interface NewSuggestionInstrument {
+export interface ISuggestionInstrument {
+  id?: string
   description: string
   instrument: Instrument
 }

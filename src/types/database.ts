@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export interface Database {
   graphql_public: {
@@ -38,20 +32,17 @@ export interface Database {
         Row: {
           attending: Database["public"]["Enums"]["attending"]
           event_id: string
-          remark: string | null
-          user_id: string
+          member_id: string
         }
         Insert: {
-          attending: Database["public"]["Enums"]["attending"]
+          attending?: Database["public"]["Enums"]["attending"]
           event_id: string
-          remark?: string | null
-          user_id: string
+          member_id: string
         }
         Update: {
           attending?: Database["public"]["Enums"]["attending"]
           event_id?: string
-          remark?: string | null
-          user_id?: string
+          member_id?: string
         }
         Relationships: [
           {
@@ -61,8 +52,8 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "attendee_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "attendee_member_id_fkey"
+            columns: ["member_id"]
             referencedRelation: "member"
             referencedColumns: ["id"]
           }
@@ -290,7 +281,7 @@ export interface Database {
     }
     Enums: {
       attending: "present" | "absent" | "undecided"
-      event_type: "Brainstormborrel" | "Rehearsal"
+      event_type: "brainstormborrel" | "rehearsal"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -482,4 +473,3 @@ export interface Database {
     }
   }
 }
-

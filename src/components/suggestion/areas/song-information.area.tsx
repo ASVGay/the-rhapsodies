@@ -1,20 +1,19 @@
 import React from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, AppState } from "@/redux/store"
-import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
+import { InputsSongInformation } from "@/interfaces/suggestion"
 import {
   isSongInformationInvalid,
   submitSongInformationForm,
 } from "@/helpers/new-suggestion.helper"
 
-const SongInformationArea = () => {
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
-  const dispatch: AppDispatch = useDispatch()
+interface SongInformationAreaProps {
+  onFormSuccess(songInformation: InputsSongInformation): void
+  proceedToNextArea(): void
+}
+
+const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformationAreaProps) => {
   const {
     register,
     handleSubmit,
@@ -22,21 +21,13 @@ const SongInformationArea = () => {
     watch,
   } = useFormContext<InputsSongInformation>()
 
-  const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
-    dispatch(
-      updateNewSuggestion({
-        ...newSuggestion,
-        title,
-        artist: [artist],
-        link,
-        motivation,
-      })
-    )
+  const onSubmit = (songInformation: InputsSongInformation) => {
+    onFormSuccess(songInformation)
   }
 
-  function submitAndGoToInstruments() {
+  const submitAndGoToInstruments = () => {
     submitSongInformationForm()
-    if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
+    if (!isSongInformationInvalid(watch)) proceedToNextArea()
   }
 
   return (

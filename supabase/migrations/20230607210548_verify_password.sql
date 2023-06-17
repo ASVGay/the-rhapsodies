@@ -1,5 +1,3 @@
-set check_function_bodies = off;
-
 CREATE OR REPLACE FUNCTION public.verify_user_password(password text)
  RETURNS boolean
  LANGUAGE plpgsql

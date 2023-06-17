@@ -1,10 +1,12 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit"
 import { newSuggestionSlice } from "@/redux/slices/new-suggestion.slice"
+import { editSuggestionSlice } from "./slices/edit-suggestion.slice"
 
 const makeStore = () => {
   return configureStore({
     reducer: {
       newSuggestion: newSuggestionSlice.reducer,
+      editSuggestion: editSuggestionSlice.reducer,
     },
   })
 }

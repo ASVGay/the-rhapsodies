@@ -1,4 +1,4 @@
-import { interceptIndefinitely } from "../helpers/interception.helper.ts"
+import { interceptIndefinitely } from "../helpers/interception.helper"
 
 describe("the change password page", () => {
   const buttonSubmitNewPassword = "button-submit-new-password"
@@ -107,13 +107,7 @@ describe("the change password page", () => {
 
     it("should show toast if unsuccessful update", () => {
       cy.intercept("/auth/v1/user", errorResponse)
-      submitCorrectData(
-        inputCurrentPassword,
-        currentPassword,
-        inputNewPassword,
-        inputConfirmationPassword,
-        buttonSubmitNewPassword
-      )
+      submitCorrectData()
 
       cy.get(".Toastify")
         .get("#1")
