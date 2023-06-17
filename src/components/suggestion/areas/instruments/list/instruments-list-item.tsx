@@ -1,11 +1,11 @@
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
-import { NewSuggestionInstrument } from "@/interfaces/new-suggestion"
+import { ISuggestionInstrument } from "@/interfaces/suggestion"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useRef } from "react"
 
 interface InstrumentsListItemProps {
-  instrumentItem: NewSuggestionInstrument
+  instrumentItem: ISuggestionInstrument
   onDeleteClick(): void
   onDescriptionChanged(value: string): void
 }

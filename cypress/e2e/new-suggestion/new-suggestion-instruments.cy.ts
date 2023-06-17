@@ -1,46 +1,31 @@
 import {
-  fillInstrumentsSuccessfully,
   addInstrumentItem,
-  shouldGoToReviewArea,
-  shouldBeFilledState,
+  fillInstrumentsSuccessfully,
   newSuggestionFilledSongInformation,
+  shouldBeFilledState,
+  shouldGoToReviewArea,
 } from "./helpers/new-suggestion.helper"
-import { CyHttpMessages } from "cypress/types/net-stubbing"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-
-const toReviewButton = "to-review-button"
-const searchInstrumentInput = "search-instrument-input"
-const instrumentSearchList = "instrument-search-list"
-const instrumentEditList = "instrument-edit-list"
-const deleteButton = "delete-button"
-const instrumentSearchCloseButton = "instrument-search-close-button"
-const descriptionInput = "description-input"
-const progressBarInstruments = "new-suggestion-progress-bar-instruments"
-
-let instrumentResponseCache: CyHttpMessages.BaseMessage
+import { mockInstruments } from "../../fixtures/mock-instruments.ts"
 
 describe("when creating a new suggestion, adding instruments", () => {
-  before(() => {
-    cy.login()
-    cy.visit("/suggestions/new")
-
-    //Intercept and cache the instrument list
-    cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc").as(
-      "getInstruments"
-    )
-    cy.wait("@getInstruments").then((intercept) => {
-      instrumentResponseCache = intercept.response
-    })
-  })
+  const toReviewButton = "to-review-button"
+  const searchInstrumentInput = "search-instrument-input"
+  const instrumentSearchList = "instrument-search-list"
+  const instrumentEditList = "instrument-edit-list"
+  const deleteButton = "delete-button"
+  const instrumentSearchCloseButton = "instrument-search-close-button"
+  const descriptionInput = "description-input"
+  const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 
   beforeEach(() => {
     cy.login()
     cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc", {
-      body: instrumentResponseCache.body,
+      body: mockInstruments,
     })
 
     cy.visit("/suggestions/new", {
-      onBeforeLoad(win: Cypress.AUTWindow) {
+      onBeforeLoad() {
         cy.window()
           .its("store")
           .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
@@ -56,8 +41,8 @@ describe("when creating a new suggestion, adding instruments", () => {
 
   it("should render the review area on click", () => {
     fillInstrumentsSuccessfully()
-    shouldBeFilledState()
     shouldGoToReviewArea()
+    shouldBeFilledState()
   })
 
   it("adding a instrument should allow the process to proceed", () => {
@@ -92,6 +77,8 @@ describe("when creating a new suggestion, adding instruments", () => {
   context("when proceeding to next step, but return to make changes", () => {
     beforeEach(() => {
       addInstrumentItem()
+      shouldGoToReviewArea()
+      cy.data(progressBarInstruments).click()
     })
 
     it("should populate the list with previously added elements", () => {
@@ -114,7 +101,7 @@ describe("when creating a new suggestion, adding instruments", () => {
     })
 
     it("should add instruments to redux's newSuggestion's suggestion", () => {
-      cy.data(instrumentEditList).first().should("exist")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")
@@ -126,6 +113,7 @@ describe("when creating a new suggestion, adding instruments", () => {
 
     it("should reflect the correct description on the instrument in redux", () => {
       cy.data(instrumentEditList).first().data(descriptionInput).type("test description")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")

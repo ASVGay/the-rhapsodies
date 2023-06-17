@@ -8,12 +8,20 @@ interface InstrumentProps {
   name: string
   division?: Division[]
   description: string | null
-  uid: string | undefined
+  uid?: string
   onclick?: () => void
   toggleOpacity?: boolean
 }
 
-const Instrument = ({ imageURL, name, division, description, uid, onclick, toggleOpacity = true }: InstrumentProps) => {
+const Instrument = ({
+  imageURL,
+  name,
+  division,
+  description,
+  uid,
+  onclick,
+  toggleOpacity = true,
+}: InstrumentProps) => {
   const formatUsernames = (divisions: Division[]) => {
     return divisions.map(({ musician }, index) => (
       <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
@@ -34,7 +42,7 @@ const Instrument = ({ imageURL, name, division, description, uid, onclick, toggl
         alt={name}
         width={64}
         height={64}
-        className={`${(toggleOpacity && division?.length == 0) ? "opacity-30" : ""} mr-4 h-10 w-10`}
+        className={`${toggleOpacity && division?.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
         draggable={"false"}
       />
       <div>

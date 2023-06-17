@@ -6,7 +6,7 @@ import { boldSpecificTextSections } from "@/helpers/text.helper"
 
 interface InstrumentSearchProps {
   instruments: Instrument[]
-  onInstrumentSelected(instrument: Instrument): boolean
+  onInstrumentSelected(instrument: Instrument): void
 }
 
 const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearchProps) => {

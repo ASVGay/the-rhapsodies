@@ -29,3 +29,33 @@ export const resetPasswordForEmail = async (supabase: SupabaseClient, email: str
 export const verifyPassword = (supabaseClient: SupabaseClient<Database>, password: string) => {
   return supabaseClient.rpc("verify_user_password", { password })
 }
+
+export const updateDisplayName = (
+  supabaseClient: SupabaseClient<Database>,
+  newDisplayName: string,
+  uid: string
+) => {
+  return supabaseClient
+    .from("member")
+    .update({ display_name: newDisplayName })
+    .eq("id", uid)
+    .select("display_name")
+    .single()
+}
+
+export const getDisplayName = (supabaseClient: SupabaseClient<Database>, uid: string) => {
+  return supabaseClient.from("member").select("display_name").eq("id", uid).limit(1).single()
+}
+
+export const sendChangeEmailRequest = async (supabase: SupabaseClient, email: string) => {
+  const { error } = await supabase.auth.updateUser(
+    { email },
+    { emailRedirectTo: `${window.location.origin}/settings/change-email` }
+  )
+  if (error) {
+    toast.error(error.message)
+    return false
+  } else {
+    return true
+  }
+}

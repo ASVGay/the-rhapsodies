@@ -1,4 +1,4 @@
-import { NewSuggestion } from "@/interfaces/new-suggestion"
+import { ISuggestion } from "@/interfaces/suggestion"
 import { newSuggestionFilledInInstruments } from "./helpers/new-suggestion.helper"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 
@@ -29,7 +29,7 @@ describe("review new suggestion page", () => {
         .its("store")
         .invoke("getState")
         .its("newSuggestion.suggestion")
-        .then((state: NewSuggestion) => {
+        .then((state: ISuggestion) => {
           cy.data("review-title").invoke("text").should("equal", state.title)
           state.artist.forEach((artist) =>
             cy.data("review-artists").invoke("text").should("contain", artist)

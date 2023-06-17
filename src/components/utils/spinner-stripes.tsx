@@ -1,7 +1,7 @@
 import React from "react"
 
 interface SpinnerStripesProps {
-  dataCy: string
+  dataCy?: string
 }
 
 const SpinnerStripes = ({ dataCy }: SpinnerStripesProps) => {

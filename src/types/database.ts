@@ -28,6 +28,37 @@ export interface Database {
   }
   public: {
     Tables: {
+      attendee: {
+        Row: {
+          attending: Database["public"]["Enums"]["attending"]
+          event_id: string
+          member_id: string
+        }
+        Insert: {
+          attending?: Database["public"]["Enums"]["attending"]
+          event_id: string
+          member_id: string
+        }
+        Update: {
+          attending?: Database["public"]["Enums"]["attending"]
+          event_id?: string
+          member_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendee_event_id_fkey"
+            columns: ["event_id"]
+            referencedRelation: "event"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendee_member_id_fkey"
+            columns: ["member_id"]
+            referencedRelation: "member"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       division: {
         Row: {
           musician: string
@@ -55,6 +86,30 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      event: {
+        Row: {
+          end_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          location: string
+          start_time: string
+        }
+        Insert: {
+          end_time: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location: string
+          start_time: string
+        }
+        Update: {
+          end_time?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string
+          start_time?: string
+        }
+        Relationships: []
       }
       instrument: {
         Row: {
@@ -225,7 +280,8 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      attending: "present" | "absent" | "undecided"
+      event_type: "brainstormborrel" | "rehearsal"
     }
     CompositeTypes: {
       [_ in never]: never

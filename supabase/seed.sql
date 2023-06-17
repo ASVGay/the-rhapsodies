@@ -51,10 +51,11 @@ INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALU
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('7d0a428d-eae6-429d-9877-48b8b79ecc73', 'Clap', 'applause');
 
 -- Create suggestions
-INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('ca20ae76-f6b3-4224-99af-cac14643a967', 'Smells Like Teen Spirit', '{Nirvana}', 'i know some of us already want to play this song, so let''s just do it :)', '2023-02-14 00:00:00+00', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', NULL);
 INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('687d4b20-9c34-4ff5-a1b5-ab4ca54c008c', 'Nobody', '{Mitski}', 'Banger with almost all instruments we have and even a fun hand clap part for those who have their hands free (unfortunately for me😔)!', '2023-03-05 00:00:00+00', 'de315267-9634-4cb8-9c7c-d0edd66c62fe', 'https://open.spotify.com/track/2P5yIMu2DNeMXTyOANKS6k?si=TT9hBdpWSausBKiT7hqBVA');
-INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('e743664e-b85b-4164-8163-24c9957f5ffd', 'Don''t Stop Believin''', '{Journey}', 'Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.', '2023-02-14 00:00:00+00', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'https://open.spotify.com/track/4bHsxqR3GMrXTxEPLuK5ue?si=84ccb0c63a4046e8');
-INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('f0a04fe5-8290-445b-af94-1b2ae0263431', 'Jessie''s Girl', '{"Rick Springfield"}', 'Pretty fun song with a nice guitar solo and fun interlude in it. Vocals are not too high and I think it would sound okay with multiple vocalists as well. All instruments (expect for the lead guitar) are fairly easy as well.', '2023-05-10 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', NULL);
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link", "inRepertoire") VALUES ('f0a04fe5-8290-445b-af94-1b2ae0263431', 'Jessie''s Girl', '{"Rick Springfield"}', 'Pretty fun song with a nice guitar solo and fun interlude in it. Vocals are not too high and I think it would sound okay with multiple vocalists as well. All instruments (expect for the lead guitar) are fairly easy as well.', '2023-05-10 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', NULL,true);
+-- Suggestion used for edit-suggestion testing (authorized for test user)
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('e743664e-b85b-4164-8163-24c9957f5ffd', 'Don''t Stop Believin''', '{Journey}', 'Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', 'https://open.spotify.com/track/4bHsxqR3GMrXTxEPLuK5ue?si=84ccb0c63a4046e8');
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('ca20ae76-f6b3-4224-99af-cac14643a967', 'Smells Like Teen Spirit', '{Nirvana}', 'i know some of us already want to play this song, so let''s just do it :)', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', NULL);
 
 -- Add instruments to songs
 INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
@@ -99,4 +100,5 @@ INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('df89
 INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('82a5e8c8-f435-40af-8c0d-167b16a6c1b4', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('55b0255a-2caf-48c5-b130-bc9ab99a060d', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 
-
+-- Insert event for testing
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location") VALUES ('0b5fb485-fc2a-4acc-8fd7-64f008c3089e', 'brainstormborrel', '2023-06-14 17:00:00+00', '2023-06-14 19:00:00+00', 'CREA 3.14');

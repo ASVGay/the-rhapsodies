@@ -21,7 +21,7 @@ export enum SongType {
   Suggestion,
 }
 
-const SongListWrapper = (props: SongListWrapperProps) => {
+const SongListWrapper = ({ songType }: SongListWrapperProps) => {
   const router = useRouter()
   const supabaseClient = useSupabaseClient<Database>()
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false)
@@ -36,7 +36,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
   useEffect(() => {
     setShowSpinner(true)
     const songs =
-      props.songType == SongType.Suggestion
+      songType == SongType.Suggestion
         ? getSuggestions(supabaseClient)
         : getRepertoireSongs(supabaseClient)
 
@@ -50,7 +50,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
         if (response.data?.length > 0) {
           setSongs(response.data as Song[])
         } else {
-          props.songType === SongType.Suggestion
+          songType === SongType.Suggestion
             ? setErrorText(
                 "Looks like there are no suggestions made yet! Feel free to start adding them."
               )
@@ -63,7 +63,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
       .finally(() => {
         setShowSpinner(false)
       })
-  }, [supabaseClient])
+  }, [songType, supabaseClient])
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toLowerCase()
@@ -76,7 +76,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
     })
 
     if (filteredSongs.length === 0) {
-      props.songType === SongType.Suggestion
+      songType === SongType.Suggestion
         ? setErrorText(
             `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
           )
@@ -99,7 +99,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
         {searchedSongs.map((song: Song) =>
-          props.songType == SongType.Suggestion ? (
+          songType == SongType.Suggestion ? (
             <SuggestionCard
               key={song.id}
               song={song}
@@ -123,7 +123,7 @@ const SongListWrapper = (props: SongListWrapperProps) => {
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"} style={{ display: showSearchBar ? "none" : "flex" }}>
         <div className={"page-header"}>
-          {props.songType === SongType.Suggestion ? "Suggestion" : "Repertoire"}
+          {songType === SongType.Suggestion ? "Suggestion" : "Repertoire"}
         </div>
         <div className={"flex flex-row gap-2"}>
           <MagnifyingGlassIcon

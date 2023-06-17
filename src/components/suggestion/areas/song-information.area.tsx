@@ -3,10 +3,9 @@ import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outlin
 import { useFormContext } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, AppState } from "@/redux/store"
-import { setActiveArea, updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import { setActiveArea } from "@/redux/slices/new-suggestion.slice"
 import { Area } from "@/constants/area"
 import ErrorMessage from "@/components/error/error-message"
-import { InputsSongInformation } from "@/interfaces/new-suggestion"
 import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
 import { SearchItem, SpotifySearchItem } from "@/interfaces/spotify-search-item"
@@ -17,8 +16,14 @@ import {
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { debounce } from "debounce"
+import { InputsSongInformation } from "@/interfaces/suggestion"
 
-const SongInformationArea = () => {
+interface SongInformationAreaProps {
+  onFormSuccess(songInformation: InputsSongInformation): void
+  proceedToNextArea(): void
+}
+
+const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformationAreaProps) => {
   const { basePath } = useRouter()
 
   const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -48,21 +53,13 @@ const SongInformationArea = () => {
       })
   }, [])
 
-  const onSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
-    dispatch(
-      updateNewSuggestion({
-        ...newSuggestion,
-        title,
-        artist: artist.split(", "),
-        link,
-        motivation
-      })
-    )
+  const onSubmit = (songInformation: InputsSongInformation) => {
+    onFormSuccess(songInformation)
   }
 
   const submitAndGoToInstruments = () => {
     submitSongInformationForm()
-    if (!isSongInformationInvalid(watch)) dispatch(setActiveArea(Area.Instruments))
+    if (!isSongInformationInvalid(watch)) proceedToNextArea()
   }
 
   const debouncedHandleSearch = debounce((value: string) => {

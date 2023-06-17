@@ -38,7 +38,7 @@
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
-const getSbToken = () =>
+export const getSbToken = () =>
   `sb-${Cypress.env("NEXT_PUBLIC_SUPABASE_URL").match(/(\w+)\./)[1]}-auth-token`
 
 Cypress.Commands.add("data", (value) => {
