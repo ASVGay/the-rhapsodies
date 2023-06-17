@@ -67,6 +67,8 @@ const SongInformationArea = () => {
   const handleSearch = (value: string) => {
     setValue("title", value)
 
+    if (value.length == 0) return
+
     setFetchingSongs(true)
 
     //TODO reduce the amount of calls
