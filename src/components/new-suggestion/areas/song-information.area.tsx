@@ -152,7 +152,7 @@ const SongInformationArea = () => {
             </span>
               {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
-                  <ul>
+                  <ul data-cy="song-information-dropdown">
                     {searchResults.map((item: SearchItem) => {
                       return <div
                         key={item.id}
@@ -270,7 +270,7 @@ const SongInformationArea = () => {
       </form>
 
       {showSearchError && (
-        <div className={"mt-6"}>
+        <div className={"mt-6"} data-cy="search-error">
           <ErrorPopup
             text={"Failed to fetch song search results."}
             closePopup={() => setShowSearchError(false)}

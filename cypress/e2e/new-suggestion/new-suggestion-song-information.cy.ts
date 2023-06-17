@@ -4,6 +4,7 @@ import {
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState
 } from "./helpers/new-suggestion.helper"
+import { wait } from "next/dist/build/output/log"
 
 const path = "/suggestions/new"
 const buttonAddInstruments = "button-add-instruments"
@@ -29,13 +30,6 @@ const requiredInputs = [
     error: "input-motivation-error"
   }
 ]
-
-//TODO divide up into:
-  //default state: autofill
-    //No content on start
-    //Content after auto-filling
-    //click and display other fields
-//Other state: go to state
 
 describe("when creating a new suggestion, adding song information", () => {
   beforeEach(() => {
@@ -104,6 +98,42 @@ describe("when creating a new suggestion, adding song information", () => {
     })
   })
 
+  context("auto-filling values", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+    })
+
+    it("should display results when searching a song", () => {
+      cy.data(inputTitle).type("A").then(() => {
+        cy.data("song-information-dropdown").should("be.visible")
+      })
+    })
+
+    it("should auto-fill song info", () => {
+      cy.data(inputTitle).type("A").then(() => {
+        cy.data("song-information-dropdown").children().first().click()
+          .then(() => {
+            wait(100)
+            cy.data("manual-input-btn").click()
+          })
+          .then(() => {
+            cy.data(inputTitle).invoke("val").should("exist")
+            cy.data(inputArtist).invoke("val").should("exist")
+            cy.data(inputLink).invoke("val").should("exist")
+          })
+      })
+    })
+
+    it("trigger error handling on failed Spotify call", () => {
+      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).then(() => {
+        cy.data(inputTitle).type("A")
+        cy.data("search-error").should("be.visible")
+      })
+    })
+
+  })
+
   context("with filled in song information", () => {
     beforeEach(() => {
       cy.visit(path, {
@@ -137,4 +167,5 @@ describe("when creating a new suggestion, adding song information", () => {
       shouldContainJSONSongInformationInState()
     })
   })
+
 })
