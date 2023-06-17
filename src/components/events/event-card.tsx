@@ -5,7 +5,6 @@ import AttendanceCard from "@/components/events/attendance-card"
 import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import {  CalendarIcon } from "@heroicons/react/24/solid"
 import {getEventDate, getEventImage, getEventTime, getEventTitle} from "@/helpers/event.helper";
-import {format} from "date-fns";
 import {useRouter} from "next/router";
 
 interface EventCardProps {
