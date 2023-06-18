@@ -10,8 +10,7 @@ import ErrorMessage from "@/components/error/error-message"
 import { CheckIcon } from "@heroicons/react/24/solid"
 import { getPrivacyPolicyContent, getTermsAndConditionContent } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
-import { getOverlay } from "@/helpers/overlay.helper"
-import ScrollViewOverlay from "@/components/overlays/scroll-view-overlay"
+import ScrollViewOverlay from "@/components/overlays/scroll-view.overlay"
 
 export async function getStaticProps() {
   const termsContent: OverlayContent = await getTermsAndConditionContent()
@@ -187,20 +186,15 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
               <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
             )}
           </form>
-          {showTerms &&
-            getOverlay(
-              <ScrollViewOverlay
-                overlayContent={termsContent}
-                onClose={() => setShowTerms(false)}
-              />
-            )}
-          {showPrivacy &&
-            getOverlay(
-              <ScrollViewOverlay
-                overlayContent={privacyContent}
-                onClose={() => setShowPrivacy(false)}
-              />
-            )}
+          {showTerms && (
+            <ScrollViewOverlay overlayContent={termsContent} onClose={() => setShowTerms(false)} />
+          )}
+          {showPrivacy && (
+            <ScrollViewOverlay
+              overlayContent={privacyContent}
+              onClose={() => setShowPrivacy(false)}
+            />
+          )}
         </div>
       </div>
     </div>

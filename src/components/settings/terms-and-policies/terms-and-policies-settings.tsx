@@ -3,8 +3,7 @@ import SettingsWrapper from "@/components/settings/settings-wrapper"
 import { BookOpenIcon } from "@heroicons/react/24/outline"
 import SettingsButton from "../controls/settings-button"
 import { OverlayContent } from "@/interfaces/overlay-content"
-import { getOverlay } from "@/helpers/overlay.helper"
-import ScrollViewOverlay from "@/components/overlays/scroll-view-overlay"
+import ScrollViewOverlay from "@/components/overlays/scroll-view.overlay"
 
 interface TermsAndPoliciesSettingsProps {
   termsContent: OverlayContent
@@ -32,17 +31,12 @@ const TermsAndPoliciesSettings = ({
         text={"View Privacy Policy"}
         dataCy={"privacy-policy-button"}
       />
-      {showTerms &&
-        getOverlay(
-          <ScrollViewOverlay overlayContent={termsContent} onClose={() => setShowTerms(false)} />
-        )}
-      {showPrivacy &&
-        getOverlay(
-          <ScrollViewOverlay
-            overlayContent={privacyContent}
-            onClose={() => setShowPrivacy(false)}
-          />
-        )}
+      {showTerms && (
+        <ScrollViewOverlay overlayContent={termsContent} onClose={() => setShowTerms(false)} />
+      )}
+      {showPrivacy && (
+        <ScrollViewOverlay overlayContent={privacyContent} onClose={() => setShowPrivacy(false)} />
+      )}
     </SettingsWrapper>
   )
 }

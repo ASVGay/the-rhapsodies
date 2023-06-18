@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import OverlayContainer from "./overlay-container"
 import { OverlayContent } from "@/interfaces/overlay-content"
+import { getOverlay } from "@/helpers/overlay.helper"
 
 interface ScrollViewOverlayProps {
   onClose: () => void
@@ -20,7 +21,7 @@ const ScrollViewOverlay = ({ overlayContent, onClose }: ScrollViewOverlayProps) 
     }, 300)
   }
 
-  return (
+  return getOverlay(
     <OverlayContainer animationActive={animationActive}>
       <div data-cy={overlayContent.dataCy}>
         <h2 className="mb-4 text-xl font-bold">{overlayContent.title}</h2>
