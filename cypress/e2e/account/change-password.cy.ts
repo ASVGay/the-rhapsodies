@@ -6,6 +6,7 @@ const displayNameTextfield = "set-name-textfield"
 const passwordTextfield = "change-password-textfield"
 const termsConditionsOverlay = "terms-and-conditions"
 const termsConditionsCheckbox = "terms-conditions-checkbox"
+const termsId = "terms"
 const termsConditionsLink = "terms-conditions-link"
 const confirmPasswordTextfield = "change-password-confirm-textfield"
 const submitPasswordBtn = "submit-password-btn"
@@ -39,6 +40,6 @@ describe("Change password", () => {
     confirmPasswordTextfield,
     passwordTextfield,
     shortPassword,
-    termsConditionsCheckbox
+    termsId
   )
 })
