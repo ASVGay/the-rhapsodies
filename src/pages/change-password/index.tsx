@@ -8,38 +8,35 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
 import { CheckIcon } from "@heroicons/react/24/solid"
-import { getMarkdownData } from "@/helpers/markdown.helper"
+import { getPrivacyPolicyContent, getTermsAndConditionContent } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 import { getOverlay } from "@/helpers/overlay.helper"
 import ScrollViewOverlay from "@/components/overlays/scroll-view-overlay"
 
 export async function getStaticProps() {
-  const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
-  const overlayContent: OverlayContent = {
-    title: "Terms and Conditions",
-    content: markdownData,
-    footer: "By accepting, you agree to our terms and conditions.",
-    buttonText: "Close",
-    dataCy: "terms-and-conditions",
-  }
+  const termsContent: OverlayContent = await getTermsAndConditionContent()
+  const privacyContent: OverlayContent = await getPrivacyPolicyContent()
 
   return {
     props: {
-      overlayContent,
+      termsContent,
+      privacyContent,
     },
   }
 }
 
 interface ChangePasswordProps {
-  overlayContent: OverlayContent
+  termsContent: OverlayContent
+  privacyContent: OverlayContent
 }
 
-const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
+const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
   const [showTerms, setShowTerms] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
 
   const {
     handleSubmit,
@@ -164,12 +161,23 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
                     onClick={() => setShowTerms(true)}
                     className="cursor-pointer text-moon-500"
                   >
-                    Terms and Conditions.
+                    Terms and Conditions
+                  </a>
+                  {" and the "}
+                  <a
+                    data-cy="privacy-policy-link"
+                    onClick={() => setShowPrivacy(true)}
+                    className="cursor-pointer text-moon-500"
+                  >
+                    Privacy Policy.
                   </a>
                 </span>
               </div>
               {errors["terms"] && (
-                <ErrorMessage dataCy={`terms-error`} message={"Terms and Conditions is required"} />
+                <ErrorMessage
+                  dataCy={`terms-error`}
+                  message={"Terms and Conditions and Privacy Policy are required"}
+                />
               )}
             </div>
             <button className={"btn"} data-cy={"submit-password-btn"}>
@@ -182,8 +190,15 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
           {showTerms &&
             getOverlay(
               <ScrollViewOverlay
-                overlayContent={overlayContent}
+                overlayContent={termsContent}
                 onClose={() => setShowTerms(false)}
+              />
+            )}
+          {showPrivacy &&
+            getOverlay(
+              <ScrollViewOverlay
+                overlayContent={privacyContent}
+                onClose={() => setShowPrivacy(false)}
               />
             )}
         </div>

@@ -1,7 +1,11 @@
 import NotificationSettings from "@/components/settings/notifications/notification-settings"
 import AccountSettings from "@/components/settings/account/account-settings"
 import TermsAndPoliciesSettings from "@/components/settings/terms-and-policies/terms-and-policies-settings"
-import { getMarkdownData } from "@/helpers/markdown.helper"
+import {
+  getMarkdownData,
+  getPrivacyPolicyContent,
+  getTermsAndConditionContent,
+} from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 
 interface SettingsProps {
@@ -10,23 +14,8 @@ interface SettingsProps {
 }
 
 export async function getStaticProps() {
-  const termsData = await getMarkdownData("src/lib/terms-and-conditions.md")
-  const termsContent: OverlayContent = {
-    title: "Terms and Conditions",
-    content: termsData,
-    footer: "During account creation you agreed to our terms and conditions.",
-    buttonText: "Close",
-    dataCy: "terms-and-conditions",
-  }
-
-  const privacyData = await getMarkdownData("src/lib/privacy-policy.md")
-  const privacyContent: OverlayContent = {
-    title: "Terms and Conditions",
-    content: privacyData,
-    footer: "During account creation you agreed to our privacy policy",
-    buttonText: "Close",
-    dataCy: "privacy-policy",
-  }
+  const termsContent: OverlayContent = await getTermsAndConditionContent()
+  const privacyContent: OverlayContent = await getPrivacyPolicyContent()
 
   return {
     props: {
