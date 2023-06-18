@@ -151,7 +151,7 @@ describe("on the specific event page", () => {
       cy.data("loading-attending-members").should("not.be.visible")
     })
 
-    it.only("should show a toast & error text if fetching data went wrong", () => {
+    it("should show a toast & error text if fetching data went wrong", () => {
       cy.intercept("/rest/v1/rpc/get_members_by_event", { statusCode: 400 })
       cy.get(".Toastify")
         .get("#toast-attending-members")
@@ -167,7 +167,7 @@ describe("on the specific event page", () => {
       cy.data(failedAttendingMembers).should("be.visible")
     })
 
-    it.only("should show text with explanation if no members for an attending status", () => {
+    it("should show text with explanation if no members for an attending status", () => {
       cy.intercept("/rest/v1/rpc/get_members_by_event", { body: [] })
       const noAttendingMembers = "no-attending-members"
       cy.get(inputPresentMembers).should("be.checked")
