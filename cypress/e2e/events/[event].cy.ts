@@ -112,7 +112,7 @@ describe("on the specific event page", () => {
         .should("be.visible")
         .children()
         .should("have.length", 1)
-        .should("have.text", "Feryll")
+        .should("have.text", "FeryllHello")
 
       cy.log("Check absent members")
       cy.get(inputAbsentMembers).parent().click()

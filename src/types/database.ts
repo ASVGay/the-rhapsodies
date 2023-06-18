@@ -274,6 +274,7 @@ export interface Database {
           id: string
           display_name: string
           attending: Database["public"]["Enums"]["attending"]
+          comment: string
         }[]
       }
       get_my_claim: {

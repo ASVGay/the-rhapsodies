@@ -81,9 +81,13 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
       <ol data-cy={`${attendance}-members-list`}>
         {members
           .sort((a, b) => a.display_name.localeCompare(b.display_name))
-          .map(({ display_name, id }) => (
-            <li key={id} className={`${id === uid && "font-bold text-moon"}`}>
+          .map(({ display_name, id, comment }) => (
+            <li
+              key={id}
+              className={`${id === uid && `font-bold leading-${comment ? 5 : 8} text-moon`}`}
+            >
               {display_name}
+              <span className={"block text-xs font-medium italic text-zinc-500"}>{comment}</span>
             </li>
           ))}
       </ol>
