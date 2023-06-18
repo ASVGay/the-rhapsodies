@@ -140,13 +140,11 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
                 placeholder="Search for a song title"
                 className={`${errors.title && "error"}`}
                 {...register("title", {
-                  validate: (value) => !!value.trim()
+                  validate: (value) => !!value.trim(),
+                  onChange: (event) => handleSearch(event.target.value)
                 })}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={handleSearchBlur}
-                onChange={(event) => {
-                  handleSearch(event.target.value)
-                }}
               />
               <span>
              {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
