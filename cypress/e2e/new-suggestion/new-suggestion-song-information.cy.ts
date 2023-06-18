@@ -145,12 +145,12 @@ describe("when creating a new suggestion, adding song information", () => {
             .its("store")
             .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
         }
-      })
-
-      cy.data("area-song-information").then($component => {
-        if ($component.find("input-artist").length == 0) {
-          cy.data("manual-input-btn").click()
-        }
+      }).then(() => {
+        cy.data("area-song-information").then($component => {
+          if ($component.find("input-artist").length == 0) {
+            cy.data("manual-input-btn").click()
+          }
+        })
       })
     })
 
