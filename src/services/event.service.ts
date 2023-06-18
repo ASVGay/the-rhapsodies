@@ -7,21 +7,7 @@ export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
 }
 
 export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>) => {
-  const currentTimestamp = new Date().toISOString()
-
-  return supabase
-    .from("event")
-    .select(
-      `
-            *,
-            attendees:attendee (
-                "member_id",
-                "attending"
-            )
-        `
-    )
-    .order("start_time")
-    .gte("end_time", currentTimestamp)
+  return supabase.rpc("get_events_with_attendance")
 }
 
 export const getAttendingMembersForEvent = (
