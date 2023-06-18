@@ -12,6 +12,7 @@ interface EventPageProps {
   event: Event
 }
 
+
 const EventPage = ({ event }: EventPageProps) => {
   const router = useRouter()
 
