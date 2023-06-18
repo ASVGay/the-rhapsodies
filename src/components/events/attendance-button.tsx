@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { Attending } from "@/types/database-types"
-import { getAttendance, updateAttendance } from "@/services/event.service"
+import { getAttendanceForEventOfUser, updateAttendance } from "@/services/event.service"
 import { toast } from "react-toastify"
 import { CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "@heroicons/react/20/solid"
 import { useForm } from "react-hook-form"
@@ -27,7 +27,7 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
     const retrieveAttendance = () => {
       if (uid != null) {
         setIsLoading(true)
-        getAttendance(supabase, eventId, uid).then(({ data, error }) => {
+        getAttendanceForEventOfUser(supabase, eventId, uid).then(({ data, error }) => {
           if (error)
             toast.error("Something went wrong while retrieving your attendance.", {
               toastId: "presence-error",
