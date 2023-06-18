@@ -15,6 +15,7 @@ import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
+import { toast } from "react-toastify"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -26,7 +27,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   isEditable,
 }: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
-  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [showSuggestionError, setShowSuggestionError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
@@ -49,9 +50,9 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Song) : setShowUpdateError(true)
+        response.data ? setSuggestion(response.data as Song) : setShowSuggestionError(true)
       })
-      .catch(() => setShowUpdateError(true))
+      .catch(() => setShowSuggestionError(true))
   }
 
   const selectInstrument = async (songInstrument: SongInstrument) => {
@@ -67,15 +68,28 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
     // TODO implement error handling and loading (so that users cant click when updating division)
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
-      await deleteDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await deleteDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+        })
+        .catch((error) => {
+          toast.error(error)
+        })
+        .finally(() => {
+          updateSuggestion()
+        })
     } else {
-      await insertDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await insertDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+          updateSuggestion()
+        })
+        .catch((error) => {
+          toast.error(error)
+        })
+        .finally(() => {
+          updateSuggestion()
+        })
     }
 
     setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
@@ -178,11 +192,11 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
             </div>
           )}
 
-          {showUpdateError && (
+          {showSuggestionError && (
             <div className={"mt-6"}>
               <ErrorPopup
-                text={"Failed to add or remove user to instrument."}
-                closePopup={() => setShowUpdateError(false)}
+                text={"Failed to load suggestion. Please reload the page."}
+                closePopup={() => setShowSuggestionError(false)}
               />
             </div>
           )}

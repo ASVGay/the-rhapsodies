@@ -59,14 +59,14 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .single()
 }
 
-export const insertDivision = (
+export const insertDivision = async (
   supabaseClient: SupabaseClient<Database>,
   division: DivisionDatabaseOperation
 ) => {
   return supabaseClient.from("division").insert(division)
 }
 
-export const deleteDivision = (
+export const deleteDivision = async (
   supabaseClient: SupabaseClient<Database>,
   division: DivisionDatabaseOperation
 ) => {

@@ -57,11 +57,9 @@ const Instrument = ({
           </div>
         </div>
       </div>
-      {loading && (
-        <div className={"ml-2 flex items-center"}>
-          <SpinnerStripes tailwindProps="stroke-moon" dataCy={"spinner"} />
-        </div>
-      )}
+      <div className={"ml-2 flex w-4 items-center"}>
+        {loading && <SpinnerStripes tailwindProps="stroke-moon" dataCy={"spinner"} />}
+      </div>
     </div>
   )
 }
