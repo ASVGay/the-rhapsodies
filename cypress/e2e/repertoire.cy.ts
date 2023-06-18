@@ -1,5 +1,5 @@
 import { testSearchSongs } from "./helpers/search-songs.helpers"
-import { interceptIndefinitely } from "./helpers/interception.helper.ts"
+import { interceptIndefinitely } from "./helpers/interception.helper"
 
 describe("repertoire page page", () => {
   const songArtist = "Nirvana"
@@ -13,7 +13,7 @@ describe("repertoire page page", () => {
     })
 
     it("should display spinner when suggestions are fetched", () => {
-      const interception = interceptIndefinitely("GET", "/rest/v1/song*")
+      const interception = interceptIndefinitely("/rest/v1/song*")
       cy.data("song-list-spinner").should("exist")
       interception.sendResponse()
       cy.data("song-list-spinner").should("not.exist")

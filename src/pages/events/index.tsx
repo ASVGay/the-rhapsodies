@@ -12,32 +12,33 @@ const Index = () => {
   const [events, setEvents] = useState<Event[]>()
   const [showSpinner, setShowSpinner] = useState<boolean>(true)
   const [errorText, setErrorText] = useState("")
-  const fetchEvents = () => {
-    setShowSpinner(true)
-    getEventsWithAttendees(supabaseClient)
-      .then((res) => {
-        if (res.error) {
-          setErrorText("Failed to load events.")
-          return
-        }
-
-        if (res.data?.length > 0) {
-          setEvents(res.data as Event[])
-        } else {
-          setErrorText("No events have been added yet.")
-        }
-      })
-      .catch(() => {
-        setErrorText("Failed to load events, try refreshing the page.")
-      })
-      .finally(() => {
-        setShowSpinner(false)
-      })
-  }
 
   useEffect(() => {
+    const fetchEvents = () => {
+      setShowSpinner(true)
+      getEventsWithAttendees(supabaseClient)
+        .then((res) => {
+          if (res.error) {
+            setErrorText("Failed to load events.")
+            return
+          }
+
+          if (res.data?.length > 0) {
+            setEvents(res.data as Event[])
+          } else {
+            setErrorText("No events have been added yet.")
+          }
+        })
+        .catch(() => {
+          setErrorText("Failed to load events, try refreshing the page.")
+        })
+        .finally(() => {
+          setShowSpinner(false)
+        })
+    }
+
     fetchEvents()
-  }, [])
+  }, [supabaseClient])
 
   return (
     <div className={"page-wrapper"}>
