@@ -29,6 +29,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
   const [roles, setRoles] = useState<UserAppMetadata>()
   const user = useUser()
   const supabase = useSupabaseClient<Database>()
@@ -53,7 +54,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
       .catch(() => setShowUpdateError(true))
   }
 
-  const selectInstrument = (songInstrument: SongInstrument) => {
+  const selectInstrument = async (songInstrument: SongInstrument) => {
     if (!uid) return
 
     const division: DivisionDatabaseOperation = {
@@ -61,19 +62,23 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
       song_instrument_id: songInstrument.id,
     }
 
+    setInstrumentsInUpdate([songInstrument, ...instrumentsInUpdate])
+
     // TODO implement error handling and loading (so that users cant click when updating division)
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
+      await deleteDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
         updateSuggestion()
       })
     } else {
-      insertDivision(supabase, division).then(({ error }) => {
+      await insertDivision(supabase, division).then(({ error }) => {
         if (error) alert(error.message)
         updateSuggestion()
       })
     }
+
+    setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
   const displayButton = (): boolean => {
@@ -157,8 +162,8 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                     division={instrument.division}
                     description={instrument.description}
                     uid={uid}
-                    onClick={() => selectInstrument(instrument)}
-                    loading
+                    onClick={async () => selectInstrument(instrument)}
+                    loading={instrumentsInUpdate.includes(instrument)}
                   />
                 )
               })}
