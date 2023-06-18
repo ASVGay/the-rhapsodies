@@ -7,11 +7,11 @@ const handler: NextApiHandler = async (req, res) => {
       Authorization: `Basic ${Buffer.from(
         `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
       ).toString("base64")}`,
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
-      grant_type: "client_credentials"
-    })
+      grant_type: "client_credentials",
+    }),
   })
 
   res.send(await response.json())

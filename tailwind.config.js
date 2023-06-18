@@ -26,7 +26,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animated")],
+  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animated")],
   future: {
     hoverOnlyWhenSupported: true,
   },

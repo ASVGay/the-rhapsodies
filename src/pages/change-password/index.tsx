@@ -7,17 +7,45 @@ import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
+import TermsAndConditions from "@/components/overlays/terms-and-conditions"
+import { CheckIcon } from "@heroicons/react/24/solid"
+import { getMarkdownData } from "@/helpers/markdown.helper"
+import { OverlayContent } from "@/interfaces/overlay-content"
+import { getOverlay } from "@/helpers/overlay.helper"
 
-const Index = () => {
+export async function getStaticProps() {
+  const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
+  const overlayContent: OverlayContent = {
+    title: "Terms and Conditions",
+    content: markdownData,
+    footer: "By accepting, you agree to our terms and conditions.",
+    buttonText: "Close",
+  }
+
+  return {
+    props: {
+      overlayContent,
+    },
+  }
+}
+
+interface ChangePasswordProps {
+  overlayContent: OverlayContent
+}
+
+const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
+  const [showTerms, setShowTerms] = useState(false)
+
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
+    setValue,
   } = useForm()
 
   useEffect(() => {
@@ -25,6 +53,7 @@ const Index = () => {
   }, [watch])
 
   const password = watch("password")
+  const isChecked = watch("terms")
 
   const changePasswordFormData: FormDataItem[] = [
     {
@@ -55,6 +84,7 @@ const Index = () => {
       },
     },
   ]
+
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
 
@@ -107,6 +137,40 @@ const Index = () => {
                 </div>
               )
             })}
+            <div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  {...register("terms", {
+                    onChange: () => setValue("terms", !isChecked),
+                    required: true,
+                  })}
+                  className="sr-only"
+                />
+                <div
+                  onClick={() => setValue("terms", !isChecked)}
+                  data-cy="terms-conditions-checkbox"
+                  className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
+                  ${isChecked && "border-none bg-moon-500"}`}
+                >
+                  {isChecked && <CheckIcon className="absolute h-5 w-5 text-white" />}
+                </div>
+                <span>
+                  I agree to the{" "}
+                  <a
+                    data-cy="terms-conditions-link"
+                    onClick={() => setShowTerms(true)}
+                    className="cursor-pointer text-moon-500"
+                  >
+                    Terms and Conditions.
+                  </a>
+                </span>
+              </div>
+              {errors["terms"] && (
+                <ErrorMessage dataCy={`terms-error`} message={"Terms and Conditions is required"} />
+              )}
+            </div>
             <button className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
@@ -114,10 +178,17 @@ const Index = () => {
               <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
             )}
           </form>
+          {showTerms &&
+            getOverlay(
+              <TermsAndConditions
+                overlayContent={overlayContent}
+                onClose={() => setShowTerms(false)}
+              />
+            )}
         </div>
       </div>
     </div>
   )
 }
 
-export default Index
+export default ChangePassword

@@ -16,7 +16,7 @@ export const setSpotifyAccessToken = (token: JSON) => {
 export const getSpotifySearchResults = async (basePath: string, searchQuery: string) => {
   return fetch(`${basePath}/api/spotify/search?q=${searchQuery}`, {
     headers: {
-      Authorization: `Bearer ${getSpotifyAccessToken().access_token}`
-    }
+      Authorization: `Bearer ${getSpotifyAccessToken().access_token}`,
+    },
   })
 }

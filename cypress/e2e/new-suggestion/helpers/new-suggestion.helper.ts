@@ -20,7 +20,7 @@ export const newSuggestionEmpty: ISuggestion = {
   link: null,
   motivation: "",
   title: "",
-  instruments: []
+  instruments: [],
 }
 
 export const filledInInstrument: ISuggestionInstrument = {
@@ -28,8 +28,8 @@ export const filledInInstrument: ISuggestionInstrument = {
   instrument: {
     id: "f5ccaa5d-c601-40fb-8604-5fc7485f8528",
     image_source: "guitar",
-    instrument_name: "Acoustic Guitar"
-  }
+    instrument_name: "Acoustic Guitar",
+  },
 }
 
 export const newSuggestionFilledSongInformation: ISuggestion = {
@@ -38,7 +38,7 @@ export const newSuggestionFilledSongInformation: ISuggestion = {
   motivation:
     "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
   title: "Let It Be",
-  instruments: []
+  instruments: [],
 }
 
 export const newSuggestionFilledInInstruments: ISuggestion = {
@@ -47,7 +47,7 @@ export const newSuggestionFilledInInstruments: ISuggestion = {
   motivation:
     "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
   title: "Let It Be",
-  instruments: [filledInInstrument]
+  instruments: [filledInInstrument],
 }
 
 export const shouldGoToInstrumentsArea = () => {
@@ -95,16 +95,18 @@ export const shouldGoToReviewArea = () => {
 }
 
 export const fillSongInformationSuccessfully = () => {
-  cy.data("area-song-information").then($component => {
-    if ($component.find("input-artist").length == 0) {
-      cy.data("manual-input-btn").click()
-    }
-  }).then(() => {
-    cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
-    cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
-    cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
-    cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
-  })
+  cy.data("area-song-information")
+    .then(($component) => {
+      if ($component.find("input-artist").length == 0) {
+        cy.data("manual-input-btn").click()
+      }
+    })
+    .then(() => {
+      cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
+      cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
+      cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
+      cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
+    })
 }
 
 export const shouldBeEmptyInformationState = () => {

@@ -52,10 +52,7 @@ const Index = () => {
           </div>
         ) : (
           events?.map((event: Event) => {
-            return <EventCard
-                key={event.id}
-                event={event}
-                setShowSpinner={setShowSpinner}/>
+            return <EventCard key={event.id} event={event} setShowSpinner={setShowSpinner} />
           })
         )}
       </div>

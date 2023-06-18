@@ -4,13 +4,17 @@ import { useFormContext } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { AppState } from "@/redux/store"
 import ErrorMessage from "@/components/error/error-message"
-import { isSongInformationInvalid, submitSongInformationForm } from "@/helpers/new-suggestion.helper"
+import {
+  isSongInformationInvalid,
+  submitSongInformationForm,
+} from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
 import { SearchItem, SpotifySearchItem } from "@/interfaces/spotify-search-item"
 import { useRouter } from "next/router"
 import {
   getSpotifySearchResults,
-  requestSpotifyAccessToken, setSpotifyAccessToken
+  requestSpotifyAccessToken,
+  setSpotifyAccessToken,
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { debounce } from "debounce"
@@ -32,7 +36,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     formState: { errors },
     watch,
     setValue,
-    getValues
+    getValues,
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
@@ -45,10 +49,9 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
   useEffect(() => {
     setManualInput(newSuggestion.title.length !== 0)
 
-    requestSpotifyAccessToken(basePath)
-      .then(async (response) => {
-        setSpotifyAccessToken(await response.json())
-      })
+    requestSpotifyAccessToken(basePath).then(async (response) => {
+      setSpotifyAccessToken(await response.json())
+    })
   }, [])
 
   const onSubmit = (songInformation: InputsSongInformation) => {
@@ -66,12 +69,12 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     setFetchingSongs(true)
     getSpotifySearchResults(basePath, getValues().title)
       .then(async (response) => {
-        const data: SpotifySearchItem[] = ((await response.json()).tracks.items)
+        const data: SpotifySearchItem[] = (await response.json()).tracks.items
         const items: SearchItem[] = data.map((item) => ({
           id: item.id,
           title: item.name,
           artists: item.artists.map((artist): string => artist.name),
-          link: item.external_urls.spotify
+          link: item.external_urls.spotify,
         }))
         setSearchResults(items)
       })
@@ -118,22 +121,23 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
             />
           )}
 
-          {manualInput
-            ? <div className="input">
+          {manualInput ? (
+            <div className="input">
               <input
                 data-cy={"input-title"}
                 type="text"
                 placeholder="Title"
                 className={`${errors.title && "error"}`}
                 {...register("title", {
-                  validate: (value) => !!value.trim()
+                  validate: (value) => !!value.trim(),
                 })}
               />
               <span>
-              <DocumentTextIcon />
-            </span>
+                <DocumentTextIcon />
+              </span>
             </div>
-            : <div className="input">
+          ) : (
+            <div className="input">
               <input
                 data-cy={"input-title"}
                 type="text"
@@ -141,32 +145,34 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
                 className={`${errors.title && "error"}`}
                 {...register("title", {
                   validate: (value) => !!value.trim(),
-                  onChange: (event) => handleSearch(event.target.value)
+                  onChange: (event) => handleSearch(event.target.value),
                 })}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={handleSearchBlur}
               />
-              <span>
-             {fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}
-            </span>
+              <span>{fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}</span>
               {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
                   <ul data-cy="song-information-dropdown">
                     {searchResults.map((item: SearchItem) => {
-                      return <div
-                        key={item.id}
-                        onClick={() => onSelectSearchResult(item)}
-                        className={"cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"}
-                      >
-                        <b>{item.title}</b>
-                        <p>{item.artists.join(", ")}</p>
-                      </div>
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => onSelectSearchResult(item)}
+                          className={
+                            "cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"
+                          }
+                        >
+                          <b>{item.title}</b>
+                          <p>{item.artists.join(", ")}</p>
+                        </div>
+                      )
                     })}
                   </ul>
                 </div>
               )}
             </div>
-          }
+          )}
         </div>
 
         <div className={`input-container`} hidden={!manualInput}>
@@ -188,9 +194,8 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               className={`${errors.artist && "error"}`}
               {...register("artist", {
                 onChange: (event) => setValue("artist", event.target.value),
-                validate: (value: string) => !!value.trim()
+                validate: (value: string) => !!value.trim(),
               })}
-
             />
             <span>
               <UserIcon />
@@ -209,7 +214,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               type="url"
               placeholder="Link to the song (optional)"
               {...register("link", {
-                onChange: (event) => setValue("link", event.target.value)
+                onChange: (event) => setValue("link", event.target.value),
               })}
             />
             <span>
@@ -238,7 +243,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
-                validate: (value) => !!value.trim()
+                validate: (value) => !!value.trim(),
               })}
             />
           </div>
@@ -246,15 +251,12 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
 
         <div>
           <button
-            className={"text-moon-400 mb-6"}
+            className={"mb-6 text-moon-400"}
             onClick={() => setManualInput(!manualInput)}
             type={"button"}
             data-cy="manual-input-btn"
           >
-            {manualInput
-              ? "Or autofill song information"
-              : "Or enter song information manually"
-            }
+            {manualInput ? "Or autofill song information" : "Or enter song information manually"}
           </button>
         </div>
 
@@ -279,6 +281,5 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     </div>
   )
 }
-
 
 export default SongInformationArea
