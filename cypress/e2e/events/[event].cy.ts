@@ -1,21 +1,24 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 import { mockGetMembersByEvent } from "../../fixtures/mock-get-members-by-event"
 
-const addCommentButton = "add-comment-button"
-const addCommentOverlay = "add-comment-overlay"
-const inputComment = "input-comment"
+const deleteCommentButton = "delete-comment-button"
+const getCommentPath = "/rest/v1/attendee?select=comment&event_id=**&member_id=**"
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
+  const path = `/events/${eventId}`
   const attending = ["present", "absent", "undecided"]
   const inputPresentMembers = "#present-members"
   const inputAbsentMembers = "#absent-members"
   const inputUndecidedMembers = "#undecided-members"
   const inputPresent = "#present"
   const inputUndecided = `#undecided`
+  const addCommentButton = "add-comment-button"
+  const addCommentOverlay = "add-comment-overlay"
+  const inputComment = "input-comment"
 
   beforeEach(() => {
     cy.login()
-    cy.visit(`/events/${eventId}`)
+    cy.visit(path)
   })
 
   it("should render event info correctly", () => {
@@ -184,8 +187,23 @@ describe("on the specific event page", () => {
 
   context("the comment button", () => {
     it("on click it should open the add comment overlay", () => {
+      cy.data(addCommentButton).invoke("text").should("equal", "Add comment")
+      cy.data(addCommentButton)
+        .click()
+        .then(() => {
+          cy.data(addCommentOverlay).should("be.visible")
+          cy.data(deleteCommentButton).should("not.be.visible")
+        })
+    })
+
+    it("should display correspondingly if user has existing comment", () => {
+      cy.intercept(getCommentPath, [{ comment: "late" }]).as("comment")
+      cy.visit(path)
+      cy.wait("@comment")
+      cy.data(addCommentButton).invoke("text").should("equal", "Edit comment")
       cy.data(addCommentButton).click()
-      cy.data(addCommentOverlay).should("be.visible")
+      cy.data(inputComment).invoke("val").should("equal", "late")
+      cy.data(deleteCommentButton).should("be.visible")
     })
 
     context("the overlay", () => {
@@ -213,12 +231,17 @@ describe("on the specific event page", () => {
         cy.data(addCommentOverlay).should("exist")
         cy.intercept("POST", "/rest/v1/attendee", { statusCode: 200 })
         cy.data(inputComment).type("Test")
-        cy.data("save-comment-button").click()
-        cy.get(".Toastify")
-          .get("#1")
-          .should("be.visible")
-          .should("have.class", "Toastify__toast--success")
-        cy.data(addCommentOverlay).should("not.exist")
+        cy.intercept(getCommentPath, cy.spy().as("getComment"))
+        cy.data("save-comment-button")
+          .click()
+          .then(() => {
+            cy.get("@getComment").should("have.been.called")
+            cy.get(".Toastify")
+              .get("#1")
+              .should("be.visible")
+              .should("have.class", "Toastify__toast--success")
+            cy.data(addCommentOverlay).should("not.exist")
+          })
       })
 
       it("should show error toast and stay on overlay if saving comment fails", () => {
