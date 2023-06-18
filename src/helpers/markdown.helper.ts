@@ -27,7 +27,7 @@ export const getTermsAndConditionContent = async (): Promise<OverlayContent> => 
 export const getPrivacyPolicyContent = async (): Promise<OverlayContent> => {
   const privacyData = await getMarkdownData("src/lib/privacy-policy.md")
   return {
-    title: "Terms and Conditions",
+    title: "Privacy Policy",
     content: privacyData,
     footer: "By accepting, you agree to our privacy policy.",
     buttonText: "Close",
