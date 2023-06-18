@@ -135,7 +135,7 @@ const SongPage = (props: SongProps) => {
                         division={instrument.division}
                         description={instrument.description}
                         uid={uid}
-                        onclick={() => {
+                        onClick={() => {
                           if (showSpinner) return
                           selectInstrument(instrument)
                         }}

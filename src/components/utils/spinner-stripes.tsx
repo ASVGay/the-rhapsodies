@@ -2,12 +2,13 @@ import React from "react"
 
 interface SpinnerStripesProps {
   dataCy?: string
+  tailwindProps?: string
 }
 
-const SpinnerStripes = ({ dataCy }: SpinnerStripesProps) => {
+const SpinnerStripes = ({ dataCy, tailwindProps = "stroke-white" }: SpinnerStripesProps) => {
   return (
     <div aria-label="Loading..." role="status" data-cy={dataCy}>
-      <svg className="h-6 w-6 animate-spin stroke-white" viewBox="0 0 256 256">
+      <svg className={`h-6 w-6 animate-spin ${tailwindProps}`} viewBox="0 0 256 256">
         <line
           x1={128}
           y1={32}

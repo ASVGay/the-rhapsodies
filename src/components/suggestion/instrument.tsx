@@ -2,6 +2,7 @@ import Image from "next/image"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import React from "react"
 import { Division } from "@/types/database-types"
+import SpinnerStripes from "../utils/spinner-stripes"
 
 interface InstrumentProps {
   imageURL: string
@@ -9,8 +10,9 @@ interface InstrumentProps {
   division?: Division[]
   description: string | null
   uid?: string
-  onclick?: () => void
+  onClick?: () => void
   toggleOpacity?: boolean
+  loading?: boolean
 }
 
 const Instrument = ({
@@ -19,8 +21,9 @@ const Instrument = ({
   division,
   description,
   uid,
-  onclick,
+  onClick,
   toggleOpacity = true,
+  loading,
 }: InstrumentProps) => {
   const formatUsernames = (divisions: Division[]) => {
     return divisions.map(({ musician }, index) => (
@@ -33,24 +36,29 @@ const Instrument = ({
 
   return (
     <div
-      className={`flex ${onclick && "cursor-pointer"} select-none`}
-      onClick={() => onclick?.()}
+      className={`flex ${onClick && !loading && "cursor-pointer"} select-none`}
+      onClick={() => onClick?.()}
       data-cy="instrument"
     >
-      <Image
-        src={getInstrumentImage(imageURL)}
-        alt={name}
-        width={64}
-        height={64}
-        className={`${toggleOpacity && division?.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
-        draggable={"false"}
-      />
-      <div>
-        <p>{name}</p>
-        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-        <div className={`font-bold`} data-cy="division">
-          {division && formatUsernames(division)}
+      <div className={`flex ${loading && "opacity-30"}`}>
+        <Image
+          src={getInstrumentImage(imageURL)}
+          alt={name}
+          width={64}
+          height={64}
+          className={`${toggleOpacity && division?.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
+          draggable={"false"}
+        />
+        <div>
+          <p>{name}</p>
+          <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
+          <div className={`font-bold`} data-cy="division">
+            {division && formatUsernames(division)}
+          </div>
         </div>
+      </div>
+      <div className={"ml-2 flex items-center"}>
+        <SpinnerStripes tailwindProps="stroke-moon" dataCy={"spinner"} />
       </div>
     </div>
   )

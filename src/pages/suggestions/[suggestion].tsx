@@ -157,7 +157,8 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                     division={instrument.division}
                     description={instrument.description}
                     uid={uid}
-                    onclick={() => selectInstrument(instrument)}
+                    onClick={() => selectInstrument(instrument)}
+                    loading
                   />
                 )
               })}
