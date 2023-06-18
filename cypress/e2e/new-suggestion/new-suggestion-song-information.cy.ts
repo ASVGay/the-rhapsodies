@@ -2,7 +2,7 @@ import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
   shouldGoToInstrumentsArea,
   newSuggestionFilledSongInformation,
-  shouldContainJSONSongInformationInState,
+  shouldContainJSONSongInformationInState
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -16,28 +16,37 @@ const requiredInputs = [
   {
     name: "title",
     inputField: inputTitle,
-    error: "input-title-error",
+    error: "input-title-error"
   },
   {
     name: "artist",
     inputField: inputArtist,
-    error: "input-artist-error",
+    error: "input-artist-error"
   },
   {
     name: "motivation",
     inputField: inputMotivation,
-    error: "input-motivation-error",
-  },
+    error: "input-motivation-error"
+  }
 ]
 
 describe("when creating a new suggestion, adding song information", () => {
   beforeEach(() => {
     cy.login()
-    cy.visit(path)
-    cy.wait(500)
   })
 
   context("with no song information", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+
+      cy.data("area-song-information").then($component => {
+        if ($component.find("input-artist").length == 0) {
+          cy.data("manual-input-btn").click()
+        }
+      })
+    })
+
     context("the form", () => {
       it("should have no default values", () => {
         cy.data(inputArtist).invoke("val").should("be.empty")
@@ -81,11 +90,51 @@ describe("when creating a new suggestion, adding song information", () => {
               artist: ["Hello"],
               link: "www.hello.com",
               motivation: "Hello",
-              instruments: [],
+              instruments: []
             })
         })
       })
     })
+  })
+
+  context("auto-filling values", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+    })
+
+    it("should display results when searching a song", () => {
+      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as("mockedSearch")
+      cy.data(inputTitle).type("A").then(() => {
+        cy.wait("@mockedSearch")
+        cy.data("song-information-dropdown").should("be.visible")
+      })
+    })
+
+    it("should auto-fill song info", () => {
+      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as("mockedSearch")
+      cy.data(inputTitle).type("A").then(() => {
+        cy.wait("@mockedSearch")
+        cy.data("song-information-dropdown").children().first().click()
+          .then(() => {
+            cy.wait(100)
+            cy.data("manual-input-btn").click()
+          })
+          .then(() => {
+            cy.data(inputTitle).invoke("val").should("exist")
+            cy.data(inputArtist).invoke("val").should("exist")
+            cy.data(inputLink).invoke("val").should("exist")
+          })
+      })
+    })
+
+    it("trigger error handling on failed Spotify call", () => {
+      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).then(() => {
+        cy.data(inputTitle).type("A")
+        cy.data("search-error").should("be.visible")
+      })
+    })
+
   })
 
   context("with filled in song information", () => {
@@ -95,7 +144,13 @@ describe("when creating a new suggestion, adding song information", () => {
           cy.window()
             .its("store")
             .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
-        },
+        }
+      }).then(() => {
+        cy.data("area-song-information").then($component => {
+          if ($component.find("input-artist").length == 0) {
+            cy.data("manual-input-btn").click()
+          }
+        })
       })
     })
 
@@ -104,6 +159,7 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("should fill in default values when filled in state", () => {
+
       cy.data(inputTitle).invoke("val").should("equal", "Let It Be")
       cy.data(inputArtist).invoke("val").should("equal", "The Beatles")
       cy.data(inputMotivation).invoke("val").should("contain", "We have already sung it once")
@@ -114,4 +170,5 @@ describe("when creating a new suggestion, adding song information", () => {
       shouldContainJSONSongInformationInState()
     })
   })
+
 })
