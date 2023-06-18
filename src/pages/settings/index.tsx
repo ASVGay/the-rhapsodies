@@ -1,11 +1,7 @@
 import NotificationSettings from "@/components/settings/notifications/notification-settings"
 import AccountSettings from "@/components/settings/account/account-settings"
 import TermsAndPoliciesSettings from "@/components/settings/terms-and-policies/terms-and-policies-settings"
-import {
-  getMarkdownData,
-  getPrivacyPolicyContent,
-  getTermsAndConditionContent,
-} from "@/helpers/markdown.helper"
+import { getPrivacyPolicyContent, getTermsAndConditionContent } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 
 interface SettingsProps {
