@@ -7,11 +7,11 @@ import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
-import TermsAndConditions from "@/components/overlays/terms-and-conditions"
 import { CheckIcon } from "@heroicons/react/24/solid"
 import { getMarkdownData } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 import { getOverlay } from "@/helpers/overlay.helper"
+import ScrollViewOverlay from "@/components/overlays/scroll-view-overlay"
 
 export async function getStaticProps() {
   const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
@@ -20,6 +20,7 @@ export async function getStaticProps() {
     content: markdownData,
     footer: "By accepting, you agree to our terms and conditions.",
     buttonText: "Close",
+    dataCy: "terms-and-conditions",
   }
 
   return {
@@ -180,7 +181,7 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
           </form>
           {showTerms &&
             getOverlay(
-              <TermsAndConditions
+              <ScrollViewOverlay
                 overlayContent={overlayContent}
                 onClose={() => setShowTerms(false)}
               />

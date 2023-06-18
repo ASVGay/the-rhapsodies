@@ -5,32 +5,44 @@ import { getMarkdownData } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 
 interface SettingsProps {
-  overlayContent: OverlayContent
+  termsContent: OverlayContent
+  privacyContent: OverlayContent
 }
 
 export async function getStaticProps() {
-  const markdownData = await getMarkdownData("src/lib/terms-and-conditions.md")
-  const overlayContent: OverlayContent = {
+  const termsData = await getMarkdownData("src/lib/terms-and-conditions.md")
+  const termsContent: OverlayContent = {
     title: "Terms and Conditions",
-    content: markdownData,
-    footer: "By accepting, you agree to our terms and conditions.",
+    content: termsData,
+    footer: "During account creation you agreed to our terms and conditions.",
     buttonText: "Close",
+    dataCy: "terms-and-conditions",
+  }
+
+  const privacyData = await getMarkdownData("src/lib/privacy-policy.md")
+  const privacyContent: OverlayContent = {
+    title: "Terms and Conditions",
+    content: privacyData,
+    footer: "During account creation you agreed to our privacy policy",
+    buttonText: "Close",
+    dataCy: "privacy-policy",
   }
 
   return {
     props: {
-      overlayContent,
+      termsContent,
+      privacyContent,
     },
   }
 }
 
-export default function Settings({ overlayContent }: SettingsProps) {
+export default function Settings({ termsContent, privacyContent }: SettingsProps) {
   return (
     <div className={"page-wrapper lg:w-3/5"}>
       <h1 className={"page-header lg:text-center"}>Settings</h1>
       <AccountSettings />
       <NotificationSettings />
-      <TermsAndPoliciesSettings overlayContent={overlayContent} />
+      <TermsAndPoliciesSettings termsContent={termsContent} privacyContent={privacyContent} />
       <p className={"bottom-0 pt-6 text-center italic text-zinc-300"}>
         Icons by{" "}
         <a href={"https://icons8.com"} className={"underline"}>
