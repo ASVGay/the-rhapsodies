@@ -7,7 +7,9 @@ import { Database } from "@/types/database"
 const signOutError = () => toast.error("Something went wrong while logging out.")
 
 export const handleNoUser = (supabase: SupabaseClient<Database>, router: NextRouter) => {
-  toast.error("Something went wrong while retrieving your data. Please sign in again.")
+  toast.error("Something went wrong while retrieving your data. Please sign in again.", {
+    toastId: "handle-no-user",
+  })
   supabase.auth
     .signOut()
     .then(async (response) => {

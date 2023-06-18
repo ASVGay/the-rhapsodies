@@ -18,12 +18,12 @@ import { AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { mapEditInstruments, mapInstruments } from "@/helpers/new-suggestion.helper"
 import {
-  updateEditSuggestion,
-  updateDeletedInstrumentUuids,
-  updateLastEditedUuid,
   setActiveArea,
+  updateDeletedInstrumentUuids,
+  updateEditSuggestion,
+  updateLastEditedUuid,
 } from "@/redux/slices/edit-suggestion.slice"
-import { Author, Song } from "@/types/database-types"
+import { Song } from "@/types/database-types"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
@@ -38,9 +38,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
 
-    const author: Author = data?.author as Author
     // If the user does not match with the author of the suggestion
-    if (session?.user.id !== author.id)
+    if (session?.user.id !== data?.author.id)
       return {
         redirect: {
           destination: "/403",

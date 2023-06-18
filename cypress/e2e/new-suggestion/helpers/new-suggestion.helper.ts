@@ -95,10 +95,18 @@ export const shouldGoToReviewArea = () => {
 }
 
 export const fillSongInformationSuccessfully = () => {
-  cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
-  cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
-  cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
-  cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
+  cy.data("area-song-information")
+    .then(($component) => {
+      if ($component.find("input-artist").length == 0) {
+        cy.data("manual-input-btn").click()
+      }
+    })
+    .then(() => {
+      cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
+      cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
+      cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
+      cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
+    })
 }
 
 export const shouldBeEmptyInformationState = () => {

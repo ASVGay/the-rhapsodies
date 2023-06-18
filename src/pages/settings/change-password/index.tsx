@@ -150,8 +150,7 @@ const Index = () => {
         </div>
         <button
           data-cy={"button-submit-new-password"}
-          type={"submit"}
-          className={"btn flex w-full justify-center gap-2 rounded-lg p-2.5"}
+          className={"btn submit"}
           disabled={isLoading}
         >
           {isLoading ? <SpinnerStripes dataCy={"spinner"} /> : "Change password"}
