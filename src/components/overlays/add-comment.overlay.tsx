@@ -4,17 +4,26 @@ import { getOverlay } from "@/helpers/overlay.helper"
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { setComment } from "@/services/event.service"
+import { Database } from "@/types/database"
+import { toast } from "react-toastify"
+import SpinnerStripes from "@/components/utils/spinner-stripes"
 
 interface ScrollViewOverlayProps {
   onClose: () => void
+  eventId: string
 }
 
 interface FormInputs {
   comment: string
 }
 
-const AddCommentOverlay = ({ onClose }: ScrollViewOverlayProps) => {
+const AddCommentOverlay = ({ onClose, eventId }: ScrollViewOverlayProps) => {
+  const uid = useUser()?.id
+  const supabase = useSupabaseClient<Database>()
   const [animationActive, setAnimationActive] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
@@ -33,8 +42,17 @@ const AddCommentOverlay = ({ onClose }: ScrollViewOverlayProps) => {
   }
 
   const submitComment = ({ comment }: FormInputs) => {
-    // todo submit comment
-    waitForTransition()
+    if (uid) {
+      setLoading(true)
+      setComment(supabase, eventId, uid, comment).then(({ error }) => {
+        if (error) toast.error("Something went wrong while saving your comment. Please try again.")
+        else {
+          toast.success("Comment successfully saved!")
+          waitForTransition()
+        }
+        setLoading(false)
+      })
+    }
   }
 
   const deleteComment = () => {
@@ -43,14 +61,24 @@ const AddCommentOverlay = ({ onClose }: ScrollViewOverlayProps) => {
       // todo delete comment
     }
   }
+
   return getOverlay(
     <OverlayContainer animationActive={animationActive}>
+      <div
+        data-cy="comment-loader"
+        className={`loader absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full 
+          w-full items-center justify-center rounded-lg bg-black opacity-40
+          ${!loading && "hidden"}`}
+      >
+        <SpinnerStripes />
+      </div>
       <div data-cy={"add-comment-overlay"} className={"flex w-80 flex-col gap-6"}>
         <h2 className="flex justify-between text-xl font-bold">
           Comment
           <XMarkIcon
             className={"h-6 cursor-pointer text-zinc-500 hover:text-red-600"}
             onClick={waitForTransition}
+            data-cy={"close-comment-overlay"}
           />
         </h2>
         <form onSubmit={handleSubmit(submitComment)}>
@@ -84,7 +112,9 @@ const AddCommentOverlay = ({ onClose }: ScrollViewOverlayProps) => {
             <button className="btn error" onClick={deleteComment} type={"button"}>
               Delete
             </button>
-            <button className="btn">Save</button>
+            <button className="btn" data-cy={"save-comment-button"}>
+              Save
+            </button>
           </div>
         </form>
       </div>

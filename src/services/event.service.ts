@@ -64,3 +64,12 @@ export const createAttendeeChannel = (supabase: SupabaseClient<Database>, callba
     })
     .subscribe()
 }
+
+export const setComment = (
+  supabase: SupabaseClient<Database>,
+  event_id: string,
+  member_id: string,
+  comment: string
+) => {
+  return supabase.from("attendee").upsert({ event_id, member_id, comment })
+}

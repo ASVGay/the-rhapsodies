@@ -1,6 +1,9 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 import { mockGetMembersByEvent } from "../../fixtures/mock-get-members-by-event"
 
+const addCommentButton = "add-comment-button"
+const addCommentOverlay = "add-comment-overlay"
+const inputComment = "input-comment"
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
   const attending = ["present", "absent", "undecided"]
@@ -176,6 +179,69 @@ describe("on the specific event page", () => {
       cy.data(noAttendingMembers).should("be.visible").should("contain.text", "absent")
       cy.get(inputUndecidedMembers).parent().click()
       cy.data(noAttendingMembers).should("be.visible").should("contain.text", "undecided")
+    })
+  })
+
+  context("the comment button", () => {
+    it("on click it should open the add comment overlay", () => {
+      cy.data(addCommentButton).click()
+      cy.data(addCommentOverlay).should("be.visible")
+    })
+
+    context("the overlay", () => {
+      before(() => Cypress.Keyboard.defaults({ keystrokeDelay: 0 }))
+
+      beforeEach(() => {
+        cy.wait(500)
+        cy.data(addCommentButton).click()
+      })
+
+      it("should close on click of x", () => {
+        cy.data(addCommentOverlay).should("be.visible")
+        cy.data("close-comment-overlay").click()
+        cy.data(addCommentOverlay).should("not.exist")
+      })
+
+      it("should show error if trying to save empty comment", () => {
+        cy.data(inputComment).type("   ").blur()
+        cy.data("save-comment-button").click()
+        cy.data("input-comment-error").should("contain.text", "Please enter text")
+        cy.data(inputComment).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      })
+
+      it("should show success toast and close on overlay if saving comment succeeds", () => {
+        cy.data(addCommentOverlay).should("exist")
+        cy.intercept("POST", "/rest/v1/attendee", { statusCode: 200 })
+        cy.data(inputComment).type("Test")
+        cy.data("save-comment-button").click()
+        cy.get(".Toastify")
+          .get("#1")
+          .should("be.visible")
+          .should("have.class", "Toastify__toast--success")
+        cy.data(addCommentOverlay).should("not.exist")
+      })
+
+      it("should show error toast and stay on overlay if saving comment fails", () => {
+        cy.data(addCommentOverlay).should("exist")
+        cy.intercept("POST", "/rest/v1/attendee", { forceNetworkError: true })
+        cy.data(inputComment).type("Test")
+        cy.data("save-comment-button").click()
+        cy.get(".Toastify")
+          .get("#1")
+          .should("be.visible")
+          .should("have.class", "Toastify__toast--error")
+        cy.data(addCommentOverlay).should("exist")
+      })
+
+      it("should show the loader while saving the comment", () => {
+        const interception = interceptIndefinitely("/rest/v1/attendee", { statusCode: 200 })
+        cy.data(addCommentOverlay).should("exist")
+        cy.data(inputComment).type("Test")
+        cy.data("save-comment-button").click()
+        cy.data("comment-loader").should("exist")
+        interception.sendResponse()
+        cy.data("comment-loader").should("not.exist")
+      })
     })
   })
 })

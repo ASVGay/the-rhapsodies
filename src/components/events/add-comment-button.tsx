@@ -2,11 +2,16 @@ import React, { useState } from "react"
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline"
 import AddCommentOverlay from "@/components/overlays/add-comment.overlay"
 
-const AddCommentButton = () => {
+interface AddCommentButtonProps {
+  eventId: string
+}
+
+const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
   const [showOverlay, setShowOverlay] = useState<boolean>(false)
   return (
     <div className={"mb-2 text-center"}>
       <button
+        data-cy={"add-comment-button"}
         type={"button"}
         onClick={() => setShowOverlay(true)}
         className={
@@ -16,7 +21,7 @@ const AddCommentButton = () => {
         <ChatBubbleBottomCenterTextIcon className={"inline h-5"} />
         <span>Add comment</span>
       </button>
-      {showOverlay && <AddCommentOverlay onClose={() => setShowOverlay(false)} />}
+      {showOverlay && <AddCommentOverlay onClose={() => setShowOverlay(false)} eventId={eventId} />}
     </div>
   )
 }

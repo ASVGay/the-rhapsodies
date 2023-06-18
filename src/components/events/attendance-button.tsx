@@ -136,7 +136,7 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
           </li>
         </ul>
       </form>
-      <AddCommentButton />
+      <AddCommentButton eventId={eventId} />
     </div>
   )
 }
