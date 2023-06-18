@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { Event } from "@/types/database-types"
+import { EventWithAttendance } from "@/types/database-types"
 import AttendanceCard from "@/components/events/attendance-card"
 import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import { CalendarIcon } from "@heroicons/react/24/solid"
@@ -8,11 +8,13 @@ import { getEventDate, getEventImage, getEventTime, getEventTitle } from "@/help
 import { useRouter } from "next/router"
 
 interface EventCardProps {
-  event: Event
+  event: EventWithAttendance
   setShowSpinner: React.Dispatch<React.SetStateAction<boolean>>
 }
+
 const EventCard = ({ event, setShowSpinner }: EventCardProps) => {
   const router = useRouter()
+
   return (
     <div
       className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg"
@@ -33,7 +35,11 @@ const EventCard = ({ event, setShowSpinner }: EventCardProps) => {
       <div className={"flex flex-col p-2"}>
         <div className={"flex flex-row justify-between gap-1"}>
           <span className={"text-lg font-medium leading-8"}>{getEventTitle(event.event_type)}</span>
-          <AttendanceCard attendees={event.attendees} />
+          <AttendanceCard
+            present={event.present}
+            absent={event.absent}
+            undecided={event.undecided}
+          />
         </div>
         <div className={"flex flex-col"}>
           <div className={"flex flex-row gap-2"}>

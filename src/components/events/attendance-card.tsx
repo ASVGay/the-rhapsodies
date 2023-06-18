@@ -1,22 +1,13 @@
 import React from "react"
 import { CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "@heroicons/react/20/solid"
-import { Attendee } from "@/types/database-types"
 
 interface AttendanceCardProps {
-  attendees: Attendee[]
+  present: number
+  absent: number
+  undecided: number
 }
-const AttendanceCard = ({ attendees }: AttendanceCardProps) => {
-  const attendeeCount = {
-    isAttending: attendees.filter((attendee) => {
-      return attendee.attending === "present"
-    }).length,
-    isNotAttending: attendees.filter((attendee) => {
-      return attendee.attending === "absent"
-    }).length,
-    noInfo: attendees.filter((attendee) => {
-      return attendee.attending === "undecided"
-    }).length,
-  }
+
+const AttendanceCard = ({ present, absent, undecided }: AttendanceCardProps) => {
   return (
     <div
       className={
@@ -24,11 +15,11 @@ const AttendanceCard = ({ attendees }: AttendanceCardProps) => {
       }
     >
       <CheckCircleIcon height={20} width={20} color={"#4ADE80"} />
-      <span className={"text-sm font-normal leading-5"}>{attendeeCount.isAttending}</span>
+      <span className={"text-sm font-normal leading-5"}>{present}</span>
       <XCircleIcon height={20} width={20} color={"#F87171"} />
-      <span className={"text-sm font-normal leading-5"}>{attendeeCount.isNotAttending}</span>
+      <span className={"text-sm font-normal leading-5"}>{absent}</span>
       <QuestionMarkCircleIcon height={20} width={20} color={"#FDBA74"} />
-      <span className={"text-sm font-normal leading-5"}>{attendeeCount.noInfo}</span>
+      <span className={"text-sm font-normal leading-5"}>{undecided}</span>
     </div>
   )
 }
