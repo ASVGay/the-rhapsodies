@@ -39,13 +39,13 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
   const [showTerms, setShowTerms] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
 
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
+    setValue,
   } = useForm()
 
   useEffect(() => {
@@ -53,6 +53,7 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
   }, [watch])
 
   const password = watch("password")
+  const isChecked = watch("terms")
 
   const changePasswordFormData: FormDataItem[] = [
     {
@@ -141,11 +142,14 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
                 <input
                   type="checkbox"
                   checked={isChecked}
-                  onChange={() => setIsChecked(!isChecked)}
+                  {...register("terms", {
+                    onChange: () => setValue("terms", !isChecked),
+                    required: true,
+                  })}
                   className="sr-only"
                 />
                 <div
-                  onClick={() => setIsChecked(!isChecked)}
+                  onClick={() => setValue("terms", !isChecked)}
                   data-cy="terms-conditions-checkbox"
                   className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
                   ${isChecked && "border-none bg-moon-500"}`}
@@ -163,8 +167,11 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
                   </a>
                 </span>
               </div>
+              {errors["terms"] && (
+                <ErrorMessage dataCy={`terms-error`} message={"Terms and Conditions is required"} />
+              )}
             </div>
-            <button disabled={!isChecked} className={"btn"} data-cy={"submit-password-btn"}>
+            <button className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
             {errorMessage !== "" && (
