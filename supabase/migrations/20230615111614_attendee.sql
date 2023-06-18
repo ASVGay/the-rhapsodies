@@ -1,3 +1,4 @@
+drop table if exists "public"."attendee";
 drop type if exists "public"."attending";
 
 create type "public"."attending" as enum ('present', 'absent', 'undecided');
