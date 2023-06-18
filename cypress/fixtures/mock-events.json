@@ -1,0 +1,70 @@
+[
+  {
+    "id": "52bcbb7a-02e5-4cc8-a353-7b4402efacd7",
+    "event_type": "Brainstormborrel",
+    "start_time": "2023-06-13T15:46:37.133473+00:00",
+    "end_time": "2023-06-13T16:46:37.133473+00:00",
+    "location": "Studio",
+    "attendees": [
+      {
+        "user_id": "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
+        "attending": "absent"
+      },
+      {
+        "user_id": "ba1dd6e7-0955-417d-9f9c-3ad841e7277f",
+        "attending": "undecided"
+      }
+    ]
+  },
+  {
+    "id": "52bcbb7a-02e6-4cc8-a353-7b4402efacd7",
+    "event_type": "Rehearsal",
+    "start_time": "2023-06-13T15:46:37.133473+00:00",
+    "end_time": "2023-06-13T16:46:37.133473+00:00",
+    "location": "Studio",
+    "attendees": [
+      {
+        "user_id": "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
+        "attending": "present"
+      },
+      {
+        "user_id": "ba1dd6e7-0955-417d-9f9c-3ad841e7277f",
+        "attending": "present"
+      }
+    ]
+  },
+  {
+    "id": "52bcbb7a-02e3-4cc8-a353-7b4402efacd7",
+    "event_type": "Brainstormborrel",
+    "start_time": "2023-06-13T16:46:37.133473+00:00",
+    "end_time": "2023-06-13T17:46:37.133473+00:00",
+    "location": "Studio",
+    "attendees": [
+      {
+        "user_id": "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
+        "attending": "present"
+      },
+      {
+        "user_id": "ba1dd6e7-0955-417d-9f9c-3ad841e7277f",
+        "attending": "present"
+      }
+    ]
+  },
+  {
+    "id": "52bcbb7a-02e4-4cc8-a353-7b4402efacd7",
+    "event_type": "Rehearsal",
+    "start_time": "2023-06-14T05:46:37.133473+00:00",
+    "end_time": "2023-06-14T10:46:37.133473+00:00",
+    "location": "Studio",
+    "attendees": [
+      {
+        "user_id": "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
+        "attending": "present"
+      },
+      {
+        "user_id": "ba1dd6e7-0955-417d-9f9c-3ad841e7277f",
+        "attending": "absent"
+      }
+    ]
+  }
+]
