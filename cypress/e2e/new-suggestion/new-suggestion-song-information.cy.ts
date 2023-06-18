@@ -35,67 +35,67 @@ describe("when creating a new suggestion, adding song information", () => {
     cy.login()
   })
 
-  // context("with no song information", () => {
-  //   beforeEach(() => {
-  //     cy.visit(path)
-  //     cy.wait(500)
-  //
-  //     cy.data("area-song-information").then($component => {
-  //       if ($component.find("input-artist").length == 0) {
-  //         cy.data("manual-input-btn").click()
-  //       }
-  //     })
-  //   })
-  //
-  //   context("the form", () => {
-  //     it("should have no default values", () => {
-  //       cy.data(inputArtist).invoke("val").should("be.empty")
-  //       cy.data(inputArtist).invoke("val").should("be.empty")
-  //       cy.data(inputLink).invoke("val").should("be.empty")
-  //       cy.data(inputMotivation).invoke("val").should("be.empty")
-  //     })
-  //
-  //     context("on submit", () => {
-  //       requiredInputs.forEach(({ name, inputField, error }) => {
-  //         it(`should show error if submitting with ${name} `, () => {
-  //           cy.data(inputField).invoke("val").should("be.empty")
-  //           cy.data(error).should("not.exist")
-  //           cy.data(buttonAddInstruments).click()
-  //           cy.data(error).should("be.visible")
-  //           cy.data(inputField).should("have.css", "outline-color", "rgb(248, 113, 113)")
-  //         })
-  //
-  //         it(`should show no error if submitting with ${name}`, () => {
-  //           cy.data(inputField).type("Hello")
-  //           cy.data(error).should("not.exist")
-  //           cy.data(buttonAddInstruments).click()
-  //           cy.data(error).should("not.exist")
-  //           cy.data(inputField).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
-  //         })
-  //       })
-  //
-  //       it("should go to InstrumentsArea if all required values are filled in", () => {
-  //         cy.data(inputTitle).type("Hello")
-  //         cy.data(inputArtist).type("Hello")
-  //         cy.data(inputLink).type("www.hello.com")
-  //         cy.data(inputMotivation).type("Hello")
-  //         shouldGoToInstrumentsArea()
-  //         cy.window()
-  //           .its("store")
-  //           .invoke("getState")
-  //           .its("newSuggestion")
-  //           .its("suggestion")
-  //           .should("deep.equal", {
-  //             title: "Hello",
-  //             artist: ["Hello"],
-  //             link: "www.hello.com",
-  //             motivation: "Hello",
-  //             instruments: []
-  //           })
-  //       })
-  //     })
-  //   })
-  // })
+  context("with no song information", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+
+      cy.data("area-song-information").then($component => {
+        if ($component.find("input-artist").length == 0) {
+          cy.data("manual-input-btn").click()
+        }
+      })
+    })
+
+    context("the form", () => {
+      it("should have no default values", () => {
+        cy.data(inputArtist).invoke("val").should("be.empty")
+        cy.data(inputArtist).invoke("val").should("be.empty")
+        cy.data(inputLink).invoke("val").should("be.empty")
+        cy.data(inputMotivation).invoke("val").should("be.empty")
+      })
+
+      context("on submit", () => {
+        requiredInputs.forEach(({ name, inputField, error }) => {
+          it(`should show error if submitting with ${name} `, () => {
+            cy.data(inputField).invoke("val").should("be.empty")
+            cy.data(error).should("not.exist")
+            cy.data(buttonAddInstruments).click()
+            cy.data(error).should("be.visible")
+            cy.data(inputField).should("have.css", "outline-color", "rgb(248, 113, 113)")
+          })
+
+          it(`should show no error if submitting with ${name}`, () => {
+            cy.data(inputField).type("Hello")
+            cy.data(error).should("not.exist")
+            cy.data(buttonAddInstruments).click()
+            cy.data(error).should("not.exist")
+            cy.data(inputField).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
+          })
+        })
+
+        it("should go to InstrumentsArea if all required values are filled in", () => {
+          cy.data(inputTitle).type("Hello")
+          cy.data(inputArtist).type("Hello")
+          cy.data(inputLink).type("www.hello.com")
+          cy.data(inputMotivation).type("Hello")
+          shouldGoToInstrumentsArea()
+          cy.window()
+            .its("store")
+            .invoke("getState")
+            .its("newSuggestion")
+            .its("suggestion")
+            .should("deep.equal", {
+              title: "Hello",
+              artist: ["Hello"],
+              link: "www.hello.com",
+              motivation: "Hello",
+              instruments: []
+            })
+        })
+      })
+    })
+  })
 
   context("auto-filling values", () => {
     beforeEach(() => {
@@ -137,38 +137,38 @@ describe("when creating a new suggestion, adding song information", () => {
 
   })
 
-  // context("with filled in song information", () => {
-  //   beforeEach(() => {
-  //     cy.visit(path, {
-  //       onBeforeLoad(win: Cypress.AUTWindow) {
-  //         cy.window()
-  //           .its("store")
-  //           .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
-  //       }
-  //     })
-  //
-  //     cy.data("area-song-information").then($component => {
-  //       if ($component.find("input-artist").length == 0) {
-  //         cy.data("manual-input-btn").click()
-  //       }
-  //     })
-  //   })
-  //
-  //   it("should contain song information in state", () => {
-  //     shouldContainJSONSongInformationInState()
-  //   })
-  //
-  //   it("should fill in default values when filled in state", () => {
-  //
-  //     cy.data(inputTitle).invoke("val").should("equal", "Let It Be")
-  //     cy.data(inputArtist).invoke("val").should("equal", "The Beatles")
-  //     cy.data(inputMotivation).invoke("val").should("contain", "We have already sung it once")
-  //   })
-  //
-  //   it("should render the instruments area on click", () => {
-  //     shouldGoToInstrumentsArea()
-  //     shouldContainJSONSongInformationInState()
-  //   })
-  // })
+  context("with filled in song information", () => {
+    beforeEach(() => {
+      cy.visit(path, {
+        onBeforeLoad(win: Cypress.AUTWindow) {
+          cy.window()
+            .its("store")
+            .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
+        }
+      })
+
+      cy.data("area-song-information").then($component => {
+        if ($component.find("input-artist").length == 0) {
+          cy.data("manual-input-btn").click()
+        }
+      })
+    })
+
+    it("should contain song information in state", () => {
+      shouldContainJSONSongInformationInState()
+    })
+
+    it("should fill in default values when filled in state", () => {
+
+      cy.data(inputTitle).invoke("val").should("equal", "Let It Be")
+      cy.data(inputArtist).invoke("val").should("equal", "The Beatles")
+      cy.data(inputMotivation).invoke("val").should("contain", "We have already sung it once")
+    })
+
+    it("should render the instruments area on click", () => {
+      shouldGoToInstrumentsArea()
+      shouldContainJSONSongInformationInState()
+    })
+  })
 
 })
