@@ -41,4 +41,9 @@ describe("the settings page", () => {
     cy.data("terms-conditions-button").click()
     cy.data("terms-and-conditions").should("exist")
   })
+
+  it("should open the privacy policy overlay", () => {
+    cy.data("privacy-policy-button").click()
+    cy.data("privacy-policy").should("exist")
+  })
 })

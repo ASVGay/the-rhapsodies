@@ -1,11 +1,11 @@
 import React from "react"
 
-interface TermsAndConditionsProps {
+interface OverlayContainerProps {
   animationActive: boolean
   children: React.ReactNode
 }
 
-const OverlayContainer = ({ animationActive, children }: TermsAndConditionsProps) => {
+const OverlayContainer = ({ animationActive, children }: OverlayContainerProps) => {
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 p-4 transition-all duration-300 

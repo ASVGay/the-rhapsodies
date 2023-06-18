@@ -2,16 +2,21 @@ import React, { useState } from "react"
 import SettingsWrapper from "@/components/settings/settings-wrapper"
 import { BookOpenIcon } from "@heroicons/react/24/outline"
 import SettingsButton from "../controls/settings-button"
-import TermsAndConditions from "@/components/overlays/terms-and-conditions"
 import { OverlayContent } from "@/interfaces/overlay-content"
 import { getOverlay } from "@/helpers/overlay.helper"
+import ScrollViewOverlay from "@/components/overlays/scroll-view-overlay"
 
 interface TermsAndPoliciesSettingsProps {
-  overlayContent: OverlayContent
+  termsContent: OverlayContent
+  privacyContent: OverlayContent
 }
 
-const TermsAndPoliciesSettings = ({ overlayContent }: TermsAndPoliciesSettingsProps) => {
+const TermsAndPoliciesSettings = ({
+  termsContent,
+  privacyContent,
+}: TermsAndPoliciesSettingsProps) => {
   const [showTerms, setShowTerms] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
 
   return (
     <SettingsWrapper category={"Terms & Policies"} icon={BookOpenIcon}>
@@ -21,9 +26,22 @@ const TermsAndPoliciesSettings = ({ overlayContent }: TermsAndPoliciesSettingsPr
         text={"View Terms and Conditions"}
         dataCy={"terms-conditions-button"}
       />
+      <SettingsButton
+        disabled={false}
+        onClick={() => setShowPrivacy(true)}
+        text={"View Privacy Policy"}
+        dataCy={"privacy-policy-button"}
+      />
       {showTerms &&
         getOverlay(
-          <TermsAndConditions overlayContent={overlayContent} onClose={() => setShowTerms(false)} />
+          <ScrollViewOverlay overlayContent={termsContent} onClose={() => setShowTerms(false)} />
+        )}
+      {showPrivacy &&
+        getOverlay(
+          <ScrollViewOverlay
+            overlayContent={privacyContent}
+            onClose={() => setShowPrivacy(false)}
+          />
         )}
     </SettingsWrapper>
   )
