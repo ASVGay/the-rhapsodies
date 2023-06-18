@@ -84,17 +84,6 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
     },
   ]
 
-  const changePasswordCheckboxData: FormDataItem = {
-    tag: "terms",
-    type: "checkbox",
-    placeholder: "Confirm Password",
-    dataCy: "terms-confirm-checkbox",
-    validationOptions: {
-      required: "Please accept Terms and Conditions to continue",
-      validate: (value) => value === true,
-    },
-  }
-
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
 
@@ -151,14 +140,18 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  {...register(
-                    changePasswordCheckboxData.tag,
-                    changePasswordCheckboxData.validationOptions
-                  )}
                   checked={isChecked}
                   onChange={() => setIsChecked(!isChecked)}
-                  className="styled-checkbox mr-2 h-8 w-8 accent-moon-500 hover:bg-moon-500"
+                  className="sr-only"
                 />
+                <div
+                  onClick={() => setIsChecked(!isChecked)}
+                  data-cy="terms-conditions-checkbox"
+                  className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
+                  ${isChecked && "border-none bg-moon-500"}`}
+                >
+                  {isChecked && <CheckIcon className="absolute h-5 w-5 text-white" />}
+                </div>
                 <span>
                   I agree to the{" "}
                   <a
@@ -170,14 +163,8 @@ const ChangePassword = ({ overlayContent }: ChangePasswordProps) => {
                   </a>
                 </span>
               </div>
-              {errors[changePasswordCheckboxData.tag] && (
-                <ErrorMessage
-                  dataCy={`${changePasswordCheckboxData.dataCy}-error`}
-                  message={errors[changePasswordCheckboxData.tag]?.message?.toString()}
-                />
-              )}
             </div>
-            <button className={"btn"} data-cy={"submit-password-btn"}>
+            <button disabled={!isChecked} className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
             {errorMessage !== "" && (
