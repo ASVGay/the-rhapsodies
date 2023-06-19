@@ -75,7 +75,7 @@ const Index = () => {
       </h1>
 
       <form
-        className={"flex flex-col gap-4 text-zinc-400"}
+        className={"flex flex-col gap-4"}
         onSubmit={handleSubmit(submitNewPassword)}
         data-cy={"change-password-form"}
       >
