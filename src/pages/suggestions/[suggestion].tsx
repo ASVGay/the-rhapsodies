@@ -47,8 +47,8 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
     }
   }, [supabase])
 
-  const updateSuggestion = () => {
-    getSuggestion(supabase, suggestion.id)
+  const updateSuggestion = async () => {
+    await getSuggestion(supabase, suggestion.id)
       .then((response) => {
         response.data ? setSuggestion(response.data as Song) : setShowSuggestionError(true)
       })
@@ -56,7 +56,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   }
 
   const selectInstrument = async (songInstrument: SongInstrument) => {
-    if (!uid) return
+    if (!uid || instrumentsInUpdate.length !== 0) return
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
@@ -74,9 +74,6 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
         .catch((error) => {
           toast.error(error.message)
         })
-        .finally(() => {
-          updateSuggestion()
-        })
     } else {
       await insertDivision(supabase, division)
         .then(({ error }) => {
@@ -85,11 +82,9 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
         .catch((error) => {
           toast.error(error.message)
         })
-        .finally(() => {
-          updateSuggestion()
-        })
     }
 
+    await updateSuggestion()
     setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
