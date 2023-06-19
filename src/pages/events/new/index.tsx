@@ -186,8 +186,7 @@ export default function Index() {
                   required: "Required",
                   validate: (value) => {
                     if (!isSelected(value)) return "The event type needs to be selected"
-                    if (value < watch("startDate"))
-                      return "The end time needs to be later than the start time"
+                    if (value < watch("startDate")) return "The end time needs to be later than the start time"
                   },
                 })}
               >
