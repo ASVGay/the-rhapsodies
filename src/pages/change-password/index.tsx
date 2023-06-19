@@ -3,7 +3,6 @@ import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { setName } from "@/services/authentication.service"
-import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
@@ -11,6 +10,7 @@ import { CheckIcon } from "@heroicons/react/24/solid"
 import { getPrivacyPolicyContent, getTermsAndConditionContent } from "@/helpers/markdown.helper"
 import { OverlayContent } from "@/interfaces/overlay-content"
 import ScrollViewOverlay from "@/components/overlays/scroll-view.overlay"
+import { useRouter } from "next/router"
 
 export async function getStaticProps() {
   const termsContent: OverlayContent = await getTermsAndConditionContent()
@@ -85,17 +85,17 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
 
-    const { data, error } = await supabase.auth.updateUser({ password })
+    const { error } = await supabase.auth.updateUser({ password })
 
     if (error) {
       setErrorMessage("Change password failed, try again")
-    } else if (data) {
+    } else {
       setName(supabase, user.id, name)
         .then((response) => {
           const { error } = response
           if (error) {
             setErrorMessage("Something went wrong, try again")
-          } else router.push("/")
+          } else router.replace("/").then(() => router.reload())
         })
         .catch(() => {
           setErrorMessage("Something went wrong, try again")

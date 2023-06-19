@@ -7,7 +7,7 @@ export const setName = async (
   id: string,
   name: string
 ) => {
-  return supabaseClient.from("member").insert({ id, display_name: name })
+  return supabaseClient.from("member").upsert({ id, display_name: name })
 }
 
 export const isInMemberDatabase = (supabaseClient: SupabaseClient<Database>, id: string) => {
