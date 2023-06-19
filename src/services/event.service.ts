@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 import { Attending } from "@/types/database-types"
-import {IEvent} from "@/interfaces/event";
+import { IEvent } from "@/interfaces/event";
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
