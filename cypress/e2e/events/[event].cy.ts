@@ -5,6 +5,7 @@ const deleteCommentButton = "delete-comment-button"
 const getCommentPath = "/rest/v1/attendee?select=comment&event_id=**&member_id=**"
 const setCommentPath = "/rest/v1/attendee"
 const attendancePath = "/rest/v1/attendee?select=attending&event_id=**member_id=**"
+const addCommentButtonLoader = "add-comment-button-loader"
 describe("on the specific event page", () => {
   const eventId = Cypress.env("CYPRESS_EVENT_ID")
   const path = `/events/${eventId}`
@@ -192,7 +193,11 @@ describe("on the specific event page", () => {
     })
 
     context("the comment button", () => {
-      it("on click it should open the add comment overlay", () => {
+      it("on load it should show loader & on click it should open the add comment overlay", () => {
+        const interception = interceptIndefinitely(getCommentPath, { statusCode: 200, body: [] })
+        cy.data(addCommentButtonLoader).should("exist")
+        interception.sendResponse()
+        cy.data(addCommentButtonLoader).should("not.exist")
         cy.data(addCommentButton).invoke("text").should("equal", "Add comment")
         cy.data(addCommentButton)
           .click()
