@@ -65,7 +65,6 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 
     setInstrumentsInUpdate([songInstrument, ...instrumentsInUpdate])
 
-    // TODO implement error handling and loading (so that users cant click when updating division)
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
       await deleteDivision(supabase, division)
@@ -73,7 +72,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
           if (error) throw new Error("Failed to remove you from instrument, please try again.")
         })
         .catch((error) => {
-          toast.error(error)
+          toast.error(error.message)
         })
         .finally(() => {
           updateSuggestion()
@@ -82,10 +81,9 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
       await insertDivision(supabase, division)
         .then(({ error }) => {
           if (error) throw new Error("Failed to remove you from instrument, please try again.")
-          updateSuggestion()
         })
         .catch((error) => {
-          toast.error(error)
+          toast.error(error.message)
         })
         .finally(() => {
           updateSuggestion()
@@ -183,7 +181,6 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               })}
             </div>
           </div>
-
           {displayButton() && (
             <div className={"m-8 flex justify-center"}>
               <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
@@ -191,20 +188,20 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               </button>
             </div>
           )}
-
           {showSuggestionError && (
             <div className={"mt-6"}>
               <ErrorPopup
                 text={"Failed to load suggestion. Please reload the page."}
+                dataCy="suggestion-error"
                 closePopup={() => setShowSuggestionError(false)}
               />
             </div>
           )}
-
           {showSongError && (
             <div className={"mt-6"}>
               <ErrorPopup
                 text={"Failed to convert this suggestion to a repertoire song."}
+                dataCy="repertoire-error"
                 closePopup={() => setShowSongError(false)}
               />
             </div>
