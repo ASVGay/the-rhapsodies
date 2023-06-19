@@ -15,7 +15,7 @@ const SignOut = () => {
 
       const res = await supabase.auth.signOut()
       if (res.error) toast.warn("Can't log out right now.")
-      else await router.push("/sign-in")
+      else router.push("/sign-in").then(() => router.reload())
     })()
   }
   return (
