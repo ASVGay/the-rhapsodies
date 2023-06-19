@@ -22,13 +22,13 @@ const TermsAndPoliciesSettings = ({
       <SettingsButton
         disabled={false}
         onClick={() => setShowTerms(true)}
-        text={"View Terms and Conditions"}
+        text={"Terms and Conditions"}
         dataCy={"terms-conditions-button"}
       />
       <SettingsButton
         disabled={false}
         onClick={() => setShowPrivacy(true)}
-        text={"View Privacy Policy"}
+        text={"Privacy Policy"}
         dataCy={"privacy-policy-button"}
       />
       {showTerms && (

@@ -13,13 +13,13 @@ const AccountSettings = () => {
       <SettingsButton
         disabled={false}
         onClick={async () => await router.push("/settings/change-display-name")}
-        text={"Change display name"}
+        text={"Set display name"}
         dataCy={"change-display-name-button"}
       />
       <SettingsButton
         disabled={false}
         onClick={async () => await router.push("/settings/change-email")}
-        text={"Change email address"}
+        text={"Update email address"}
         dataCy={"change-email-button"}
       />
       <SettingsButton

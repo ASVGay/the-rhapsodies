@@ -43,7 +43,7 @@ const Index = () => {
           className={"mr-2 h-8 cursor-pointer hover:text-moon"}
           onClick={() => router.push("/settings")}
         />
-        Change email
+        Update email address
         {/*Empty span to center text on lg screen*/}
         <span />
       </h1>
