@@ -62,7 +62,7 @@ const ChangeDisplayNameForm = () => {
 
   return (
     <form
-      className={"flex flex-col gap-4 text-zinc-400"}
+      className={"flex flex-col gap-4"}
       onSubmit={handleSubmit(submitNewDisplayName)}
       data-cy={"change-display-name-form"}
     >
