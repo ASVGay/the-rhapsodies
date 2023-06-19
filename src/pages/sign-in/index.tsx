@@ -57,9 +57,7 @@ const Index = () => {
       const { error } = response
       if (error) {
         setErrorPopupText(error.message)
-      } else {
-        router.push("/")
-      }
+      } else router.push("/")
     })
   }
 
