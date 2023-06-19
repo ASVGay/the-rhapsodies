@@ -1,4 +1,4 @@
-import {EventType} from "@/types/database-types";
+import { EventType } from "@/types/database-types";
 
 export interface IEvent {
     endTime: string,
