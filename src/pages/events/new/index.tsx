@@ -69,7 +69,7 @@ export default function Index() {
 
   const customDateInputField = (
     <div className={"input-container"}>
-      <label htmlFor="eventType" className="sr-only">
+      <label htmlFor="eventDate" className="sr-only">
         Pick an event date
       </label>
       {errors.date && <ErrorMessage dataCy={"input-date-error"} message={errors.date.message} />}
@@ -121,6 +121,7 @@ export default function Index() {
 
           <div className={`input w-full ${!isSelected(watch("eventType")) && "text-gray-400"}`}>
             <select
+                data-cy={"event-type-select"}
               {...register("eventType", {
                 required: "Required",
                 validate: (value) => isSelected(value) || "The event type needs to be selected",
@@ -191,7 +192,7 @@ export default function Index() {
                 {...register("endDate", {
                   required: "Required",
                   validate: (value) => {
-                    if (!isSelected(value)) return "The event type needs to be selected"
+                    if (!isSelected(value)) return "The end time needs to be selected"
                     if (value < watch("startDate")) return "The end time needs to be later than the start time"
                   },
                 })}
