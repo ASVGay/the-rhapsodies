@@ -152,7 +152,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
 
     dispatch(
       updateEditSuggestion({
-        ...suggestion,
+        ...reduxSuggestion,
         instruments: newInstruments,
       })
     )
