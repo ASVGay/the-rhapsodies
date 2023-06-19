@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { ClockIcon, DocumentTextIcon, LockClosedIcon } from "@heroicons/react/24/outline"
@@ -15,11 +15,13 @@ type FormValues = {
 }
 export default function Index() {
   const [startDate, setStartDate] = useState(new Date())
-  const { handleSubmit, register,formState: { errors } } = useForm<FormValues>()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues>()
 
-  useEffect(() => {
-    console.log(errors)
-  },[errors])
   const submitNewEvent: SubmitHandler<FormValues> = async ({
     eventType,
     day,
@@ -27,6 +29,10 @@ export default function Index() {
     endTime,
   }: FormValues) => {
     console.log("hi")
+  }
+
+  const isSelected = (field: string | number) => {
+    return field !== undefined && field != 0
   }
 
   const customDateInput = (
@@ -49,19 +55,17 @@ export default function Index() {
     <div className={"page-wrapper lg:w-3/5"}>
       <div className={"page-header"}>New Event</div>
       <form className={"flex flex-col gap-6"} onSubmit={handleSubmit(submitNewEvent)}>
-        <div className="input">
-          <select
-            className="w-full appearance-none rounded-lg bg-white p-4 pe-12 text-base shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
-            defaultValue=""
-            {...register("eventType", {
-              required: "Required",
-            })}
-          >
-            <option>Brainstormborrel</option>
-            <option>Rehearsal</option>
+
+        <div className={`input w-full ${!isSelected(watch("eventType")) && "text-gray-400"}`}>
+          <select className="" {...register("eventType")}>
+            <option value="0" disabled selected hidden>
+              Event type
+            </option>
+            <option value="1">Brainstormborrel</option>
+            <option value="2">Rehearsal</option>
           </select>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+          <span>
+            <ChevronDownIcon />
           </span>
         </div>
 
@@ -74,14 +78,16 @@ export default function Index() {
         />
 
         <div className={"flex flex-row justify-between gap-4"}>
-          <div className={"input w-full"}>
+          <div className={`input w-full ${!isSelected(watch("startTime")) && "text-gray-400"}`}>
             <select
               className="w-full appearance-none rounded-lg bg-white p-4 pe-12 text-base shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 disabled:text-gray-100"
-              placeholder={"Event type"}
               {...register("startTime", {
                 required: "Required",
               })}
             >
+              <option value="0" disabled selected hidden>
+                Start
+              </option>
               {getAllTimeSlots().map((timeslot) => {
                 return <option key={timeslot}>{timeslot}</option>
               })}
@@ -91,13 +97,15 @@ export default function Index() {
             </span>
           </div>
 
-          <div className={"input w-full"}>
+          <div className={`input w-full ${!isSelected(watch("endTime")) && "text-gray-400"}`}>
             <select
-              className="w-full appearance-none rounded-lg bg-white p-4 pe-12 text-base shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
               {...register("endTime", {
                 required: "Required",
               })}
             >
+              <option value="0" disabled selected hidden>
+                End
+              </option>
               {getAllTimeSlots().map((option) => {
                 return <option key={option}>{option}</option>
               })}
@@ -107,22 +115,22 @@ export default function Index() {
             </span>
           </div>
         </div>
+
         <div className="input">
-          <input data-cy={"input-confirmation-password"} type="text" placeholder="Location" />
+          <input data-cy={"input-location"} type="text" placeholder="Location" />
           <span>
             <LockClosedIcon />
           </span>
         </div>
-        <button
-          data-cy={"button-add-instruments"}
-          type="submit"
-          className="btn song-information mb-4"
-        >
-          Add instruments
+
+        <button data-cy={"button-add-event"} type="submit" className="btn song-information mb-4">
+          Add Event
         </button>
+
       </form>
       <style>
-        {`
+          {/* Custom css to style datepicker */}
+          {`
             .react-datepicker__day--selected {
               background-color: #F2D264;
              }         

@@ -74,6 +74,10 @@
         @apply w-full rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm
     }
 
+    .input select {
+        @apply w-full bg-white appearance-none rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm
+    }
+
     .input input.error {
         @apply outline-red-400
     }
