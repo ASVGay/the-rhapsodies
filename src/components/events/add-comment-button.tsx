@@ -14,12 +14,13 @@ const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
   const supabase = useSupabaseClient<Database>()
   const uid = useUser()?.id
   const [showOverlay, setShowOverlay] = useState<boolean>(false)
-  const [commentValue, setCommentValue] = useState<string>("")
+  const [commentValue, setCommentValue] = useState<string | null>("")
+
   const fetchCommentValue = useCallback(() => {
     if (uid) {
       getComment(supabase, eventId, uid).then(({ data, error }) => {
         if (error) toast.error("Something went wrong while retrieving your saved comment.")
-        if (data?.comment) setCommentValue(data.comment)
+        if (data) setCommentValue(data.comment)
       })
     }
   }, [eventId, supabase, uid])

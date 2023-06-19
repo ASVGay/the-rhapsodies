@@ -13,7 +13,7 @@ import SpinnerStripes from "@/components/utils/spinner-stripes"
 interface ScrollViewOverlayProps {
   onClose: (updated: boolean) => void
   eventId: string
-  commentValue: string
+  commentValue: string | null
 }
 
 interface FormInputs {
@@ -24,46 +24,46 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: ScrollViewOverlay
   const uid = useUser()?.id
   const supabase = useSupabaseClient<Database>()
   const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     watch,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({ defaultValues: { comment: commentValue } })
+  } = useForm<FormInputs>({ defaultValues: { comment: commentValue ?? "" } })
 
   const inputValue = watch("comment")
 
-  useEffect(() => {
-    setOverlayIsOpen(true)
-  }, [])
+  useEffect(() => setOverlayIsOpen(true), [])
 
   const waitForTransition = (updated: boolean) => {
     setOverlayIsOpen(false)
-    setTimeout(() => {
-      onClose(updated)
-    }, 300)
+    setTimeout(() => onClose(updated), 300)
   }
 
-  const submitComment = ({ comment }: FormInputs) => {
+  function updateComment(comment: string | null, deleted?: true) {
     if (uid) {
-      setLoading(true)
+      setIsLoading(true)
       setComment(supabase, eventId, uid, comment).then(({ error }) => {
-        if (error) toast.error("Something went wrong while saving your comment. Please try again.")
+        if (error)
+          toast.error(
+            `Something went wrong while ${deleted ? "deleting" : "saving"} 
+            your comment. Please try again.`
+          )
         else {
-          toast.success("Comment successfully saved!")
+          toast.success(`Comment successfully ${deleted ? "deleted" : "saved"}!`)
           waitForTransition(true)
         }
-        setLoading(false)
+        setIsLoading(false)
       })
     }
   }
 
+  const submitComment = ({ comment }: FormInputs) => updateComment(comment)
+
   const deleteComment = () => {
     const confirmed = confirm("Are you sure you want to delete your comment?")
-    if (confirmed) {
-      // todo delete comment
-    }
+    if (confirmed) updateComment(null, true)
   }
 
   return getOverlay(
@@ -72,7 +72,7 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: ScrollViewOverlay
         data-cy="comment-loader"
         className={`loader absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full 
           w-full items-center justify-center rounded-lg bg-black opacity-40
-          ${!loading && "hidden"}`}
+          ${!isLoading && "hidden"}`}
       >
         <SpinnerStripes />
       </div>

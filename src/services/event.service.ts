@@ -69,7 +69,7 @@ export const setComment = (
   supabase: SupabaseClient<Database>,
   event_id: string,
   member_id: string,
-  comment: string
+  comment: string | null
 ) => {
   return supabase.from("attendee").upsert({ event_id, member_id, comment })
 }
