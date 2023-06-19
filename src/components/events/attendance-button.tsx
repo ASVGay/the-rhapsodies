@@ -20,9 +20,9 @@ interface AttendanceButtonInputs {
 const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
   const supabase = useSupabaseClient<Database>()
   const uid = useUser()?.id
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { register, watch, getValues, setValue } = useForm<AttendanceButtonInputs>()
   const currentValue = watch("attending")
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const retrieveAttendance = () => {
@@ -39,9 +39,7 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
       }
     }
 
-    setTimeout(() => {
-      retrieveAttendance()
-    }, 500)
+    setTimeout(() => retrieveAttendance(), 500)
   }, [eventId, setValue, supabase, uid])
 
   const changeAttendance = () => {

@@ -10,7 +10,7 @@ import { Database } from "@/types/database"
 import { toast } from "react-toastify"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
 
-interface ScrollViewOverlayProps {
+interface AddCommentOverlayProps {
   onClose: (updated: boolean) => void
   eventId: string
   commentValue: string | null
@@ -20,7 +20,7 @@ interface FormInputs {
   comment: string
 }
 
-const AddCommentOverlay = ({ onClose, eventId, commentValue }: ScrollViewOverlayProps) => {
+const AddCommentOverlay = ({ onClose, eventId, commentValue }: AddCommentOverlayProps) => {
   const uid = useUser()?.id
   const supabase = useSupabaseClient<Database>()
   const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
