@@ -1,17 +1,16 @@
-import React, {useState} from "react"
+import React, { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import {ClockIcon, DocumentTextIcon, LockClosedIcon} from "@heroicons/react/24/outline"
-import {format} from "date-fns"
-import {ChevronDownIcon} from "@heroicons/react/20/solid"
-import {getAllTimeSlots} from "@/helpers/event.helper"
-import {SubmitHandler, useForm} from "react-hook-form"
+import { ClockIcon, DocumentTextIcon, LockClosedIcon } from "@heroicons/react/24/outline"
+import { format } from "date-fns"
+import { ChevronDownIcon } from "@heroicons/react/20/solid"
+import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
+import { SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import {useSupabaseClient} from "@supabase/auth-helpers-react";
-import {Database} from "@/types/database";
-import {IEvent} from "@/interfaces/event";
-import {EventType} from "@/types/database-types";
-import {createEvent} from "@/services/event.service";
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { EventType } from "@/types/database-types"
+import { createEvent } from "@/services/event.service"
 
 type FormValues = {
   eventType: EventType
@@ -37,34 +36,14 @@ export default function Index() {
     endDate,
     location,
   }: FormValues) => {
-
-    const { startTime, endTime } = parseStartAndEndDate(startDate, endDate)
-
-    createEvent(supabase, {startTime, endTime, eventType, location}).then((res) => {
+    const { startTime, endTime } = parseStartAndEndDate(startDate, endDate, eventDate)
+    createEvent(supabase, { startTime, endTime, eventType, location }).then((res) => {
       console.log(res)
     })
-
-
   }
 
   const isSelected = (field: string | number) => {
     return field !== undefined && field != 0
-  }
-
-  const parseStartAndEndDate = (startTime: string, endTime: string) => {
-    const [startHours, startMinutes] = startTime.split(":");
-    const [endHours, endMinutes] = endTime.split(":");
-
-    const startDate = new Date(eventDate)
-    const endDate = new Date(eventDate)
-
-    startDate.setHours(parseInt(startHours) ,parseInt(startMinutes))
-    endDate.setHours(parseInt(endHours) ,parseInt(endMinutes))
-
-    const startDateIsoString = startDate.toISOString()
-    const endDateIsoString = endDate.toISOString()
-
-    return { startTime: startDateIsoString, endTime: endDateIsoString }
   }
 
   const customDateInputField = (
@@ -81,11 +60,11 @@ export default function Index() {
           value={format(new Date(eventDate), "cccc, LLLL d")}
           {...register("date", {
             required: "Date is required",
-              validate: () => {
-                  const currentDate = new Date();
-                  currentDate.setDate(currentDate.getDate() - 1); //substract one day to include today
-                  return eventDate > currentDate || "The date has to be in the future";
-              },
+            validate: () => {
+              const currentDate = new Date()
+              currentDate.setDate(currentDate.getDate() - 1) //substract one day to include today
+              return eventDate > currentDate || "The date has to be in the future"
+            },
           })}
         />
         <span>
@@ -134,7 +113,7 @@ export default function Index() {
           enableTabLoop={false}
         />
 
-        <div className={"flex flex-row justify-between gap-4 items-end"}>
+        <div className={"flex flex-row items-end justify-between gap-4"}>
           <div className={"input-container w-full"}>
             <label htmlFor="startDate" className="sr-only">
               Enter the start time
@@ -149,7 +128,7 @@ export default function Index() {
                   required: "Required",
                   validate: (value) => {
                     if (!isSelected(value)) return "The start time needs to be selected"
-                  }
+                  },
                 })}
               >
                 <option value="0" disabled selected hidden>
@@ -179,9 +158,10 @@ export default function Index() {
                 {...register("endDate", {
                   required: "Required",
                   validate: (value) => {
-                      if (!isSelected(value)) return "The event type needs to be selected"
-                      if (value < watch("endDate")) return "The end time needs to be later than the start time"
-                  }
+                    if (!isSelected(value)) return "The event type needs to be selected"
+                    if (value < watch("endDate"))
+                      return "The end time needs to be later than the start time"
+                  },
                 })}
               >
                 <option value="0" disabled selected hidden>

@@ -33,15 +33,28 @@ export const getAllTimeSlots = () => {
     const timeSlot = `${formattedHours}:${formattedMinutes}`
     timeSlots.push(timeSlot)
 
-    // Increment minutes by 15
     minutes += 15
 
-    // If minutes reach 60, increment hours and reset minutes to 0
     if (minutes === 60) {
       hours++
       minutes = 0
     }
   }
-
   return timeSlots
+}
+
+export const parseStartAndEndDate = (startTime: string, endTime: string, eventDate: Date) => {
+  const [startHours, startMinutes] = startTime.split(":");
+  const [endHours, endMinutes] = endTime.split(":");
+
+  const startDate = new Date(eventDate)
+  const endDate = new Date(eventDate)
+
+  startDate.setHours(parseInt(startHours) ,parseInt(startMinutes))
+  endDate.setHours(parseInt(endHours) ,parseInt(endMinutes))
+
+  const startDateIsoString = startDate.toISOString()
+  const endDateIsoString = endDate.toISOString()
+
+  return { startTime: startDateIsoString, endTime: endDateIsoString }
 }
