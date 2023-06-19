@@ -22,7 +22,10 @@ const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
     if (uid) {
       setIsLoading(true)
       getComment(supabase, eventId, uid).then(({ data, error }) => {
-        if (error) toast.error("Something went wrong while retrieving your saved comment.")
+        if (error)
+          toast.error("Something went wrong while retrieving your saved comment.", {
+            toastId: "saved-comment-error",
+          })
         if (data) setCommentValue(data.comment)
         setIsLoading(false)
       })
