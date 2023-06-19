@@ -1,8 +1,5 @@
-import {interceptIndefinitely} from "../helpers/interception.helper";
 
 describe("Create events page", () => {
-    const eventsRequestPath = "/rest/v1/rpc/get_events_with_attendance"
-
     beforeEach(() => {
         cy.login()
         cy.visit("events/new")
