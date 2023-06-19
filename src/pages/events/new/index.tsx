@@ -119,7 +119,7 @@ export default function Index() {
               Enter the start time
             </label>
             {errors.startDate && (
-              <ErrorMessage dataCy={"select-startDate-error"} message={errors.startTime.message} />
+              <ErrorMessage dataCy={"select-startDate-error"} message={errors.startDate.message} />
             )}
             <div className={`input w-full ${!isSelected(watch("startDate")) && "text-gray-400"}`}>
               <select
