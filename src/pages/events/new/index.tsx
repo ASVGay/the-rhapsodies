@@ -6,7 +6,7 @@ import { format } from "date-fns"
 import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
 import { SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { EventType } from "@/types/database-types"
 import { createEvent } from "@/services/event.service"
@@ -22,11 +22,14 @@ type FormValues = {
   endDate: string
   location: string
 }
+
 export default function Index() {
   const [eventDate, setEventDate] = useState(new Date())
   const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
+  const user = useUser()
   const supabase = useSupabaseClient<Database>()
+  const isAdmin = user?.app_metadata.claims_admin
 
   const {
     handleSubmit,
@@ -99,11 +102,13 @@ export default function Index() {
     <div className={"page-wrapper lg:w-3/5"}>
       <div className={"flex justify-between"}>
         <div className={"page-header"}>New Event</div>
-        <XMarkIcon
-          data-cy={"button-discard-new-suggestion"}
-          className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-          onClick={() => router.push("/events")}
-        />
+        {
+          isAdmin &&   <XMarkIcon
+                data-cy={"button-discard-new-suggestion"}
+                className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
+                onClick={() => router.push("/events")}
+            />
+        }
       </div>
       {showSpinner ?
           <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
