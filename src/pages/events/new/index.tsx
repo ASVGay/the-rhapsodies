@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import {ClockIcon, CalendarIcon, XMarkIcon, MapPinIcon} from "@heroicons/react/24/outline"
+import { ClockIcon, CalendarIcon, XMarkIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import { format } from "date-fns"
 import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
 import { SubmitHandler, useForm } from "react-hook-form"
