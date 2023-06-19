@@ -24,4 +24,10 @@ for select
 to authenticated, anon
 using (true);
 
+create policy "Enable insert for authenticated users only"
+on "public"."event"
+as permissive
+for insert
+to authenticated
+with check (true);
 
