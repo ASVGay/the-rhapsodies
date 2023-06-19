@@ -13,6 +13,7 @@ import { createEvent } from "@/services/event.service"
 import { toast } from "react-toastify"
 import { useRouter } from "next/router"
 import { ChevronDownIcon} from "@heroicons/react/20/solid";
+import Spinner from "@/components/utils/spinner";
 
 type FormValues = {
   eventType: EventType
@@ -23,7 +24,7 @@ type FormValues = {
 }
 export default function Index() {
   const [eventDate, setEventDate] = useState(new Date())
-  const [isLoading, setIsLoading] = useState(false)
+  const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
   const supabase = useSupabaseClient<Database>()
 
@@ -40,7 +41,7 @@ export default function Index() {
     endDate,
     location,
   }: FormValues) => {
-    setIsLoading(true)
+    setShowSpinner(true)
     const { startTime, endTime } = parseStartAndEndDate(startDate, endDate, eventDate)
 
     try {
@@ -59,7 +60,7 @@ export default function Index() {
     } catch (error) {
         toast.error("Something went wrong trying to add the event, please try again.")
     }
-    setIsLoading(false)
+    setShowSpinner(false)
   }
 
   const isSelected = (field: string | number) => {
@@ -104,7 +105,12 @@ export default function Index() {
           onClick={() => router.push("/events")}
         />
       </div>
-      <form className={"flex flex-col"} onSubmit={handleSubmit(submitNewEvent)}>
+      {showSpinner ?
+          <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
+            <Spinner size={10} />
+          </div>
+          :
+          <form className={"flex flex-col"} onSubmit={handleSubmit(submitNewEvent)}>
         <div className={"input-container"}>
           <label htmlFor="eventType" className="sr-only">
             Enter the event type
@@ -231,7 +237,7 @@ export default function Index() {
           Create Event
         </button>
       </form>
-
+      }
       <style>
         {/* Custom css to style datepicker */}
         {`
