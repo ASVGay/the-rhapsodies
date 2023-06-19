@@ -20,6 +20,8 @@ export const createEvent = (supabase: SupabaseClient<Database>, {endTime, startT
             event_type: eventType,
             location: location,
         })
+        .select()
+        .single()
 }
 
 export const getAttendingMembersForEvent = (

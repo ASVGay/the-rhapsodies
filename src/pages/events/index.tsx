@@ -6,6 +6,8 @@ import { getEventsWithAttendees } from "@/services/event.service"
 import { Database } from "@/types/database"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
+import {PlusIcon} from "@heroicons/react/24/solid";
+import {router} from "next/client";
 
 const Index = () => {
   const supabaseClient = useSupabaseClient<Database>()
@@ -44,6 +46,11 @@ const Index = () => {
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"}>
         <div className={"page-header"}>Events</div>
+          <PlusIcon
+              data-cy={"button-new-suggestion"}
+              className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+              onClick={() => router.push("/events/new")}
+          />
       </div>
 
       <div data-cy={"event-list"} className={"flex flex-wrap justify-center gap-6"}>

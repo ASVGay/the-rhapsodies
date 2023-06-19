@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { ClockIcon, DocumentTextIcon, LockClosedIcon } from "@heroicons/react/24/outline"
+import {ClockIcon, CalendarIcon, XMarkIcon, MapPinIcon} from "@heroicons/react/24/outline"
 import { format } from "date-fns"
-import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
 import { SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
@@ -11,6 +10,9 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { EventType } from "@/types/database-types"
 import { createEvent } from "@/services/event.service"
+import { toast } from "react-toastify"
+import { useRouter } from "next/router"
+import { ChevronDownIcon} from "@heroicons/react/20/solid";
 
 type FormValues = {
   eventType: EventType
@@ -21,6 +23,8 @@ type FormValues = {
 }
 export default function Index() {
   const [eventDate, setEventDate] = useState(new Date())
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const supabase = useSupabaseClient<Database>()
 
   const {
@@ -36,10 +40,26 @@ export default function Index() {
     endDate,
     location,
   }: FormValues) => {
+    setIsLoading(true)
     const { startTime, endTime } = parseStartAndEndDate(startDate, endDate, eventDate)
-    createEvent(supabase, { startTime, endTime, eventType, location }).then((res) => {
-      console.log(res)
-    })
+
+    try {
+      const { error, data } = await createEvent(supabase, {
+        startTime,
+        endTime,
+        eventType,
+        location,
+      })
+      if (error) {
+        toast.error("Something went wrong trying to add the event, please try again.")
+      } else {
+        toast.success("Your event has been added.")
+        router.push(`/events/${data.id}`)
+      }
+    } catch (error) {
+        toast.error("Something went wrong trying to add the event, please try again.")
+    }
+    setIsLoading(false)
   }
 
   const isSelected = (field: string | number) => {
@@ -68,7 +88,7 @@ export default function Index() {
           })}
         />
         <span>
-          <DocumentTextIcon />
+          <CalendarIcon />
         </span>
       </div>
     </div>
@@ -76,7 +96,14 @@ export default function Index() {
 
   return (
     <div className={"page-wrapper lg:w-3/5"}>
-      <div className={"page-header"}>New Event</div>
+      <div className={"flex justify-between"}>
+        <div className={"page-header"}>New Event</div>
+        <XMarkIcon
+          data-cy={"button-discard-new-suggestion"}
+          className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
+          onClick={() => router.push("/events")}
+        />
+      </div>
       <form className={"flex flex-col"} onSubmit={handleSubmit(submitNewEvent)}>
         <div className={"input-container"}>
           <label htmlFor="eventType" className="sr-only">
@@ -159,7 +186,7 @@ export default function Index() {
                   required: "Required",
                   validate: (value) => {
                     if (!isSelected(value)) return "The event type needs to be selected"
-                    if (value < watch("endDate"))
+                    if (value < watch("startDate"))
                       return "The end time needs to be later than the start time"
                   },
                 })}
@@ -196,13 +223,13 @@ export default function Index() {
               })}
             />
             <span>
-              <LockClosedIcon />
+              <MapPinIcon />
             </span>
           </div>
         </div>
 
         <button data-cy={"button-add-event"} type="submit" className="btn song-information mb-4">
-          Add Event
+          Create Event
         </button>
       </form>
 
