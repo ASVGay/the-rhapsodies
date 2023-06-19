@@ -12,7 +12,7 @@ import { EventType } from "@/types/database-types"
 import { createEvent } from "@/services/event.service"
 import { toast } from "react-toastify"
 import { useRouter } from "next/router"
-import { ChevronDownIcon} from "@heroicons/react/20/solid";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Spinner from "@/components/utils/spinner";
 
 type FormValues = {
