@@ -7,14 +7,14 @@ import { Database } from "@/types/database"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {router} from "next/client";
+import {useRouter} from "next/router";
 
 const Index = () => {
   const supabaseClient = useSupabaseClient<Database>()
   const [events, setEvents] = useState<Events>()
   const [showSpinner, setShowSpinner] = useState<boolean>(true)
   const [errorText, setErrorText] = useState("")
-
+  const router = useRouter();
   useEffect(() => {
     const fetchEvents = () => {
       setShowSpinner(true)
