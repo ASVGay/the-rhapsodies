@@ -57,7 +57,7 @@ const ChangeEmailForm = ({ setEmailIsSent }: ChangeEmailFormProps) => {
 
   return (
     <form
-      className={"flex flex-col gap-4 text-zinc-400"}
+      className={"flex flex-col gap-4"}
       onSubmit={handleSubmit(submitNewEmail)}
       data-cy={"change-email-form"}
     >
