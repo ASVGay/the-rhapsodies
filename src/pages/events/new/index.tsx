@@ -27,6 +27,8 @@ export default function Index() {
   const [eventDate, setEventDate] = useState(new Date())
   const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
+  const supabase = useSupabaseClient<Database>()
+
 
   const {
     handleSubmit,
