@@ -48,10 +48,10 @@ export default function Index() {
 
     try {
       const { error, data } = await createEvent(supabase, {
-        startTime,
-        endTime,
-        eventType,
-        location,
+        start_time: startTime,
+        end_time: endTime,
+        event_type: eventType,
+        location: location,
       })
       if (error) {
         toast.error("Something went wrong trying to add the event, please try again.")
