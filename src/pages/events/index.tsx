@@ -6,8 +6,8 @@ import { getEventsWithAttendees } from "@/services/event.service"
 import { Database } from "@/types/database"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import Spinner from "@/components/utils/spinner"
-import {PlusIcon} from "@heroicons/react/24/solid";
-import {useRouter} from "next/router";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/router";
 
 const Index = () => {
   const supabaseClient = useSupabaseClient<Database>()
