@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { ClockIcon, DocumentTextIcon, LockClosedIcon } from "@heroicons/react/24/outline"
@@ -38,7 +38,7 @@ export default function Index() {
   const customDateInput = (
     <div className="input">
       <input
-        data-cy={"input-title"}
+        data-cy={"input-event-date"}
         type="text"
         value={format(new Date(startDate), "cccc, LLLL d")}
         {...register("day", {
@@ -80,8 +80,8 @@ export default function Index() {
         <div className={"flex flex-row justify-between gap-4"}>
           <div className={`input w-full ${!isSelected(watch("startTime")) && "text-gray-400"}`}>
             <select
-              className="w-full appearance-none rounded-lg bg-white p-4 pe-12 text-base shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 disabled:text-gray-100"
-              {...register("startTime", {
+                data-cy={"start-time-select"}
+                {...register("startTime", {
                 required: "Required",
               })}
             >
@@ -99,6 +99,7 @@ export default function Index() {
 
           <div className={`input w-full ${!isSelected(watch("endTime")) && "text-gray-400"}`}>
             <select
+                data-cy={"end-time-select"}
               {...register("endTime", {
                 required: "Required",
               })}
@@ -128,6 +129,7 @@ export default function Index() {
         </button>
 
       </form>
+
       <style>
           {/* Custom css to style datepicker */}
           {`
