@@ -33,34 +33,6 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Rens', 'de315267-9
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Marcel', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Feryll', '1ce835c1-a708-4e73-a808-334e982dfe3d');
 
-INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'brainstormborrel', (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '2 hours') + (random() * INTERVAL '7 days'), 'Studio');
-INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'rehearsal', (current_timestamp + INTERVAL '14 hours') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '19 hours') + (random() * INTERVAL '7 days'), 'Studio');
-INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'brainstormborrel', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'Studio');
-INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
-VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'rehearsal', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'Studio');
-
-
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'absent');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e4-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'absent');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e5-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'undecided');
-INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
-VALUES ('52bcbb7a-02e6-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
-
-
 -- Create instruments
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('edc0bc16-b99f-436c-af63-3f9cd838c986', 'Vocals', 'micro');
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('f5ccaa5d-c601-40fb-8604-5fc7485f8528', 'Acoustic Guitar', 'guitar');
@@ -130,3 +102,31 @@ INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('55b0
 
 -- Insert event for testing
 INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location") VALUES ('0b5fb485-fc2a-4acc-8fd7-64f008c3089e', 'brainstormborrel', '2023-06-14 17:00:00+00', '2023-06-14 19:00:00+00', 'CREA 3.14');
+
+-- Events
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'brainstormborrel', (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '2 hours') + (random() * INTERVAL '7 days'), 'CREA 3.14');
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('7a620d4c-5985-4cbb-aa9e-26e72c5eaede', 'rehearsal', (current_timestamp + INTERVAL '14 hours') + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '19 hours') + (random() * INTERVAL '7 days'), 'Rewind Music Studio');
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('f5ff70b4-6e0c-4ad0-b73c-7355d863a504', 'brainstormborrel', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'CREA 2.11');
+INSERT INTO "public"."event" ("id", "event_type", "start_time", "end_time", "location")
+VALUES ('4c0c7b17-ed22-4ff9-8161-5c4995d4adce', 'rehearsal', current_timestamp + (random() * INTERVAL '7 days'), (current_timestamp + INTERVAL '1 hour') + (random() * INTERVAL '7 days'), 'Helicopter Amsterdam');
+
+-- Attendees
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('7a620d4c-5985-4cbb-aa9e-26e72c5eaede', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('f5ff70b4-6e0c-4ad0-b73c-7355d863a504', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'absent');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('4c0c7b17-ed22-4ff9-8161-5c4995d4adce', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'present');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('52bcbb7a-02e3-4cc8-a353-7b4402efacd7', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('7a620d4c-5985-4cbb-aa9e-26e72c5eaede', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'absent');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('f5ff70b4-6e0c-4ad0-b73c-7355d863a504', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'undecided');
+INSERT INTO "public"."attendee" ("event_id", "member_id", "attending")
+VALUES ('4c0c7b17-ed22-4ff9-8161-5c4995d4adce', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f', 'present');

@@ -7,17 +7,42 @@ import { useRouter } from "next/router"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import ErrorMessage from "@/components/error/error-message"
+import { CheckIcon } from "@heroicons/react/24/solid"
+import { getPrivacyPolicyContent, getTermsAndConditionContent } from "@/helpers/markdown.helper"
+import { OverlayContent } from "@/interfaces/overlay-content"
+import ScrollViewOverlay from "@/components/overlays/scroll-view.overlay"
 
-const Index = () => {
+export async function getStaticProps() {
+  const termsContent: OverlayContent = await getTermsAndConditionContent()
+  const privacyContent: OverlayContent = await getPrivacyPolicyContent()
+
+  return {
+    props: {
+      termsContent,
+      privacyContent,
+    },
+  }
+}
+
+interface ChangePasswordProps {
+  termsContent: OverlayContent
+  privacyContent: OverlayContent
+}
+
+const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) => {
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
+  const [showTerms, setShowTerms] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
+
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
+    setValue,
   } = useForm()
 
   useEffect(() => {
@@ -25,6 +50,7 @@ const Index = () => {
   }, [watch])
 
   const password = watch("password")
+  const isChecked = watch("terms")
 
   const changePasswordFormData: FormDataItem[] = [
     {
@@ -55,6 +81,7 @@ const Index = () => {
       },
     },
   ]
+
   const submitNewPassword: SubmitHandler<FieldValues> = async ({ name, password }) => {
     if (!user) return
 
@@ -107,6 +134,51 @@ const Index = () => {
                 </div>
               )
             })}
+            <div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  {...register("terms", {
+                    onChange: () => setValue("terms", !isChecked),
+                    required: true,
+                  })}
+                  className="sr-only"
+                />
+                <div
+                  onClick={() => setValue("terms", !isChecked)}
+                  data-cy="terms-conditions-checkbox"
+                  className={`relative mr-4 flex h-6 min-w-[24px] cursor-pointer items-center justify-center rounded border-2 border-gray-300 checked:bg-black 
+                  ${isChecked && "border-none bg-moon-500"}`}
+                >
+                  {isChecked && <CheckIcon className="absolute h-5 w-5 text-white" />}
+                </div>
+                <span>
+                  I agree to the{" "}
+                  <a
+                    data-cy="terms-conditions-link"
+                    onClick={() => setShowTerms(true)}
+                    className="cursor-pointer text-moon-500"
+                  >
+                    Terms and Conditions
+                  </a>
+                  {" and the "}
+                  <a
+                    data-cy="privacy-policy-link"
+                    onClick={() => setShowPrivacy(true)}
+                    className="cursor-pointer text-moon-500"
+                  >
+                    Privacy Policy.
+                  </a>
+                </span>
+              </div>
+              {errors["terms"] && (
+                <ErrorMessage
+                  dataCy={`terms-error`}
+                  message={"Terms and Conditions and Privacy Policy are required"}
+                />
+              )}
+            </div>
             <button className={"btn"} data-cy={"submit-password-btn"}>
               Submit
             </button>
@@ -114,10 +186,19 @@ const Index = () => {
               <ErrorMessage dataCy={"submit-password-err"} message={errorMessage} />
             )}
           </form>
+          {showTerms && (
+            <ScrollViewOverlay overlayContent={termsContent} onClose={() => setShowTerms(false)} />
+          )}
+          {showPrivacy && (
+            <ScrollViewOverlay
+              overlayContent={privacyContent}
+              onClose={() => setShowPrivacy(false)}
+            />
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-export default Index
+export default ChangePassword

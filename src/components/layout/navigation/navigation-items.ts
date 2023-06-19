@@ -1,7 +1,7 @@
 import { Cog8ToothIcon, HomeIcon, LightBulbIcon, FolderIcon } from "@heroicons/react/24/solid"
 import { NextRouter } from "next/router"
 import { HeroIcon } from "@/types/hero-icon"
-import {CalendarDaysIcon} from "@heroicons/react/20/solid";
+import { CalendarDaysIcon } from "@heroicons/react/20/solid"
 
 export type NavItem = {
   icon: HeroIcon
@@ -21,7 +21,7 @@ export const NavigationItems: NavItem[] = [
     icon: FolderIcon,
     path: "/repertoire",
     text: "Repertoire",
-    data: "repertoire"
+    data: "repertoire",
   },
   {
     icon: LightBulbIcon,
@@ -29,7 +29,7 @@ export const NavigationItems: NavItem[] = [
     text: "Suggestions",
     data: "suggestions",
   },
-  {icon: CalendarDaysIcon, path: "/events", text: "Events", data: "events"},
+  { icon: CalendarDaysIcon, path: "/events", text: "Events", data: "events" },
   {
     icon: Cog8ToothIcon,
     path: "/settings",

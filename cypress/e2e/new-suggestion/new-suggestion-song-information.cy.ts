@@ -33,11 +33,20 @@ const requiredInputs = [
 describe("when creating a new suggestion, adding song information", () => {
   beforeEach(() => {
     cy.login()
-    cy.visit(path)
-    cy.wait(500)
   })
 
   context("with no song information", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+
+      cy.data("area-song-information").then(($component) => {
+        if ($component.find("input-artist").length == 0) {
+          cy.data("manual-input-btn").click()
+        }
+      })
+    })
+
     context("the form", () => {
       it("should have no default values", () => {
         cy.data(inputArtist).invoke("val").should("be.empty")
@@ -88,6 +97,56 @@ describe("when creating a new suggestion, adding song information", () => {
     })
   })
 
+  context("auto-filling values", () => {
+    beforeEach(() => {
+      cy.visit(path)
+      cy.wait(500)
+    })
+
+    it("should display results when searching a song", () => {
+      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
+        "mockedSearch"
+      )
+      cy.data(inputTitle)
+        .type("A")
+        .then(() => {
+          cy.wait("@mockedSearch")
+          cy.data("song-information-dropdown").should("be.visible")
+        })
+    })
+
+    it("should auto-fill song info", () => {
+      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
+        "mockedSearch"
+      )
+      cy.data(inputTitle)
+        .type("A")
+        .then(() => {
+          cy.wait("@mockedSearch")
+          cy.data("song-information-dropdown")
+            .children()
+            .first()
+            .click()
+            .then(() => {
+              cy.wait(100)
+              cy.data("manual-input-btn").click()
+            })
+            .then(() => {
+              cy.data(inputTitle).invoke("val").should("exist")
+              cy.data(inputArtist).invoke("val").should("exist")
+              cy.data(inputLink).invoke("val").should("exist")
+            })
+        })
+    })
+
+    it("trigger error handling on failed Spotify call", () => {
+      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).then(() => {
+        cy.data(inputTitle).type("A")
+        cy.data("search-error").should("be.visible")
+      })
+    })
+  })
+
   context("with filled in song information", () => {
     beforeEach(() => {
       cy.visit(path, {
@@ -96,6 +155,12 @@ describe("when creating a new suggestion, adding song information", () => {
             .its("store")
             .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
         },
+      }).then(() => {
+        cy.data("area-song-information").then(($component) => {
+          if ($component.find("input-artist").length == 0) {
+            cy.data("manual-input-btn").click()
+          }
+        })
       })
     })
 

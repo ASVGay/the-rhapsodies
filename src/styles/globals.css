@@ -45,6 +45,10 @@
         @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black
     }
 
+    .btn-secondary {
+        @apply rounded bg-zinc-300 px-4 py-2 font-bold text-white hover:bg-gray-400 disabled:opacity-25 disabled:bg-gray-800
+    }
+
     .page-wrapper {
         @apply mx-auto px-4 pt-6;
     }

@@ -1,10 +1,15 @@
-import {testErrorHandlingChangePassword} from "../helpers/change-password.helper";
+import { testErrorHandlingChangePassword } from "../helpers/change-password.helper"
 
 const displayName = "New"
 const newPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
-const errorPopup = "error-popup-change-password"
 const displayNameTextfield = "set-name-textfield"
 const passwordTextfield = "change-password-textfield"
+const termsConditionsOverlay = "terms-and-conditions"
+const termsConditionsCheckbox = "terms-conditions-checkbox"
+const termsId = "terms"
+const termsConditionsLink = "terms-conditions-link"
+const privacyPolicyLink = "privacy-policy-link"
+const privacyPolicyOverlay = "privacy-policy"
 const confirmPasswordTextfield = "change-password-confirm-textfield"
 const submitPasswordBtn = "submit-password-btn"
 const shortPassword = "test"
@@ -22,9 +27,26 @@ describe("Change password", () => {
     cy.data(displayNameTextfield).type(displayName)
     cy.data(passwordTextfield).type(newPassword)
     cy.data(confirmPasswordTextfield).type(newPassword)
+    cy.data(termsConditionsCheckbox).click()
     cy.data(submitPasswordBtn).click()
     cy.location("pathname").should("equal", "/")
   })
 
-  testErrorHandlingChangePassword(submitPasswordBtn, confirmPasswordTextfield, passwordTextfield, shortPassword );
+  it("should show terms and conditions when clicking on the link", () => {
+    cy.data(termsConditionsLink).click()
+    cy.data(termsConditionsOverlay).should("exist")
+  })
+
+  it("should show privacy policy when clicking on the link", () => {
+    cy.data(privacyPolicyLink).click()
+    cy.data(privacyPolicyOverlay).should("exist")
+  })
+
+  testErrorHandlingChangePassword(
+    submitPasswordBtn,
+    confirmPasswordTextfield,
+    passwordTextfield,
+    shortPassword,
+    termsId
+  )
 })

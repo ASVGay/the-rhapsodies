@@ -27,10 +27,15 @@ export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   author: string | DisplayName | Member
 }
 
-export type Event = Database["public"]["Tables"]["event"]["Row"] & {
-  attendees: Attendee[]
+export type Events = Database["public"]["Functions"]["get_events_with_attendance"]["Returns"]
+export type Event = Database["public"]["Tables"]["event"]["Row"]
+export type EventWithAttendance = Event & {
+  present: number
+  absent: number
+  undecided: number
 }
 export type EventType = Database["public"]["Enums"]["event_type"]
 
-export type Attendee = Database["public"]["Tables"]["attendee"]["Row"]
 export type Attending = Database["public"]["Enums"]["attending"]
+
+export type AttendingMembers = Database["public"]["Functions"]["get_members_by_event"]["Returns"]

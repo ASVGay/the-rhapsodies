@@ -256,6 +256,29 @@ export interface Database {
         }
         Returns: Json
       }
+      get_events_with_attendance: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          start_time: string
+          end_time: string
+          location: string
+          present: number
+          absent: number
+          undecided: number
+        }[]
+      }
+      get_members_by_event: {
+        Args: {
+          event_id: string
+        }
+        Returns: {
+          id: string
+          display_name: string
+          attending: Database["public"]["Enums"]["attending"]
+        }[]
+      }
       get_my_claim: {
         Args: {
           claim: string

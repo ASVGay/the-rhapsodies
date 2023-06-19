@@ -236,6 +236,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               toastClassName="rounded-lg"
               transition={Slide}
             />
+            <div id="overlay-container" />
           </main>
         </SessionContextProvider>
       </Provider>
