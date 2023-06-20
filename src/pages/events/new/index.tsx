@@ -134,8 +134,9 @@ export default function Index() {
                   required: "Required",
                   validate: (value) => isSelected(value) || "The event type needs to be selected",
                 })}
+                  defaultValue={"0"}
               >
-                <option value="0" disabled selected hidden>
+                <option value="0" disabled  hidden>
                   Event type
                 </option>
                 <option value="brainstormborrel">Brainstormborrel</option>
@@ -169,6 +170,7 @@ export default function Index() {
               <div className={`input w-full ${!isSelected(watch("startDate")) && "text-gray-400"}`}>
                 <select
                   data-cy={"start-time-select"}
+                  defaultValue={"0"}
                   {...register("startDate", {
                     required: "Required",
                     validate: (value) => {
@@ -176,7 +178,7 @@ export default function Index() {
                     },
                   })}
                 >
-                  <option value="0" disabled selected hidden>
+                  <option value="0" disabled hidden>
                     Start
                   </option>
                   {getAllTimeSlots().map((timeslot) => {
@@ -200,6 +202,7 @@ export default function Index() {
               <div className={`input w-full ${!isSelected(watch("endDate")) && "text-gray-400"}`}>
                 <select
                   data-cy={"end-time-select"}
+                  defaultValue={"0"}
                   {...register("endDate", {
                     required: "Required",
                     validate: (value) => {
@@ -209,7 +212,7 @@ export default function Index() {
                     },
                   })}
                 >
-                  <option value="0" disabled selected hidden>
+                  <option value="0" disabled hidden>
                     End
                   </option>
                   {getAllTimeSlots().map((option) => {
