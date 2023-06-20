@@ -47,8 +47,6 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
         toast.success("Event succesfully deleted.")
       }
     })
-
-
   }
 
   return getOverlay(
