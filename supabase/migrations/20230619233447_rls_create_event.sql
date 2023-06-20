@@ -1,4 +1,4 @@
-drop policy if exists "Enable insert access for admins";
+drop policy if exists "Enable insert access for admins" on "public"."event";
 
 create policy "Enable insert access for admins"
 on "public"."event"
