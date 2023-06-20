@@ -81,11 +81,16 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
       <ol data-cy={`${attendance}-members-list`}>
         {members
           .sort((a, b) => a.display_name.localeCompare(b.display_name))
-          .map(({ display_name, id }) => (
-            <li key={id} className={`${id === uid && "font-bold text-moon"}`}>
-              {display_name}
-            </li>
-          ))}
+          .map(({ display_name, id, comment }) => {
+            const stylesIfNameIsUserName = id === uid && `font-bold text-moon`
+            const leadingSize = comment ? 5 : 8
+            return (
+              <li key={id} className={`py-1 leading-${leadingSize} ${stylesIfNameIsUserName}`}>
+                {display_name}
+                <span className={"block text-xs font-medium italic text-zinc-500"}>{comment}</span>
+              </li>
+            )
+          })}
       </ol>
     )
   }

@@ -30,7 +30,7 @@ const ScrollViewOverlay = ({ overlayContent, onClose }: ScrollViewOverlayProps) 
         </div>
         <p className="mb-2 ">{overlayContent.footer}</p>
         <div className="flex justify-end">
-          <button className="btn-secondary" onClick={waitForTransition}>
+          <button className="btn secondary" onClick={waitForTransition}>
             {overlayContent.buttonText}
           </button>
         </div>

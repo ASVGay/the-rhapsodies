@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import { Attending } from "@/types/database-types"
+import {Attending, InsertEvent} from "@/types/database-types"
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
@@ -8,6 +8,19 @@ export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
 
 export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>) => {
   return supabase.rpc("get_events_with_attendance")
+}
+
+export const createEvent = (supabase: SupabaseClient<Database>, {end_time, start_time, event_type, location}: InsertEvent) => {
+    return supabase
+        .from("event")
+        .insert({
+            end_time: end_time,
+            start_time: start_time,
+            event_type: event_type,
+            location: location,
+        })
+        .select()
+        .single()
 }
 
 export const getAttendingMembersForEvent = (
@@ -50,4 +63,26 @@ export const createAttendeeChannel = (supabase: SupabaseClient<Database>, callba
       callback()
     })
     .subscribe()
+}
+
+export const setComment = (
+  supabase: SupabaseClient<Database>,
+  event_id: string,
+  member_id: string,
+  comment: string | null
+) => {
+  return supabase.from("attendee").upsert({ event_id, member_id, comment })
+}
+
+export const getComment = (
+  supabase: SupabaseClient<Database>,
+  event_id: string,
+  member_id: string
+) => {
+  return supabase
+    .from("attendee")
+    .select("comment")
+    .eq("event_id", event_id)
+    .eq("member_id", member_id)
+    .maybeSingle()
 }
