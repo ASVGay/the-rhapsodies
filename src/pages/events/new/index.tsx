@@ -42,8 +42,7 @@ export default function Index() {
     if(!user) {
       return
     }
-
-    console.log(isAdmin)
+    
     if(!isAdmin) {
       router.push("/events")
     }
