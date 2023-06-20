@@ -1,5 +1,5 @@
 import { EventType } from "@/types/database-types"
-import { format } from "date-fns"
+import { format, parse } from "date-fns"
 
 export const getEventTitle = (eventType: EventType) => {
   switch (eventType) {
@@ -20,4 +20,32 @@ export const getEventDate = (startTime: string) => {
 
 export const getEventTime = (startTime: string, endTime: string) => {
   return `${format(new Date(startTime), "HH:mm")} - ${format(new Date(endTime), "HH:mm")}`
+}
+
+export const getAllTimeSlots = () => {
+  const timeSlots = []
+  let hours = 0
+  let minutes = 0
+
+  for (let i = 0; i < 96; i++) {
+    const formattedHours = hours.toString().padStart(2, "0")
+    const formattedMinutes = minutes.toString().padStart(2, "0")
+    const timeSlot = `${formattedHours}:${formattedMinutes}`
+    timeSlots.push(timeSlot)
+
+    minutes += 15
+
+    if (minutes === 60) {
+      hours++
+      minutes = 0
+    }
+  }
+  return timeSlots
+}
+
+export const parseStartAndEndDate = (startTime: string, endTime: string, date: Date) => {
+  const startDateTime = parse(startTime, "HH:mm", date).toISOString()
+  const endDateTime = parse(startTime, "HH:mm", date).toISOString()
+
+  return { startTime: startDateTime, endTime: endDateTime }
 }

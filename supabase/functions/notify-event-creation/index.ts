@@ -26,18 +26,14 @@ serve(async (req: Promise<Response>) => {
     try {
       const { record } = await req.json()
 
-      // Run a query
-      const result = await connection.queryObject`SELECT display_name
-                                                  FROM member
-                                                  WHERE id = ${record.author}`
       // Build OneSignal notification object
       const notification = new OneSignal.Notification()
       notification.app_id = _OnesignalAppId_
       notification.included_segments = ["Subscribed Users"]
       notification.contents = {
-        en: `${result.rows[0].display_name} just suggested a song!`,
+        en: `A new event has just been announced! Tap on this notification to let us know if you're coming.`,
       }
-      notification.web_url = `${_OnesignalUrl_}/suggestions/${record.id}`
+      notification.web_url = `${_OnesignalUrl_}/events/${record.id}`
       const onesignalApiRes = await onesignal.createNotification(notification)
 
       return new Response(JSON.stringify({ onesignalResponse: onesignalApiRes }), {

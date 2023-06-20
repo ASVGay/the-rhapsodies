@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export interface Database {
   graphql_public: {
@@ -37,16 +31,19 @@ export interface Database {
       attendee: {
         Row: {
           attending: Database["public"]["Enums"]["attending"]
+          comment: string | null
           event_id: string
           member_id: string
         }
         Insert: {
           attending?: Database["public"]["Enums"]["attending"]
+          comment?: string | null
           event_id: string
           member_id: string
         }
         Update: {
           attending?: Database["public"]["Enums"]["attending"]
+          comment?: string | null
           event_id?: string
           member_id?: string
         }
@@ -277,6 +274,7 @@ export interface Database {
           id: string
           display_name: string
           attending: Database["public"]["Enums"]["attending"]
+          comment: string
         }[]
       }
       get_my_claim: {
@@ -502,4 +500,3 @@ export interface Database {
     }
   }
 }
-
