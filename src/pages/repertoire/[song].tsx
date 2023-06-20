@@ -4,7 +4,7 @@ import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/databas
 import React, { useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon } from "@heroicons/react/24/solid"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import Instrument from "@/components/suggestion/instrument"
 import { Database } from "@/types/database"
@@ -14,7 +14,7 @@ import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { PostgrestError } from "@supabase/supabase-js"
-import PreviewPlayer from "@/components/preview-player/preview-player"
+import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface SongProps {
   song: Song
@@ -112,21 +112,7 @@ const SongPage = (props: SongProps) => {
                 </p>
                 <div className={"flex"}>
                   <div className={"my-auto flex bg-neutral-200 rounded-md relative"}>
-                    {song.previewUrl
-                      ? <PreviewPlayer
-                        url={song.previewUrl}
-                        color={song.image ? "text-white" : "text-black"}
-                      />
-                      : <MusicalNoteIcon className={"p-2"} width={64} height={64} />
-                    }
-                    {song.image &&
-                      <img
-                        src={song.image}
-                        height={64} width={64}
-                        alt={`${song.title} by ${song.artist}`}
-                        className={"rounded-md my-auto absolute"}
-                      />
-                    }
+                    <SongPreviewImage previewUrl={song.previewUrl} imageUrl={song.image} />
                   </div>
                   <div className={"ml-3"}>
                     <p className={"line-clamp-1 font-bold"}>{song.title}</p>

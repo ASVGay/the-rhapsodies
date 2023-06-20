@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -15,7 +15,7 @@ import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
-import PreviewPlayer from "@/components/preview-player/preview-player"
+import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -131,21 +131,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
             </p>
             <div className={"flex"}>
               <div className={"my-auto flex bg-neutral-200 rounded-md relative"}>
-                {suggestion.previewUrl
-                  ? <PreviewPlayer
-                    url={suggestion.previewUrl}
-                    color={suggestion.image ? "text-white" : "text-black"}
-                  />
-                  : <MusicalNoteIcon className={"p-2"} width={64} height={64} />
-                }
-                {suggestion.image &&
-                  <img
-                    src={suggestion.image}
-                    height={64} width={64}
-                    alt={`${suggestion.title} by ${suggestion.artist}`}
-                    className={"rounded-md my-auto absolute"}
-                  />
-                }
+                <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               </div>
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>

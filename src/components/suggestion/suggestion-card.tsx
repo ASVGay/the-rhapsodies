@@ -1,9 +1,9 @@
-import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import Image from "next/image"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import React from "react"
 import { SongCardProps } from "@/interfaces/song-card-props"
+import SongImage from "@/components/images/song-image"
 
 const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   return (
@@ -17,17 +17,7 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
       data-id={song.id}
     >
       <div className={"flex items-start p-3"} key={song.id}>
-        {song.image
-          ? <img
-            src={song.image}
-            height={64} width={64}
-            alt={`${song.title} by ${song.artist}`}
-            className={"rounded-md my-auto"}
-          />
-          : <div className={"my-auto flex"}>
-            <MusicalNoteIcon className={"rounded-md bg-neutral-200 p-2 text-black"} width={64} height={64} />
-          </div>
-        }
+        <SongImage url={song.image} />
         <span className={"pl-3"}>
           <p className={"line-clamp-1 font-bold"}>{song.title}</p>
           <p className={"line-clamp-1"}>{song.artist?.join(", ")}</p>
