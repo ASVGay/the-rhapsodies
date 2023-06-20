@@ -164,6 +164,8 @@ export interface Database {
           link: string | null
           motivation: string
           title: string
+          image: string | null
+          previewUrl: string | null
         }
         Insert: {
           artist: string[]

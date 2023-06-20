@@ -4,7 +4,7 @@ import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/databas
 import React, { useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon } from "@heroicons/react/24/solid"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
 import Instrument from "@/components/suggestion/instrument"
 import { Database } from "@/types/database"
@@ -14,6 +14,7 @@ import { deleteDivision, insertDivision } from "@/services/suggestion.service"
 import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { PostgrestError } from "@supabase/supabase-js"
+import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface SongProps {
   song: Song
@@ -110,9 +111,7 @@ const SongPage = (props: SongProps) => {
                   Song information
                 </p>
                 <div className={"flex"}>
-                  <MusicalNoteIcon
-                    className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"}
-                  />
+                  <SongPreviewImage previewUrl={song.previewUrl} imageUrl={song.image} />
                   <div className={"ml-3"}>
                     <p className={"line-clamp-1 font-bold"}>{song.title}</p>
                     <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>

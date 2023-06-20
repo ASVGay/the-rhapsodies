@@ -79,7 +79,7 @@ export const deleteDivision = async (
 
 export const insertSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
-  { artist, link, motivation, title }: ISuggestion,
+  { artist, link, motivation, title, image, previewUrl }: ISuggestion,
   uid: string
 ) => {
   return supabaseClient
@@ -90,6 +90,8 @@ export const insertSuggestion = async (
       motivation: motivation,
       author: uid,
       link: link,
+      image: image,
+      previewUrl: previewUrl,
     })
     .eq("inRepertoire", false)
     .select()

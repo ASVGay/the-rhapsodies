@@ -65,7 +65,14 @@ const NewSuggestion = () => {
     dispatch(setActiveArea(Area.Review))
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({
+    title,
+    artist,
+    link,
+    motivation,
+    image,
+    previewUrl,
+  }: InputsSongInformation) => {
     dispatch(
       updateNewSuggestion({
         ...suggestion,
@@ -73,6 +80,8 @@ const NewSuggestion = () => {
         artist: [artist],
         link,
         motivation,
+        image,
+        previewUrl,
       })
     )
   }

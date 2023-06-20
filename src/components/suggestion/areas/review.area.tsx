@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import Spinner from "@/components/utils/spinner"
-import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import ErrorPopup from "@/components/popups/error-popup"
 import Instrument from "@/components/suggestion/instrument"
 import { ISuggestion } from "@/interfaces/suggestion"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
+import SongImage from "@/components/images/song-image"
 
 interface ReviewAreaProps {
   newSuggestion: ISuggestion
@@ -47,7 +47,7 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
         <>
           <div className={"m-2 text-left md:ml-auto md:mr-auto md:max-w-sm"}>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <SongImage url={suggestion.image} />
               <div className={"ml-3"}>
                 <span data-cy="review-title">
                   <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>

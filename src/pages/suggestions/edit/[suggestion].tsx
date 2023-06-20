@@ -89,6 +89,8 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         motivation: suggestion.motivation,
         title: suggestion.title,
         instruments: suggestionInstruments,
+        image: suggestion.image,
+        previewUrl: suggestion.previewUrl,
       })
     )
 

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -15,6 +15,7 @@ import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
+import SongPreviewImage from "@/components/images/song-preview-image"
 import { toast } from "react-toastify"
 
 interface SuggestionPageProps {
@@ -141,7 +142,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               Song information
             </p>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>

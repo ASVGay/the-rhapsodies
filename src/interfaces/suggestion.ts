@@ -6,6 +6,8 @@ export interface ISuggestion {
   motivation: string
   title: string
   instruments: ISuggestionInstrument[]
+  image: string | null
+  previewUrl: string | null
 }
 
 export interface ISuggestionInstrument {
@@ -19,4 +21,6 @@ export interface InputsSongInformation {
   link: string
   motivation: string
   title: string
+  image: string | null
+  previewUrl: string | null
 }

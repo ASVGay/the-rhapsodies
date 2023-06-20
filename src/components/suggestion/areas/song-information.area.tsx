@@ -43,7 +43,6 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
   const [searchResults, setSearchResults] = useState<SearchItem[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [fetchingSongs, setFetchingSongs] = useState(false)
-
   const [showSearchError, setShowSearchError] = useState<boolean>(false)
 
   useEffect(() => {
@@ -75,6 +74,8 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
           title: item.name,
           artists: item.artists.map((artist): string => artist.name),
           link: item.external_urls.spotify,
+          image: item.album.images.pop()?.url ?? null,
+          previewUrl: item.preview_url,
         }))
         setSearchResults(items)
       })
@@ -97,6 +98,8 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     setValue("title", item.title)
     setValue("artist", item.artists.join(", "))
     setValue("link", item.link)
+    setValue("image", item.image)
+    setValue("previewUrl", item.previewUrl)
     setSearchResults([])
   }
 
@@ -246,6 +249,18 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
                 validate: (value) => !!value.trim(),
               })}
             />
+          </div>
+        </div>
+
+        <div className={"input-container"} hidden={true}>
+          <div className="input">
+            <input type="url" {...register("image")} />
+          </div>
+        </div>
+
+        <div className={"input-container"} hidden={true}>
+          <div className="input">
+            <input type="url" {...register("previewUrl")} />
           </div>
         </div>
 
