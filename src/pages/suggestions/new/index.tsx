@@ -15,6 +15,7 @@ import { useRouter } from "next/router"
 import { getSongInformationFormData, mapInstruments } from "@/helpers/new-suggestion.helper"
 import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
 import { FormProvider, useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 
 const NewSuggestion = () => {
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -87,7 +88,7 @@ const NewSuggestion = () => {
     )
   }
 
-  const onClearClicked = () => {
+  const onClear = () => {
     dispatch(setActiveArea(Area.SongInformation))
     dispatch(
       updateNewSuggestion({
@@ -100,6 +101,7 @@ const NewSuggestion = () => {
         previewUrl: null,
       })
     )
+    toast.success("Your suggestion has been cleared")
   }
 
   return (
@@ -108,7 +110,7 @@ const NewSuggestion = () => {
         title={"New Suggestion"}
         newSuggestion={suggestion}
         currentArea={activeArea}
-        onClearClicked={onClearClicked}
+        onClear={onClear}
         onSongInformationSubmit={onSongInformationSubmit}
         onAreaSelect={(area) => dispatch(setActiveArea(area))}
         onInstrumentSubmit={onInstrumentSubmit}

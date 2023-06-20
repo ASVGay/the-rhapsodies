@@ -20,7 +20,7 @@ interface SuggestionPageSectionProps {
   newSuggestion: ISuggestion
   currentArea: Area
   onCloseClicked(): void
-  onClearClicked?(): void
+  onClear?(): void
   onSongInformationSubmit(songInformation: InputsSongInformation): void
   onInstrumentSubmit(newInstruments: ISuggestionInstrument[]): void
   onAreaSelect(newArea: Area): void
@@ -34,7 +34,7 @@ const SuggestionPageSection = ({
   onReviewSubmit,
   onAreaSelect,
   onCloseClicked,
-  onClearClicked,
+  onClear,
   onInstrumentSubmit,
   onSongInformationSubmit,
 }: SuggestionPageSectionProps) => {
@@ -72,21 +72,30 @@ const SuggestionPageSection = ({
     onAreaSelect(area)
   }
 
-  const { getValues, reset } = useFormContext<InputsSongInformation>()
+  const onClearClick = () => {
+    if (!isDirty) return
+    reset()
+    onClear?.()
+  }
 
+  const {
+    getValues,
+    reset,
+    formState: { isDirty },
+  } = useFormContext<InputsSongInformation>()
+  console.log(isDirty)
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"}>
         <div className={"page-header"}>{title}</div>
         <div className={"flex flex-row gap-2"}>
-          {onClearClicked && (
+          {onClear && (
             <ArrowPathIcon
-              className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+              className={`h-8 w-8 text-black ${
+                isDirty ? "cursor-pointer hover:text-zinc-400" : "opacity-20"
+              }`}
               data-cy="suggestion-clear-icon"
-              onClick={() => {
-                reset()
-                onClearClicked()
-              }}
+              onClick={onClearClick}
             />
           )}
           <XMarkIcon
