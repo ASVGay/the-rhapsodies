@@ -156,7 +156,7 @@ describe("when creating a new suggestion, adding song information", () => {
             .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
         },
       }).then(() => {
-        cy.data("area-song-information").then(($component) => {
+        cy.data("song-image-preview").then(($component) => {
           if ($component.find("input-artist").length == 0) {
             cy.data("manual-input-btn").click()
           }
