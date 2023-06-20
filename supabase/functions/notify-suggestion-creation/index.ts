@@ -9,6 +9,8 @@ const pool = new postgres.Pool(databaseUrl, 3, true)
 const _OnesignalAppId_ = Deno.env.get("NEXT_PUBLIC_ONESIGNAL_APP_ID")!
 const _OnesignalUserAuthKey_ = Deno.env.get("USER_AUTH_KEY")!
 const _OnesignalRestApiKey_ = Deno.env.get("ONESIGNAL_REST_API_KEY")!
+const _OnesignalUrl_ = Deno.env.get("ONESIGNAL_URL")!
+
 const configuration = OneSignal.createConfiguration({
   userKey: _OnesignalUserAuthKey_,
   appKey: _OnesignalRestApiKey_,
@@ -35,6 +37,7 @@ serve(async (req: Promise<Response>) => {
       notification.contents = {
         en: `${result.rows[0].display_name} just suggested a song!`,
       }
+      notification.web_url = `${_OnesignalUrl_}/suggestions/${record.id}`
       const onesignalApiRes = await onesignal.createNotification(notification)
 
       return new Response(JSON.stringify({ onesignalResponse: onesignalApiRes }), {
