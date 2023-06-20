@@ -51,9 +51,6 @@ const SuggestionPageSection = ({
   })
 
   const [instrumentList, setInstrumentList] = useState<Instrument[]>([])
-  const [newSuggestionInstruments, setNewSuggestionInstruments] = useState<ISuggestionInstrument[]>(
-    newSuggestion.instruments
-  )
 
   useEffect(() => {
     setShowSpinner(true)
@@ -78,7 +75,7 @@ const SuggestionPageSection = ({
     submitSongInformationForm()
     onSongInformationSubmit(methods.getValues())
 
-    if (area !== Area.Instruments) onInstrumentSubmit(newSuggestionInstruments)
+    if (area !== Area.Instruments) onInstrumentSubmit(newSuggestion.instruments)
 
     onAreaSelect(area)
   }
@@ -121,7 +118,7 @@ const SuggestionPageSection = ({
           <div className={"mx-auto text-center lg:w-2/4"}>
             <ProgressBar
               activeArea={currentArea}
-              newSuggestionInstruments={newSuggestionInstruments}
+              newSuggestionInstruments={newSuggestion.instruments}
               onAreaSelect={(area) => handleAreaChange(area)}
             />
             {currentArea == Area.SongInformation && (
@@ -132,8 +129,8 @@ const SuggestionPageSection = ({
             )}
             {currentArea == Area.Instruments && (
               <InstrumentsArea
-                onInstrumentsChanged={setNewSuggestionInstruments}
-                newSuggestionInstruments={newSuggestionInstruments}
+                onInstrumentsChanged={onInstrumentSubmit}
+                newSuggestionInstruments={newSuggestion.instruments}
                 instrumentList={instrumentList}
                 onSubmit={() => handleAreaChange(Area.Review)}
               />

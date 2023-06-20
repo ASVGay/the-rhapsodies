@@ -62,7 +62,6 @@ const NewSuggestion = () => {
         instruments: newInstruments,
       })
     )
-    dispatch(setActiveArea(Area.Review))
   }
 
   const onSongInformationSubmit = ({
@@ -106,11 +105,11 @@ const NewSuggestion = () => {
       title={"New Suggestion"}
       newSuggestion={suggestion}
       currentArea={activeArea}
+      onClearClicked={onClearClicked}
       onSongInformationSubmit={onSongInformationSubmit}
       onAreaSelect={(area) => dispatch(setActiveArea(area))}
       onInstrumentSubmit={onInstrumentSubmit}
       onReviewSubmit={saveSuggestion}
-      onClearClicked={onClearClicked}
       onCloseClicked={() => {
         router.push("/suggestions")
       }}
