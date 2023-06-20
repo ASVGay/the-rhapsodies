@@ -1,6 +1,6 @@
 import PreviewPlayer from "@/components/images/preview-player"
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
-import React, { useEffect } from "react"
+import React from "react"
 
 export interface SongPreviewImageProps {
   previewUrl: string | null
