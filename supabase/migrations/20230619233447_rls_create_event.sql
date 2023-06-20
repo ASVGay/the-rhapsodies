@@ -1,3 +1,5 @@
+drop policy if exists "Enable insert access for admins"
+
 create policy "Enable insert access for admins"
 on "public"."event"
 as permissive
