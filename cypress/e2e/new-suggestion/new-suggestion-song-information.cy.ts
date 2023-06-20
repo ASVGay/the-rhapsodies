@@ -91,6 +91,8 @@ describe("when creating a new suggestion, adding song information", () => {
               link: "www.hello.com",
               motivation: "Hello",
               instruments: [],
+              image: null,
+              previewUrl: null
             })
         })
       })

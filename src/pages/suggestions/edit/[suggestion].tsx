@@ -7,7 +7,7 @@ import {
   getSuggestion,
   insertSuggestionInstruments,
   updateSuggestion,
-  updateSuggestionInstruments,
+  updateSuggestionInstruments
 } from "@/services/suggestion.service"
 import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
@@ -21,7 +21,7 @@ import {
   setActiveArea,
   updateDeletedInstrumentUuids,
   updateEditSuggestion,
-  updateLastEditedUuid,
+  updateLastEditedUuid
 } from "@/redux/slices/edit-suggestion.slice"
 import { Song } from "@/types/database-types"
 
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   // Check if we have a session
   const {
-    data: { session },
+    data: { session }
   } = await supabase.auth.getSession()
   const { params } = context
 
@@ -43,8 +43,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return {
         redirect: {
           destination: "/403",
-          permanent: false,
-        },
+          permanent: false
+        }
       }
 
     return { props: { suggestion: data } }
@@ -77,7 +77,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         suggestionInstruments.push({
           id: element.id,
           description: element.description ?? "",
-          instrument: element.instrument,
+          instrument: element.instrument
         })
       }
     )
@@ -89,6 +89,8 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         motivation: suggestion.motivation,
         title: suggestion.title,
         instruments: suggestionInstruments,
+        image: suggestion.image,
+        previewUrl: suggestion.previewUrl
       })
     )
 
@@ -153,7 +155,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
     dispatch(
       updateEditSuggestion({
         ...reduxSuggestion,
-        instruments: newInstruments,
+        instruments: newInstruments
       })
     )
     dispatch(setActiveArea(Area.Review))
@@ -166,7 +168,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         title,
         artist: [artist],
         link,
-        motivation,
+        motivation
       })
     )
   }

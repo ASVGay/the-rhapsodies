@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -15,6 +15,7 @@ import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
+import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -22,9 +23,9 @@ interface SuggestionPageProps {
 }
 
 const SuggestionPage: FC<SuggestionPageProps> = ({
-  suggestionFromNext,
-  isEditable,
-}: SuggestionPageProps) => {
+                                                   suggestionFromNext,
+                                                   isEditable
+                                                 }: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
@@ -58,7 +59,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      song_instrument_id: songInstrument.id,
+      song_instrument_id: songInstrument.id
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
@@ -129,7 +130,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               Song information
             </p>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
@@ -198,7 +199,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   const {
-    data: { session },
+    data: { session }
   } = await supabase.auth.getSession()
   const { params } = context
   try {
@@ -207,8 +208,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         suggestionFromNext: data,
-        isEditable: (data.author as { id: string }).id === session?.user.id,
-      },
+        isEditable: (data.author as { id: string }).id === session?.user.id
+      }
     }
   } catch {
     return { notFound: true }
