@@ -111,9 +111,7 @@ const SongPage = (props: SongProps) => {
                   Song information
                 </p>
                 <div className={"flex"}>
-                  <div className={"my-auto flex bg-neutral-200 rounded-md relative"}>
-                    <SongPreviewImage previewUrl={song.previewUrl} imageUrl={song.image} />
-                  </div>
+                  <SongPreviewImage previewUrl={song.previewUrl} imageUrl={song.image} />
                   <div className={"ml-3"}>
                     <p className={"line-clamp-1 font-bold"}>{song.title}</p>
                     <p className={"line-clamp-1"}>{song.artist.join(", ")}</p>

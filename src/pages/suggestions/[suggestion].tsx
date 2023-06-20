@@ -130,9 +130,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               Song information
             </p>
             <div className={"flex"}>
-              <div className={"my-auto flex bg-neutral-200 rounded-md relative"}>
-                <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
-              </div>
+              <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
