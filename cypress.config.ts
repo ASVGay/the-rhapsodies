@@ -6,6 +6,7 @@ const tasks = require("./cypress/plugins/index")
 export default defineConfig({
   projectId: process.env.CYPRESS_PROJECT_ID,
   e2e: {
+    pageLoadTimeout: 1000 * parseInt(process.env.CYPRESS_PAGE_LOAD_TIMEOUT_SECONDS || "12"),
     defaultCommandTimeout: 1000 * parseInt(process.env.CYPRESS_TIMEOUT_SECONDS || "12"),
     baseUrl: process.env.CYPRESS_BASE_URL,
     retries: {
