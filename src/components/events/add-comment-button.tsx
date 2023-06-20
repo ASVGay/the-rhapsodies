@@ -51,7 +51,11 @@ const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
         disabled={isLoading}
       >
         {isLoading ? (
-          <SpinnerStripes dataCy={"add-comment-button-loader"} size={5} stroke={"stroke-sky-500"} />
+          <SpinnerStripes
+            dataCy={"add-comment-button-loader"}
+            size={5}
+            className={"stroke-sky-500"}
+          />
         ) : (
           <>
             <ChatBubbleBottomCenterTextIcon className={"inline h-5 stroke-[1.7px]"} />
