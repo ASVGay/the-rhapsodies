@@ -17,9 +17,17 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
       data-id={song.id}
     >
       <div className={"flex items-start p-3"} key={song.id}>
-        <div className={"mb-auto mt-auto flex"}>
-          <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
-        </div>
+        {song.image
+          ? <img
+            src={song.image}
+            height={64} width={64}
+            alt={`${song.title} by ${song.artist}`}
+            className={"rounded-md my-auto"}
+          />
+          : <div className={"my-auto flex"}>
+            <MusicalNoteIcon className={"rounded-md bg-neutral-200 p-2 text-black"} width={64} height={64} />
+          </div>
+        }
         <span className={"pl-3"}>
           <p className={"line-clamp-1 font-bold"}>{song.title}</p>
           <p className={"line-clamp-1"}>{song.artist?.join(", ")}</p>
