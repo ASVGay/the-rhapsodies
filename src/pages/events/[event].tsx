@@ -9,9 +9,6 @@ import EventInfoCard from "@/components/events/event-info-card"
 import AttendanceButton from "@/components/events/attendance-button"
 import AttendingMembers from "@/components/events/attending-members"
 import { FolderMinusIcon } from "@heroicons/react/24/outline"
-import ModalContainer from "@/components/overlays/modal-container"
-import DeleteEventModal from "@/components/overlays/delete-event-modal";
-import OverlayContainer from "@/components/overlays/overlay-container";
 import DeleteEventOverlay from "@/components/overlays/delete-event.overlay";
 
 interface EventPageProps {
