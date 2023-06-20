@@ -59,6 +59,9 @@ INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at"
 -- Suggestion used for edit-suggestion testing (authorized for test user)
 INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('e743664e-b85b-4164-8163-24c9957f5ffd', 'Don''t Stop Believin''', '{Journey}', 'Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', 'https://open.spotify.com/track/4bHsxqR3GMrXTxEPLuK5ue?si=84ccb0c63a4046e8');
 INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link") VALUES ('ca20ae76-f6b3-4224-99af-cac14643a967', 'Smells Like Teen Spirit', '{Nirvana}', 'i know some of us already want to play this song, so let''s just do it :)', '2023-02-14 00:00:00+00', '4ec7af50-3ced-45a9-9c1c-0e1038404778', NULL);
+-- Songs used for image testing
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link", "inRepertoire", "image", "previewUrl") VALUES ('771a84a3-e582-4acb-8458-25841a8f9fce', 'Be Honest (feat. Burna Boy)', '{"Jorja Smith", "Burna Boy"}', 'Fun song that I think we would really enjoy to play. Enough roles to fill to have a large group join in.', '2023-05-11 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', 'https://open.spotify.com/track/5pAbCxt9e3f81lOmjIXwzd', true, 'https://i.scdn.co/image/ab67616d000048510d4b41895ada0172a9237b9e', 'https://p.scdn.co/mp3-preview/c93e00fffb6375770af94f61472e1927895be9f6?cid=e16fb4c9d3424f2cac1ad481e3f3d7f9');
+INSERT INTO "public"."song" ("id", "title", "artist", "motivation", "created_at", "author", "link", "inRepertoire", "image", "previewUrl") VALUES ('166f11fc-5e2b-4a1f-b962-1d8fe9314ae8', 'We''re all In This Together', '{"High School Musical Cast", "Disney"}', 'Who doesn''t want to learn how to play this song?', '2023-05-11 00:00:00+00', '1ce835c1-a708-4e73-a808-334e982dfe3d', null, true, null, null);
 
 -- Add instruments to songs
 INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('dc998144-1b73-4330-8ebf-749e51852fff', 'ca20ae76-f6b3-4224-99af-cac14643a967', 'edc0bc16-b99f-436c-af63-3f9cd838c986', NULL);
@@ -84,6 +87,8 @@ INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "descr
 INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('0facee49-a54b-4970-9a97-c974e39da600', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'c52a4872-69ed-4c9b-95ae-ffa6d06701c1', NULL);
 INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('570a12d4-a436-40cb-9936-cffb6148b506', 'f0a04fe5-8290-445b-af94-1b2ae0263431', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
 INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('e3ae0780-78c9-453e-bef2-5f0d0788d68b', 'f0a04fe5-8290-445b-af94-1b2ae0263431', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('87ce3264-6af7-407a-b25b-371a3a6cd0fe', '771a84a3-e582-4acb-8458-25841a8f9fce', '08527f92-4aa3-4f65-b12c-b8b5e82752e7', NULL);
+INSERT INTO "public"."song_instrument" ("id", "song_id", "instrument_id", "description") VALUES ('655876f8-c325-4bb2-be8d-838f3a3f4fe3', '166f11fc-5e2b-4a1f-b962-1d8fe9314ae8', 'b16f75cd-907f-44f2-a67b-28853c9d55a9', NULL);
 
 -- Insert instrument divisions
 INSERT INTO "public"."division" ("song_instrument_id", "musician") VALUES ('cdcc14bf-8411-4e5d-8f49-4aaef682d27e', '1ce835c1-a708-4e73-a808-334e982dfe3d');

@@ -20,10 +20,7 @@ export const getSong = async (supabase: SupabaseClient<Database>, id: string) =>
     .from("song")
     .select(
       `
-      id,
-      artist,
-      link,
-      title,
+      *,
       song_instruments:song_instrument(
         id,
         description,

@@ -301,4 +301,45 @@ describe("on the specific event page", () => {
         })
     })
   })
+
+  context("when deleting an event", () => {
+    beforeEach(() => cy.visit(path))
+    it("should show delete btn when admin", () => {
+      cy.data("delete-event-btn").should("exist")
+    })
+
+    it("btn should  not be disabled when text is incorrect", () => {
+      cy.wait(500)
+      cy.data("delete-event-btn").click()
+      cy.data("delete-event-continue-button").click()
+      cy.data("input-delete-event").type("Brainstormborrel")
+      cy.data("delete-event-final-button").should('not.be.disabled')
+    })
+
+    it("btn should be disabled when text is incorrect", () => {
+      cy.wait(500)
+      cy.data("delete-event-btn").click()
+      cy.data("delete-event-continue-button").click()
+      cy.data("input-delete-event").type("Brainstormborre")
+      cy.data("delete-event-final-button").should('be.disabled')
+    })
+
+
+    it("should show toast when failing confirm when pressing on delete", () => {
+      cy.wait(500)
+      cy.data("delete-event-btn").click()
+      cy.intercept("/rest/v1/event*", {
+        statusCode: 500,
+        body: { error: "error" },
+      })
+      cy.data("delete-event-continue-button").click()
+      cy.data("input-delete-event").type("Brainstormborrel")
+      cy.data("delete-event-final-button").click()
+      cy.on("window:confirm", () => true);
+      cy.get(".Toastify")
+          .get("#1")
+          .get(".Toastify__toast-body")
+          .should("have.text", "We couldn't delete your event, try again later.")
+    })
+  })
 })

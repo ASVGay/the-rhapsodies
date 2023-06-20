@@ -1,7 +1,7 @@
 import React from "react"
-import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 import { SongCardProps } from "@/interfaces/song-card-props"
+import SongImage from "@/components/images/song-image"
 
 const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
   const checkEmptyDivision = () => song.song_instruments.some((item) => item.division.length === 0)
@@ -18,9 +18,7 @@ const RepertoireCard = ({ song, setShowSpinner, router }: SongCardProps) => {
       <div className={"m-2 flex"}>
         <div className={"mb-auto mt-auto flex w-full justify-between"}>
           <div className={"flex gap-2"}>
-            <div className={"mb-auto mt-auto flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
-            </div>
+            <SongImage url={song.image} />
             <div className={"flex flex-col justify-center"}>
               <p className={"line-clamp-1 font-bold"}>{song.title}</p>
               <p className={"line-clamp-1"}>{song.artist}</p>

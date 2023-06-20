@@ -6,7 +6,7 @@ import { AppState } from "@/redux/store"
 import ErrorMessage from "@/components/error/error-message"
 import {
   isSongInformationInvalid,
-  submitSongInformationForm,
+  submitSongInformationForm
 } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
 import { SearchItem, SpotifySearchItem } from "@/interfaces/spotify-search-item"
@@ -14,7 +14,7 @@ import { useRouter } from "next/router"
 import {
   getSpotifySearchResults,
   requestSpotifyAccessToken,
-  setSpotifyAccessToken,
+  setSpotifyAccessToken
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { debounce } from "debounce"
@@ -36,14 +36,13 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     formState: { errors },
     watch,
     setValue,
-    getValues,
+    getValues
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
   const [searchResults, setSearchResults] = useState<SearchItem[]>([])
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [fetchingSongs, setFetchingSongs] = useState(false)
-
   const [showSearchError, setShowSearchError] = useState<boolean>(false)
 
   useEffect(() => {
@@ -75,6 +74,8 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
           title: item.name,
           artists: item.artists.map((artist): string => artist.name),
           link: item.external_urls.spotify,
+          image: item.album.images.pop()?.url ?? null,
+          previewUrl: item.preview_url
         }))
         setSearchResults(items)
       })
@@ -97,6 +98,8 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
     setValue("title", item.title)
     setValue("artist", item.artists.join(", "))
     setValue("link", item.link)
+    setValue("image", item.image)
+    setValue("previewUrl", item.previewUrl)
     setSearchResults([])
   }
 
@@ -129,7 +132,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
                 placeholder="Title"
                 className={`${errors.title && "error"}`}
                 {...register("title", {
-                  validate: (value) => !!value.trim(),
+                  validate: (value) => !!value.trim()
                 })}
               />
               <span>
@@ -145,7 +148,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
                 className={`${errors.title && "error"}`}
                 {...register("title", {
                   validate: (value) => !!value.trim(),
-                  onChange: (event) => handleSearch(event.target.value),
+                  onChange: (event) => handleSearch(event.target.value)
                 })}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={handleSearchBlur}
@@ -194,7 +197,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               className={`${errors.artist && "error"}`}
               {...register("artist", {
                 onChange: (event) => setValue("artist", event.target.value),
-                validate: (value: string) => !!value.trim(),
+                validate: (value: string) => !!value.trim()
               })}
             />
             <span>
@@ -214,7 +217,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               type="url"
               placeholder="Link to the song (optional)"
               {...register("link", {
-                onChange: (event) => setValue("link", event.target.value),
+                onChange: (event) => setValue("link", event.target.value)
               })}
             />
             <span>
@@ -243,9 +246,21 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
-                validate: (value) => !!value.trim(),
+                validate: (value) => !!value.trim()
               })}
             />
+          </div>
+        </div>
+
+        <div className={"input-container"} hidden={true}>
+          <div className="input">
+            <input type="url" {...register("image")} />
+          </div>
+        </div>
+
+        <div className={"input-container"} hidden={true}>
+          <div className="input">
+            <input type="url" {...register("previewUrl")} />
           </div>
         </div>
 

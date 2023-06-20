@@ -23,6 +23,10 @@ export const createEvent = (supabase: SupabaseClient<Database>, {end_time, start
         .single()
 }
 
+export const deleteEvent = (supabase: SupabaseClient<Database>, eventId: string) => {
+    return supabase.from("event").delete().eq("id", eventId)
+}
+
 export const getAttendingMembersForEvent = (
   supabase: SupabaseClient<Database>,
   eventId: string
