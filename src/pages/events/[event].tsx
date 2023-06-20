@@ -9,9 +9,10 @@ import EventInfoCard from "@/components/events/event-info-card"
 import AttendanceButton from "@/components/events/attendance-button"
 import AttendingMembers from "@/components/events/attending-members"
 import { FolderMinusIcon } from "@heroicons/react/24/outline"
-import DeleteEventModal from "@/components/overlays/modal-container"
 import ModalContainer from "@/components/overlays/modal-container"
-import ErrorPopup from "@/components/popups/error-popup"
+import DeleteEventModal from "@/components/overlays/delete-event-modal";
+import OverlayContainer from "@/components/overlays/overlay-container";
+import DeleteEventOverlay from "@/components/overlays/delete-event.overlay";
 
 interface EventPageProps {
   event: Event
@@ -48,9 +49,7 @@ const EventPage = ({ event }: EventPageProps) => {
         <p className={"text-center text-xl font-medium text-moon"}>Attending Members</p>
         <AttendingMembers eventId={event.id} />
       </div>
-      <ModalContainer isOpen={isOpen} setIsOpen={(isOpen) => setIsOpen(isOpen)}>
-        <ErrorPopup text={"hi"} />
-      </ModalContainer>
+      {isOpen && <DeleteEventOverlay event={event} onClose={() => setIsOpen(false)}/>}
     </div>
   )
 }
