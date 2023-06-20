@@ -45,16 +45,16 @@ const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
         data-cy={"add-comment-button"}
         type={"button"}
         onClick={() => setShowOverlay(true)}
-        disabled={isLoading}
-        className={`inline-flex w-36 min-w-[9rem] justify-center gap-2 rounded-lg 
-          border border-sky-500 px-2 py-1 align-baseline text-sm text-sky-500 
+        className={`inline-flex w-40 min-w-[10rem] items-center justify-center gap-2 
+          rounded-lg border border-sky-500 px-2 py-1 text-sky-500 
           hover:bg-sky-500 hover:text-white focus:ring-2 focus:ring-sky-500`}
+        disabled={isLoading}
       >
         {isLoading ? (
           <SpinnerStripes dataCy={"add-comment-button-loader"} size={5} stroke={"stroke-sky-500"} />
         ) : (
           <>
-            <ChatBubbleBottomCenterTextIcon className={"inline h-5"} />
+            <ChatBubbleBottomCenterTextIcon className={"inline h-5 stroke-[1.7px]"} />
             <span>{commentValue ? "Edit" : "Add"} comment</span>
           </>
         )}
