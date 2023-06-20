@@ -39,8 +39,15 @@ export default function Index() {
   } = useForm<FormValues>()
 
   useEffect(() => {
+    if(!user) {
+      return
+    }
+
     console.log(isAdmin)
-  },[isAdmin])
+    if(!isAdmin) {
+      router.push("/events")
+    }
+  },[])
   const submitNewEvent: SubmitHandler<FormValues> = async ({
     eventType,
     startDate,

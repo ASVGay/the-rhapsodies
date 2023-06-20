@@ -18,9 +18,6 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Old', '4ec7af50-3c
 CREATE POLICY "Members are viewable by everyone." ON "member" FOR SELECT TO "authenticated", "anon" USING (true);
 CREATE POLICY "Members are deletable by everyone." ON "member" FOR DELETE TO "authenticated", "anon" USING (true);
 
-select set_claim('4ec7af50-3ced-45a9-9c1c-0e1038404778', 'claims_admin', 'true');
-
-
 -- Create users for developers
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user") VALUES ('00000000-0000-0000-0000-000000000000', '1ce835c1-a708-4e73-a808-334e982dfe3d', 'authenticated', 'authenticated', 'feryll@local.com', '$2a$10$I0kfL9CpRu6P1eEo.2gELOZ9kGBtkYK3f839YZmp0HFIIbKPL/EEq', '2023-05-18 02:04:25.378505+00', NULL, '', NULL, '', NULL, '', '', NULL, '2023-05-18 02:05:18.706407+00', '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2023-05-18 02:04:25.371707+00', '2023-05-18 02:05:28.937951+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false);
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user") VALUES ('00000000-0000-0000-0000-000000000000', 'cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4', 'authenticated', 'authenticated', 'kevin@local.com', '$2a$10$abGfTz8srhR5xbYBbu/BROdRBLujxDpC5FVtskSAhyMQ7MtRVWgTy', '2023-05-18 02:04:38.908645+00', NULL, '', NULL, '', NULL, '', '', NULL, '2023-05-18 02:05:42.905695+00', '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2023-05-18 02:04:38.904983+00', '2023-05-18 02:07:45.867248+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false);
@@ -36,6 +33,8 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Kevin', 'cbe9b982-
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Rens', 'de315267-9634-4cb8-9c7c-d0edd66c62fe');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Marcel', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Feryll', '1ce835c1-a708-4e73-a808-334e982dfe3d');
+
+select set_claim('4ec7af50-3ced-45a9-9c1c-0e1038404778', 'claims_admin', 'true');
 
 -- Create instruments
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('edc0bc16-b99f-436c-af63-3f9cd838c986', 'Vocals', 'micro');
