@@ -69,15 +69,6 @@ for delete
 to authenticated, anon
 using (true);
 
-
-create policy "Members are viewable by everyone."
-on "public"."member"
-as permissive
-for select
-to authenticated, anon
-using (true);
-
-
 create policy "Enable delete access for users"
 on "public"."song"
 as permissive
