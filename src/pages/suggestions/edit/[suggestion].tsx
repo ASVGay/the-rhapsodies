@@ -161,14 +161,16 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
     dispatch(setActiveArea(Area.Review))
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({ title, artist, link, motivation, image, previewUrl }: InputsSongInformation) => {
     dispatch(
       updateEditSuggestion({
         ...reduxSuggestion,
         title,
         artist: [artist],
         link,
-        motivation
+        motivation,
+        image,
+        previewUrl
       })
     )
   }
