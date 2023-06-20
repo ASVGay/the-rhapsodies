@@ -2,12 +2,14 @@ import React from "react"
 
 interface SpinnerStripesProps {
   dataCy?: string
+  className?: string
+  size?: number
 }
 
-const SpinnerStripes = ({ dataCy }: SpinnerStripesProps) => {
+const SpinnerStripes = ({ dataCy, className = "stroke-white", size = 6 }: SpinnerStripesProps) => {
   return (
     <div aria-label="Loading..." role="status" data-cy={dataCy}>
-      <svg className="h-6 w-6 animate-spin stroke-white" viewBox="0 0 256 256">
+      <svg className={`h-${size} w-${size} animate-spin ${className}`} viewBox="0 0 256 256">
         <line
           x1={128}
           y1={32}

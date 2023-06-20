@@ -3,6 +3,7 @@ export const mockGetMembersByEvent = [
     id: "1ce835c1-a708-4e73-a808-334e982dfe3d",
     display_name: "Feryll",
     attending: "present",
+    comment: "Hello",
   },
   {
     id: "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
