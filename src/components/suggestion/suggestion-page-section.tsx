@@ -83,7 +83,7 @@ const SuggestionPageSection = ({
     reset,
     formState: { isDirty },
   } = useFormContext<InputsSongInformation>()
-  console.log(isDirty)
+
   return (
     <div className={"page-wrapper"}>
       <div className={"flex justify-between"}>
