@@ -309,6 +309,7 @@ describe("on the specific event page", () => {
     })
 
     it("btn should  not be disabled when text is incorrect", () => {
+      cy.wait(500)
       cy.data("delete-event-btn").click()
       cy.data("delete-event-continue-button").click()
       cy.data("input-delete-event").type("Brainstormborrel")
@@ -316,6 +317,7 @@ describe("on the specific event page", () => {
     })
 
     it("btn should be disabled when text is incorrect", () => {
+      cy.wait(500)
       cy.data("delete-event-btn").click()
       cy.data("delete-event-continue-button").click()
       cy.data("input-delete-event").type("Brainstormborre")
@@ -324,6 +326,7 @@ describe("on the specific event page", () => {
 
 
     it("should show toast when failing confirm when pressing on delete", () => {
+      cy.wait(500)
       cy.data("delete-event-btn").click()
       cy.intercept("/rest/v1/event*", {
         statusCode: 500,

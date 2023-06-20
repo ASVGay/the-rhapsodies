@@ -36,7 +36,7 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
   }
 
   const removeEvent = () => {
-    const confirmed = window.confirm("Are you sure you want to sign out?")
+    const confirmed = window.confirm("Are you sure you want to delete this event?")
     if (!confirmed) return
 
     deleteEvent(supabase, event.id).then(({error, data}) => {
