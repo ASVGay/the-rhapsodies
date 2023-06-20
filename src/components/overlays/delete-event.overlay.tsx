@@ -92,7 +92,7 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
         {!showInput ? (
           <button
             className="btn error m-4 w-[280px]"
-            data-cy={"delete-event-button"}
+            data-cy={"delete-event-continue-button"}
             onClick={() => setShowInput(true)}
           >
             I want to delete this event
@@ -106,13 +106,14 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
               <div className={"input"}>
                 <input
                   className="h-8 w-full shadow-sm"
+                  data-cy={"input-delete-event"}
                   onChange={(e) => handleChange(e.target.value)}
                 />
               </div>
             </div>
             <button
               className="btn error m-4 mt-1 w-[280px]"
-              data-cy={"delete-event-button"}
+              data-cy={"delete-event-final-button"}
               disabled={!deleteButtonIsActive}
               onClick={() => removeEvent()}
             >

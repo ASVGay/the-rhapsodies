@@ -9,8 +9,9 @@ import EventInfoCard from "@/components/events/event-info-card"
 import AttendanceButton from "@/components/events/attendance-button"
 import AttendingMembers from "@/components/events/attending-members"
 import { FolderMinusIcon } from "@heroicons/react/24/outline"
-import DeleteEventOverlay from "@/components/overlays/delete-event.overlay"
+
 import { useUser } from "@supabase/auth-helpers-react"
+import DeleteEventOverlay from "@/components/overlays/delete-event.overlay";
 
 interface EventPageProps {
   event: Event
