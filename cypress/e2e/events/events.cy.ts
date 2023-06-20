@@ -9,6 +9,7 @@ describe("events page", () => {
 
   it("should display correct amount of events", () => {
     cy.intercept("GET", eventsRequestPath, { fixture: "mock-events.json" })
+    cy.wait(500)
     cy.visit("events")
     cy.data("event-list").children().should("have.length", 4)
   })
