@@ -9,7 +9,7 @@ export interface PreviewPlayerProps {
 }
 
 const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
-  const [audio, setAudio] = useState<any>()
+  const [audio, setAudio] = useState<HTMLAudioElement>()
   const [playing, setPlaying] = useState(false)
 
   const router = useRouter()
