@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { debounce } from "debounce"
 import { PlayIcon, PlayPauseIcon } from "@heroicons/react/24/solid"
+import { useRouter } from "next/router"
 
 export interface PreviewPlayerProps {
   url: string
@@ -11,7 +12,7 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
   const [audio] = useState(new Audio(url))
   const [playing, setPlaying] = useState(false)
 
-  //TODO pause song on page leave
+  const router = useRouter()
 
   useEffect(() => {
     playing ? audio.play() : audio.load()
@@ -22,6 +23,10 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
     return () => {
       audio.removeEventListener("ended", () => setPlaying(false))
     }
+  }, [])
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", () => audio.pause())
   }, [])
 
   return (
