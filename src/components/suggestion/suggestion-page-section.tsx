@@ -4,7 +4,7 @@ import ProgressBar from "@/components/suggestion/progress-bar/progress-bar"
 import SongInformationArea from "@/components/suggestion/areas/song-information.area"
 import ReviewArea from "@/components/suggestion/areas/review.area"
 import { Area } from "@/constants/area"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { InputsSongInformation, ISuggestion, ISuggestionInstrument } from "@/interfaces/suggestion"
 import InstrumentsArea from "@/components/suggestion/areas/instruments/instruments.area"
 import { Database } from "@/types/database"
@@ -42,14 +42,6 @@ const SuggestionPageSection = ({
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
 
-  const methods = useForm<InputsSongInformation>({
-    defaultValues: {
-      ...newSuggestion,
-      artist: newSuggestion.artist.join(","),
-    } as InputsSongInformation,
-    shouldFocusError: false,
-  })
-
   const [instrumentList, setInstrumentList] = useState<Instrument[]>([])
 
   useEffect(() => {
@@ -73,76 +65,79 @@ const SuggestionPageSection = ({
 
   const handleAreaChange = (area: Area) => {
     submitSongInformationForm()
-    onSongInformationSubmit(methods.getValues())
+    onSongInformationSubmit(getValues())
 
     if (area !== Area.Instruments) onInstrumentSubmit(newSuggestion.instruments)
 
     onAreaSelect(area)
   }
 
-  return (
-    <FormProvider {...methods}>
-      <div className={"page-wrapper"}>
-        <div className={"flex justify-between"}>
-          <div className={"page-header"}>{title}</div>
-          <div className={"flex flex-row gap-2"}>
-            {onClearClicked && (
-              <ArrowPathIcon
-                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
-                data-cy="suggestion-clear-icon"
-                onClick={onClearClicked}
-              />
-            )}
-            <XMarkIcon
-              data-cy={"button-discard-new-suggestion"}
-              className={"h-8 w-8 cursor-pointer text-black hover:text-red-500"}
-              onClick={onCloseClicked}
-            />
-          </div>
-        </div>
+  const { getValues, reset } = useFormContext<InputsSongInformation>()
 
-        {showSpinner && (
-          <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
-            <Spinner size={10} />
-          </div>
-        )}
-        {showLoadingError ? (
-          <div className={"mt-6"} data-cy="failed-fetching-instruments">
-            <ErrorPopup
-              text={`“Something went wrong”
-            You can try again. Contact support if this error persists.`}
-              closePopup={() => {}}
+  return (
+    <div className={"page-wrapper"}>
+      <div className={"flex justify-between"}>
+        <div className={"page-header"}>{title}</div>
+        <div className={"flex flex-row gap-2"}>
+          {onClearClicked && (
+            <ArrowPathIcon
+              className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+              data-cy="suggestion-clear-icon"
+              onClick={() => {
+                reset()
+                onClearClicked()
+              }}
             />
-          </div>
-        ) : (
-          <div className={"mx-auto text-center lg:w-2/4"}>
-            <ProgressBar
-              activeArea={currentArea}
-              newSuggestionInstruments={newSuggestion.instruments}
-              onAreaSelect={(area) => handleAreaChange(area)}
-            />
-            {currentArea == Area.SongInformation && (
-              <SongInformationArea
-                onFormSuccess={onSongInformationSubmit}
-                proceedToNextArea={() => handleAreaChange(Area.Instruments)}
-                newSuggestion={newSuggestion}
-              />
-            )}
-            {currentArea == Area.Instruments && (
-              <InstrumentsArea
-                onInstrumentsChanged={onInstrumentSubmit}
-                newSuggestionInstruments={newSuggestion.instruments}
-                instrumentList={instrumentList}
-                onSubmit={() => handleAreaChange(Area.Review)}
-              />
-            )}
-            {currentArea == Area.Review && (
-              <ReviewArea newSuggestion={newSuggestion} onSubmit={onReviewSubmit} />
-            )}
-          </div>
-        )}
+          )}
+          <XMarkIcon
+            data-cy={"button-discard-new-suggestion"}
+            className={"h-8 w-8 cursor-pointer text-black hover:text-red-500"}
+            onClick={onCloseClicked}
+          />
+        </div>
       </div>
-    </FormProvider>
+
+      {showSpinner && (
+        <div className={"h-[75vh] text-center"} data-cy="suggestions-spinner">
+          <Spinner size={10} />
+        </div>
+      )}
+      {showLoadingError ? (
+        <div className={"mt-6"} data-cy="failed-fetching-instruments">
+          <ErrorPopup
+            text={`“Something went wrong”
+            You can try again. Contact support if this error persists.`}
+            closePopup={() => {}}
+          />
+        </div>
+      ) : (
+        <div className={"mx-auto text-center lg:w-2/4"}>
+          <ProgressBar
+            activeArea={currentArea}
+            newSuggestionInstruments={newSuggestion.instruments}
+            onAreaSelect={(area) => handleAreaChange(area)}
+          />
+          {currentArea == Area.SongInformation && (
+            <SongInformationArea
+              onFormSuccess={onSongInformationSubmit}
+              proceedToNextArea={() => handleAreaChange(Area.Instruments)}
+              newSuggestion={newSuggestion}
+            />
+          )}
+          {currentArea == Area.Instruments && (
+            <InstrumentsArea
+              onInstrumentsChanged={onInstrumentSubmit}
+              newSuggestionInstruments={newSuggestion.instruments}
+              instrumentList={instrumentList}
+              onSubmit={() => handleAreaChange(Area.Review)}
+            />
+          )}
+          {currentArea == Area.Review && (
+            <ReviewArea newSuggestion={newSuggestion} onSubmit={onReviewSubmit} />
+          )}
+        </div>
+      )}
+    </div>
   )
 }
 

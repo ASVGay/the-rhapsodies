@@ -12,8 +12,9 @@ import { insertSuggestion, insertSuggestionInstruments } from "@/services/sugges
 import { Database } from "@/types/database"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { useRouter } from "next/router"
-import { mapInstruments } from "@/helpers/new-suggestion.helper"
+import { getSongInformationFormData, mapInstruments } from "@/helpers/new-suggestion.helper"
 import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
+import { FormProvider, useForm } from "react-hook-form"
 
 const NewSuggestion = () => {
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -23,6 +24,7 @@ const NewSuggestion = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const user = useUser()
+  const methods = useForm<InputsSongInformation>(getSongInformationFormData(suggestion))
 
   const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
     if (user === null) {
@@ -101,19 +103,21 @@ const NewSuggestion = () => {
   }
 
   return (
-    <SuggestionPageSection
-      title={"New Suggestion"}
-      newSuggestion={suggestion}
-      currentArea={activeArea}
-      onClearClicked={onClearClicked}
-      onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={(area) => dispatch(setActiveArea(area))}
-      onInstrumentSubmit={onInstrumentSubmit}
-      onReviewSubmit={saveSuggestion}
-      onCloseClicked={() => {
-        router.push("/suggestions")
-      }}
-    />
+    <FormProvider {...methods}>
+      <SuggestionPageSection
+        title={"New Suggestion"}
+        newSuggestion={suggestion}
+        currentArea={activeArea}
+        onClearClicked={onClearClicked}
+        onSongInformationSubmit={onSongInformationSubmit}
+        onAreaSelect={(area) => dispatch(setActiveArea(area))}
+        onInstrumentSubmit={onInstrumentSubmit}
+        onReviewSubmit={saveSuggestion}
+        onCloseClicked={() => {
+          router.push("/suggestions")
+        }}
+      />
+    </FormProvider>
   )
 }
 
