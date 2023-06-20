@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { getSong, moveSongToSuggestions } from "@/services/song.service"
 import Link from "next/link"
 import { XMarkIcon } from "@heroicons/react/24/solid"
@@ -30,8 +30,6 @@ const SongPage = (props: SongProps) => {
   const user = useUser()
   const uid = user?.id
   const isAdmin = user?.app_metadata.claims_admin
-
-
 
   const updateSong = () => {
     setShowSpinner(true)
