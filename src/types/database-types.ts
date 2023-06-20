@@ -39,3 +39,5 @@ export type EventType = Database["public"]["Enums"]["event_type"]
 export type Attending = Database["public"]["Enums"]["attending"]
 
 export type AttendingMembers = Database["public"]["Functions"]["get_members_by_event"]["Returns"]
+
+export type InsertEvent = Database["public"]["Tables"]["event"]["Insert"]

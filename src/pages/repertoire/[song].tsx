@@ -30,6 +30,8 @@ const SongPage = (props: SongProps) => {
   const uid = user?.id
   const isAdmin = user?.app_metadata.claims_admin
 
+
+
   const updateSong = () => {
     setShowSpinner(true)
     getSong(supabase, song.id)
