@@ -125,6 +125,7 @@ const SuggestionPageSection = ({
               <SongInformationArea
                 onFormSuccess={onSongInformationSubmit}
                 proceedToNextArea={() => handleAreaChange(Area.Instruments)}
+                newSuggestion={newSuggestion}
               />
             )}
             {currentArea == Area.Instruments && (
