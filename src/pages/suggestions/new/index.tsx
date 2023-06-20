@@ -77,6 +77,19 @@ const NewSuggestion = () => {
     )
   }
 
+  const onClearClicked = () => {
+    console.log("called")
+    dispatch(
+      updateNewSuggestion({
+        title: "",
+        artist: [],
+        link: null,
+        motivation: "",
+        instruments: [],
+      })
+    )
+  }
+
   return (
     <SuggestionPageSection
       title={"New Suggestion"}
@@ -86,6 +99,7 @@ const NewSuggestion = () => {
       onAreaSelect={(area) => dispatch(setActiveArea(area))}
       onInstrumentSubmit={onInstrumentSubmit}
       onReviewSubmit={saveSuggestion}
+      onClearClicked={onClearClicked}
       onCloseClicked={() => {
         router.push("/suggestions")
       }}

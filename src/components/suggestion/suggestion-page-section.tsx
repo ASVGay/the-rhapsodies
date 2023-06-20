@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
 import ProgressBar from "@/components/suggestion/progress-bar/progress-bar"
 import SongInformationArea from "@/components/suggestion/areas/song-information.area"
 import ReviewArea from "@/components/suggestion/areas/review.area"
@@ -20,6 +20,7 @@ interface SuggestionPageSectionProps {
   newSuggestion: ISuggestion
   startingArea: Area
   onCloseClicked(): void
+  onClearClicked?(): void
   onSongInformationSubmit(songInformation: InputsSongInformation): void
   onInstrumentSubmit(newInstruments: ISuggestionInstrument[]): void
   onAreaSelect(newArea: Area): void
@@ -33,6 +34,7 @@ const SuggestionPageSection = ({
   onReviewSubmit,
   onAreaSelect,
   onCloseClicked,
+  onClearClicked,
   onInstrumentSubmit,
   onSongInformationSubmit,
 }: SuggestionPageSectionProps) => {
@@ -89,11 +91,20 @@ const SuggestionPageSection = ({
       <div className={"page-wrapper"}>
         <div className={"flex justify-between"}>
           <div className={"page-header"}>{title}</div>
-          <XMarkIcon
-            data-cy={"button-discard-new-suggestion"}
-            className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={onCloseClicked}
-          />
+          <div className={"flex flex-row gap-2"}>
+            {onClearClicked && (
+              <ArrowPathIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-clear-icon"
+                onClick={onClearClicked}
+              />
+            )}
+            <XMarkIcon
+              data-cy={"button-discard-new-suggestion"}
+              className={"h-8 w-8 cursor-pointer text-black hover:text-red-500"}
+              onClick={onCloseClicked}
+            />
+          </div>
         </div>
 
         {showSpinner && (
