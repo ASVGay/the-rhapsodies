@@ -6,7 +6,7 @@ import { Area } from "@/constants/area"
 import {
   updateNewSuggestion,
   initialState,
-  setActiveArea
+  setActiveArea,
 } from "@/redux/slices/new-suggestion.slice"
 import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import { Database } from "@/types/database"
@@ -59,13 +59,20 @@ const NewSuggestion = () => {
     dispatch(
       updateNewSuggestion({
         ...suggestion,
-        instruments: newInstruments
+        instruments: newInstruments,
       })
     )
     dispatch(setActiveArea(Area.Review))
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation, image, previewUrl }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({
+    title,
+    artist,
+    link,
+    motivation,
+    image,
+    previewUrl,
+  }: InputsSongInformation) => {
     dispatch(
       updateNewSuggestion({
         ...suggestion,
@@ -74,13 +81,13 @@ const NewSuggestion = () => {
         link,
         motivation,
         image,
-        previewUrl
+        previewUrl,
       })
     )
   }
 
   const onClearClicked = () => {
-    console.log("called")
+    dispatch(setActiveArea(Area.SongInformation))
     dispatch(
       updateNewSuggestion({
         title: "",
@@ -88,6 +95,8 @@ const NewSuggestion = () => {
         link: null,
         motivation: "",
         instruments: [],
+        image: null,
+        previewUrl: null,
       })
     )
   }
@@ -96,7 +105,7 @@ const NewSuggestion = () => {
     <SuggestionPageSection
       title={"New Suggestion"}
       newSuggestion={suggestion}
-      startingArea={activeArea}
+      currentArea={activeArea}
       onSongInformationSubmit={onSongInformationSubmit}
       onAreaSelect={(area) => dispatch(setActiveArea(area))}
       onInstrumentSubmit={onInstrumentSubmit}

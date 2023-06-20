@@ -18,7 +18,7 @@ import { submitSongInformationForm } from "@/helpers/new-suggestion.helper"
 interface SuggestionPageSectionProps {
   title: string
   newSuggestion: ISuggestion
-  startingArea: Area
+  currentArea: Area
   onCloseClicked(): void
   onClearClicked?(): void
   onSongInformationSubmit(songInformation: InputsSongInformation): void
@@ -30,7 +30,7 @@ interface SuggestionPageSectionProps {
 const SuggestionPageSection = ({
   title,
   newSuggestion,
-  startingArea,
+  currentArea,
   onReviewSubmit,
   onAreaSelect,
   onCloseClicked,
@@ -38,7 +38,6 @@ const SuggestionPageSection = ({
   onInstrumentSubmit,
   onSongInformationSubmit,
 }: SuggestionPageSectionProps) => {
-  const [activeArea, setActiveArea] = useState<Area>(startingArea)
   const supabaseClient = useSupabaseClient<Database>()
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [showLoadingError, setShowLoadingError] = useState<boolean>(false)
@@ -76,14 +75,12 @@ const SuggestionPageSection = ({
   }, [supabaseClient])
 
   const handleAreaChange = (area: Area) => {
-    onAreaSelect(area)
-
     submitSongInformationForm()
     onSongInformationSubmit(methods.getValues())
 
     if (area !== Area.Instruments) onInstrumentSubmit(newSuggestionInstruments)
 
-    setActiveArea(area)
+    onAreaSelect(area)
   }
 
   return (
@@ -123,17 +120,17 @@ const SuggestionPageSection = ({
         ) : (
           <div className={"mx-auto text-center lg:w-2/4"}>
             <ProgressBar
-              activeArea={activeArea}
+              activeArea={currentArea}
               newSuggestionInstruments={newSuggestionInstruments}
               onAreaSelect={(area) => handleAreaChange(area)}
             />
-            {activeArea == Area.SongInformation && (
+            {currentArea == Area.SongInformation && (
               <SongInformationArea
                 onFormSuccess={onSongInformationSubmit}
                 proceedToNextArea={() => handleAreaChange(Area.Instruments)}
               />
             )}
-            {activeArea == Area.Instruments && (
+            {currentArea == Area.Instruments && (
               <InstrumentsArea
                 onInstrumentsChanged={setNewSuggestionInstruments}
                 newSuggestionInstruments={newSuggestionInstruments}
@@ -141,7 +138,7 @@ const SuggestionPageSection = ({
                 onSubmit={() => handleAreaChange(Area.Review)}
               />
             )}
-            {activeArea == Area.Review && (
+            {currentArea == Area.Review && (
               <ReviewArea newSuggestion={newSuggestion} onSubmit={onReviewSubmit} />
             )}
           </div>
