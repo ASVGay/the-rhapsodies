@@ -52,8 +52,8 @@ const Index = () => {
         {isAdmin && (
           <PlusIcon
             data-cy={"button-discard-new-suggestion"}
-            className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={() => router.push("/events")}
+            className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+            onClick={() => router.push("/events/new")}
           />
         )}
       </div>
