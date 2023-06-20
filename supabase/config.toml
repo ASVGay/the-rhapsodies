@@ -83,3 +83,6 @@ gcp_jwt_path = "supabase/gcloud.json"
 
 [functions.notify-suggestion-creation]
 verify_jwt = false
+
+[functions.notify-event-creation]
+verify_jwt = false
