@@ -21,7 +21,10 @@ interface SuggestionPageProps {
   isEditable: boolean
 }
 
-const SuggestionPage: FC<SuggestionPageProps> = ({ suggestionFromNext, isEditable }: SuggestionPageProps) => {
+const SuggestionPage: FC<SuggestionPageProps> = ({
+  suggestionFromNext,
+  isEditable,
+}: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
@@ -47,7 +50,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({ suggestionFromNext, isEditabl
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      song_instrument_id: songInstrument.id
+      song_instrument_id: songInstrument.id,
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
@@ -66,10 +69,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({ suggestionFromNext, isEditabl
   }
 
   const displayButton = (): boolean => {
-    return (
-      isAdmin &&
-      suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
-    )
+    return isAdmin && suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
   }
 
   const addToRepertoire = () => {
@@ -187,7 +187,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({ suggestionFromNext, isEditabl
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   const {
-    data: { session }
+    data: { session },
   } = await supabase.auth.getSession()
   const { params } = context
   try {
@@ -196,8 +196,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         suggestionFromNext: data,
-        isEditable: (data.author as { id: string }).id === session?.user.id
-      }
+        isEditable: (data.author as { id: string }).id === session?.user.id,
+      },
     }
   } catch {
     return { notFound: true }

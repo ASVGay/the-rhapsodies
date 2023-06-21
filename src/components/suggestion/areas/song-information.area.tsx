@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
-import { useSelector } from "react-redux"
-import { AppState } from "@/redux/store"
 import ErrorMessage from "@/components/error/error-message"
 import {
   isSongInformationInvalid,
-  submitSongInformationForm
+  submitSongInformationForm,
 } from "@/helpers/new-suggestion.helper"
 import Spinner from "@/components/utils/spinner"
 import { SearchItem, SpotifySearchItem } from "@/interfaces/spotify-search-item"
@@ -14,29 +12,32 @@ import { useRouter } from "next/router"
 import {
   getSpotifySearchResults,
   requestSpotifyAccessToken,
-  setSpotifyAccessToken
+  setSpotifyAccessToken,
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { debounce } from "debounce"
-import { InputsSongInformation } from "@/interfaces/suggestion"
+import { ISuggestion, InputsSongInformation } from "@/interfaces/suggestion"
 
 interface SongInformationAreaProps {
   onFormSuccess(songInformation: InputsSongInformation): void
-
+  newSuggestion: ISuggestion
   proceedToNextArea(): void
 }
 
-const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformationAreaProps) => {
+const SongInformationArea = ({
+  proceedToNextArea,
+  onFormSuccess,
+  newSuggestion,
+}: SongInformationAreaProps) => {
   const { basePath } = useRouter()
 
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
     setValue,
-    getValues
+    getValues,
   } = useFormContext<InputsSongInformation>()
 
   const [manualInput, setManualInput] = useState<boolean>(false)
@@ -73,7 +74,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
           artists: item.artists.map((artist): string => artist.name),
           link: item.external_urls.spotify,
           image: item.album.images.pop()?.url ?? null,
-          previewUrl: item.preview_url
+          previewUrl: item.preview_url,
         }))
         setSearchResults(items)
       })
@@ -131,7 +132,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               className={`${errors.title && "error"}`}
               {...register("title", {
                 validate: (value) => !!value.trim(),
-                onChange: (event) => handleSearch(event.target.value)
+                onChange: (event) => handleSearch(event.target.value),
               })}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={handleSearchBlur}
@@ -179,7 +180,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               className={`${errors.artist && "error"}`}
               {...register("artist", {
                 onChange: (event) => setValue("artist", event.target.value),
-                validate: (value: string) => !!value.trim()
+                validate: (value: string) => !!value.trim(),
               })}
             />
             <span>
@@ -199,7 +200,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               type="url"
               placeholder="Link to the song (optional)"
               {...register("link", {
-                onChange: (event) => setValue("link", event.target.value)
+                onChange: (event) => setValue("link", event.target.value),
               })}
             />
             <span>
@@ -228,7 +229,7 @@ const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformati
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
-                validate: (value) => !!value.trim()
+                validate: (value) => !!value.trim(),
               })}
             />
           </div>

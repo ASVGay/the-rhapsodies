@@ -91,7 +91,7 @@ export const insertSuggestion = async (
       author: uid,
       link: link,
       image: image,
-      previewUrl: previewUrl
+      previewUrl: previewUrl,
     })
     .eq("inRepertoire", false)
     .select()
@@ -110,7 +110,7 @@ export const updateSuggestion = async (
       motivation: motivation,
       link: link,
       image: image,
-      previewUrl: previewUrl
+      previewUrl: previewUrl,
     })
     .eq("id", uid)
     .select()

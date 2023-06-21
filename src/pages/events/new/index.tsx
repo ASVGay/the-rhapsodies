@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { ClockIcon, CalendarIcon, XMarkIcon, MapPinIcon } from "@heroicons/react/24/outline"
@@ -6,7 +6,7 @@ import { format } from "date-fns"
 import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
 import { SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { EventType } from "@/types/database-types"
 import { createEvent } from "@/services/event.service"
@@ -39,14 +39,14 @@ export default function Index() {
   } = useForm<FormValues>()
 
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       return
     }
-    
-    if(!isAdmin) {
+
+    if (!isAdmin) {
       router.push("/events")
     }
-  },[])
+  }, [])
   const submitNewEvent: SubmitHandler<FormValues> = async ({
     eventType,
     startDate,
@@ -138,9 +138,9 @@ export default function Index() {
                   required: "Required",
                   validate: (value) => isSelected(value) || "The event type needs to be selected",
                 })}
-                  defaultValue={"0"}
+                defaultValue={"0"}
               >
-                <option value="0" disabled  hidden>
+                <option value="0" disabled hidden>
                   Event type
                 </option>
                 <option value="brainstormborrel">Brainstormborrel</option>

@@ -1,21 +1,21 @@
 import { UseFormWatch } from "react-hook-form"
-import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
+import { InputsSongInformation, ISuggestion, ISuggestionInstrument } from "@/interfaces/suggestion"
 import { SongInstrumentDatabaseOperation } from "@/types/database-types"
 
-export function submitSongInformationForm() {
+export const submitSongInformationForm = () => {
   document
     .querySelector("#song-information")
     // Those properties are necessary [src: https://stackoverflow.com/a/65667238]
     ?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
 }
 
-export function isSongInformationInvalid<TFieldNames, TFieldName>(
+export const isSongInformationInvalid = <TFieldNames, TFieldName>(
   watch: UseFormWatch<InputsSongInformation>
-) {
+) => {
   return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
 }
 
-export function isInstrumentSuggestionInvalid(instruments: ISuggestionInstrument[]) {
+export const isInstrumentSuggestionInvalid = (instruments: ISuggestionInstrument[]) => {
   return instruments.length < 1
 }
 
@@ -40,4 +40,14 @@ export const mapEditInstruments = (
     instrument_id: instrument.id,
     description: description,
   }))
+}
+
+export const getSongInformationFormData = (suggestion: ISuggestion) => {
+  return {
+    defaultValues: {
+      ...suggestion,
+      artist: suggestion.artist.join(","),
+    } as InputsSongInformation,
+    shouldFocusError: false,
+  }
 }

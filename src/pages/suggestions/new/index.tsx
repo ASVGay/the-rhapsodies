@@ -6,14 +6,16 @@ import { Area } from "@/constants/area"
 import {
   updateNewSuggestion,
   initialState,
-  setActiveArea
+  setActiveArea,
 } from "@/redux/slices/new-suggestion.slice"
 import { insertSuggestion, insertSuggestionInstruments } from "@/services/suggestion.service"
 import { Database } from "@/types/database"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { useRouter } from "next/router"
-import { mapInstruments } from "@/helpers/new-suggestion.helper"
+import { getSongInformationFormData, mapInstruments } from "@/helpers/new-suggestion.helper"
 import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
+import { FormProvider, useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 
 const NewSuggestion = () => {
   const suggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
@@ -23,6 +25,7 @@ const NewSuggestion = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const user = useUser()
+  const methods = useForm<InputsSongInformation>(getSongInformationFormData(suggestion))
 
   const saveSuggestion = (onSuccess: () => void, onError: () => void) => {
     if (user === null) {
@@ -59,13 +62,19 @@ const NewSuggestion = () => {
     dispatch(
       updateNewSuggestion({
         ...suggestion,
-        instruments: newInstruments
+        instruments: newInstruments,
       })
     )
-    dispatch(setActiveArea(Area.Review))
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation, image, previewUrl }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({
+    title,
+    artist,
+    link,
+    motivation,
+    image,
+    previewUrl,
+  }: InputsSongInformation) => {
     dispatch(
       updateNewSuggestion({
         ...suggestion,
@@ -74,24 +83,43 @@ const NewSuggestion = () => {
         link,
         motivation,
         image,
-        previewUrl
+        previewUrl,
       })
     )
   }
 
+  const onClear = () => {
+    dispatch(setActiveArea(Area.SongInformation))
+    dispatch(
+      updateNewSuggestion({
+        title: "",
+        artist: [],
+        link: null,
+        motivation: "",
+        instruments: [],
+        image: null,
+        previewUrl: null,
+      })
+    )
+    toast.success("Your suggestion has been cleared")
+  }
+
   return (
-    <SuggestionPageSection
-      title={"New Suggestion"}
-      newSuggestion={suggestion}
-      startingArea={activeArea}
-      onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={(area) => dispatch(setActiveArea(area))}
-      onInstrumentSubmit={onInstrumentSubmit}
-      onReviewSubmit={saveSuggestion}
-      onCloseClicked={() => {
-        router.push("/suggestions")
-      }}
-    />
+    <FormProvider {...methods}>
+      <SuggestionPageSection
+        title={"New Suggestion"}
+        newSuggestion={suggestion}
+        currentArea={activeArea}
+        onClear={onClear}
+        onSongInformationSubmit={onSongInformationSubmit}
+        onAreaSelect={(area) => dispatch(setActiveArea(area))}
+        onInstrumentSubmit={onInstrumentSubmit}
+        onReviewSubmit={saveSuggestion}
+        onCloseClicked={() => {
+          router.push("/suggestions")
+        }}
+      />
+    </FormProvider>
   )
 }
 

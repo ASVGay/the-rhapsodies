@@ -7,7 +7,7 @@ import {
   getSuggestion,
   insertSuggestionInstruments,
   updateSuggestion,
-  updateSuggestionInstruments
+  updateSuggestionInstruments,
 } from "@/services/suggestion.service"
 import { InputsSongInformation, ISuggestionInstrument } from "@/interfaces/suggestion"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
@@ -16,20 +16,25 @@ import { useRouter } from "next/router"
 import { Area } from "@/constants/area"
 import { AppState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
-import { mapEditInstruments, mapInstruments } from "@/helpers/new-suggestion.helper"
+import {
+  getSongInformationFormData,
+  mapEditInstruments,
+  mapInstruments,
+} from "@/helpers/new-suggestion.helper"
 import {
   setActiveArea,
   updateDeletedInstrumentUuids,
   updateEditSuggestion,
-  updateLastEditedUuid
+  updateLastEditedUuid,
 } from "@/redux/slices/edit-suggestion.slice"
 import { Song } from "@/types/database-types"
+import { FormProvider, useForm } from "react-hook-form"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   // Check if we have a session
   const {
-    data: { session }
+    data: { session },
   } = await supabase.auth.getSession()
   const { params } = context
 
@@ -43,8 +48,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return {
         redirect: {
           destination: "/403",
-          permanent: false
-        }
+          permanent: false,
+        },
       }
 
     return { props: { suggestion: data } }
@@ -61,10 +66,10 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
   const dispatch = useDispatch()
-
   const lastEditedUuid = useSelector((state: AppState) => state.editSuggestion.lastEditedUuid)
   const reduxSuggestion = useSelector((state: AppState) => state.editSuggestion.suggestion)
   const activeArea = useSelector((state: AppState) => state.editSuggestion.activeArea)
+  const methods = useForm<InputsSongInformation>(getSongInformationFormData(reduxSuggestion))
   const deletedInstruments = useSelector(
     (state: AppState) => state.editSuggestion.deletedInstrumentUuids
   )
@@ -77,7 +82,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         suggestionInstruments.push({
           id: element.id,
           description: element.description ?? "",
-          instrument: element.instrument
+          instrument: element.instrument,
         })
       }
     )
@@ -90,7 +95,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         title: suggestion.title,
         instruments: suggestionInstruments,
         image: suggestion.image,
-        previewUrl: suggestion.previewUrl
+        previewUrl: suggestion.previewUrl,
       })
     )
 
@@ -155,13 +160,19 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
     dispatch(
       updateEditSuggestion({
         ...reduxSuggestion,
-        instruments: newInstruments
+        instruments: newInstruments,
       })
     )
-    dispatch(setActiveArea(Area.Review))
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation, image, previewUrl }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({
+    title,
+    artist,
+    link,
+    motivation,
+    image,
+    previewUrl,
+  }: InputsSongInformation) => {
     dispatch(
       updateEditSuggestion({
         ...reduxSuggestion,
@@ -170,28 +181,30 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         link,
         motivation,
         image,
-        previewUrl
+        previewUrl,
       })
     )
   }
 
   return (
-    <SuggestionPageSection
-      title={"Edit Suggestion"}
-      newSuggestion={reduxSuggestion}
-      startingArea={activeArea}
-      onSongInformationSubmit={onSongInformationSubmit}
-      onAreaSelect={(area) => dispatch(setActiveArea(area))}
-      onInstrumentSubmit={onInstrumentSubmit}
-      onCloseClicked={() => {
-        router.push(`/suggestions/${suggestion.id}`)
-      }}
-      onReviewSubmit={(success, error) => {
-        saveSuggestion(success, error).catch(() => {
-          error()
-        })
-      }}
-    />
+    <FormProvider {...methods}>
+      <SuggestionPageSection
+        title={"Edit Suggestion"}
+        newSuggestion={reduxSuggestion}
+        currentArea={activeArea}
+        onSongInformationSubmit={onSongInformationSubmit}
+        onAreaSelect={(area) => dispatch(setActiveArea(area))}
+        onInstrumentSubmit={onInstrumentSubmit}
+        onCloseClicked={() => {
+          router.push(`/suggestions/${suggestion.id}`)
+        }}
+        onReviewSubmit={(success, error) => {
+          saveSuggestion(success, error).catch(() => {
+            error()
+          })
+        }}
+      />
+    </FormProvider>
   )
 }
 
