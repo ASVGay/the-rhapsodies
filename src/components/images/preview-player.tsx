@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { debounce } from "debounce"
 import { PlayIcon, PlayPauseIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/router"
 
@@ -15,17 +14,13 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (audio) {
-      playing ? audio.play() : audio.load()
-    }
+    playing && audio ? audio.play() : audio?.load()
   }, [playing])
 
   useEffect(() => {
     if (audio) {
       router.events.on("routeChangeStart", () => {
-        if (audio) {
-          audio.pause()
-        }
+        audio.pause()
       })
 
       audio.addEventListener("ended", () => setPlaying(false))
@@ -42,7 +37,7 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
   return (
     <div
       className={`z-10 ${color}`}
-      onClick={debounce(() => setPlaying(!playing), 100)}
+      onClick={() => setPlaying(!playing)}
       data-cy="player"
     >
       {playing ? (
