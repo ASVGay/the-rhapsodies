@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { DocumentTextIcon, LinkIcon, UserIcon } from "@heroicons/react/24/outline"
 import { useFormContext } from "react-hook-form"
-import { useSelector } from "react-redux"
-import { AppState } from "@/redux/store"
 import ErrorMessage from "@/components/error/error-message"
 import {
   isSongInformationInvalid,
@@ -18,18 +16,21 @@ import {
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
 import { debounce } from "debounce"
-import { InputsSongInformation } from "@/interfaces/suggestion"
+import { ISuggestion, InputsSongInformation } from "@/interfaces/suggestion"
 
 interface SongInformationAreaProps {
   onFormSuccess(songInformation: InputsSongInformation): void
-
+  newSuggestion: ISuggestion
   proceedToNextArea(): void
 }
 
-const SongInformationArea = ({ proceedToNextArea, onFormSuccess }: SongInformationAreaProps) => {
+const SongInformationArea = ({
+  proceedToNextArea,
+  onFormSuccess,
+  newSuggestion,
+}: SongInformationAreaProps) => {
   const { basePath } = useRouter()
 
-  const newSuggestion = useSelector((state: AppState) => state.newSuggestion.suggestion)
   const {
     register,
     handleSubmit,

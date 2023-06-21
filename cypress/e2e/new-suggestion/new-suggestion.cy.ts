@@ -4,6 +4,7 @@ import {
   fillSongInformationSuccessfully,
   areaInStateShouldBe,
   shouldContainJSONSongInformationInState,
+  fillInstrumentsSuccessfully,
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -14,6 +15,9 @@ const areaReview = "area-review"
 const progressBarInstruments = "new-suggestion-progress-bar-instruments"
 const progressBarReview = "new-suggestion-progress-bar-review"
 const progressBar = "progress-bar"
+const inputArtist = "input-artist"
+const instrumentEditList = "instrument-edit-list"
+const clearSuggestion = "suggestion-clear-icon"
 
 const instrumentsAndReviewArea = [
   {
@@ -107,6 +111,24 @@ describe("when creating a new suggestion", () => {
         cy.data(areaReview).should("not.exist")
         cy.data(progressBar).invoke("data", "active-area").should("equal", Area.Instruments)
         shouldContainJSONSongInformationInState()
+      })
+    })
+
+    context("with song information and instruments", () => {
+      it("should clear changes when pressing the clear button", () => {
+        // execute user flow to fill the song information and instruments
+        fillSongInformationSuccessfully()
+        cy.data(progressBarInstruments).click()
+        fillInstrumentsSuccessfully()
+        // clear suggestion changes
+        cy.data(clearSuggestion).click()
+        areaInStateShouldBe(Area.SongInformation)
+        cy.data(areaSongInformation).should("be.visible")
+        cy.data(inputArtist).invoke("val").should("be.empty")
+        // fill in song information again to check the instruments state
+        fillSongInformationSuccessfully()
+        cy.data(progressBarInstruments).click()
+        cy.data(instrumentEditList).should("be.empty")
       })
     })
   })
