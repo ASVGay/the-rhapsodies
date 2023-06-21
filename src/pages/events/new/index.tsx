@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { ClockIcon, CalendarIcon, XMarkIcon, MapPinIcon } from "@heroicons/react/24/outline"
+import { CalendarIcon, ClockIcon, MapPinIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { format } from "date-fns"
 import { getAllTimeSlots, parseStartAndEndDate } from "@/helpers/event.helper"
 import { SubmitHandler, useForm } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import { EventType } from "@/types/database-types"
 import { createEvent } from "@/services/event.service"
@@ -28,8 +28,6 @@ export default function Index() {
   const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
   const supabase = useSupabaseClient<Database>()
-  const user = useUser()
-  const isAdmin = user?.app_metadata.claims_admin
 
   const {
     handleSubmit,
@@ -38,15 +36,6 @@ export default function Index() {
     watch,
   } = useForm<FormValues>()
 
-  useEffect(() => {
-    if (!user) {
-      return
-    }
-
-    if (!isAdmin) {
-      router.push("/events")
-    }
-  }, [])
   const submitNewEvent: SubmitHandler<FormValues> = async ({
     eventType,
     startDate,
