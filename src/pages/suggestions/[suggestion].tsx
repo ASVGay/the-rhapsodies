@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
@@ -10,7 +10,6 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
-import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
@@ -22,29 +21,18 @@ interface SuggestionPageProps {
   isEditable: boolean
 }
 
-const SuggestionPage: FC<SuggestionPageProps> = ({
-                                                   suggestionFromNext,
-                                                   isEditable
-                                                 }: SuggestionPageProps) => {
+const SuggestionPage: FC<SuggestionPageProps> = ({ suggestionFromNext, isEditable }: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [roles, setRoles] = useState<UserAppMetadata>()
-  const user = useUser()
-  const supabase = useSupabaseClient<Database>()
-  const uid = user?.id
-  const router = useRouter()
 
-  useEffect(() => {
-    if (supabase) {
-      supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          setRoles(session?.user?.app_metadata)
-        }
-      })
-    }
-  }, [supabase])
+  const supabase = useSupabaseClient<Database>()
+  const user = useUser()
+  const uid = user?.id
+  const isAdmin = user?.app_metadata.claims_admin
+
+  const router = useRouter()
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -79,7 +67,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 
   const displayButton = (): boolean => {
     return (
-      roles?.["claims_admin"] &&
+      isAdmin &&
       suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
     )
   }

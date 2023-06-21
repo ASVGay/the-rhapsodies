@@ -4,7 +4,7 @@ import ErrorPopup from "@/components/popups/error-popup"
 import Instrument from "@/components/suggestion/instrument"
 import { ISuggestion } from "@/interfaces/suggestion"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
-import SongImage from "@/components/images/song-image"
+import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface ReviewAreaProps {
   newSuggestion: ISuggestion
@@ -47,7 +47,7 @@ const ReviewArea = ({ newSuggestion: suggestion, onSubmit }: ReviewAreaProps) =>
         <>
           <div className={"m-2 text-left md:ml-auto md:mr-auto md:max-w-sm"}>
             <div className={"flex"}>
-              <SongImage url={suggestion.image}/>
+              <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               <div className={"ml-3"}>
                 <span data-cy="review-title">
                   <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>

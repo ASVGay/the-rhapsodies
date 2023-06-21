@@ -99,7 +99,7 @@ export const insertSuggestion = async (
 
 export const updateSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
-  { artist, link, motivation, title }: ISuggestion,
+  { artist, link, motivation, title, image, previewUrl }: ISuggestion,
   uid: string
 ) => {
   return supabaseClient
@@ -108,7 +108,9 @@ export const updateSuggestion = async (
       title: title,
       artist: artist,
       motivation: motivation,
-      link: link
+      link: link,
+      image: image,
+      previewUrl: previewUrl
     })
     .eq("id", uid)
     .select()
