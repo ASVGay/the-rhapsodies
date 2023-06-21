@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react"
 import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { getUpcomingEvent } from "@/services/event.service"
 import { EventWithAttendance } from "@/types/database-types"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import EventCard from "@/components/events/event-card"
+import { getEventsWithAttendees } from "@/services/event.service"
 
 export default function Home() {
   const [showSpinner, setShowSpinner] = useState<boolean>(true)
@@ -15,9 +15,9 @@ export default function Home() {
 
   useEffect(() => {
     setShowSpinner(true)
-    getUpcomingEvent(supabase)
+    getEventsWithAttendees(supabase)
       .then(({ data, error }) => {
-        if (data) setUpcomingEvent(data as EventWithAttendance)
+        if (data) setUpcomingEvent((data as EventWithAttendance[])[0])
         else setShowEventError(true)
       })
     setShowSpinner(false)
