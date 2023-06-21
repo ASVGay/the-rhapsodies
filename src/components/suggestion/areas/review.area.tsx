@@ -8,7 +8,6 @@ import SongPreviewImage from "@/components/images/song-preview-image"
 
 interface ReviewAreaProps {
   newSuggestion: ISuggestion
-
   onSubmit(onSuccess: () => void, onError: () => void): void
 }
 
