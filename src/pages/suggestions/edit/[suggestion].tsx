@@ -165,7 +165,14 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
     )
   }
 
-  const onSongInformationSubmit = ({ title, artist, link, motivation }: InputsSongInformation) => {
+  const onSongInformationSubmit = ({
+    title,
+    artist,
+    link,
+    motivation,
+    image,
+    previewUrl,
+  }: InputsSongInformation) => {
     dispatch(
       updateEditSuggestion({
         ...reduxSuggestion,
@@ -173,6 +180,8 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         artist: [artist],
         link,
         motivation,
+        image,
+        previewUrl,
       })
     )
   }

@@ -64,10 +64,8 @@ const SongInformationArea = ({
   }
 
   const debouncedHandleSearch = debounce((value: string) => {
-    if (value.length == 0) return
-
     setFetchingSongs(true)
-    getSpotifySearchResults(basePath, getValues().title)
+    getSpotifySearchResults(basePath, value)
       .then(async (response) => {
         const data: SpotifySearchItem[] = (await response.json()).tracks.items
         const items: SearchItem[] = data.map((item) => ({
@@ -85,6 +83,7 @@ const SongInformationArea = ({
   }, 400)
 
   const handleSearch = (value: string) => {
+    if (manualInput || value.trim().length < 1) return
     setValue("title", value)
     debouncedHandleSearch(value)
   }
@@ -125,58 +124,41 @@ const SongInformationArea = ({
             />
           )}
 
-          {manualInput ? (
-            <div className="input">
-              <input
-                data-cy={"input-title"}
-                type="text"
-                placeholder="Title"
-                className={`${errors.title && "error"}`}
-                {...register("title", {
-                  validate: (value) => !!value.trim(),
-                })}
-              />
-              <span>
-                <DocumentTextIcon />
-              </span>
-            </div>
-          ) : (
-            <div className="input">
-              <input
-                data-cy={"input-title"}
-                type="text"
-                placeholder="Search for a song title"
-                className={`${errors.title && "error"}`}
-                {...register("title", {
-                  validate: (value) => !!value.trim(),
-                  onChange: (event) => handleSearch(event.target.value),
-                })}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={handleSearchBlur}
-              />
-              <span>{fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}</span>
-              {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
-                <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
-                  <ul data-cy="song-information-dropdown">
-                    {searchResults.map((item: SearchItem) => {
-                      return (
-                        <div
-                          key={item.id}
-                          onClick={() => onSelectSearchResult(item)}
-                          className={
-                            "cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"
-                          }
-                        >
-                          <b>{item.title}</b>
-                          <p>{item.artists.join(", ")}</p>
-                        </div>
-                      )
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
+          <div className="input">
+            <input
+              data-cy={"input-title"}
+              type="text"
+              placeholder="Search for a song title"
+              className={`${errors.title && "error"}`}
+              {...register("title", {
+                validate: (value) => !!value.trim(),
+                onChange: (event) => handleSearch(event.target.value),
+              })}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={handleSearchBlur}
+            />
+            <span>{fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}</span>
+            {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
+              <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
+                <ul data-cy="song-information-dropdown">
+                  {searchResults.map((item: SearchItem) => {
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => onSelectSearchResult(item)}
+                        className={
+                          "cursor-pointer items-center p-4 hover:bg-moon-300 hover:text-white"
+                        }
+                      >
+                        <b>{item.title}</b>
+                        <p>{item.artists.join(", ")}</p>
+                      </div>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={`input-container`} hidden={!manualInput}>

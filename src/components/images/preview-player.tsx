@@ -9,7 +9,7 @@ export interface PreviewPlayerProps {
 }
 
 const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
-  const [audio, setAudio] = useState<any>()
+  const [audio, setAudio] = useState<HTMLAudioElement>()
   const [playing, setPlaying] = useState(false)
 
   const router = useRouter()
@@ -45,10 +45,11 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
       onClick={debounce(() => setPlaying(!playing), 100)}
       data-cy="player"
     >
-      {playing
-        ? <PlayPauseIcon className={`p-3`} width={64} height={64} data-cy="pause-icon" />
-        : <PlayIcon className={`p-4`} width={64} height={64} data-cy="play-icon" />
-      }
+      {playing ? (
+        <PlayPauseIcon className={`p-3`} width={64} height={64} data-cy="pause-icon" />
+      ) : (
+        <PlayIcon className={`p-4`} width={64} height={64} data-cy="play-icon" />
+      )}
     </div>
   )
 }

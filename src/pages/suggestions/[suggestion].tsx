@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
@@ -10,7 +10,6 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
 import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
-import { UserAppMetadata } from "@supabase/gotrue-js"
 import { createSongFromSuggestion } from "@/services/song.service"
 import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
@@ -23,28 +22,20 @@ interface SuggestionPageProps {
 }
 
 const SuggestionPage: FC<SuggestionPageProps> = ({
-                                                   suggestionFromNext,
-                                                   isEditable
-                                                 }: SuggestionPageProps) => {
+  suggestionFromNext,
+  isEditable,
+}: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
   const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [roles, setRoles] = useState<UserAppMetadata>()
-  const user = useUser()
-  const supabase = useSupabaseClient<Database>()
-  const uid = user?.id
-  const router = useRouter()
 
-  useEffect(() => {
-    if (supabase) {
-      supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          setRoles(session?.user?.app_metadata)
-        }
-      })
-    }
-  }, [supabase])
+  const supabase = useSupabaseClient<Database>()
+  const user = useUser()
+  const uid = user?.id
+  const isAdmin = user?.app_metadata.claims_admin
+
+  const router = useRouter()
 
   const updateSuggestion = () => {
     getSuggestion(supabase, suggestion.id)
@@ -59,7 +50,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      song_instrument_id: songInstrument.id
+      song_instrument_id: songInstrument.id,
     }
 
     // TODO implement error handling and loading (so that users cant click when updating division)
@@ -78,10 +69,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   }
 
   const displayButton = (): boolean => {
-    return (
-      roles?.["claims_admin"] &&
-      suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
-    )
+    return isAdmin && suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
   }
 
   const addToRepertoire = () => {
@@ -199,7 +187,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const supabase = createPagesServerClient(context)
   const {
-    data: { session }
+    data: { session },
   } = await supabase.auth.getSession()
   const { params } = context
   try {
@@ -208,8 +196,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         suggestionFromNext: data,
-        isEditable: (data.author as { id: string }).id === session?.user.id
-      }
+        isEditable: (data.author as { id: string }).id === session?.user.id,
+      },
     }
   } catch {
     return { notFound: true }
