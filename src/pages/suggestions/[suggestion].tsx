@@ -15,6 +15,7 @@ import { useRouter } from "next/router"
 import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 import SongPreviewImage from "@/components/images/song-preview-image"
+import { toast } from "react-toastify"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -26,10 +27,10 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   isEditable,
 }: SuggestionPageProps) => {
   const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
-  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
+  const [showSuggestionError, setShowSuggestionError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-
+  const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const uid = user?.id
@@ -37,35 +38,45 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
 
   const router = useRouter()
 
-  const updateSuggestion = () => {
-    getSuggestion(supabase, suggestion.id)
+  const updateSuggestion = async () => {
+    await getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Song) : setShowUpdateError(true)
+        response.data ? setSuggestion(response.data as Song) : setShowSuggestionError(true)
       })
-      .catch(() => setShowUpdateError(true))
+      .catch(() => setShowSuggestionError(true))
   }
 
-  const selectInstrument = (songInstrument: SongInstrument) => {
-    if (!uid) return
+  const selectInstrument = async (songInstrument: SongInstrument) => {
+    if (!uid || instrumentsInUpdate.length !== 0) return
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
       song_instrument_id: songInstrument.id,
     }
 
-    // TODO implement error handling and loading (so that users cant click when updating division)
+    setInstrumentsInUpdate([songInstrument, ...instrumentsInUpdate])
+
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await deleteDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+        })
+        .catch((error) => {
+          toast.error(error.message)
+        })
     } else {
-      insertDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await insertDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+        })
+        .catch((error) => {
+          toast.error(error.message)
+        })
     }
+
+    await updateSuggestion()
+    setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
   const displayButton = (): boolean => {
@@ -146,13 +157,13 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                     division={instrument.division}
                     description={instrument.description}
                     uid={uid}
-                    onclick={() => selectInstrument(instrument)}
+                    onClick={async () => selectInstrument(instrument)}
+                    loading={instrumentsInUpdate.includes(instrument)}
                   />
                 )
               })}
             </div>
           </div>
-
           {displayButton() && (
             <div className={"m-8 flex justify-center"}>
               <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
@@ -160,20 +171,20 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               </button>
             </div>
           )}
-
-          {showUpdateError && (
+          {showSuggestionError && (
             <div className={"mt-6"}>
               <ErrorPopup
-                text={"Failed to add or remove user to instrument."}
-                closePopup={() => setShowUpdateError(false)}
+                text={"Failed to load suggestion. Please reload the page."}
+                dataCy="suggestion-error"
+                closePopup={() => setShowSuggestionError(false)}
               />
             </div>
           )}
-
           {showSongError && (
             <div className={"mt-6"}>
               <ErrorPopup
                 text={"Failed to convert this suggestion to a repertoire song."}
+                dataCy="repertoire-error"
                 closePopup={() => setShowSongError(false)}
               />
             </div>

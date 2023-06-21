@@ -16,7 +16,7 @@ export const initialState: NewSuggestionSlice = {
     motivation: "",
     instruments: [],
     image: null,
-    previewUrl: null
+    previewUrl: null,
   },
 }
 

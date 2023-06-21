@@ -1,5 +1,5 @@
 import { EventType } from "@/types/database-types"
-import {format, parse} from "date-fns"
+import { format, parse } from "date-fns"
 
 export const getEventTitle = (eventType: EventType) => {
   switch (eventType) {

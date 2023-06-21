@@ -6,22 +6,21 @@ export interface SongImageProps {
 }
 
 const SongImage = ({ url }: SongImageProps) => {
-  return <>
-    {url
-      ? <img
-        src={url}
-        height={64} width={64}
-        alt={`song image`}
-        className={"rounded-md my-auto"}
-      />
-      : <div className={"my-auto flex"}>
-        <MusicalNoteIcon
-          className={"rounded-md bg-neutral-200 p-2 text-black"}
-          width={64} height={64}
-        />
-      </div>
-    }
-  </>
+  return (
+    <>
+      {url ? (
+        <img src={url} height={64} width={64} alt={`song image`} className={"my-auto rounded-md"} />
+      ) : (
+        <div className={"my-auto flex"}>
+          <MusicalNoteIcon
+            className={"rounded-md bg-neutral-200 p-2 text-black"}
+            width={64}
+            height={64}
+          />
+        </div>
+      )}
+    </>
+  )
 }
 
 export default SongImage

@@ -9,23 +9,22 @@ export interface SongPreviewImageProps {
 
 const SongPreviewImage = ({ previewUrl, imageUrl }: SongPreviewImageProps) => {
   return (
-    <div className={"my-auto flex bg-neutral-200 rounded-md relative"} data-cy="song-image-preview">
-      {previewUrl
-        ? <PreviewPlayer
-          url={previewUrl}
-          color={imageUrl ? "text-white" : "text-black"}
-        />
-        : <MusicalNoteIcon className={"p-2"} width={64} height={64} data-cy="no-sound" />
-      }
-      {imageUrl &&
+    <div className={"relative my-auto flex rounded-md bg-neutral-200"} data-cy="song-image-preview">
+      {previewUrl ? (
+        <PreviewPlayer url={previewUrl} color={imageUrl ? "text-white" : "text-black"} />
+      ) : (
+        <MusicalNoteIcon className={"p-2"} width={64} height={64} data-cy="no-sound" />
+      )}
+      {imageUrl && (
         <img
           src={imageUrl}
-          height={64} width={64}
+          height={64}
+          width={64}
           alt={"song image"}
-          className={"rounded-md my-auto absolute"}
+          className={"absolute my-auto rounded-md"}
           data-cy="song-image"
         />
-      }
+      )}
     </div>
   )
 }

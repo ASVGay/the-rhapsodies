@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import {Attending, InsertEvent} from "@/types/database-types"
+import { Attending, InsertEvent } from "@/types/database-types"
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
@@ -10,17 +10,20 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
   return supabase.rpc("get_events_with_attendance")
 }
 
-export const createEvent = (supabase: SupabaseClient<Database>, {end_time, start_time, event_type, location}: InsertEvent) => {
-    return supabase
-        .from("event")
-        .insert({
-            end_time: end_time,
-            start_time: start_time,
-            event_type: event_type,
-            location: location,
-        })
-        .select()
-        .single()
+export const createEvent = (
+  supabase: SupabaseClient<Database>,
+  { end_time, start_time, event_type, location }: InsertEvent
+) => {
+  return supabase
+    .from("event")
+    .insert({
+      end_time: end_time,
+      start_time: start_time,
+      event_type: event_type,
+      location: location,
+    })
+    .select()
+    .single()
 }
 
 export const deleteEvent = (supabase: SupabaseClient<Database>, eventId: string) => {

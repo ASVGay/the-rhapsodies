@@ -72,7 +72,7 @@ const SongPage = (props: SongProps) => {
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      song_instrument_id: songInstrument.id
+      song_instrument_id: songInstrument.id,
     }
 
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
@@ -134,7 +134,7 @@ const SongPage = (props: SongProps) => {
                         division={instrument.division}
                         description={instrument.description}
                         uid={uid}
-                        onclick={() => {
+                        onClick={() => {
                           if (showSpinner) return
                           selectInstrument(instrument)
                         }}
@@ -185,8 +185,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       redirect: {
         destination: "/500",
-        permanent: false
-      }
+        permanent: false,
+      },
     }
   }
 }

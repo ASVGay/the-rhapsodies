@@ -21,8 +21,7 @@ describe("song images", () => {
         if ($component.find("pause-icon").length > 0) {
           cy.data("pause-icon").click()
           cy.data("play-icon").should("be.visible")
-        }
-        else if ($component.find("play-icon").length > 0) {
+        } else if ($component.find("play-icon").length > 0) {
           cy.data("play-icon").click()
           cy.data("pause-icon").should("be.visible")
         }

@@ -92,7 +92,7 @@ describe("when creating a new suggestion, adding song information", () => {
               motivation: "Hello",
               instruments: [],
               image: null,
-              previewUrl: null
+              previewUrl: null,
             })
         })
       })

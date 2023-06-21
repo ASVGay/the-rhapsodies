@@ -19,7 +19,7 @@ export const initialState: EditSuggestionSlice = {
     motivation: "",
     instruments: [],
     image: null,
-    previewUrl: null
+    previewUrl: null,
   },
   lastEditedUuid: "",
 }
