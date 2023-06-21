@@ -313,7 +313,7 @@ describe("on the specific event page", () => {
       cy.data("delete-event-btn").click()
       cy.data("delete-event-continue-button").click()
       cy.data("input-delete-event").type("Brainstormborrel")
-      cy.data("delete-event-final-button").should('not.be.disabled')
+      cy.data("delete-event-final-button").should("not.be.disabled")
     })
 
     it("btn should be disabled when text is incorrect", () => {
@@ -321,9 +321,8 @@ describe("on the specific event page", () => {
       cy.data("delete-event-btn").click()
       cy.data("delete-event-continue-button").click()
       cy.data("input-delete-event").type("Brainstormborre")
-      cy.data("delete-event-final-button").should('be.disabled')
+      cy.data("delete-event-final-button").should("be.disabled")
     })
-
 
     it("should show toast when failing confirm when pressing on delete", () => {
       cy.wait(500)
@@ -335,11 +334,18 @@ describe("on the specific event page", () => {
       cy.data("delete-event-continue-button").click()
       cy.data("input-delete-event").type("Brainstormborrel")
       cy.data("delete-event-final-button").click()
-      cy.on("window:confirm", () => true);
+      cy.on("window:confirm", () => true)
       cy.get(".Toastify")
-          .get("#1")
-          .get(".Toastify__toast-body")
-          .should("have.text", "We couldn't delete your event, try again later.")
+        .get("#1")
+        .get(".Toastify__toast-body")
+        .should("have.text", "We couldn't delete your event, try again later.")
     })
+  })
+
+  it("should go to the edit event page on click of button", () => {
+    cy.login()
+    cy.visit(`/events/${eventId}`)
+    cy.data("edit-event-btn").click()
+    cy.location("pathname").should("eq", `/events/${eventId}/edit`)
   })
 })
