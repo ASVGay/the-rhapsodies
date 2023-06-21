@@ -6,6 +6,18 @@ export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
 }
 
+export const getUpcomingEvent = (supabase: SupabaseClient<Database>) => {
+  const today = new Date()
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+  const nextweek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 8)
+
+  return supabase
+    .rpc("get_events_with_attendance")
+    .gt("start_time", yesterday.toISOString().split("T")[0])
+    .lt("start_time", nextweek.toISOString().split("T")[0])
+    .single()
+}
+
 export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>) => {
   return supabase.rpc("get_events_with_attendance")
 }
