@@ -17,7 +17,7 @@ const EventCard = ({ event, setShowSpinner }: EventCardProps) => {
 
   return (
     <div
-      className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white drop-shadow-lg"
+      className="h-fit w-[22rem] cursor-pointer overflow-hidden rounded-md bg-white shadow"
       onClick={() => {
         setShowSpinner(true)
         router.push({ pathname: "/events/[event]", query: { event: event.id } })
