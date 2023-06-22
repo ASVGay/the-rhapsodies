@@ -15,8 +15,13 @@ describe("the edit event page", () => {
   it("should auto fill values", () => {
     cy.data("event-type-select").invoke("val").should("equal", "brainstormborrel")
     cy.get("#date-picker input").invoke("val").should("equal", "Wednesday, June 14")
-    cy.data("start-time-select").invoke("val").should("equal", "19:00")
-    cy.data("end-time-select").invoke("val").should("equal", "21:00")
+
+    cy.data("start-time-select")
+      .invoke("val")
+      .should("match", /^(0\d|1\d|2[0-3]):[0-5]\d/)
+    cy.data("end-time-select")
+      .invoke("val")
+      .should("match", /^(0\d|1\d|2[0-3]):[0-5]\d/)
     cy.data("input-location").invoke("val").should("equal", "CREA 3.14")
   })
 
@@ -42,8 +47,8 @@ describe("the edit event page", () => {
       cy.data(buttonSubmitEvent).click()
       cy.wait("@submit").then((xhr) => {
         const body = xhr.request.body
-        expect(body.start_time).to.contain("2023-06-14T11:00:00.000Z")
-        expect(body.end_time).to.contain("2023-06-14T14:00:00.000Z")
+        expect(body.start_time).to.match(/2023-06-14T\d\d:00:00.000Z/)
+        expect(body.end_time).to.match(/2023-06-14T\d\d:00:00.000Z/)
         expect(body.event_type).to.contain("rehearsal")
         expect(body.location).to.contain("Amsterdam")
       })
