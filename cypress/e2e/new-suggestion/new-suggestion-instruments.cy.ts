@@ -1,32 +1,38 @@
 import {
-  fillSongInformationSuccessfully,
-  shouldGoToInstrumentsArea,
-  fillInstrumentsSuccessfully,
   addInstrumentItem,
-  shouldGoToReviewArea,
+  fillInstrumentsSuccessfully,
+  newSuggestionFilledSongInformation,
   shouldBeFilledState,
+  shouldGoToReviewArea,
 } from "./helpers/new-suggestion.helper"
-
-const toReviewButton = "to-review-button"
-const searchInstrumentInput = "search-instrument-input"
-const instrumentSearchList = "instrument-search-list"
-const instrumentEditList = "instrument-edit-list"
-const deleteButton = "delete-button"
-const instrumentSearchCloseButton = "instrument-search-close-button"
-const descriptionInput = "description-input"
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import { mockInstruments } from "../../fixtures/mock-instruments.ts"
 
 describe("when creating a new suggestion, adding instruments", () => {
+  const toReviewButton = "to-review-button"
+  const searchInstrumentInput = "search-instrument-input"
+  const instrumentSearchList = "instrument-search-list"
+  const instrumentEditList = "instrument-edit-list"
+  const deleteButton = "delete-button"
+  const instrumentSearchCloseButton = "instrument-search-close-button"
+  const descriptionInput = "description-input"
+  const progressBarInstruments = "new-suggestion-progress-bar-instruments"
+
   beforeEach(() => {
     cy.login()
-    cy.visit("/suggestions/new")
-    // Wait so content can render properly and set up submit events
-    cy.wait(500)
-    fillSongInformationSuccessfully()
-    shouldGoToInstrumentsArea()
-  })
+    cy.intercept("GET", "/rest/v1/instrument?select=*&order=instrument_name.asc", {
+      body: mockInstruments,
+    })
 
-  it("should error if it can't retrieve instruments", () => {
-    //N.Y.I
+    cy.visit("/suggestions/new", {
+      onBeforeLoad() {
+        cy.window()
+          .its("store")
+          .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
+      },
+    })
+    cy.wait(500) // Wait so content can render properly and set up submit events
+    cy.data(progressBarInstruments).click()
   })
 
   it("should prevent the process to proceed further", () => {
@@ -35,8 +41,8 @@ describe("when creating a new suggestion, adding instruments", () => {
 
   it("should render the review area on click", () => {
     fillInstrumentsSuccessfully()
-    shouldBeFilledState()
     shouldGoToReviewArea()
+    shouldBeFilledState()
   })
 
   it("adding a instrument should allow the process to proceed", () => {
@@ -71,6 +77,8 @@ describe("when creating a new suggestion, adding instruments", () => {
   context("when proceeding to next step, but return to make changes", () => {
     beforeEach(() => {
       addInstrumentItem()
+      shouldGoToReviewArea()
+      cy.data(progressBarInstruments).click()
     })
 
     it("should populate the list with previously added elements", () => {
@@ -93,7 +101,7 @@ describe("when creating a new suggestion, adding instruments", () => {
     })
 
     it("should add instruments to redux's newSuggestion's suggestion", () => {
-      cy.data(instrumentEditList).first().should("exist")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")
@@ -105,6 +113,7 @@ describe("when creating a new suggestion, adding instruments", () => {
 
     it("should reflect the correct description on the instrument in redux", () => {
       cy.data(instrumentEditList).first().data(descriptionInput).type("test description")
+      shouldGoToReviewArea()
       cy.window()
         .its("store")
         .invoke("getState")

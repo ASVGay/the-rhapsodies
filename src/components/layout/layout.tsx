@@ -12,7 +12,12 @@ export default function Layout({ children }: LayoutProps) {
   const { pathname } = useRouter()
   const user = useUser()
 
-  if (pathname === "/change-password" || pathname === "/sign-in" || !user) {
+  if (
+    pathname === "/change-password" ||
+    pathname === "/sign-in" ||
+    pathname === "/forgot-password/reset" ||
+    !user
+  ) {
     return <>{children}</>
   }
 

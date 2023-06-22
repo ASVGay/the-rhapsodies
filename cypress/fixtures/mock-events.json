@@ -1,0 +1,42 @@
+[
+  {
+    "id": "4c0c7b17-ed22-4ff9-8161-5c4995d4adce",
+    "event_type": "rehearsal",
+    "start_time": "2023-06-19T03:36:13.816851+00:00",
+    "end_time": "2023-06-24T20:36:12.28884+00:00",
+    "location": "Helicopter Amsterdam",
+    "present": 2,
+    "absent": 0,
+    "undecided": 3
+  },
+  {
+    "id": "f5ff70b4-6e0c-4ad0-b73c-7355d863a504",
+    "event_type": "brainstormborrel",
+    "start_time": "2023-06-21T17:31:01.379201+00:00",
+    "end_time": "2023-06-22T13:06:52.674951+00:00",
+    "location": "CREA 2.11",
+    "present": 0,
+    "absent": 1,
+    "undecided": 4
+  },
+  {
+    "id": "7a620d4c-5985-4cbb-aa9e-26e72c5eaede",
+    "event_type": "rehearsal",
+    "start_time": "2023-06-25T10:57:33.501689+00:00",
+    "end_time": "2023-06-24T09:12:57.906273+00:00",
+    "location": "Rewind Music Studio",
+    "present": 1,
+    "absent": 1,
+    "undecided": 3
+  },
+  {
+    "id": "52bcbb7a-02e3-4cc8-a353-7b4402efacd7",
+    "event_type": "brainstormborrel",
+    "start_time": "2023-06-21T11:19:44.57863+00:00",
+    "end_time": "2023-06-21T22:57:58.00803+00:00",
+    "location": "CREA 3.14",
+    "present": 2,
+    "absent": 0,
+    "undecided": 3
+  }
+]

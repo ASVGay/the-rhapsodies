@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { NewSuggestion } from "@/interfaces/new-suggestion"
+import { ISuggestion } from "@/interfaces/suggestion"
 import { Area } from "@/constants/area"
 
 export interface NewSuggestionSlice {
   activeArea: Area
-  suggestion: NewSuggestion
+  suggestion: ISuggestion
 }
 
 export const initialState: NewSuggestionSlice = {
@@ -15,6 +15,8 @@ export const initialState: NewSuggestionSlice = {
     link: null,
     motivation: "",
     instruments: [],
+    image: null,
+    previewUrl: null,
   },
 }
 
@@ -28,13 +30,13 @@ export const newSuggestionSlice = createSlice({
         activeArea: action.payload,
       }
     },
-    updateNewSuggestion(state, action: PayloadAction<NewSuggestion>) {
+    updateNewSuggestion(state, action: PayloadAction<ISuggestion>) {
       return {
         ...state,
         suggestion: action.payload,
       }
     },
-    updateInstrumentNewSuggestion(state, action: PayloadAction<NewSuggestion>) {
+    updateInstrumentNewSuggestion(state, action: PayloadAction<ISuggestion>) {
       return {
         ...state,
         suggestion: action.payload,

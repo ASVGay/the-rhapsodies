@@ -1,5 +1,5 @@
 import React, { ChangeEvent, RefObject } from "react"
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
 
 interface SearchBarProps {
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createMiddlewareClient, Session } from "@supabase/auth-helpers-nextjs"
 import { isInMemberDatabase } from "@/services/authentication.service"
+import { SupabaseClient } from "@supabase/supabase-js"
 
 const goToPath = (path: string, req: NextRequest) => {
   const redirectUrl = req.nextUrl.clone()
@@ -8,38 +9,79 @@ const goToPath = (path: string, req: NextRequest) => {
   return NextResponse.redirect(redirectUrl)
 }
 
+function checkAdminRoutes(supabase: SupabaseClient, req: NextRequest, res: NextResponse<unknown>) {
+  if (req.nextUrl.pathname.startsWith("/events/new")) return goToPath("/events", req)
+  if (RegExp(/\/events\/([A-Za-z0-9-]+)\/edit/).exec(req.nextUrl.pathname)) {
+    const eventId = RegExp(/\/events\/(.*)\/edit/i).exec(req.nextUrl.pathname)?.[1]
+    return eventId ? goToPath(`/events/${eventId}`, req) : goToPath("/events", req)
+  }
+
+  return res
+}
+
+async function handleRoutesWhenLoggedIn(
+  supabase: SupabaseClient,
+  session: Session,
+  req: NextRequest,
+  res: NextResponse<unknown>
+) {
+  // Try to fetch the user first login status
+  let count
+  try {
+    count = (await isInMemberDatabase(supabase, session.user.id)).count
+  } catch (error) {
+    return goToPath("/500", req)
+  }
+
+  // If is first login, go to change password
+  if (count === 0) {
+    if (req.nextUrl.pathname.startsWith("/change-password")) return res
+    else return goToPath("/change-password", req)
+    // If not and trying to go to change-password, send to home
+  } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
+
+  // If trying to reset password, let them
+  if (req.nextUrl.pathname.startsWith("/forgot-password/reset")) return res
+
+  // Go to homepage if user is logged in and tries to go to sign-in or forgot-password
+  if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
+  if (req.nextUrl.pathname.startsWith("/forgot-password")) return goToPath("/", req)
+
+  const isAdmin = session.user.app_metadata.claims_admin
+
+  // If user is not admin and going to an admin page, redirect them
+  if (!isAdmin) return checkAdminRoutes(supabase, req, res)
+  return res
+}
+
 export const middleware = async (req: NextRequest) => {
   // We need to create a response and hand it to the supabase client to be able to modify the response headers
   const res = NextResponse.next()
   // Create authenticated Supabase Client
-  const supabase = createMiddlewareSupabaseClient({ req, res })
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
 
-  // If user is logged in
-  if (session?.user) {
-    // TODO Add error handling (perhaps a new page for it?)
-    const { count } = await isInMemberDatabase(supabase, session.user.id)
+  try {
+    const supabase = createMiddlewareClient({ req, res })
+    // Check if we have a session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-    // If is first login, go to change password
-    if (count === 0) {
-      if (req.nextUrl.pathname.startsWith("/change-password")) return res
-      else return goToPath("/change-password", req)
-    } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
+    // If user is logged in
+    if (session?.user) {
+      return await handleRoutesWhenLoggedIn(supabase, session, req, res)
+    }
 
-    // Go to homepage if user is logged in and tries to go to sign-in
-    if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
-    return res
+    // If user is not logged in and going to sign-in or forgot-password, let them
+    if (req.nextUrl.pathname.startsWith("/sign-in")) return res
+    if (req.nextUrl.pathname === "/forgot-password") return res
+
+    // Else, redirect to sign in page
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = "/sign-in"
+    return NextResponse.redirect(redirectUrl)
+  } catch (error) {
+    return goToPath("/500", req)
   }
-
-  // If user is not logged in and going to sign-in, let them
-  if (req.nextUrl.pathname.startsWith("/sign-in")) return res
-  // Else, redirect to sign in page
-  const redirectUrl = req.nextUrl.clone()
-  redirectUrl.pathname = "/sign-in"
-  return NextResponse.redirect(redirectUrl)
 }
 
 export const config = {

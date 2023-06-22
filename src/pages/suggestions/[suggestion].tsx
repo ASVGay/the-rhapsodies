@@ -1,77 +1,103 @@
 import React, { FC, useState } from "react"
-import { MusicalNoteIcon, XMarkIcon } from "@heroicons/react/24/solid"
-import Link from "next/link"
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
-import Image from "next/image"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs"
-import {
-  Division,
-  DivisionDatabaseOperation,
-  Suggestion,
-  SuggestionInstrument,
-} from "@/types/database-types"
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
+import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
-import { getInstrumentImage } from "@/helpers/cloudinary.helper"
+import SuggestionLink from "@/components/suggestion/song-information/suggestion-link"
+import { createSongFromSuggestion } from "@/services/song.service"
+import { useRouter } from "next/router"
+import Spinner from "@/components/utils/spinner"
+import Instrument from "@/components/suggestion/instrument"
+import SongPreviewImage from "@/components/images/song-preview-image"
+import { toast } from "react-toastify"
 
-interface SuggestionProps {
-  suggestion: Suggestion
+interface SuggestionPageProps {
+  suggestionFromNext: Song
+  isEditable: boolean
 }
 
-const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
-  const [suggestion, setSuggestion] = useState<Suggestion>(props.suggestion)
-  const [showUpdateError, setShowUpdateError] = useState<boolean>(false)
-  const user = useUser()
+const SuggestionPage: FC<SuggestionPageProps> = ({
+  suggestionFromNext,
+  isEditable,
+}: SuggestionPageProps) => {
+  const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
+  const [showSuggestionError, setShowSuggestionError] = useState<boolean>(false)
+  const [showSongError, setShowSongError] = useState<boolean>(false)
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
   const supabase = useSupabaseClient<Database>()
+  const user = useUser()
   const uid = user?.id
+  const isAdmin = user?.app_metadata.claims_admin
 
-  const updateSuggestion = () => {
-    getSuggestion(supabase, suggestion.id)
+  const router = useRouter()
+
+  const updateSuggestion = async () => {
+    await getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Suggestion) : setShowUpdateError(true)
+        response.data ? setSuggestion(response.data as Song) : setShowSuggestionError(true)
       })
-      .catch(() => setShowUpdateError(true))
+      .catch(() => setShowSuggestionError(true))
   }
 
-  const selectInstrument = (suggestionInstrument: SuggestionInstrument) => {
-    if (!uid) return
+  const selectInstrument = async (songInstrument: SongInstrument) => {
+    if (!uid || instrumentsInUpdate.length !== 0) return
 
     const division: DivisionDatabaseOperation = {
       musician: uid,
-      suggestion_instrument_id: suggestionInstrument.id,
+      song_instrument_id: songInstrument.id,
     }
 
-    // TODO implement error handling and loading (so that users cant click when updating division)
-    const exists = suggestionInstrument.division.some(({ musician }) => musician.id === uid)
+    setInstrumentsInUpdate([songInstrument, ...instrumentsInUpdate])
+
+    const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
     if (exists) {
-      deleteDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await deleteDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+        })
+        .catch((error) => {
+          toast.error(error.message)
+        })
     } else {
-      insertDivision(supabase, division).then(({ error }) => {
-        if (error) alert(error.message)
-        updateSuggestion()
-      })
+      await insertDivision(supabase, division)
+        .then(({ error }) => {
+          if (error) throw new Error("Failed to remove you from instrument, please try again.")
+        })
+        .catch((error) => {
+          toast.error(error.message)
+        })
     }
+
+    await updateSuggestion()
+    setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
-  const formatUsernames = (divisions: Division[]) => {
-    return divisions.map(({ musician }, index) => (
-      <span key={musician.id} className={musician.id == uid ? "text-moon-500" : "text-zinc-400"}>
-        {musician.display_name}
-        {index != divisions.length - 1 && ", "}
-      </span>
-    ))
+  const displayButton = (): boolean => {
+    return isAdmin && suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
+  }
+
+  const addToRepertoire = () => {
+    setShowSpinner(true)
+    createSongFromSuggestion(supabase, suggestion.id)
+      .then(() => router.push("/repertoire"))
+      .catch(() => setShowSongError(true))
+      .finally(() => setShowSpinner(false))
   }
 
   return (
     <>
-      {suggestion && (
+      {showSpinner ? (
+        <div className={"h-[75vh] text-center"}>
+          <Spinner size={10} />
+        </div>
+      ) : (
         <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
@@ -82,9 +108,20 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
               </p>
             </div>
-            <Link href={"/suggestions"}>
-              <XMarkIcon className={"h-8 w-8 text-zinc-400"} data-cy="suggestion-x-icon" />
-            </Link>
+            <div className={"flex flex-row gap-2"}>
+              {isEditable && (
+                <PencilSquareIcon
+                  className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                  data-cy="suggestion-edit-icon"
+                  onClick={() => router.push(`/suggestions/edit/${suggestion.id}`)}
+                />
+              )}
+              <XMarkIcon
+                className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
+                data-cy="suggestion-x-icon"
+                onClick={() => router.push("/suggestions")}
+              />
+            </div>
           </div>
 
           <div className={"m-2 md:ml-auto md:mr-auto md:max-w-sm"}>
@@ -92,63 +129,63 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
               Song information
             </p>
             <div className={"flex"}>
-              <MusicalNoteIcon className={"h-14 w-14 rounded-md bg-neutral-200 p-2 text-black"} />
+              <SongPreviewImage previewUrl={suggestion.previewUrl} imageUrl={suggestion.image} />
               <div className={"ml-3"}>
                 <p className={"line-clamp-1 font-bold"}>{suggestion.title}</p>
                 <p className={"line-clamp-1"}>{suggestion.artist.join(", ")}</p>
               </div>
             </div>
-            <p
-              className={"mb-3 mt-3 line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"}
-            >
+            <p className={"mb-3 mt-3 text-sm font-medium leading-4 text-gray-400"}>
               {suggestion.motivation}
             </p>
+            <SuggestionLink link={suggestion.link} />
           </div>
 
           <div className={"flex-col items-center md:flex"}>
             <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar suggestionInstruments={suggestion.suggestion_instruments} />
+              <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.suggestion_instruments.map((suggestionInstrument: SuggestionInstrument) => {
-                  const { instrument, division, id, description } = suggestionInstrument
-                  return (
-                    <div
-                      key={id}
-                      className={"flex cursor-pointer select-none"}
-                      onClick={() => selectInstrument(suggestionInstrument)}
-                    >
-                      <Image
-                        src={getInstrumentImage(instrument.image_source)}
-                        alt={instrument.instrument_name.toString()}
-                        width={64}
-                        height={64}
-                        className={`${division.length == 0 ? "opacity-30" : ""} mr-4 h-10 w-10`}
-                        draggable={"false"}
-                      />
-                      <div>
-                        <p>{instrument.instrument_name}</p>
-                        <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
-                        {division.length > 0 && (
-                          <div className={`font-bold`} data-cy="division">
-                            {formatUsernames(division)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                }
-              )}
+              {suggestion.song_instruments.map((instrument) => {
+                return (
+                  <Instrument
+                    key={instrument.id}
+                    imageURL={instrument.instrument.image_source}
+                    name={instrument.instrument.instrument_name}
+                    division={instrument.division}
+                    description={instrument.description}
+                    uid={uid}
+                    onClick={async () => selectInstrument(instrument)}
+                    loading={instrumentsInUpdate.includes(instrument)}
+                  />
+                )
+              })}
             </div>
           </div>
-
-          {showUpdateError && (
+          {displayButton() && (
+            <div className={"m-8 flex justify-center"}>
+              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
+                Move to repertoire
+              </button>
+            </div>
+          )}
+          {showSuggestionError && (
             <div className={"mt-6"}>
               <ErrorPopup
-                text={"Failed to add or remove user to instrument."}
-                closePopup={() => setShowUpdateError(false)}
+                text={"Failed to load suggestion. Please reload the page."}
+                dataCy="suggestion-error"
+                closePopup={() => setShowSuggestionError(false)}
+              />
+            </div>
+          )}
+          {showSongError && (
+            <div className={"mt-6"}>
+              <ErrorPopup
+                text={"Failed to convert this suggestion to a repertoire song."}
+                dataCy="repertoire-error"
+                closePopup={() => setShowSongError(false)}
               />
             </div>
           )}
@@ -159,12 +196,20 @@ const SuggestionPage: FC<SuggestionProps> = (props: SuggestionProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context)
+  const supabase = createPagesServerClient(context)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
   const { params } = context
   try {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
-    return { props: { suggestion: data } }
+    return {
+      props: {
+        suggestionFromNext: data,
+        isEditable: (data.author as { id: string }).id === session?.user.id,
+      },
+    }
   } catch {
     return { notFound: true }
   }

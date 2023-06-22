@@ -38,6 +38,9 @@
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
+export const getSbToken = () =>
+  `sb-${Cypress.env("NEXT_PUBLIC_SUPABASE_URL").match(/(\w+)\./)[1]}-auth-token`
+
 Cypress.Commands.add("data", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
@@ -49,12 +52,12 @@ Cypress.Commands.add("login", (useNewUser: boolean = false) => {
     email: Cypress.env(`CYPRESS_${user}_EMAIL`),
     password: Cypress.env(`CYPRESS_${user}_PASSWORD`),
   }).then((sessionData) => {
-    cy.setCookie("supabase-auth-token", JSON.stringify(sessionData))
+    cy.setCookie(getSbToken(), JSON.stringify(sessionData))
   })
 })
 
 Cypress.Commands.add("logout", () => {
-  cy.setCookie("supabase-auth-token", "")
+  cy.setCookie(getSbToken(), "")
 })
 
 Cypress.Commands.add("deleteNewUser", () => {

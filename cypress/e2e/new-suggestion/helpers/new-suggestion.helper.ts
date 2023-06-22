@@ -1,5 +1,5 @@
 import { Area } from "@/constants/area"
-import { NewSuggestionInstrument, NewSuggestion } from "@/interfaces/new-suggestion"
+import { ISuggestionInstrument, ISuggestion } from "@/interfaces/suggestion"
 
 const buttonAddInstruments = "button-add-instruments"
 const areaSongInformation = "area-song-information"
@@ -15,7 +15,7 @@ const inputMotivation = "input-motivation"
 const instrumentsArea = "area-instruments"
 const toReviewButton = "to-review-button"
 
-export const newSuggestionEmpty: NewSuggestion = {
+export const newSuggestionEmpty: ISuggestion = {
   artist: [],
   link: null,
   motivation: "",
@@ -23,7 +23,7 @@ export const newSuggestionEmpty: NewSuggestion = {
   instruments: [],
 }
 
-export const filledInInstrument: NewSuggestionInstrument = {
+export const filledInInstrument: ISuggestionInstrument = {
   description: "",
   instrument: {
     id: "f5ccaa5d-c601-40fb-8604-5fc7485f8528",
@@ -32,13 +32,22 @@ export const filledInInstrument: NewSuggestionInstrument = {
   },
 }
 
-export const newSuggestionFilledSongInformation: NewSuggestion = {
+export const newSuggestionFilledSongInformation: ISuggestion = {
   artist: ["The Beatles"],
   link: "www.hello.com",
   motivation:
     "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
   title: "Let It Be",
   instruments: [],
+}
+
+export const newSuggestionFilledInInstruments: ISuggestion = {
+  artist: ["The Beatles"],
+  link: "www.hello.com",
+  motivation:
+    "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
+  title: "Let It Be",
+  instruments: [filledInInstrument],
 }
 
 export const shouldGoToInstrumentsArea = () => {
@@ -83,14 +92,21 @@ export const shouldGoToReviewArea = () => {
   cy.data(toReviewButton).click()
   cy.data(instrumentsArea).should("not.exist")
   cy.data(areaSongInformation).should("not.exist")
-  areaInStateShouldBe(Area.Review)
 }
 
 export const fillSongInformationSuccessfully = () => {
-  cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
-  cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
-  cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
-  cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
+  cy.data("area-song-information")
+    .then(($component) => {
+      if ($component.find("input-artist").length == 0) {
+        cy.data("manual-input-btn").click()
+      }
+    })
+    .then(() => {
+      cy.data(inputTitle).type(newSuggestionFilledSongInformation.title)
+      cy.data(inputArtist).type(newSuggestionFilledSongInformation.artist[0])
+      cy.data(inputLink).type(newSuggestionFilledSongInformation.link)
+      cy.data(inputMotivation).type(newSuggestionFilledSongInformation.motivation)
+    })
 }
 
 export const shouldBeEmptyInformationState = () => {

@@ -13,30 +13,48 @@ describe("suggestion detail page", () => {
     })
 
     it("should add or remove username from division", () => {
-      cy.intercept("GET", "/rest/v1/suggestion*").as("updateSuggestion")
       cy.data("division")
         .first()
         .then((division) => {
           const criteria = division.text().includes(username)
-          cy.data("division")
-            .first()
-            .click()
-            .wait("@updateSuggestion")
-            .then(() => {
-              criteria
-                ? cy.data("division").first().should(`not.contain.text`, username)
-                : cy.data("division").first().should(`contain.text`, username)
-            })
+          cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
+          cy.data("instrument").first().click().wait("@updateSuggestion")
+          criteria
+            ? cy.data("division").first().should(`not.contain.text`, username)
+            : cy.data("division").first().should(`contain.text`, username)
+        })
+    })
+
+    it("should error when failing to fetch suggestions after updating division", () => {
+      cy.data("division")
+        .first()
+        .then(() => {
+          cy.intercept("GET", "/rest/v1/song*", { forceNetworkError: true }).as("updateSuggestion")
+          cy.data("instrument").first().click().wait("@updateSuggestion")
+          cy.data("suggestion-error").should("be.visible")
+        })
+    })
+
+    it("should error when failing to update division", () => {
+      cy.intercept("DELETE", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
+      cy.intercept("POST", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
+
+      cy.data("division")
+        .first()
+        .then(() => {
+          cy.data("instrument").first().click().wait("@changeDivision")
+
+          cy.get(".Toastify").get("#1").should("be.visible")
         })
     })
 
     it("should redirect to suggestions on pressing the exit button", () => {
-      cy.data("suggestion-x-icon").click()
+      cy.data("suggestion-x-icon")
+        .click()
         .then(() => {
-          cy.location('pathname').should("equal", "/suggestions")
+          cy.location("pathname").should("equal", "/suggestions")
         })
     })
-
   })
 
   context("suggestion doesn't exist", () => {
