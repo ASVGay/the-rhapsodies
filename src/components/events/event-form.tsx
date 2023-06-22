@@ -1,3 +1,4 @@
+import "react-datepicker/dist/react-datepicker.css"
 import { Controller, useFormContext } from "react-hook-form"
 import ErrorMessage from "@/components/error/error-message"
 import { CalendarIcon, ClockIcon, MapPinIcon, XMarkIcon } from "@heroicons/react/24/outline"
@@ -9,7 +10,6 @@ import React from "react"
 import { EventFormInputs } from "@/interfaces/event-form-inputs"
 
 interface EventFormParams {
-  title: string
   goBack: () => void
   showSpinner: boolean
   onSubmit: ({
@@ -19,9 +19,10 @@ interface EventFormParams {
     location,
     eventDate,
   }: EventFormInputs) => Promise<void>
+  type: "new" | "edit"
 }
 
-const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) => {
+const EventForm = ({ goBack, showSpinner, onSubmit, type }: EventFormParams) => {
   const {
     control,
     handleSubmit,
@@ -62,7 +63,7 @@ const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) =>
   return (
     <div className={"page-wrapper lg:w-3/5"}>
       <div className={"flex justify-between"}>
-        <div className={"page-header"}>{title}</div>
+        <div className={"page-header"}>{type === "new" ? "New" : "Edit"} Event</div>
         <XMarkIcon
           data-cy={"close-event-form"}
           className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
@@ -215,7 +216,7 @@ const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) =>
           </div>
 
           <button data-cy={"button-add-event"} type="submit" className="btn song-information mb-4">
-            Create Event
+            {type === "new" ? "Create" : "Update"} Event
           </button>
         </form>
       )}
