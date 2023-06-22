@@ -34,6 +34,7 @@ export default function Home() {
     setShowSpinner(false)
   }, [])
 
+
   return <>
     {showSpinner ? (
       <div className={"h-[75vh] text-center"}>
@@ -44,10 +45,11 @@ export default function Home() {
           <div className={"flex flex-col w-full"}>
             <b className={"text-2xl leading-8"}>Home</b>
           </div>
-          <div className={"flex justify-center flex-col text-center"}>
+          <div className={"flex justify-center items-center flex-col text-center gap-4"}>
             <p><span className={"text-moon-400"}>Hi {displayName}! </span>Check out the next event or start browsing the app.</p>
             {upcomingEvent &&
-              <EventCard key={upcomingEvent.id} event={upcomingEvent} setShowSpinner={setShowSpinner} />}
+              <EventCard key={upcomingEvent.id} event={upcomingEvent} setShowSpinner={setShowSpinner} />
+            }
             {showEventError &&
               <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}>
                 <div><ExclamationTriangleIcon className={"h-[50px] w-[50px]"} /></div>
