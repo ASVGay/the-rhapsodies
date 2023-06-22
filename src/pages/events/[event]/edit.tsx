@@ -63,7 +63,7 @@ const EditEventPage = ({
     <FormProvider {...methods}>
       <EventForm
         type={"edit"}
-        goBack={() => void router.push(redirectPath)}
+        goBack={() => router.push(redirectPath)}
         showSpinner={showSpinner}
         onSubmit={submitUpdatedEvent}
       />

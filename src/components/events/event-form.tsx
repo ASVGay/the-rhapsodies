@@ -10,7 +10,7 @@ import React from "react"
 import { EventFormInputs } from "@/interfaces/event-form-inputs"
 
 interface EventFormParams {
-  goBack: () => void
+  goBack: () => Promise<boolean>
   showSpinner: boolean
   onSubmit: ({
     eventType,

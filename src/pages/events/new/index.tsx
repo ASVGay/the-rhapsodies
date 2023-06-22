@@ -35,7 +35,7 @@ export default function Index() {
         toast.error("Something went wrong trying to add the event, please try again.")
       } else {
         toast.success("Your event has been added.")
-        void router.push(`/events/${data.id}`)
+        await router.push(`/events/${data.id}`)
       }
     } catch (error) {
       toast.error("Something went wrong trying to add the event, please try again.")
@@ -47,7 +47,7 @@ export default function Index() {
     <FormProvider {...methods}>
       <EventForm
         type="new"
-        goBack={() => void router.push("/events")}
+        goBack={() => router.push("/events")}
         showSpinner={showSpinner}
         onSubmit={submitNewEvent}
       />
