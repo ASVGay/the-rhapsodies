@@ -50,7 +50,7 @@ export default function Home() {
         <>
           <div className={"page-wrapper"}>
             <div className={"page-header"}>
-              Welcome{displayName && <span className={"text-moon-400"}> {displayName}</span>}!
+              Welcome{displayName && <span className={"text-moon-400"}> {displayName}!</span>}
             </div>
             <div className={"flex flex-col items-center justify-center gap-2 text-center"}>
               <p>Check out the next event or start browsing the app.</p>
