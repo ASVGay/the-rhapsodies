@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
-import { Attending, InsertEvent } from "@/types/database-types"
+import { Attending, InsertEvent, UpdateEvent } from "@/types/database-types"
 
 export const getEvent = (supabase: SupabaseClient<Database>, id: string) => {
   return supabase.from("event").select("*").eq("id", id).single()
@@ -26,8 +26,16 @@ export const createEvent = (
     .single()
 }
 
+export const updateEvent = (
+  supabase: SupabaseClient<Database>,
+  updatedEvent: UpdateEvent,
+  id: string
+) => {
+  return supabase.from("event").update(updatedEvent).eq("id", id)
+}
+
 export const deleteEvent = (supabase: SupabaseClient<Database>, eventId: string) => {
-    return supabase.from("event").delete().eq("id", eventId)
+  return supabase.from("event").delete().eq("id", eventId)
 }
 
 export const getAttendingMembersForEvent = (

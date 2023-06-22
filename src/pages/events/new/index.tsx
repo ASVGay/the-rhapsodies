@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import "react-datepicker/dist/react-datepicker.css"
 import { parseStartAndEndDate } from "@/helpers/event.helper"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
@@ -47,7 +46,7 @@ export default function Index() {
   return (
     <FormProvider {...methods}>
       <EventForm
-        title={"New Event"}
+        type="new"
         goBack={() => void router.push("/events")}
         showSpinner={showSpinner}
         onSubmit={submitNewEvent}

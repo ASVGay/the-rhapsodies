@@ -1,13 +1,16 @@
-import React from "react"
-import { Event } from "@/types/database-types"
+import React, { useState } from "react"
+import { Event, UpdateEvent } from "@/types/database-types"
 import EventForm from "@/components/events/event-form"
 import { useRouter } from "next/router"
 import { EventFormInputs } from "@/interfaces/event-form-inputs"
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { getEvent } from "@/services/event.service"
+import { getEvent, updateEvent } from "@/services/event.service"
 import { FormProvider, useForm } from "react-hook-form"
-import { getEventTimeInHoursMinutes } from "@/helpers/event.helper"
+import { getEventTimeInHoursMinutes, parseStartAndEndDate } from "@/helpers/event.helper"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { Database } from "@/types/database"
+import { toast } from "react-toastify"
 
 interface EditEventPageProps {
   event: Event
@@ -17,6 +20,9 @@ const EditEventPage = ({
   event: { id, event_type, location, end_time, start_time },
 }: EditEventPageProps) => {
   const router = useRouter()
+  const redirectPath = `/events/${id}`
+  const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const supabase = useSupabaseClient<Database>()
   const methods = useForm<EventFormInputs>({
     defaultValues: {
       eventType: event_type,
@@ -26,20 +32,39 @@ const EditEventPage = ({
       eventDate: new Date(start_time),
     },
   })
-  const submitUpdatedEvent = async ({
-    eventType,
-    startTime,
-    endTime,
-    location,
-    eventDate,
-  }: EventFormInputs) => {}
+  const submitUpdatedEvent = async (input: EventFormInputs) => {
+    setShowSpinner(true)
+
+    const { startDateTime, endDateTime } = parseStartAndEndDate(
+      input.startTime,
+      input.endTime,
+      input.eventDate
+    )
+
+    const updatedEvent: UpdateEvent = {
+      start_time: startDateTime,
+      end_time: endDateTime,
+      event_type: input.eventType,
+      location: input.location,
+    }
+
+    const { error } = await updateEvent(supabase, updatedEvent, id)
+
+    if (error) {
+      toast.error("Something went wrong while saving your changes. Please try again")
+      setShowSpinner(false)
+    } else {
+      toast.success("The event has been successfully updated!")
+      await router.push(redirectPath)
+    }
+  }
 
   return (
     <FormProvider {...methods}>
       <EventForm
-        title={"Edit Event"}
-        goBack={() => void router.push(`/events/${id}`)}
-        showSpinner={false}
+        type={"edit"}
+        goBack={() => void router.push(redirectPath)}
+        showSpinner={showSpinner}
         onSubmit={submitUpdatedEvent}
       />
     </FormProvider>

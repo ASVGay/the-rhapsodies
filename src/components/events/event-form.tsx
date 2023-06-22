@@ -71,7 +71,7 @@ const EventForm = ({ goBack, showSpinner, onSubmit, type }: EventFormParams) => 
         />
       </div>
       {showSpinner ? (
-        <div className={"h-[75vh] text-center"} data-cy="song-list-spinner">
+        <div className={"h-[75vh] text-center"} data-cy="event-form-spinner">
           <Spinner size={10} />
         </div>
       ) : (
