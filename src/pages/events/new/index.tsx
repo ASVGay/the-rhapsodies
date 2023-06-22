@@ -17,18 +17,18 @@ export default function Index() {
   const methods = useForm<EventFormInputs>()
   const submitNewEvent = async ({
     eventType,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
     location,
     eventDate,
   }: EventFormInputs) => {
     setShowSpinner(true)
-    const { startTime, endTime } = parseStartAndEndDate(startDate, endDate, eventDate)
+    const { startDateTime, endDateTime } = parseStartAndEndDate(startTime, endTime, eventDate)
 
     try {
       const { error, data } = await createEvent(supabase, {
-        start_time: startTime,
-        end_time: endTime,
+        start_time: startDateTime,
+        end_time: endDateTime,
         event_type: eventType,
         location: location,
       })

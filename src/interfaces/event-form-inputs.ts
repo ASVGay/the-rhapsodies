@@ -3,7 +3,7 @@ import { EventType } from "@/types/database-types"
 export interface EventFormInputs {
   eventType: EventType
   eventDate: Date
-  startDate: string
-  endDate: string
+  startTime: string
+  endTime: string
   location: string
 }

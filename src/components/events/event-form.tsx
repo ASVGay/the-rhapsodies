@@ -14,8 +14,8 @@ interface EventFormParams {
   showSpinner: boolean
   onSubmit: ({
     eventType,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
     location,
     eventDate,
   }: EventFormInputs) => Promise<void>
@@ -64,7 +64,7 @@ const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) =>
       <div className={"flex justify-between"}>
         <div className={"page-header"}>{title}</div>
         <XMarkIcon
-          data-cy={"button-discard-new-suggestion"}
+          data-cy={"close-event-form"}
           className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
           onClick={goBack}
         />
@@ -126,17 +126,17 @@ const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) =>
               <label htmlFor="startDate" className="sr-only">
                 Enter the start time
               </label>
-              {errors.startDate && (
+              {errors.startTime && (
                 <ErrorMessage
                   dataCy={"select-startDate-error"}
-                  message={errors.startDate.message}
+                  message={errors.startTime.message}
                 />
               )}
-              <div className={`input w-full ${!isSelected(watch("startDate")) && "text-gray-400"}`}>
+              <div className={`input w-full ${!isSelected(watch("startTime")) && "text-gray-400"}`}>
                 <select
                   data-cy={"start-time-select"}
                   defaultValue={"0"}
-                  {...register("startDate", {
+                  {...register("startTime", {
                     required: "Required",
                     validate: (value) => {
                       if (!isSelected(value)) return "The start time needs to be selected"
@@ -160,19 +160,19 @@ const EventForm = ({ title, goBack, showSpinner, onSubmit }: EventFormParams) =>
               <label htmlFor="endTime" className="sr-only">
                 Enter the end time
               </label>
-              {errors.endDate && (
-                <ErrorMessage dataCy={"select-end-time-error"} message={errors.endDate.message} />
+              {errors.endTime && (
+                <ErrorMessage dataCy={"select-end-time-error"} message={errors.endTime.message} />
               )}
 
-              <div className={`input w-full ${!isSelected(watch("endDate")) && "text-gray-400"}`}>
+              <div className={`input w-full ${!isSelected(watch("endTime")) && "text-gray-400"}`}>
                 <select
                   data-cy={"end-time-select"}
                   defaultValue={"0"}
-                  {...register("endDate", {
+                  {...register("endTime", {
                     required: "Required",
                     validate: (value) => {
                       if (!isSelected(value)) return "The end time needs to be selected"
-                      if (value < watch("startDate"))
+                      if (value < watch("startTime"))
                         return "The end time needs to be later than the start time"
                     },
                   })}
