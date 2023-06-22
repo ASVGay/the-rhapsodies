@@ -9,6 +9,16 @@ const goToPath = (path: string, req: NextRequest) => {
   return NextResponse.redirect(redirectUrl)
 }
 
+function checkAdminRoutes(supabase: SupabaseClient, req: NextRequest, res: NextResponse<unknown>) {
+  if (req.nextUrl.pathname.startsWith("/events/new")) return goToPath("/events", req)
+  if (RegExp(/\/events\/([A-Za-z0-9-]+)\/edit/).exec(req.nextUrl.pathname)) {
+    const eventId = RegExp(/\/events\/(.*)\/edit/i).exec(req.nextUrl.pathname)?.[1]
+    return eventId ? goToPath(`/events/${eventId}`, req) : goToPath("/events", req)
+  }
+
+  return res
+}
+
 async function handleRoutesWhenLoggedIn(
   supabase: SupabaseClient,
   session: Session,
@@ -36,6 +46,11 @@ async function handleRoutesWhenLoggedIn(
   // Go to homepage if user is logged in and tries to go to sign-in or forgot-password
   if (req.nextUrl.pathname.startsWith("/sign-in")) return goToPath("/", req)
   if (req.nextUrl.pathname.startsWith("/forgot-password")) return goToPath("/", req)
+
+  const isAdmin = session.user.app_metadata.claims_admin
+
+  // If user is not admin and going to an admin page, redirect them
+  if (!isAdmin) return checkAdminRoutes(supabase, req, res)
   return res
 }
 

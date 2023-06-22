@@ -6,7 +6,7 @@ describe("Create events page", () => {
 
   it("Should throw error when eventtype is empty", () => {
     cy.data("button-add-event").click()
-    cy.data("input_eventtype_error").contains("The event type needs to be selected")
+    cy.data("input-event-type-error").contains("The event type needs to be selected")
   })
 
   it("Should throw error when startdate is empty", () => {
@@ -35,13 +35,16 @@ describe("Create events page", () => {
   context("When making a request", () => {
     beforeEach(() => {
       cy.wait(500)
+      cy.data("input-event-date").click()
+      cy.get("#date-picker").find("input").eq(0).type("9999-05-01", { force: true })
+      cy.get("body").click()
       cy.data("start-time-select").select("10:00")
       cy.data("end-time-select").select("11:00")
       cy.data("event-type-select").select("Brainstormborrel")
       cy.data("input-location").type("Amsterdam")
     })
 
-    it("Should show success toastr when adding event succesfully", () => {
+    it("Should show success toast when adding event successfully", () => {
       cy.intercept("POST", "rest/v1/event?select=*", {
         statusCode: 200,
         body: {

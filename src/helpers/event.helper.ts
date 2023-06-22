@@ -18,8 +18,16 @@ export const getEventDate = (startTime: string) => {
   return format(new Date(startTime), "cccc, LLLL d")
 }
 
+export const getEventDateFormatted = (date: Date) => {
+  return format(new Date(date), "cccc, LLLL d")
+}
+
 export const getEventTime = (startTime: string, endTime: string) => {
-  return `${format(new Date(startTime), "HH:mm")} - ${format(new Date(endTime), "HH:mm")}`
+  return `${getEventTimeInHoursMinutes(startTime)} - ${getEventTimeInHoursMinutes(endTime)}`
+}
+
+export const getEventTimeInHoursMinutes = (startTime: string) => {
+  return format(new Date(startTime), "HH:mm")
 }
 
 export const getAllTimeSlots = () => {
@@ -45,7 +53,7 @@ export const getAllTimeSlots = () => {
 
 export const parseStartAndEndDate = (startTime: string, endTime: string, date: Date) => {
   const startDateTime = parse(startTime, "HH:mm", date).toISOString()
-  const endDateTime = parse(startTime, "HH:mm", date).toISOString()
+  const endDateTime = parse(endTime, "HH:mm", date).toISOString()
 
-  return { startTime: startDateTime, endTime: endDateTime }
+  return { startDateTime: startDateTime, endDateTime: endDateTime }
 }

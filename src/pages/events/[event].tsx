@@ -4,14 +4,14 @@ import { Event } from "@/types/database-types"
 import { GetServerSideProps } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { getEvent } from "@/services/event.service"
-import { XMarkIcon } from "@heroicons/react/24/solid"
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import EventInfoCard from "@/components/events/event-info-card"
 import AttendanceButton from "@/components/events/attendance-button"
 import AttendingMembers from "@/components/events/attending-members"
 import { FolderMinusIcon } from "@heroicons/react/24/outline"
 
 import { useUser } from "@supabase/auth-helpers-react"
-import DeleteEventOverlay from "@/components/overlays/delete-event.overlay";
+import DeleteEventOverlay from "@/components/overlays/delete-event.overlay"
 
 interface EventPageProps {
   event: Event
@@ -19,7 +19,7 @@ interface EventPageProps {
 
 const EventPage = ({ event }: EventPageProps) => {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
+  const [showDeleteOverlay, setShowDeleteOverlay] = useState(false)
   const user = useUser()
   const isAdmin = user?.app_metadata.claims_admin
 
@@ -29,11 +29,18 @@ const EventPage = ({ event }: EventPageProps) => {
         <div className={"page-header"}>Event</div>
         <div className={"flex flex-row gap-2"}>
           {isAdmin && (
-            <FolderMinusIcon
-              data-cy={"delete-event-btn"}
-              className={"h-8 w-8 cursor-pointer text-red-500 hover:text-red-400"}
-              onClick={() => setIsOpen(true)}
-            />
+            <>
+              <PencilSquareIcon
+                data-cy={"edit-event-btn"}
+                className={"h-8 w-8 cursor-pointer text-moon-500 hover:text-moon-400"}
+                onClick={() => router.push(`/events/${event.id}/edit`)}
+              />
+              <FolderMinusIcon
+                data-cy={"delete-event-btn"}
+                className={"h-8 w-8 cursor-pointer text-red-500 hover:text-red-400"}
+                onClick={() => setShowDeleteOverlay(true)}
+              />
+            </>
           )}
           <XMarkIcon
             data-cy={"button-back-to-events"}
@@ -48,7 +55,9 @@ const EventPage = ({ event }: EventPageProps) => {
         <p className={"text-center text-xl font-medium text-moon"}>Attending Members</p>
         <AttendingMembers eventId={event.id} />
       </div>
-      {isOpen && <DeleteEventOverlay event={event} onClose={() => setIsOpen(false)} />}
+      {showDeleteOverlay && (
+        <DeleteEventOverlay event={event} onClose={() => setShowDeleteOverlay(false)} />
+      )}
     </div>
   )
 }
