@@ -33,7 +33,7 @@ const EventPage = ({ event }: EventPageProps) => {
               <PencilSquareIcon
                 data-cy={"edit-event-btn"}
                 className={"h-8 w-8 cursor-pointer text-moon-500 hover:text-moon-400"}
-                onClick={void (() => router.push(`/events/${event.id}/edit`))()}
+                onClick={() => router.push(`/events/${event.id}/edit`)}
               />
               <FolderMinusIcon
                 data-cy={"delete-event-btn"}
@@ -45,7 +45,7 @@ const EventPage = ({ event }: EventPageProps) => {
           <XMarkIcon
             data-cy={"button-back-to-events"}
             className={"h-8 w-8 cursor-pointer text-zinc-400 hover:text-red-500"}
-            onClick={void (() => router.push("/events"))()}
+            onClick={() => router.push("/events")}
           />
         </div>
       </div>

@@ -52,6 +52,7 @@ const EventForm = ({ goBack, showSpinner, onSubmit, type }: EventFormParams) => 
           type="text"
           placeholder={"Date"}
           value={eventDate ? getEventDateFormatted(eventDate) : ""}
+          readOnly={true}
         />
         <span>
           <CalendarIcon />
