@@ -25,17 +25,17 @@ const EnableNotificationsToggle = ({
   const userId = useUser()?.id
   const [renderContent, setRenderContent] = useState<boolean>(false)
   const [permission, setPermission] = useState<NotificationPermission>(
-    notificationsAreSupported() ? Notification.permission : "default"
+    notificationsAreSupported() ? Notification.permission : "default",
   )
 
   const changeNotificationSetting = () => {
-    OneSignal.registerForPushNotifications()
+    OneSignal.Notifications.requestPermission()
       .then(() => {
         const result = Notification.permission
         // If permission is same as before, refer user to settings to change permission
         if (result === permission) showPermissionInstructions(result)
         setHasNotificationPermission(result === "granted")
-        if (result === "granted") OneSignal.setExternalUserId(userId || "")
+        if (result === "granted") userId ? OneSignal.login(userId) : OneSignal.logout()
       })
       .catch((error) => alert(error))
       .finally(() => {
