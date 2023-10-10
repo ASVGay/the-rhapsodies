@@ -36,7 +36,7 @@ describe("Create events page", () => {
     beforeEach(() => {
       cy.wait(500)
       cy.data("input-event-date").click()
-      cy.get("#date-picker").find("input").eq(0).type("9999-05-01", { force: true })
+      cy.get(".react-datepicker__day--today").click()
       cy.get("body").click()
       cy.data("start-time-select").select("10:00")
       cy.data("end-time-select").select("11:00")
