@@ -1,9 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":dependencyDashboard"
   ],
+  "rebaseWhen": "behind-base-branch",
   "baseBranches": ["dev"],
   "packageRules": [
     {
