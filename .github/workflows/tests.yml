@@ -47,7 +47,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -95,7 +95,7 @@ jobs:
         containers: [ 1, 2, 3, 4, 5 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download the build files
         uses: actions/download-artifact@v3
         with:
