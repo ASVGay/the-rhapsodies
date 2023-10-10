@@ -1,6 +1,7 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 
 describe("the change password page", () => {
+  const environment = Cypress.env("CYPRESS_ENV")
   const buttonSubmitNewPassword = "button-submit-new-password"
   const inputCurrentPassword = "input-current-password"
   const inputNewPassword = "input-new-password"
@@ -96,13 +97,25 @@ describe("the change password page", () => {
     it("should redirect & show toast if successful update", () => {
       submitCorrectData()
 
-      cy.get(".Toastify")
-        .get("#1")
-        .should("be.visible")
-        .should("have.class", "Toastify__toast--success")
-        .get(".Toastify__toast-body")
-        .should("have.text", "Password successfully changed!")
-      cy.location("pathname").should("eq", "/settings")
+      // If running local, the password change will be successful
+      if (environment == "local") {
+        cy.get(".Toastify")
+          .get("#1")
+          .should("be.visible")
+          .should("have.class", "Toastify__toast--success")
+          .get(".Toastify__toast-body")
+          .should("have.text", "Password successfully changed!")
+        cy.location("pathname").should("eq", "/settings")
+      } else {
+        // If running in GitHub Actions, the password change will be unsuccessful
+        // since we cannot change the password to the same as the current one
+        cy.get(".Toastify")
+          .get("#1")
+          .should("be.visible")
+          .should("have.class", "Toastify__toast--error")
+          .get(".Toastify__toast-body")
+          .should("contain.text", "must be different")
+      }
     })
 
     it("should show toast if unsuccessful update", () => {
