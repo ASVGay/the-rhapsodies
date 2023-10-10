@@ -1,17 +1,19 @@
 import { testErrorHandlingChangePassword } from "../helpers/change-password.helper"
 
 const displayName = "New"
+const environment = Cypress.env("CYPRESS_ENV")
 const newPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
-const displayNameTextfield = "set-name-textfield"
-const passwordTextfield = "change-password-textfield"
+const displayNameTextField = "set-name-text-field"
+const passwordTextField = "change-password-text-field"
 const termsConditionsOverlay = "terms-and-conditions"
 const termsConditionsCheckbox = "terms-conditions-checkbox"
 const termsId = "terms"
 const termsConditionsLink = "terms-conditions-link"
 const privacyPolicyLink = "privacy-policy-link"
 const privacyPolicyOverlay = "privacy-policy"
-const confirmPasswordTextfield = "change-password-confirm-textfield"
+const confirmPasswordTextField = "change-password-confirm-text-field"
 const submitPasswordBtn = "submit-password-btn"
+const submitPasswordErr = "submit-password-err"
 const shortPassword = "test"
 
 describe("Change password", () => {
@@ -23,13 +25,21 @@ describe("Change password", () => {
     cy.visit("/change-password")
   })
 
-  it("should login when changing password", () => {
-    cy.data(displayNameTextfield).type(displayName)
-    cy.data(passwordTextfield).type(newPassword)
-    cy.data(confirmPasswordTextfield).type(newPassword)
+  it("should login or give error when changing password", () => {
+    cy.data(displayNameTextField).type(displayName)
+    cy.data(passwordTextField).type(newPassword)
+    cy.data(confirmPasswordTextField).type(newPassword)
     cy.data(termsConditionsCheckbox).click()
     cy.data(submitPasswordBtn).click()
-    cy.location("pathname").should("equal", "/")
+    // When running locally, the user is redirected to the home page
+    if (environment === "local") {
+      cy.location("pathname").should("equal", "/")
+    } else {
+      // When running in GitHub Actions, the user gets error 422
+      // since we cannot change the password to the same as the current one
+      cy.data(submitPasswordErr).should("exist")
+      cy.data(submitPasswordErr).should("contain.text", "Change password failed")
+    }
   })
 
   it("should show terms and conditions when clicking on the link", () => {
@@ -44,9 +54,9 @@ describe("Change password", () => {
 
   testErrorHandlingChangePassword(
     submitPasswordBtn,
-    confirmPasswordTextfield,
-    passwordTextfield,
+    confirmPasswordTextField,
+    passwordTextField,
     shortPassword,
-    termsId
+    termsId,
   )
 })
