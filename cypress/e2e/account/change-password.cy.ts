@@ -38,7 +38,10 @@ describe("Change password", () => {
       // When running in GitHub Actions, the user gets error 422
       // since we cannot change the password to the same as the current one
       cy.data(submitPasswordErr).should("exist")
-      cy.data(submitPasswordErr).should("contain.text", "Change password failed")
+      cy.data(submitPasswordErr).should(
+        "contain.text",
+        "New password should be different from the old password",
+      )
     }
   })
 
