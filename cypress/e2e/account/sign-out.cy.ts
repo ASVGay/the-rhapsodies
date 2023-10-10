@@ -10,7 +10,7 @@ describe("Sign-out", () => {
   })
 
   it("Should show toast when signing out returns error", () => {
-    cy.intercept("POST", "/auth/v1/logout", (req) => {
+    cy.intercept("POST", "/auth/v1/logout*", (req) => {
       req.reply({
         statusCode: 500,
       })
