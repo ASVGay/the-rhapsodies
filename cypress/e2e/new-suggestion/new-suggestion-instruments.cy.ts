@@ -1,3 +1,5 @@
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
+import { mockInstruments } from "../../fixtures/mock-instruments.ts"
 import {
   addInstrumentItem,
   fillInstrumentsSuccessfully,
@@ -5,8 +7,6 @@ import {
   shouldBeFilledState,
   shouldGoToReviewArea,
 } from "./helpers/new-suggestion.helper"
-import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { mockInstruments } from "../../fixtures/mock-instruments.ts"
 
 describe("when creating a new suggestion, adding instruments", () => {
   const toReviewButton = "to-review-button"
@@ -30,9 +30,15 @@ describe("when creating a new suggestion, adding instruments", () => {
           .its("store")
           .invoke("dispatch", updateNewSuggestion(newSuggestionFilledSongInformation))
       },
+    }).then(() => {
+      cy.data("area-song-information").then(($component) => {
+        if ($component.find("input-artist").length == 0) {
+          cy.data("manual-input-btn").click()
+          cy.wait(500) // Wait so content can render properly and set up submit events
+          cy.data(progressBarInstruments).click()
+        }
+      })
     })
-    cy.wait(500) // Wait so content can render properly and set up submit events
-    cy.data(progressBarInstruments).click()
   })
 
   it("should prevent the process to proceed further", () => {

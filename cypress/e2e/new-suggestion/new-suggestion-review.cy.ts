@@ -1,27 +1,28 @@
+import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import { ISuggestion } from "@/interfaces/suggestion"
 import { newSuggestionFilledInInstruments } from "./helpers/new-suggestion.helper"
-import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 
 const progressBarReview = "new-suggestion-progress-bar-review"
-
-const setUp = () => {
-  cy.login()
-  cy.visit("/suggestions/new", {
-    onBeforeLoad(win: Cypress.AUTWindow) {
-      cy.window()
-        .its("store")
-        .invoke("dispatch", updateNewSuggestion(newSuggestionFilledInInstruments))
-    },
-  })
-
-  cy.wait(500) // Wait so content can render properly and set up submit events
-  cy.data(progressBarReview).click()
-}
 
 describe("review new suggestion page", () => {
   context("review new suggestion details", () => {
     beforeEach(() => {
-      setUp()
+      cy.login()
+      cy.visit("/suggestions/new", {
+        onBeforeLoad(win: Cypress.AUTWindow) {
+          cy.window()
+            .its("store")
+            .invoke("dispatch", updateNewSuggestion(newSuggestionFilledInInstruments))
+        },
+      }).then(() => {
+        cy.data("area-song-information").then(($component) => {
+          if ($component.find("input-artist").length == 0) {
+            cy.data("manual-input-btn").click()
+            cy.wait(500) // Wait so content can render properly and set up submit events
+            cy.data(progressBarReview).click()
+          }
+        })
+      })
     })
 
     it("should display Redux content in UI", () => {
@@ -32,7 +33,7 @@ describe("review new suggestion page", () => {
         .then((state: ISuggestion) => {
           cy.data("review-title").invoke("text").should("equal", state.title)
           state.artist.forEach((artist) =>
-            cy.data("review-artists").invoke("text").should("contain", artist)
+            cy.data("review-artists").invoke("text").should("contain", artist),
           )
           cy.data("review-motivation").invoke("text").should("equal", state.motivation)
           cy.data("review-link").invoke("attr", "href").should("equal", state.link)
@@ -43,7 +44,22 @@ describe("review new suggestion page", () => {
 
   context("save new suggestion", () => {
     beforeEach(() => {
-      setUp()
+      cy.login()
+      cy.visit("/suggestions/new", {
+        onBeforeLoad(win: Cypress.AUTWindow) {
+          cy.window()
+            .its("store")
+            .invoke("dispatch", updateNewSuggestion(newSuggestionFilledInInstruments))
+        },
+      }).then(() => {
+        cy.data("area-song-information").then(($component) => {
+          if ($component.find("input-artist").length == 0) {
+            cy.data("manual-input-btn").click()
+            cy.wait(500) // Wait so content can render properly and set up submit events
+            cy.data(progressBarReview).click()
+          }
+        })
+      })
     })
 
     it("should display spinner while creating a new suggestion", () => {
