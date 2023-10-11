@@ -17,21 +17,23 @@ const ReceiveNotificationsToggle = ({
   const [renderContent, setRenderContent] = useState<boolean>(false)
 
   const getSubscriptionStatus = useCallback(() => {
-    OneSignal.isPushNotificationsEnabled()
-      .then((isEnabled) => setIsSubscribed(isEnabled))
-      .catch((error) => {
-        toast.error("Something went wrong while retrieving your notification data")
-        console.error(error)
-      })
+    setIsSubscribed(OneSignal.User.PushSubscription.optedIn ?? false)
   }, [setIsSubscribed])
 
   const changeSubscription = () => {
-    OneSignal.setSubscription(!isSubscribed)
-      .then(() => getSubscriptionStatus())
-      .catch((error) => {
-        toast.error("Something went wrong while retrieving your notification data")
-        console.error(error)
-      })
+    isSubscribed
+      ? OneSignal.User.PushSubscription.optOut()
+          .then(() => getSubscriptionStatus())
+          .catch((error) => {
+            toast.error("Something went wrong while retrieving your notification data")
+            console.error(error)
+          })
+      : OneSignal.User.PushSubscription.optIn()
+          .then(() => getSubscriptionStatus())
+          .catch((error) => {
+            toast.error("Something went wrong while retrieving your notification data")
+            console.error(error)
+          })
   }
 
   useEffect(() => {

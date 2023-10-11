@@ -4,6 +4,7 @@ import Toggle from "@/components/settings/controls/toggle"
 import { AlertText } from "@/constants/notifications"
 import OneSignal from "react-onesignal"
 import { useUser } from "@supabase/auth-helpers-react"
+import { toast } from "react-toastify"
 
 const showPermissionInstructions = (result: NotificationPermission) => {
   if (result === "denied") {
@@ -25,17 +26,25 @@ const EnableNotificationsToggle = ({
   const userId = useUser()?.id
   const [renderContent, setRenderContent] = useState<boolean>(false)
   const [permission, setPermission] = useState<NotificationPermission>(
-    notificationsAreSupported() ? Notification.permission : "default"
+    notificationsAreSupported() ? Notification.permission : "default",
   )
 
   const changeNotificationSetting = () => {
-    OneSignal.registerForPushNotifications()
+    OneSignal.Notifications.requestPermission()
       .then(() => {
         const result = Notification.permission
         // If permission is same as before, refer user to settings to change permission
         if (result === permission) showPermissionInstructions(result)
         setHasNotificationPermission(result === "granted")
-        if (result === "granted") OneSignal.setExternalUserId(userId || "")
+        if (result === "granted") {
+          if (userId) {
+            OneSignal.login(userId)
+          } else {
+            toast.error(
+              "Something went wrong while enabling notifications. Please try again later.",
+            )
+          }
+        }
       })
       .catch((error) => alert(error))
       .finally(() => {
