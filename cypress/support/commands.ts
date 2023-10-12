@@ -72,11 +72,3 @@ const executeTask = (taskName: string) => {
 Cypress.Commands.add("deleteNewUser", () => {
   return executeTask("deleteNewUser")
 })
-
-Cypress.Commands.add("giveUserAdminPrivileges", () => {
-  return executeTask("giveUserAdminPrivileges")
-})
-
-Cypress.Commands.add("removeUserAdminPrivileges", () => {
-  return executeTask("removeUserAdminPrivileges")
-})

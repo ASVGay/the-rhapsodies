@@ -9,18 +9,6 @@ const notOfUserSuggestion = "687d4b20-9c34-4ff5-a1b5-ab4ca54c008c"
 
 describe("when the user wants to edit a suggestion", () => {
   context("when visiting a suggestion detail page", () => {
-    context("while user is unauthorized to edit", () => {
-      beforeEach(() => {
-        cy.login()
-        cy.visit(`suggestions/${notOfUserSuggestion}`)
-        // Wait so content can render properly and set up submit events
-        cy.wait(500)
-      })
-
-      it("shouldn't show the edit button", () => {
-        cy.data("suggestion-edit-icon").should("not.exist")
-      })
-    })
     context("while user is authorized to edit", () => {
       beforeEach(() => {
         cy.login()
@@ -41,20 +29,6 @@ describe("when the user wants to edit a suggestion", () => {
   })
 
   context("when visiting the edit suggestion page", () => {
-    context("while user is unauthorized to edit", () => {
-      beforeEach(() => {
-        cy.login()
-        cy.visit(`suggestions/edit/${notOfUserSuggestion}`)
-        // Wait so content can render properly and set up submit events
-        cy.wait(500)
-      })
-
-      it("should force the user to the 403 page", () => {
-        cy.location("pathname").should("eq", `/403`)
-        cy.data("403-page").should("be.visible")
-      })
-    })
-
     context("while user is authorized to edit", () => {
       beforeEach(() => {
         cy.login()

@@ -82,14 +82,10 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
     setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
-  const displayButton = (): boolean => {
-    return isAdmin && suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
-  }
-
   const addToRepertoire = () => {
     setShowSpinner(true)
     createSongFromSuggestion(supabase, suggestion.id)
-      .then(() => router.push("/repertoire"))
+      .then(() => router.push(`/repertoire/${suggestion.id}`))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
   }
@@ -174,9 +170,13 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               })}
             </div>
           </div>
-          {displayButton() && (
+          {isAdmin && (
             <div className={"m-8 flex justify-center"}>
-              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
+              <button
+                className={"btn toRepertoire"}
+                onClick={() => addToRepertoire()}
+                data-cy={"move-to-repertoire"}
+              >
                 Move to repertoire
               </button>
             </div>
@@ -223,7 +223,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         suggestionFromNext: data,
-        isEditable: (data.author as { id: string }).id === session?.user.id,
+        isEditable:
+          (
+            data.author as {
+              id: string
+            }
+          ).id === session?.user.id || session?.user?.app_metadata.claims_admin === true,
       },
     }
   } catch {

@@ -30,16 +30,6 @@ declare global {
        *
        */
       deleteNewUser()
-
-      /**
-       * Custom command to give user admin privileges
-       */
-      giveUserAdminPrivileges()
-
-      /**
-       * Custom command to remove user admin privileges
-       */
-      removeUserAdminPrivileges()
     }
   }
 }

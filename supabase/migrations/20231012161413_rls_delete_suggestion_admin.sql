@@ -4,6 +4,3 @@ as permissive
 for delete
 to authenticated
 using (is_claims_admin());
-
-
-
