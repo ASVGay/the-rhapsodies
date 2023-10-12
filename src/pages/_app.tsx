@@ -44,12 +44,17 @@ const App = ({ Component, pageProps }: AppProps) => {
         const OneSignal = module.default
         OneSignal.init({
           appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
+          safari_web_id: "web.onesignal.auto.0860f031-816f-4b4e-9724-08fcd0b320db",
           allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
           serviceWorkerParam: {
-            scope: "/js/push/onesignal/",
+            scope: "/",
           },
-          serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
-        }).then(() => console.log("OneSignal initialized"))
+          serviceWorkerPath: "./OneSignalSDKWorker.js",
+          autoResubscribe: true,
+        }).then(() => {
+          console.log("OneSignal initialized")
+          OneSignal.Debug.setLogLevel("info")
+        })
       })
     }
   }, [])

@@ -29,7 +29,20 @@ const TestNotificationButton = ({ isSubscribed }: TestNotificationButtonProps) =
         if (!res.ok) {
           throw new Error("Something went wrong while sending your notification")
         }
-        toast.success("Notification sent!")
+
+        res
+          .json()
+          .then((data) => {
+            if (data.errors) {
+              console.error("Error sending notification")
+              console.error(data.errors)
+              throw new Error("Something went wrong while sending your notification")
+            }
+            toast.success("Notification sent!")
+          })
+          .catch(() => {
+            toast.error("Something went wrong while sending your notification")
+          })
       })
       .catch(() => {
         toast.error("Something went wrong while sending your notification")

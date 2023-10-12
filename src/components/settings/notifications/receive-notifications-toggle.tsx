@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react"
-import Toggle from "@/components/settings/controls/toggle"
 import OneSignal from "react-onesignal"
 import { toast } from "react-toastify"
+import { useUser } from "@supabase/auth-helpers-react"
+import Toggle from "@/components/settings/controls/toggle"
 
 interface ReceiveNotificationsToggleProps {
   isSubscribed: boolean
@@ -15,25 +16,29 @@ const ReceiveNotificationsToggle = ({
   hasNotificationPermission,
 }: ReceiveNotificationsToggleProps) => {
   const [renderContent, setRenderContent] = useState<boolean>(false)
+  const userId = useUser()?.id
 
   const getSubscriptionStatus = useCallback(() => {
-    setIsSubscribed(OneSignal.User.PushSubscription.optedIn ?? false)
+    if (!OneSignal.User && userId) {
+      OneSignal.login(userId)
+    }
+    setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
   }, [setIsSubscribed])
 
   const changeSubscription = () => {
-    isSubscribed
-      ? OneSignal.User.PushSubscription.optOut()
-          .then(() => getSubscriptionStatus())
-          .catch((error) => {
-            toast.error("Something went wrong while retrieving your notification data")
-            console.error(error)
-          })
-      : OneSignal.User.PushSubscription.optIn()
-          .then(() => getSubscriptionStatus())
-          .catch((error) => {
-            toast.error("Something went wrong while retrieving your notification data")
-            console.error(error)
-          })
+    if (isSubscribed) {
+      OneSignal.User.PushSubscription.optOut().then(() => {
+        setIsSubscribed(false)
+        toast.success("Unsubscribed from notifications! It might take a bit time to take effect.")
+      })
+    } else {
+      if (OneSignal.User.PushSubscription.id) {
+        OneSignal.User.PushSubscription.optIn().then(() => {
+          getSubscriptionStatus()
+          toast.success("Subscribed to notifications! It might take a bit time to take effect.")
+        })
+      }
+    }
   }
 
   useEffect(() => {
@@ -45,9 +50,10 @@ const ReceiveNotificationsToggle = ({
   return (
     <>
       {renderContent && (
+        // <div className="onesignal-customlink-container"></div>
         <Toggle
           dataCy={"receive-notifications-toggle"}
-          text={"Receive notifications"}
+          text={"Subscribe to notifications"}
           checked={isSubscribed}
           handleChange={changeSubscription}
           disabled={!hasNotificationPermission}
