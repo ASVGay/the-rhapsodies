@@ -20,10 +20,9 @@ const ReceiveNotificationsToggle = ({
 
   const getSubscriptionStatus = useCallback(() => {
     if (!OneSignal.User && userId) {
-      OneSignal.login(userId).then(() => {
-        setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
-      })
+      OneSignal.login(userId).then(() => {})
     }
+    setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
   }, [setIsSubscribed, userId])
 
   const changeSubscription = () => {
