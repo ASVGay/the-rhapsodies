@@ -17,6 +17,7 @@ import Instrument from "@/components/suggestion/instrument"
 import SongPreviewImage from "@/components/images/song-preview-image"
 import { toast } from "react-toastify"
 import { TrashIcon } from "@heroicons/react/24/outline"
+import DeleteSuggestionOverlay from "@/components/overlays/delete-suggestion.overlay"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -32,6 +33,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
+  const [showDeleteOverlay, setShowDeleteOverlay] = useState<boolean>(false)
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const uid = user?.id
@@ -114,6 +116,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                 <TrashIcon
                   className={"h-8 w-8 cursor-pointer text-red-500 hover:text-red-700"}
                   data-cy="suggestion-delete-icon"
+                  onClick={() => setShowDeleteOverlay(true)}
                 />
               )}
               {isEditable && (
@@ -195,6 +198,12 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                 closePopup={() => setShowSongError(false)}
               />
             </div>
+          )}
+          {showDeleteOverlay && (
+            <DeleteSuggestionOverlay
+              onClose={() => setShowDeleteOverlay(false)}
+              suggestion={suggestion}
+            />
           )}
         </div>
       )}
