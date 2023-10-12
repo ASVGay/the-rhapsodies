@@ -34,7 +34,8 @@ INSERT INTO "public"."member" ("display_name", "id") VALUES ('Rens', 'de315267-9
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Marcel', 'ba1dd6e7-0955-417d-9f9c-3ad841e7277f');
 INSERT INTO "public"."member" ("display_name", "id") VALUES ('Feryll', '1ce835c1-a708-4e73-a808-334e982dfe3d');
 
-select set_claim('4ec7af50-3ced-45a9-9c1c-0e1038404778', 'claims_admin', 'true');
+-- Make 'old' user an admin
+SELECT set_claim('4ec7af50-3ced-45a9-9c1c-0e1038404778', 'claims_admin', 'true');
 
 -- Create instruments
 INSERT INTO "public"."instrument" ("id", "instrument_name", "image_source") VALUES ('edc0bc16-b99f-436c-af63-3f9cd838c986', 'Vocals', 'micro');

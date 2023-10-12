@@ -68,4 +68,62 @@ describe("suggestion detail page", () => {
         .should("equal", 404)
     })
   })
+
+  context("user is not admin", () => {
+    before(() => {
+      cy.removeUserAdminPrivileges()
+      cy.login()
+      cy.visit(`/suggestions/${suggestionId}`)
+    })
+
+    afterEach(() => cy.giveUserAdminPrivileges())
+
+    it("should not display the delete suggestion button", () => {
+      // Check if page is loaded correctly
+      cy.data("suggestion").should("be.visible")
+      cy.data("suggestion-delete-icon").should("not.exist")
+    })
+  })
+
+  context("user is admin", () => {
+    beforeEach(() => {
+      cy.giveUserAdminPrivileges()
+      cy.login()
+      cy.visit(`/suggestions/${suggestionId}`)
+    })
+
+    it("should display the delete suggestion button", () => {
+      cy.data("suggestion-delete-icon").should("exist")
+    })
+
+    it("should not disable button if text is correct", () => {
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-continue-button").click()
+      cy.data("input-delete-suggestion").type("Rens")
+      cy.data("delete-suggestion-final-button").should("not.be.disabled")
+    })
+
+    it("should disable button when text is incorrect", () => {
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-continue-button").click()
+      cy.data("input-delete-suggestion").type("Wrong text")
+      cy.data("delete-suggestion-final-button").should("be.disabled")
+    })
+
+    it("should show toast when failing to delete", () => {
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.intercept("/rest/v1/song*", {
+        statusCode: 500,
+        body: { error: "error" },
+      })
+      cy.data("delete-suggestion-continue-button").click()
+      cy.data("input-delete-suggestion").type("Rens")
+      cy.data("delete-suggestion-final-button").click()
+      cy.on("window:confirm", () => true)
+      cy.get(".Toastify")
+        .get("#1")
+        .get(".Toastify__toast-body")
+        .should("have.text", "We couldn't delete the suggestion, try again later.")
+    })
+  })
 })

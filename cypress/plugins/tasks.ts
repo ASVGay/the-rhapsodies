@@ -25,3 +25,19 @@ export async function getUserSession({ email, password }) {
 export async function deleteNewUser() {
   return supabase.from("member").delete({ count: "exact" }).eq("id", process.env.CYPRESS_NEW_ID)
 }
+
+export async function giveUserAdminPrivileges() {
+  return supabase.rpc("set_claim", {
+    claim: "claims_admin",
+    uid: process.env.CYPRESS_OLD_ID,
+    value: true,
+  })
+}
+
+export async function removeUserAdminPrivileges() {
+  return supabase.rpc("set_claim", {
+    claim: "claims_admin",
+    uid: process.env.CYPRESS_OLD_ID,
+    value: false,
+  })
+}
