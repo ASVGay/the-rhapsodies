@@ -20,24 +20,27 @@ const ReceiveNotificationsToggle = ({
 
   const getSubscriptionStatus = useCallback(() => {
     if (!OneSignal.User && userId) {
-      OneSignal.login(userId)
+      OneSignal.login(userId).then(() => {
+        setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
+      })
     }
-    setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
-  }, [setIsSubscribed])
+  }, [setIsSubscribed, userId])
 
   const changeSubscription = () => {
     if (isSubscribed) {
       OneSignal.User.PushSubscription.optOut().then(() => {
         setIsSubscribed(false)
-        toast.success("Unsubscribed from notifications! It might take a bit time to take effect.")
+        toast.success(
+          "Unsubscribed from notifications! It might take a couple of seconds to take effect.",
+        )
       })
-    } else {
-      if (OneSignal.User.PushSubscription.id) {
-        OneSignal.User.PushSubscription.optIn().then(() => {
-          getSubscriptionStatus()
-          toast.success("Subscribed to notifications! It might take a bit time to take effect.")
-        })
-      }
+    } else if (OneSignal.User.PushSubscription.id) {
+      OneSignal.User.PushSubscription.optIn().then(() => {
+        getSubscriptionStatus()
+        toast.success(
+          "Subscribed to notifications! It might take a couple of seconds to take effect.",
+        )
+      })
     }
   }
 
