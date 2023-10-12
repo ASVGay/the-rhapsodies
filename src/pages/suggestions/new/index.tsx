@@ -63,7 +63,7 @@ const NewSuggestion = () => {
       updateNewSuggestion({
         ...suggestion,
         instruments: newInstruments,
-      })
+      }),
     )
   }
 
@@ -84,7 +84,7 @@ const NewSuggestion = () => {
         motivation,
         image,
         previewUrl,
-      })
+      }),
     )
   }
 
@@ -99,7 +99,7 @@ const NewSuggestion = () => {
         instruments: [],
         image: null,
         previewUrl: null,
-      })
+      }),
     )
     toast.success("Your suggestion has been cleared")
   }

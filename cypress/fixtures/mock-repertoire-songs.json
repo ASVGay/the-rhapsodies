@@ -2,9 +2,7 @@
   {
     "id": "ca20ae76-f6b3-4224-99af-cac14643a967",
     "title": "Smells Like Teen Spirit",
-    "artist": [
-      "Nirvana"
-    ],
+    "artist": ["Nirvana"],
     "motivation": "i know some of us already want to play this song, so let's just do it :)",
     "created_at": "2023-02-14T00:00:00+00:00",
     "author": "cbe9b982-fbf9-4036-9e4a-b98b0b4f26d4",
@@ -72,9 +70,7 @@
   {
     "id": "e743664e-b85b-4164-8163-24c9957f5ffd",
     "title": "Don't Stop Believin'",
-    "artist": [
-      "Journey"
-    ],
+    "artist": ["Journey"],
     "motivation": "Featured in Glee, energetic and easy for a most likely drunk crowd to sing along with.",
     "created_at": "2023-02-14T00:00:00+00:00",
     "author": "ba1dd6e7-0955-417d-9f9c-3ad841e7277f",
@@ -156,9 +152,7 @@
   {
     "id": "687d4b20-9c34-4ff5-a1b5-ab4ca54c008c",
     "title": "Nobody",
-    "artist": [
-      "Mitski"
-    ],
+    "artist": ["Mitski"],
     "motivation": "Banger with almost all instruments we have and even a fun hand clap part for those who have their hands free (unfortunately for me😔)!",
     "created_at": "2023-03-05T00:00:00+00:00",
     "author": "de315267-9634-4cb8-9c7c-d0edd66c62fe",
@@ -265,8 +259,7 @@
           "instrument_name": "Clap",
           "image_source": "applause"
         },
-        "division": [
-        ]
+        "division": []
       }
     ]
   }

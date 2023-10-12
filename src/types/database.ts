@@ -59,7 +59,7 @@ export interface Database {
             columns: ["member_id"]
             referencedRelation: "member"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       division: {
@@ -87,7 +87,7 @@ export interface Database {
             columns: ["song_instrument_id"]
             referencedRelation: "song_instrument"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       event: {
@@ -151,7 +151,7 @@ export interface Database {
             columns: ["id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       song: {
@@ -193,7 +193,7 @@ export interface Database {
             columns: ["author"]
             referencedRelation: "member"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       song_instrument: {
@@ -227,7 +227,7 @@ export interface Database {
             columns: ["song_id"]
             referencedRelation: "song"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }
@@ -358,7 +358,7 @@ export interface Database {
             columns: ["owner"]
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       migrations: {
@@ -431,7 +431,7 @@ export interface Database {
             columns: ["owner"]
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }

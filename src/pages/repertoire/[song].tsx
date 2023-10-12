@@ -50,7 +50,7 @@ const SongPage = (props: SongProps) => {
   const updateOrDeleteDivision = async (
     exists: boolean,
     divisionOperation: DivisionDatabaseOperation,
-    divisionLength: number
+    divisionLength: number,
   ) => {
     if (exists && divisionLength == 1) {
       setShowUpdateError("You're not allowed to remove yourself from this instrument.")

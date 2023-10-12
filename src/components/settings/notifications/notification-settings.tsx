@@ -9,7 +9,7 @@ import ReceiveNotificationsToggle from "@/components/settings/notifications/rece
 const NotificationSettings = () => {
   const [info, setInfo] = useState<string>("")
   const [hasNotificationPermission, setHasNotificationPermission] = useState<boolean>(
-    notificationsAreSupported() ? Notification.permission === "granted" : false
+    notificationsAreSupported() ? Notification.permission === "granted" : false,
   )
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
   const [hasAdBlock, setHasAdBlock] = useState<boolean>(false)
@@ -18,7 +18,7 @@ const NotificationSettings = () => {
     // Only show content once window has been defined (since that is necessary for notificationsAreSupported)
     if (!notificationsAreSupported())
       setInfo(
-        "You need to add this application to your home screen if you want to enable notifications."
+        "You need to add this application to your home screen if you want to enable notifications.",
       )
   }, [])
 
@@ -30,7 +30,7 @@ const NotificationSettings = () => {
           method: "HEAD",
           mode: "no-cors",
           cache: "no-store",
-        }
+        },
       ).catch(() => {
         setHasAdBlock(true)
       })

@@ -11,7 +11,7 @@ const handler: NextApiHandler = async (req, res) => {
       headers: {
         Authorization: accessToken,
       },
-    }
+    },
   )
 
   res.send(await response.json())

@@ -80,7 +80,7 @@ describe("suggestions page", () => {
   context("search suggestions", () => {
     beforeEach(() => {
       cy.intercept("GET", "/rest/v1/song*", { fixture: "mock-suggestions.json" }).as(
-        "mockedRequest"
+        "mockedRequest",
       )
       cy.login()
       cy.visit("suggestions")

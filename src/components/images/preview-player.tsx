@@ -35,11 +35,7 @@ const PreviewPlayer = ({ url, color }: PreviewPlayerProps) => {
   }, [])
 
   return (
-    <div
-      className={`z-10 ${color}`}
-      onClick={() => setPlaying(!playing)}
-      data-cy="player"
-    >
+    <div className={`z-10 ${color}`} onClick={() => setPlaying(!playing)} data-cy="player">
       {playing ? (
         <PlayPauseIcon className={`p-3`} width={64} height={64} data-cy="pause-icon" />
       ) : (

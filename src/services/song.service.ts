@@ -3,14 +3,14 @@ import { Database } from "@/types/database"
 
 export const createSongFromSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
-  id: string
+  id: string,
 ) => {
   return supabaseClient.from("song").update({ inRepertoire: true }).eq("id", id)
 }
 
 export const moveSongToSuggestions = async (
   supabaseClient: SupabaseClient<Database>,
-  id: string
+  id: string,
 ) => {
   return supabaseClient.from("song").update({ inRepertoire: false }).eq("id", id)
 }
@@ -30,7 +30,7 @@ export const getSong = async (supabase: SupabaseClient<Database>, id: string) =>
           musician:member (display_name, id)
         )
       )
-        `
+        `,
     )
     .eq("id", id)
     .eq("inRepertoire", true)

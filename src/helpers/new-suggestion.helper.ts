@@ -10,7 +10,7 @@ export const submitSongInformationForm = () => {
 }
 
 export const isSongInformationInvalid = <TFieldNames, TFieldName>(
-  watch: UseFormWatch<InputsSongInformation>
+  watch: UseFormWatch<InputsSongInformation>,
 ) => {
   return watch("title") == "" || watch("artist").length == 0 || watch("motivation") == ""
 }
@@ -21,7 +21,7 @@ export const isInstrumentSuggestionInvalid = (instruments: ISuggestionInstrument
 
 export const mapInstruments = (
   instruments: ISuggestionInstrument[],
-  suggestionId: string
+  suggestionId: string,
 ): SongInstrumentDatabaseOperation[] => {
   return instruments.map(({ instrument, description }) => ({
     song_id: suggestionId,
@@ -32,7 +32,7 @@ export const mapInstruments = (
 
 export const mapEditInstruments = (
   instruments: ISuggestionInstrument[],
-  suggestionId: string
+  suggestionId: string,
 ): SongInstrumentDatabaseOperation[] => {
   return instruments.map(({ id, instrument, description }) => ({
     id: id,
