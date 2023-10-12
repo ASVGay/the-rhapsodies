@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import OneSignal from "react-onesignal"
 import { toast } from "react-toastify"
 import { useUser } from "@supabase/auth-helpers-react"
 import Toggle from "@/components/settings/controls/toggle"
+import { OneSignalContext } from "@/pages/_app"
 
 interface ReceiveNotificationsToggleProps {
   isSubscribed: boolean
@@ -15,15 +16,27 @@ const ReceiveNotificationsToggle = ({
   setIsSubscribed,
   hasNotificationPermission,
 }: ReceiveNotificationsToggleProps) => {
+  const oneSignalInitialized = useContext(OneSignalContext)
   const [renderContent, setRenderContent] = useState<boolean>(false)
   const userId = useUser()?.id
 
   const getSubscriptionStatus = useCallback(() => {
-    if (!OneSignal.User && userId) {
-      OneSignal.login(userId).then(() => {})
-    }
     setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
-  }, [setIsSubscribed, userId])
+  }, [setIsSubscribed])
+
+  useEffect(() => {
+    if (userId && oneSignalInitialized) {
+      console.log("Logging in to OneSignal")
+      OneSignal.login(userId)
+        .then(() => getSubscriptionStatus())
+        .catch(() => console.error("Error logging in to OneSignal"))
+    } else {
+      console.log("Logging out of OneSignal")
+      OneSignal.logout()
+        .then(() => getSubscriptionStatus())
+        .catch(() => console.error("Error logging out of OneSignal"))
+    }
+  }, [getSubscriptionStatus, oneSignalInitialized, userId])
 
   const changeSubscription = () => {
     if (isSubscribed) {
