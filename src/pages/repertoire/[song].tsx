@@ -84,7 +84,7 @@ const SongPage = (props: SongProps) => {
   const moveToSuggestions = () => {
     setShowSpinner(true)
     moveSongToSuggestions(supabase, song.id)
-      .then(() => router.push("/repertoire"))
+      .then(() => router.push(`/suggestions/${song.id}`))
       .catch(() => setShowConversionError(true))
       .finally(() => setShowSpinner(false))
   }
