@@ -15,6 +15,7 @@ import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { PostgrestError } from "@supabase/supabase-js"
 import SongPreviewImage from "@/components/images/song-preview-image"
+import { toast } from "react-toastify"
 
 interface SongProps {
   song: Song
@@ -53,7 +54,12 @@ const SongPage = (props: SongProps) => {
     divisionLength: number,
   ) => {
     if (exists && divisionLength == 1) {
-      setShowUpdateError("You're not allowed to remove yourself from this instrument.")
+      toast.error(
+        "Failed to remove you from the instrument. Please contact an administrator to remove you.",
+        {
+          toastId: "failed-to-remove-you",
+        },
+      )
     } else if (exists) {
       deleteDivision(supabase, divisionOperation).then(({ error }) => {
         handleDivisionOperation(error, "Failed to remove user from the instrument.")
