@@ -85,7 +85,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const addToRepertoire = () => {
     setShowSpinner(true)
     createSongFromSuggestion(supabase, suggestion.id)
-      .then(() => router.push("/repertoire"))
+      .then(() => router.push(`/repertoire/${suggestion.id}`))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
   }
