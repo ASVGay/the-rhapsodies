@@ -11,7 +11,6 @@ import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
 import { Slide, ToastContainer } from "react-toastify"
-import OneSignal from "react-onesignal"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -25,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     createPagesBrowserClient<Database>({
       supabaseUrl,
       supabaseKey,
-    })
+    }),
   )
 
   if (typeof window !== "undefined") {
@@ -37,14 +36,22 @@ const App = ({ Component, pageProps }: AppProps) => {
   }
 
   useEffect(() => {
-    OneSignal.init({
-      appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
-      allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
-      serviceWorkerParam: {
-        scope: "/js/push/onesignal/",
-      },
-      serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
-    })
+    // Only initialize OneSignal if it's not disabled
+    // OneSignal should be disabled while running Cypress tests
+    // Since it causes issues with the Redux implementation since react-onesignal v3.0.1
+    if (process.env.NEXT_PUBLIC_DISABLE_ONESIGNAL !== "true") {
+      import("react-onesignal").then((module) => {
+        const OneSignal = module.default
+        OneSignal.init({
+          appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
+          allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
+          serviceWorkerParam: {
+            scope: "/js/push/onesignal/",
+          },
+          serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
+        }).then(() => console.log("OneSignal initialized"))
+      })
+    }
   }, [])
 
   return (
