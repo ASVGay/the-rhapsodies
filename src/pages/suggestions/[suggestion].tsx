@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -16,6 +16,7 @@ import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 import SongPreviewImage from "@/components/images/song-preview-image"
 import { toast } from "react-toastify"
+import { TrashIcon } from "@heroicons/react/24/outline"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -109,6 +110,12 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               </p>
             </div>
             <div className={"flex flex-row gap-2"}>
+              {isAdmin && (
+                <TrashIcon
+                  className={"h-8 w-8 cursor-pointer text-red-500 hover:text-red-700"}
+                  data-cy="suggestion-delete-icon"
+                />
+              )}
               {isEditable && (
                 <PencilSquareIcon
                   className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}

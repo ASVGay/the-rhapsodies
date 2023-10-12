@@ -66,3 +66,17 @@ Cypress.Commands.add("deleteNewUser", () => {
     if (response.error) throw new Error(response.error.message)
   })
 })
+
+Cypress.Commands.add("giveUserAdminPrivileges", () => {
+  cy.task("giveUserAdminPrivileges").then((response: PostgrestSingleResponse<null>) => {
+    cy.log(JSON.stringify(response))
+    if (response.error) throw new Error(response.error.message)
+  })
+})
+
+Cypress.Commands.add("removeUserAdminPrivileges", () => {
+  cy.task("removeUserAdminPrivileges").then((response: PostgrestSingleResponse<null>) => {
+    cy.log(JSON.stringify(response))
+    if (response.error) throw new Error(response.error.message)
+  })
+})
