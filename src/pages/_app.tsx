@@ -44,7 +44,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         const OneSignal = module.default
         OneSignal.init({
           appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
-          safari_web_id: "web.onesignal.auto.0860f031-816f-4b4e-9724-08fcd0b320db",
+          safari_web_id: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID!,
           allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
           serviceWorkerParam: {
             scope: "/",
