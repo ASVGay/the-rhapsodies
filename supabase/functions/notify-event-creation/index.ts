@@ -8,7 +8,7 @@ const pool = new postgres.Pool(databaseUrl, 3, true)
 
 const _OnesignalAppId_ = Deno.env.get("NEXT_PUBLIC_ONESIGNAL_APP_ID")!
 const _OnesignalUserAuthKey_ = Deno.env.get("USER_AUTH_KEY")!
-const _OnesignalRestApiKey_ = Deno.env.get("ONESIGNAL_REST_API_KEY")!
+const _OnesignalRestApiKey_ = Deno.env.get("NEXT_PUBLIC_ONESIGNAL_REST_API_KEY")!
 const _OnesignalUrl_ = Deno.env.get("ONESIGNAL_URL")!
 
 const configuration = OneSignal.createConfiguration({

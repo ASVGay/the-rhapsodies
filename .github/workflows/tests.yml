@@ -4,8 +4,6 @@
 name: Build & test project
 
 on:
-  push:
-    branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
   workflow_dispatch:
@@ -22,6 +20,9 @@ env:
   NEXT_PUBLIC_SUPABASE_URL: ${{secrets.HOSTED_SUPABASE_URL}}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.HOSTED_SUPABASE_ANON_KEY}}
   NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
+  NEXT_PUBLIC_ONESIGNAL_REST_API_KEY: ${{secrets.NEXT_PUBLIC_ONESIGNAL_REST_API_KEY}}
+  NEXT_PUBLIC_DISABLE_ONESIGNAL: "true"
+  CYPRESS_ENV: ${{secrets.CYPRESS_ENV}}
   CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
   CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
   CYPRESS_OLD_DISPLAY_NAME: ${{secrets.CYPRESS_OLD_DISPLAY_NAME}}
@@ -48,7 +49,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -96,7 +97,7 @@ jobs:
         containers: [ 1, 2, 3, 4, 5 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download the build files
         uses: actions/download-artifact@v3
         with:

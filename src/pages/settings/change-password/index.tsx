@@ -37,8 +37,15 @@ const Index = () => {
   const updatePassword = async (newPassword: string) => {
     const { error } = await supabase.auth.updateUser({ password: newPassword })
 
-    if (error) updatePasswordError()
-    else {
+    if (error) {
+      if (error.message.includes("New password should be different from the old password")) {
+        toast.error(
+          "Your new password must be different from your old password. Please try again with a different password.",
+        )
+      } else {
+        updatePasswordError()
+      }
+    } else {
       toast.success("Password successfully changed!")
       await router.push("/settings")
     }

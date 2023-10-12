@@ -57,14 +57,14 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
       tag: "name",
       type: "text",
       placeholder: "Name",
-      dataCy: "set-name-textfield",
+      dataCy: "set-name-text-field",
       validationOptions: { required: "Username is required" },
     },
     {
       tag: "password",
       type: "password",
       placeholder: "Password",
-      dataCy: "change-password-textfield",
+      dataCy: "change-password-text-field",
       validationOptions: {
         required: "Password is required",
         minLength: { value: 6, message: "Password should at least be 6 characters." },
@@ -74,7 +74,7 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
       tag: "confirmPassword",
       type: "password",
       placeholder: "Confirm Password",
-      dataCy: "change-password-confirm-textfield",
+      dataCy: "change-password-confirm-text-field",
       validationOptions: {
         required: "Confirm Password is required",
         validate: (value) => value === password || "Passwords do not match",
@@ -88,7 +88,11 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
     const { error } = await supabase.auth.updateUser({ password })
 
     if (error) {
-      setErrorMessage("Change password failed, try again")
+      if (error.message.includes("New password should be different from the old password.")) {
+        setErrorMessage("New password should be different from the old password.")
+      } else {
+        setErrorMessage("Something went wrong with changing your password, try again.")
+      }
     } else {
       setName(supabase, user.id, name)
         .then((response) => {
