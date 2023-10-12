@@ -26,15 +26,10 @@ const NotificationSettings = () => {
     setTimeout(function () {
       fetch(
         `https://onesignal.com/api/v1/sync/${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}/web?callback=__jp0`,
-        {
-          method: "HEAD",
-          mode: "no-cors",
-          cache: "no-store",
-        },
       ).catch(() => {
         setHasAdBlock(true)
       })
-    }, 3500)
+    }, 1000) // Delay to make sure the request is not blocked by the browser
   }
 
   checkForAdblock()
@@ -44,7 +39,7 @@ const NotificationSettings = () => {
       {hasAdBlock && (
         <span className={"inline-flex items-center text-sm text-zinc-400"}>
           <InformationCircleIcon className={"mr-1 h-4"} />
-          Notifications might not work properly with ad-block enabled.
+          Please disable your ad-blocker for the notification settings to work.
         </span>
       )}
       <EnableNotificationsToggle
