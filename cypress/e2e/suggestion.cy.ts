@@ -69,31 +69,16 @@ describe("suggestion detail page", () => {
     })
   })
 
-  context("user is not admin", () => {
-    before(() => {
-      cy.removeUserAdminPrivileges()
-      cy.login()
-      cy.visit(`/suggestions/${suggestionId}`)
-    })
-
-    afterEach(() => cy.giveUserAdminPrivileges())
-
-    it("should not display the delete suggestion button", () => {
-      // Check if page is loaded correctly
-      cy.data("suggestion").should("be.visible")
-      cy.data("suggestion-delete-icon").should("not.exist")
-    })
-  })
-
   context("user is admin", () => {
     beforeEach(() => {
-      cy.giveUserAdminPrivileges()
       cy.login()
       cy.visit(`/suggestions/${suggestionId}`)
     })
 
-    it("should display the delete suggestion button", () => {
+    it("should display the admin action buttons", () => {
       cy.data("suggestion-delete-icon").should("exist")
+      cy.data("suggestion-edit-icon").should("exist")
+      cy.data("move-to-repertoire").should("exist")
     })
 
     it("should not disable button if text is correct", () => {

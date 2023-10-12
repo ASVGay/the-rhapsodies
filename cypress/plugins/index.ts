@@ -1,16 +1,9 @@
-import {
-  deleteNewUser,
-  getUserSession,
-  giveUserAdminPrivileges,
-  removeUserAdminPrivileges,
-} from "./tasks"
+import { deleteNewUser, getUserSession } from "./tasks"
 
 module.exports = (on, config) => {
   on("task", {
     getUserSession,
     deleteNewUser,
-    removeUserAdminPrivileges,
-    giveUserAdminPrivileges,
   })
 
   return config

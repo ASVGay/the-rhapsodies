@@ -172,7 +172,11 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
           </div>
           {isAdmin && (
             <div className={"m-8 flex justify-center"}>
-              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
+              <button
+                className={"btn toRepertoire"}
+                onClick={() => addToRepertoire()}
+                data-cy={"move-to-repertoire"}
+              >
                 Move to repertoire
               </button>
             </div>
