@@ -60,23 +60,23 @@ Cypress.Commands.add("logout", () => {
   cy.setCookie(getSbToken(), "")
 })
 
-Cypress.Commands.add("deleteNewUser", () => {
-  cy.task("deleteNewUser").then((response: PostgrestSingleResponse<null>) => {
+const executeTask = (taskName: string) => {
+  return cy.task(taskName).then((response: PostgrestSingleResponse<null>) => {
     cy.log(JSON.stringify(response))
-    if (response.error) throw new Error(response.error.message)
+    if (response.error) {
+      throw new Error(response.error.message)
+    }
   })
+}
+
+Cypress.Commands.add("deleteNewUser", () => {
+  return executeTask("deleteNewUser")
 })
 
 Cypress.Commands.add("giveUserAdminPrivileges", () => {
-  cy.task("giveUserAdminPrivileges").then((response: PostgrestSingleResponse<null>) => {
-    cy.log(JSON.stringify(response))
-    if (response.error) throw new Error(response.error.message)
-  })
+  return executeTask("giveUserAdminPrivileges")
 })
 
 Cypress.Commands.add("removeUserAdminPrivileges", () => {
-  cy.task("removeUserAdminPrivileges").then((response: PostgrestSingleResponse<null>) => {
-    cy.log(JSON.stringify(response))
-    if (response.error) throw new Error(response.error.message)
-  })
+  return executeTask("removeUserAdminPrivileges")
 })
