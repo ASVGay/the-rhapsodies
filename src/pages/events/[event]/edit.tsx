@@ -38,7 +38,7 @@ const EditEventPage = ({
     const { startDateTime, endDateTime } = parseStartAndEndDate(
       input.startTime,
       input.endTime,
-      input.eventDate
+      input.eventDate,
     )
 
     const updatedEvent: UpdateEvent = {

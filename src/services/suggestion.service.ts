@@ -14,7 +14,7 @@ export const getSuggestions = async (supabase: SupabaseClient<Database>) => {
         instrument (*),
         division (*)
       )
-    `
+    `,
     )
     .eq("inRepertoire", false)
     .order("created_at", { ascending: false })
@@ -31,7 +31,7 @@ export const getRepertoireSongs = async (supabase: SupabaseClient<Database>) => 
         instrument (*),
         division (*)
       )
-    `
+    `,
     )
     .eq("inRepertoire", true)
     .order("artist")
@@ -51,7 +51,7 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
             *,
             musician:member(display_name, id)
           )
-        )`
+        )`,
     )
     .eq("id", id)
     .eq("inRepertoire", false)
@@ -61,14 +61,14 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
 
 export const insertDivision = async (
   supabaseClient: SupabaseClient<Database>,
-  division: DivisionDatabaseOperation
+  division: DivisionDatabaseOperation,
 ) => {
   return supabaseClient.from("division").insert(division)
 }
 
 export const deleteDivision = async (
   supabaseClient: SupabaseClient<Database>,
-  division: DivisionDatabaseOperation
+  division: DivisionDatabaseOperation,
 ) => {
   return supabaseClient
     .from("division")
@@ -80,7 +80,7 @@ export const deleteDivision = async (
 export const insertSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
   { artist, link, motivation, title, image, previewUrl }: ISuggestion,
-  uid: string
+  uid: string,
 ) => {
   return supabaseClient
     .from("song")
@@ -100,7 +100,7 @@ export const insertSuggestion = async (
 export const updateSuggestion = async (
   supabaseClient: SupabaseClient<Database>,
   { artist, link, motivation, title, image, previewUrl }: ISuggestion,
-  uid: string
+  uid: string,
 ) => {
   return supabaseClient
     .from("song")
@@ -118,14 +118,14 @@ export const updateSuggestion = async (
 
 export const updateSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
-  operations: SongInstrumentDatabaseOperation[]
+  operations: SongInstrumentDatabaseOperation[],
 ) => {
   return supabaseClient.from("song_instrument").upsert(operations)
 }
 
 export const insertSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
-  operation: SongInstrumentDatabaseOperation[]
+  operation: SongInstrumentDatabaseOperation[],
 ) => {
   return supabaseClient.from("song_instrument").insert(operation)
 }
@@ -136,7 +136,7 @@ export const deleteSuggestion = async (supabaseClient: SupabaseClient<Database>,
 
 export const deleteSuggestionInstruments = async (
   supabaseClient: SupabaseClient<Database>,
-  ids: string[]
+  ids: string[],
 ) => {
   return supabaseClient.from("song_instrument").delete().in("id", ids)
 }

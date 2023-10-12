@@ -3,7 +3,7 @@ export const testErrorHandlingChangePassword = (
   confirmPasswordTextfield,
   passwordTextfield,
   shortPassword,
-  termsId
+  termsId,
 ) => {
   it("should all give error messages when nothing is filled in", () => {
     cy.data(submitPasswordBtn).click()

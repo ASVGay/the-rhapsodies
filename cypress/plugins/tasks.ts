@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js"
 
 const supabase = createClient(
   process.env?.NEXT_PUBLIC_SUPABASE_URL ?? "x",
-  process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "x"
+  process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "x",
 )
 
 // cache session data for each user name

@@ -7,7 +7,7 @@ import { HttpResponseInterceptor, RouteMatcher, StaticResponse } from "cypress/t
  */
 export function interceptIndefinitely(
   requestMatcher: RouteMatcher,
-  response?: StaticResponse | HttpResponseInterceptor
+  response?: StaticResponse | HttpResponseInterceptor,
 ): { sendResponse: () => void } {
   let sendResponse
   const trigger = new Promise((resolve) => {

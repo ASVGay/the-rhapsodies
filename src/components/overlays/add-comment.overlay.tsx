@@ -48,7 +48,7 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: AddCommentOverlay
         if (error)
           toast.error(
             `Something went wrong while ${deleted ? "deleting" : "saving"} 
-            your comment. Please try again.`
+            your comment. Please try again.`,
           )
         else {
           toast.success(`Comment successfully ${deleted ? "deleted" : "saved"}!`)
@@ -132,7 +132,7 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: AddCommentOverlay
           </div>
         </form>
       </div>
-    </OverlayContainer>
+    </OverlayContainer>,
   )
 }
 

@@ -20,7 +20,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
     setSearchTerm(value)
 
     const searchResults = instruments.filter((instruments) =>
-      instruments.instrument_name.toLowerCase().includes(value.toLowerCase())
+      instruments.instrument_name.toLowerCase().includes(value.toLowerCase()),
     )
 
     setSearchResults(searchResults)
@@ -102,7 +102,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
                       dangerouslySetInnerHTML={{
                         __html: boldSpecificTextSections(
                           instrumentItem.instrument_name,
-                          searchTerm
+                          searchTerm,
                         ),
                       }}
                     ></div>

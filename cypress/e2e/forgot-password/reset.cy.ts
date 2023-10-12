@@ -52,7 +52,7 @@ describe("on the reset password page", () => {
         cy.data(buttonSubmitNewPassword).click()
         cy.data(inputConfirmationPasswordError).should(
           "contain.text",
-          "Please provide your password"
+          "Please provide your password",
         )
         cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
       })

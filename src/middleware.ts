@@ -23,7 +23,7 @@ async function handleRoutesWhenLoggedIn(
   supabase: SupabaseClient,
   session: Session,
   req: NextRequest,
-  res: NextResponse<unknown>
+  res: NextResponse<unknown>,
 ) {
   // Try to fetch the user first login status
   let count

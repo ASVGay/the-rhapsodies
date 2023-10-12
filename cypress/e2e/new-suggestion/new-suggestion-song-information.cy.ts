@@ -107,7 +107,7 @@ describe("when creating a new suggestion, adding song information", () => {
 
     it("should display results when searching a song", () => {
       cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
-        "mockedSearch"
+        "mockedSearch",
       )
       cy.data(inputTitle)
         .type("A")
@@ -119,7 +119,7 @@ describe("when creating a new suggestion, adding song information", () => {
 
     it("should auto-fill song info", () => {
       cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
-        "mockedSearch"
+        "mockedSearch",
       )
       cy.data(inputTitle)
         .type("A")

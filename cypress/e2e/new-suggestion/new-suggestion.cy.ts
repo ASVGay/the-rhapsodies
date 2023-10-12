@@ -77,7 +77,7 @@ describe("when creating a new suggestion", () => {
                 .get(".Toastify__toast-body")
                 .should(
                   "have.text",
-                  "You need to fill in all the required fields before continuing"
+                  "You need to fill in all the required fields before continuing",
                 )
             })
 
