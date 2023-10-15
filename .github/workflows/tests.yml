@@ -42,6 +42,7 @@ env:
   CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
   CYPRESS_PAGE_LOAD_TIMEOUT_SECONDS: ${{vars.CYPRESS_PAGE_LOAD_TIMEOUT_SECONDS}}
   CYPRESS_RETRY_MODE_RUN: ${{vars.CYPRESS_RETRY_MODE_RUN}}
+  GA_NODE_VERSION: ${{secrets.GA_NODE_VERSION}}
   HUSKY: 0
 
 jobs:
@@ -58,6 +59,10 @@ jobs:
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
         run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.GA_NODE_VERSION }}
       - name: Setup cache
         uses: actions/cache@v3
         with:
@@ -99,6 +104,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.GA_NODE_VERSION }}
       - name: Download the build files
         uses: actions/download-artifact@v3
         with:
