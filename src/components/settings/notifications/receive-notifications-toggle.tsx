@@ -38,21 +38,32 @@ const ReceiveNotificationsToggle = ({
     }
   }, [getSubscriptionStatus, oneSignalInitialized, userId])
 
+  const handleSubscribingError = () => {
+    toast.error("Something went wrong while subscribing to notifications. Please try again later.")
+    getSubscriptionStatus()
+  }
+
   const changeSubscription = () => {
     if (isSubscribed) {
       OneSignal.User.PushSubscription.optOut().then(() => {
-        setIsSubscribed(false)
         toast.success(
           "Unsubscribed from notifications! It might take a couple of seconds to take effect.",
         )
-      })
-    } else if (OneSignal.User.PushSubscription.id) {
-      OneSignal.User.PushSubscription.optIn().then(() => {
         getSubscriptionStatus()
-        toast.success(
-          "Subscribed to notifications! It might take a couple of seconds to take effect.",
-        )
       })
+    } else if (userId) {
+      OneSignal.login(userId)
+        .then(() => {
+          OneSignal.User.PushSubscription.optIn().then(() => {
+            toast.success(
+              "Subscribed to notifications! It might take a couple of seconds to take effect.",
+            )
+            getSubscriptionStatus()
+          })
+        })
+        .catch(() => handleSubscribingError())
+    } else {
+      handleSubscribingError()
     }
   }
 

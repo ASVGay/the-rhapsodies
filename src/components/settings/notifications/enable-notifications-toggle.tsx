@@ -25,7 +25,7 @@ const EnableNotificationsToggle = ({
   const userId = useUser()?.id
   const [renderContent, setRenderContent] = useState<boolean>(false)
   const [permission, setPermission] = useState<NotificationPermission>(
-    notificationsAreSupported() ? Notification.permission : "default",
+    notificationsAreSupported() ? OneSignal.Notifications.permissionNative : "default",
   )
 
   const changeNotificationSetting = () => {
@@ -38,7 +38,7 @@ const EnableNotificationsToggle = ({
       })
       .catch((error) => alert(error))
       .finally(() => {
-        setPermission(Notification.permission)
+        setPermission(OneSignal.Notifications.permissionNative)
       })
   }
 
