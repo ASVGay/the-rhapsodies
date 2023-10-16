@@ -2,6 +2,7 @@ import React from "react"
 import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
 import { useUser } from "@supabase/auth-helpers-react"
+import OneSignal from "react-onesignal"
 
 interface TestNotificationButtonProps {
   isSubscribed: boolean
@@ -22,7 +23,7 @@ const TestNotificationButton = ({ isSubscribed }: TestNotificationButtonProps) =
         app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
         contents: { en: "This is a test notification!" },
         name: "Test notification",
-        include_external_user_ids: [userId],
+        include_subscription_ids: [OneSignal.User.PushSubscription.id],
       }),
     })
       .then((res) => {
