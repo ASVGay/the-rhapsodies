@@ -27,7 +27,11 @@ const SignOut = () => {
       if (process.env.NEXT_PUBLIC_DISABLE_ONESIGNAL !== "true") {
         // Log out of OneSignal
         OneSignal.User.PushSubscription.optOut()
-          .then(async () => await signOutSupabase())
+          .then(async () => {
+            // Add delay to ensure OneSignal has time to opt out
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await signOutSupabase()
+          })
           .catch(() => showLogoutError())
       } else await signOutSupabase()
     })()
