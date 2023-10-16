@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react"
-import Toggle from "@/components/settings/controls/toggle"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import OneSignal from "react-onesignal"
 import { toast } from "react-toastify"
+import { useUser } from "@supabase/auth-helpers-react"
+import Toggle from "@/components/settings/controls/toggle"
+import { OneSignalContext } from "@/pages/_app"
 
 interface ReceiveNotificationsToggleProps {
   isSubscribed: boolean
@@ -14,26 +16,55 @@ const ReceiveNotificationsToggle = ({
   setIsSubscribed,
   hasNotificationPermission,
 }: ReceiveNotificationsToggleProps) => {
+  const oneSignalInitialized = useContext(OneSignalContext)
   const [renderContent, setRenderContent] = useState<boolean>(false)
+  const userId = useUser()?.id
 
   const getSubscriptionStatus = useCallback(() => {
-    setIsSubscribed(OneSignal.User.PushSubscription.optedIn ?? false)
+    setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
   }, [setIsSubscribed])
 
+  useEffect(() => {
+    if (userId && oneSignalInitialized) {
+      console.log("Logging in to OneSignal")
+      OneSignal.login(userId)
+        .then(() => getSubscriptionStatus())
+        .catch(() => console.error("Error logging in to OneSignal"))
+    } else {
+      console.log("Logging out of OneSignal")
+      OneSignal.logout()
+        .then(() => getSubscriptionStatus())
+        .catch(() => console.error("Error logging out of OneSignal"))
+    }
+  }, [getSubscriptionStatus, oneSignalInitialized, userId])
+
+  const handleSubscribingError = () => {
+    toast.error("Something went wrong while subscribing to notifications. Please try again later.")
+    getSubscriptionStatus()
+  }
+
   const changeSubscription = () => {
-    isSubscribed
-      ? OneSignal.User.PushSubscription.optOut()
-          .then(() => getSubscriptionStatus())
-          .catch((error) => {
-            toast.error("Something went wrong while retrieving your notification data")
-            console.error(error)
+    if (isSubscribed) {
+      OneSignal.User.PushSubscription.optOut().then(() => {
+        toast.success(
+          "Unsubscribed from notifications! It might take a couple of seconds to take effect.",
+        )
+        getSubscriptionStatus()
+      })
+    } else if (userId) {
+      OneSignal.login(userId)
+        .then(() => {
+          OneSignal.User.PushSubscription.optIn().then(() => {
+            toast.success(
+              "Subscribed to notifications! It might take a couple of seconds to take effect.",
+            )
+            getSubscriptionStatus()
           })
-      : OneSignal.User.PushSubscription.optIn()
-          .then(() => getSubscriptionStatus())
-          .catch((error) => {
-            toast.error("Something went wrong while retrieving your notification data")
-            console.error(error)
-          })
+        })
+        .catch(() => handleSubscribingError())
+    } else {
+      handleSubscribingError()
+    }
   }
 
   useEffect(() => {
@@ -45,9 +76,10 @@ const ReceiveNotificationsToggle = ({
   return (
     <>
       {renderContent && (
+        // <div className="onesignal-customlink-container"></div>
         <Toggle
           dataCy={"receive-notifications-toggle"}
-          text={"Receive notifications"}
+          text={"Subscribe to notifications"}
           checked={isSubscribed}
           handleChange={changeSubscription}
           disabled={!hasNotificationPermission}
