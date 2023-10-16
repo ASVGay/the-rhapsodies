@@ -50,9 +50,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           safari_web_id: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID!,
           allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
           serviceWorkerParam: {
-            scope: "/",
+            scope: "/js/push/onesignal/",
           },
-          serviceWorkerPath: "./OneSignalSDKWorker.js",
+          serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
           autoResubscribe: true,
         }).then(() => {
           console.log("OneSignal initialized")
