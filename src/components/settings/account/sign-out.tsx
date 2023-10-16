@@ -14,18 +14,22 @@ const SignOut = () => {
     toast.warn("Something went wrong while logging out. Please try again.")
   }
 
+  async function signOutSupabase() {
+    const res = await supabase.auth.signOut()
+    res.error ? showLogoutError() : router.push("/sign-in").then(() => router.reload())
+  }
+
   const signOut = () => {
     ;(async () => {
       const confirmed = window.confirm("Are you sure you want to sign out?")
       if (!confirmed) return
 
-      // Log out of OneSignal
-      OneSignal.User.PushSubscription.optOut()
-        .then(async () => {
-          const res = await supabase.auth.signOut()
-          res.error ? showLogoutError() : router.push("/sign-in").then(() => router.reload())
-        })
-        .catch(() => showLogoutError())
+      if (process.env.NEXT_PUBLIC_DISABLE_ONESIGNAL !== "true") {
+        // Log out of OneSignal
+        OneSignal.User.PushSubscription.optOut()
+          .then(async () => await signOutSupabase())
+          .catch(() => showLogoutError())
+      } else await signOutSupabase()
     })()
   }
   return (
