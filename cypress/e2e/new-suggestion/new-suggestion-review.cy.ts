@@ -32,7 +32,7 @@ describe("review new suggestion page", () => {
         .then((state: ISuggestion) => {
           cy.data("review-title").invoke("text").should("equal", state.title)
           state.artist.forEach((artist) =>
-            cy.data("review-artists").invoke("text").should("contain", artist)
+            cy.data("review-artists").invoke("text").should("contain", artist),
           )
           cy.data("review-motivation").invoke("text").should("equal", state.motivation)
           cy.data("review-link").invoke("attr", "href").should("equal", state.link)

@@ -4,18 +4,36 @@ import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
+import OneSignal from "react-onesignal"
 
 const SignOut = () => {
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
+
+  const showLogoutError = () => {
+    toast.error("Something went wrong while logging out. Please try again.")
+  }
+
+  async function signOutSupabase() {
+    const res = await supabase.auth.signOut()
+    res.error ? showLogoutError() : router.push("/sign-in").then(() => router.reload())
+  }
+
   const signOut = () => {
     ;(async () => {
       const confirmed = window.confirm("Are you sure you want to sign out?")
       if (!confirmed) return
 
-      const res = await supabase.auth.signOut()
-      if (res.error) toast.warn("Can't log out right now.")
-      else router.push("/sign-in").then(() => router.reload())
+      if (process.env.NEXT_PUBLIC_DISABLE_ONESIGNAL !== "true") {
+        // Log out of OneSignal
+        OneSignal.User.PushSubscription.optOut()
+          .then(async () => {
+            // Add delay to ensure OneSignal has time to opt out
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await signOutSupabase()
+          })
+          .catch(() => showLogoutError())
+      } else await signOutSupabase()
     })()
   }
   return (

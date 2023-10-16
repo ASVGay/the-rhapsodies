@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 export const setName = async (
   supabaseClient: SupabaseClient<Database>,
   id: string,
-  name: string
+  name: string,
 ) => {
   return supabaseClient.from("member").upsert({ id, display_name: name })
 }
@@ -33,7 +33,7 @@ export const verifyPassword = (supabaseClient: SupabaseClient<Database>, passwor
 export const updateDisplayName = (
   supabaseClient: SupabaseClient<Database>,
   newDisplayName: string,
-  uid: string
+  uid: string,
 ) => {
   return supabaseClient
     .from("member")
@@ -50,7 +50,7 @@ export const getDisplayName = (supabaseClient: SupabaseClient<Database>, uid: st
 export const sendChangeEmailRequest = async (supabase: SupabaseClient, email: string) => {
   const { error } = await supabase.auth.updateUser(
     { email },
-    { emailRedirectTo: `${window.location.origin}/settings/change-email` }
+    { emailRedirectTo: `${window.location.origin}/settings/change-email` },
   )
   if (error) {
     toast.error(error.message)

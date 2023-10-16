@@ -35,7 +35,7 @@ const ScrollViewOverlay = ({ overlayContent, onClose }: ScrollViewOverlayProps) 
           </button>
         </div>
       </div>
-    </OverlayContainer>
+    </OverlayContainer>,
   )
 }
 

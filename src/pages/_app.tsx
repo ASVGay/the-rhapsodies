@@ -6,7 +6,7 @@ import { Lexend } from "next/font/google"
 import Layout from "@/components/layout/layout"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs"
-import { useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { Database } from "@/types/database"
 import { Provider } from "react-redux"
 import store from "@/redux/store"
@@ -17,7 +17,10 @@ const lexend = Lexend({
   variable: "--font-lexend",
 })
 
+export const OneSignalContext = createContext(false)
+
 const App = ({ Component, pageProps }: AppProps) => {
+  const [oneSignalInitialized, setOneSignalInitialized] = useState<boolean>(false)
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const [supabaseClient] = useState(() =>
@@ -44,18 +47,24 @@ const App = ({ Component, pageProps }: AppProps) => {
         const OneSignal = module.default
         OneSignal.init({
           appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
+          safari_web_id: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID!,
           allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
           serviceWorkerParam: {
             scope: "/js/push/onesignal/",
           },
           serviceWorkerPath: "./js/push/onesignal/OneSignalSDKWorker.js",
-        }).then(() => console.log("OneSignal initialized"))
+          autoResubscribe: true,
+        }).then(() => {
+          console.log("OneSignal initialized")
+          setOneSignalInitialized(true)
+          OneSignal.Debug.setLogLevel("info")
+        })
       })
     }
   }, [])
 
   return (
-    <>
+    <OneSignalContext.Provider value={oneSignalInitialized}>
       <Head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="application-name" content="The Rhapsodies" />
@@ -247,7 +256,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </main>
         </SessionContextProvider>
       </Provider>
-    </>
+    </OneSignalContext.Provider>
   )
 }
 export default App

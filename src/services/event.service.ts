@@ -12,7 +12,7 @@ export const getEventsWithAttendees = async (supabase: SupabaseClient<Database>)
 
 export const createEvent = (
   supabase: SupabaseClient<Database>,
-  { end_time, start_time, event_type, location }: InsertEvent
+  { end_time, start_time, event_type, location }: InsertEvent,
 ) => {
   return supabase
     .from("event")
@@ -29,7 +29,7 @@ export const createEvent = (
 export const updateEvent = (
   supabase: SupabaseClient<Database>,
   updatedEvent: UpdateEvent,
-  id: string
+  id: string,
 ) => {
   return supabase.from("event").update(updatedEvent).eq("id", id)
 }
@@ -40,7 +40,7 @@ export const deleteEvent = (supabase: SupabaseClient<Database>, eventId: string)
 
 export const getAttendingMembersForEvent = (
   supabase: SupabaseClient<Database>,
-  eventId: string
+  eventId: string,
 ) => {
   return supabase.rpc("get_members_by_event", { event_id: eventId })
 }
@@ -48,7 +48,7 @@ export const getAttendingMembersForEvent = (
 export const getAttendanceForEventOfUser = (
   supabase: SupabaseClient<Database>,
   eventId: string,
-  memberId: string
+  memberId: string,
 ) => {
   return supabase
     .from("attendee")
@@ -62,7 +62,7 @@ export const updateAttendance = (
   supabase: SupabaseClient<Database>,
   eventId: string,
   memberId: string,
-  attending: Attending
+  attending: Attending,
 ) => {
   return supabase
     .from("attendee")
@@ -84,7 +84,7 @@ export const setComment = (
   supabase: SupabaseClient<Database>,
   event_id: string,
   member_id: string,
-  comment: string | null
+  comment: string | null,
 ) => {
   return supabase.from("attendee").upsert({ event_id, member_id, comment })
 }
@@ -92,7 +92,7 @@ export const setComment = (
 export const getComment = (
   supabase: SupabaseClient<Database>,
   event_id: string,
-  member_id: string
+  member_id: string,
 ) => {
   return supabase
     .from("attendee")

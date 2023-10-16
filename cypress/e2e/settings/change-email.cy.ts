@@ -105,7 +105,7 @@ describe("on the change email page", () => {
     it("should disable form & show spinner when loading", () => {
       const interception = interceptIndefinitely(
         `**/rest/v1/rpc/verify_user_password**`,
-        errorResponseChangeEmail
+        errorResponseChangeEmail,
       )
       submitCorrectData()
       cy.data(changeEmailForm)
@@ -145,7 +145,7 @@ describe("on the change email page", () => {
           .get(".Toastify__toast-body")
           .should(
             "have.text",
-            "An email has been sent. Check your spam folder if you cannot find it."
+            "An email has been sent. Check your spam folder if you cannot find it.",
           )
       })
 
@@ -189,7 +189,7 @@ describe("on change email page with hash params", () => {
 
   it("should show redirect to sign in if going to page with error hash", () => {
     cy.visit(
-      "/settings/change-email#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired"
+      "/settings/change-email#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired",
     )
     cy.location("pathname").should("eq", "/sign-in")
     cy.get(".Toastify")

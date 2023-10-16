@@ -23,7 +23,7 @@ describe("repertoire page page", () => {
   context("when displaying content", () => {
     beforeEach(() => {
       cy.intercept("GET", "/rest/v1/song*", { fixture: "mock-repertoire-songs.json" }).as(
-        "mockedRequest"
+        "mockedRequest",
       )
       cy.login()
       cy.visit("repertoire")

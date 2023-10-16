@@ -64,7 +64,7 @@ describe("the forgot password page", () => {
       {
         code: 429,
         msg: "For security purposes, you can only request this once every 60 seconds",
-      }.msg
+      }.msg,
     )
   })
 
@@ -110,7 +110,7 @@ describe("the forgot password page", () => {
         {
           code: 429,
           msg: "For security purposes, you can only request this once every 60 seconds",
-        }.msg
+        }.msg,
       )
     })
   })

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
 import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
@@ -16,6 +16,8 @@ import Spinner from "@/components/utils/spinner"
 import Instrument from "@/components/suggestion/instrument"
 import SongPreviewImage from "@/components/images/song-preview-image"
 import { toast } from "react-toastify"
+import { TrashIcon } from "@heroicons/react/24/outline"
+import DeleteSuggestionOverlay from "@/components/overlays/delete-suggestion.overlay"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -31,6 +33,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [instrumentsInUpdate, setInstrumentsInUpdate] = useState<SongInstrument[]>([])
+  const [showDeleteOverlay, setShowDeleteOverlay] = useState<boolean>(false)
   const supabase = useSupabaseClient<Database>()
   const user = useUser()
   const uid = user?.id
@@ -79,14 +82,10 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
     setInstrumentsInUpdate(instrumentsInUpdate.filter((item) => item.id !== songInstrument.id))
   }
 
-  const displayButton = (): boolean => {
-    return isAdmin && suggestion.song_instruments.filter((i) => i.division.length == 0).length == 0
-  }
-
   const addToRepertoire = () => {
     setShowSpinner(true)
     createSongFromSuggestion(supabase, suggestion.id)
-      .then(() => router.push("/repertoire"))
+      .then(() => router.push(`/repertoire/${suggestion.id}`))
       .catch(() => setShowSongError(true))
       .finally(() => setShowSpinner(false))
   }
@@ -109,6 +108,13 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               </p>
             </div>
             <div className={"flex flex-row gap-2"}>
+              {isAdmin && (
+                <TrashIcon
+                  className={"h-8 w-8 cursor-pointer text-red-500 hover:text-red-700"}
+                  data-cy="suggestion-delete-icon"
+                  onClick={() => setShowDeleteOverlay(true)}
+                />
+              )}
               {isEditable && (
                 <PencilSquareIcon
                   className={"h-8 w-8 cursor-pointer text-black hover:text-zinc-400"}
@@ -164,9 +170,13 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               })}
             </div>
           </div>
-          {displayButton() && (
+          {isAdmin && (
             <div className={"m-8 flex justify-center"}>
-              <button className={"btn toRepertoire"} onClick={() => addToRepertoire()}>
+              <button
+                className={"btn toRepertoire"}
+                onClick={() => addToRepertoire()}
+                data-cy={"move-to-repertoire"}
+              >
                 Move to repertoire
               </button>
             </div>
@@ -189,6 +199,12 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
               />
             </div>
           )}
+          {showDeleteOverlay && (
+            <DeleteSuggestionOverlay
+              onClose={() => setShowDeleteOverlay(false)}
+              suggestion={suggestion}
+            />
+          )}
         </div>
       )}
     </>
@@ -207,7 +223,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         suggestionFromNext: data,
-        isEditable: (data.author as { id: string }).id === session?.user.id,
+        isEditable:
+          (
+            data.author as {
+              id: string
+            }
+          ).id === session?.user.id || session?.user?.app_metadata.claims_admin === true,
       },
     }
   } catch {

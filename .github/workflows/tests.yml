@@ -21,8 +21,10 @@ env:
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.HOSTED_SUPABASE_ANON_KEY}}
   NEXT_PUBLIC_ONESIGNAL_APP_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_APP_ID}}
   NEXT_PUBLIC_ONESIGNAL_REST_API_KEY: ${{secrets.NEXT_PUBLIC_ONESIGNAL_REST_API_KEY}}
+  NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID}}
   NEXT_PUBLIC_DISABLE_ONESIGNAL: "true"
   CYPRESS_ENV: ${{secrets.CYPRESS_ENV}}
+  CYPRESS_OLD_ID: ${{secrets.CYPRESS_OLD_ID}}
   CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
   CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
   CYPRESS_OLD_DISPLAY_NAME: ${{secrets.CYPRESS_OLD_DISPLAY_NAME}}
@@ -41,6 +43,7 @@ env:
   CYPRESS_TIMEOUT_SECONDS: ${{vars.CYPRESS_TIMEOUT_SECONDS}}
   CYPRESS_PAGE_LOAD_TIMEOUT_SECONDS: ${{vars.CYPRESS_PAGE_LOAD_TIMEOUT_SECONDS}}
   CYPRESS_RETRY_MODE_RUN: ${{vars.CYPRESS_RETRY_MODE_RUN}}
+  GA_NODE_VERSION: ${{secrets.GA_NODE_VERSION}}
   HUSKY: 0
 
 jobs:
@@ -57,6 +60,10 @@ jobs:
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
         run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.GA_NODE_VERSION }}
       - name: Setup cache
         uses: actions/cache@v3
         with:
@@ -98,6 +105,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.GA_NODE_VERSION }}
       - name: Download the build files
         uses: actions/download-artifact@v3
         with:

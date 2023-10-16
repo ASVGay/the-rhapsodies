@@ -52,7 +52,7 @@ const SongListWrapper = ({ songType }: SongListWrapperProps) => {
         } else {
           songType === SongType.Suggestion
             ? setErrorText(
-                "Looks like there are no suggestions made yet! Feel free to start adding them."
+                "Looks like there are no suggestions made yet! Feel free to start adding them.",
               )
             : setErrorText("Looks like there are no songs in the repertoire yet.")
         }
@@ -78,7 +78,7 @@ const SongListWrapper = ({ songType }: SongListWrapperProps) => {
     if (filteredSongs.length === 0) {
       songType === SongType.Suggestion
         ? setErrorText(
-            `It looks like the song you are looking for has not been added yet. Feel free to add the song!`
+            `It looks like the song you are looking for has not been added yet. Feel free to add the song!`,
           )
         : setErrorText("This song is currently not in the repertoire.")
     } else {
@@ -113,7 +113,7 @@ const SongListWrapper = ({ songType }: SongListWrapperProps) => {
               setShowSpinner={setShowSpinner}
               router={router}
             />
-          )
+          ),
         )}
       </div>
     )

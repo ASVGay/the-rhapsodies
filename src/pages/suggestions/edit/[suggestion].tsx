@@ -43,8 +43,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
 
-    // If the user does not match with the author of the suggestion
-    if (session?.user.id !== data?.author.id)
+    // If the user does not match with the author of the suggestion and is not an admin, redirect to 403
+    if (session?.user.id !== data?.author.id && session?.user?.app_metadata.claims_admin !== true)
       return {
         redirect: {
           destination: "/403",
@@ -71,7 +71,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
   const activeArea = useSelector((state: AppState) => state.editSuggestion.activeArea)
   const methods = useForm<InputsSongInformation>(getSongInformationFormData(reduxSuggestion))
   const deletedInstruments = useSelector(
-    (state: AppState) => state.editSuggestion.deletedInstrumentUuids
+    (state: AppState) => state.editSuggestion.deletedInstrumentUuids,
   )
 
   //If the user visits a new edit page, clear the previously edited from redux
@@ -84,7 +84,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
           description: element.description ?? "",
           instrument: element.instrument,
         })
-      }
+      },
     )
 
     dispatch(
@@ -96,7 +96,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         instruments: suggestionInstruments,
         image: suggestion.image,
         previewUrl: suggestion.previewUrl,
-      })
+      }),
     )
 
     dispatch(updateDeletedInstrumentUuids([]))
@@ -108,7 +108,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
       const suggestionResponse = await updateSuggestion(
         supabase,
         reduxSuggestion,
-        lastEditedUuid ?? ""
+        lastEditedUuid ?? "",
       )
       if (suggestionResponse.error) throw new Error("Failed to update song")
 
@@ -123,19 +123,19 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
 
       const instrumentUpdateResponse = await updateSuggestionInstruments(
         supabase,
-        mapEditInstruments(updateInstrument, suggestionId)
+        mapEditInstruments(updateInstrument, suggestionId),
       )
       if (instrumentUpdateResponse.error) throw Error("Failed to update song_instruments")
 
       const instrumentInsertResponse = await insertSuggestionInstruments(
         supabase,
-        mapInstruments(insertInstrument, suggestionId)
+        mapInstruments(insertInstrument, suggestionId),
       )
       if (instrumentInsertResponse.error) throw Error("Failed to insert song_instruments")
 
       const deleteSuggestionResponse = await deleteSuggestionInstruments(
         supabase,
-        deletedInstruments
+        deletedInstruments,
       )
       if (deleteSuggestionResponse.error) throw new Error("Failed to delete song_instruments")
 
@@ -161,7 +161,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
       updateEditSuggestion({
         ...reduxSuggestion,
         instruments: newInstruments,
-      })
+      }),
     )
   }
 
@@ -182,7 +182,7 @@ const EditSuggestionPage = ({ suggestion }: EditSuggestionPageProps) => {
         motivation,
         image,
         previewUrl,
-      })
+      }),
     )
   }
 

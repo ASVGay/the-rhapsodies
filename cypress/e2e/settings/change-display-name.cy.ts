@@ -102,7 +102,7 @@ describe("the change display name page", () => {
     it("should disable form & show spinner when loading", () => {
       const interception = interceptIndefinitely(
         `**/rest/v1/member**`,
-        errorResponseChangeDisplayName
+        errorResponseChangeDisplayName,
       )
       submitCorrectData()
       cy.data("change-display-name-form")

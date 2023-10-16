@@ -19,6 +19,6 @@ describe("Sign-out", () => {
     cy.get(".Toastify")
       .get("#1")
       .get(".Toastify__toast-body")
-      .should("have.text", "Can't log out right now.")
+      .should("have.text", "Something went wrong while logging out. Please try again.")
   })
 })

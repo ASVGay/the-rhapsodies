@@ -7,9 +7,9 @@ import { Database } from "@/types/database"
 import { Event } from "@/types/database-types"
 import { getEventDate, getEventTime, getEventTitle } from "@/helpers/event.helper"
 import { CalendarIcon } from "@heroicons/react/24/solid"
-import {deleteEvent} from "@/services/event.service";
-import {useRouter} from "next/router";
-import {toast} from "react-toastify";
+import { deleteEvent } from "@/services/event.service"
+import { useRouter } from "next/router"
+import { toast } from "react-toastify"
 
 interface DeleteEventOverlayProps {
   onClose: (showOverlay: boolean) => void
@@ -21,7 +21,7 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
   const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
   const [showInput, setShowInput] = useState(false)
   const [deleteButtonIsActive, setDeleteButtonIsActive] = useState(false)
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => setOverlayIsOpen(true), [])
 
   const waitForTransition = (isOpen: boolean) => {
@@ -39,8 +39,8 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
     const confirmed = window.confirm("Are you sure you want to delete this event?")
     if (!confirmed) return
 
-    deleteEvent(supabase, event.id).then(({error, data}) => {
-      if(error) {
+    deleteEvent(supabase, event.id).then(({ error, data }) => {
+      if (error) {
         toast.error("We couldn't delete your event, try again later.")
       } else {
         router.push("/events")
@@ -58,12 +58,12 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
               Delete {getEventTitle(event.event_type)}
             </span>
           </div>
-            <XMarkIcon
-              className="p-0cursor-pointer h-6 text-zinc-500 hover:text-red-600"
-              onClick={() => waitForTransition(false)}
-              data-cy="close-comment-overlay"
-            />
-          </div>
+          <XMarkIcon
+            className="p-0cursor-pointer h-6 text-zinc-500 hover:text-red-600"
+            onClick={() => waitForTransition(false)}
+            data-cy="close-comment-overlay"
+          />
+        </div>
         <hr className="w-full" />
         <div className="fle items-center justify-center pb-2 pt-2">
           <div className="flex flex-col items-center justify-center">
@@ -122,7 +122,7 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
           </div>
         )}
       </div>
-    </OverlayContainer>
+    </OverlayContainer>,
   )
 }
 

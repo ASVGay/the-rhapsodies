@@ -59,7 +59,7 @@ describe("forgot password", () => {
 
   it("should show error if reset password link has an error", () => {
     cy.visit(
-      "/sign-in#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired"
+      "/sign-in#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired",
     )
     cy.get(".Toastify")
       .get("#error_description")
