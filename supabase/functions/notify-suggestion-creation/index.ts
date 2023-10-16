@@ -7,7 +7,7 @@ const databaseUrl = Deno.env.get("SUPABASE_DB_URL")!
 const pool = new postgres.Pool(databaseUrl, 3, true)
 
 const _OnesignalAppId_ = Deno.env.get("NEXT_PUBLIC_ONESIGNAL_APP_ID")!
-const _OnesignalUserAuthKey_ = Deno.env.get("USER_AUTH_KEY")!
+const _OnesignalUserAuthKey_ = Deno.env.get("ONESIGNAL_USER_AUTH_KEY")!
 const _OnesignalRestApiKey_ = Deno.env.get("NEXT_PUBLIC_ONESIGNAL_REST_API_KEY")!
 const _OnesignalUrl_ = Deno.env.get("ONESIGNAL_URL")!
 
@@ -33,7 +33,7 @@ serve(async (req: Promise<Response>) => {
       // Build OneSignal notification object
       const notification = new OneSignal.Notification()
       notification.app_id = _OnesignalAppId_
-      notification.included_segments = ["Subscribed Users"]
+      notification.included_segments = ["Total Subscriptions"]
       notification.contents = {
         en: `${result.rows[0].display_name} just suggested a song!`,
       }
