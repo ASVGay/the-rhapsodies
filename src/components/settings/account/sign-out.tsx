@@ -11,7 +11,7 @@ const SignOut = () => {
   const router = useRouter()
 
   const showLogoutError = () => {
-    toast.warn("Something went wrong while logging out. Please try again.")
+    toast.error("Something went wrong while logging out. Please try again.")
   }
 
   async function signOutSupabase() {
