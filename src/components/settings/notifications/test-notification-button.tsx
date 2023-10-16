@@ -1,7 +1,6 @@
 import React from "react"
 import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
-import { useUser } from "@supabase/auth-helpers-react"
 import OneSignal from "react-onesignal"
 
 interface TestNotificationButtonProps {
@@ -9,8 +8,6 @@ interface TestNotificationButtonProps {
 }
 
 const TestNotificationButton = ({ isSubscribed }: TestNotificationButtonProps) => {
-  const userId = useUser()?.id
-
   const sendTestNotification = () => {
     fetch(`https://onesignal.com/api/v1/notifications`, {
       method: "POST",
