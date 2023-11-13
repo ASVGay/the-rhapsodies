@@ -13,6 +13,12 @@ module.exports = withPWA({
         port: "",
         pathname: `/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/**`,
       },
+      {
+        protocol: "https",
+        hostname: `i.scdn.co`,
+        port: "",
+        pathname: `/image/**`,
+      },
     ],
   },
 })

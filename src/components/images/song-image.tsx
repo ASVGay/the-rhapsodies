@@ -1,5 +1,6 @@
 import { MusicalNoteIcon } from "@heroicons/react/24/solid"
 import React from "react"
+import Image from "next/image"
 
 export interface SongImageProps {
   url: string | null
@@ -9,7 +10,7 @@ const SongImage = ({ url }: SongImageProps) => {
   return (
     <>
       {url ? (
-        <img src={url} height={64} width={64} alt={`song image`} className={"my-auto rounded-md"} />
+        <Image src={url} height={64} width={64} alt={`Song Image`} />
       ) : (
         <div className={"my-auto flex"}>
           <MusicalNoteIcon
