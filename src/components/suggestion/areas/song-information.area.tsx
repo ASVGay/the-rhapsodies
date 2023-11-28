@@ -15,12 +15,14 @@ import {
   setSpotifyAccessToken,
 } from "@/services/spotify.service"
 import ErrorPopup from "@/components/popups/error-popup"
-import { debounce } from "debounce"
-import { ISuggestion, InputsSongInformation } from "@/interfaces/suggestion"
+import debounce from "debounce"
+import { InputsSongInformation, ISuggestion } from "@/interfaces/suggestion"
 
 interface SongInformationAreaProps {
-  onFormSuccess(songInformation: InputsSongInformation): void
   newSuggestion: ISuggestion
+
+  onFormSuccess(songInformation: InputsSongInformation): void
+
   proceedToNextArea(): void
 }
 
