@@ -145,7 +145,7 @@ describe("on the specific event page", () => {
                   cy.wrap($child).should("have.text", "Marcel")
                   break
                 case 1:
-                  cy.wrap($child).should("have.text", "Old").should("have.class", "text-moon")
+                  cy.wrap($child).should("have.text", "Admin").should("have.class", "text-moon")
                   break
                 case 2:
                   cy.wrap($child).should("have.text", "Rens")

@@ -1,5 +1,5 @@
 const suggestionId = Cypress.env("CYPRESS_SUGGESTION_ID")
-const username = Cypress.env("CYPRESS_USERNAME_OLD")
+const username = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 
 describe("suggestion detail page", () => {
   context("suggestion exists", () => {

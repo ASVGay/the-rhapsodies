@@ -46,7 +46,7 @@ Cypress.Commands.add("data", (value) => {
 })
 
 Cypress.Commands.add("login", (useNewUser: boolean = false) => {
-  let user = "OLD"
+  let user = "ADMIN"
   if (useNewUser) user = "NEW"
   cy.task("getUserSession", {
     email: Cypress.env(`CYPRESS_${user}_EMAIL`),

@@ -9,7 +9,7 @@ describe("the change password page", () => {
   const errorNewPassword = "input-new-password-error"
   const errorConfirmationPassword = "input-confirmation-password-error"
   const errorCurrentPassword = "input-current-password-error"
-  const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
+  const currentPassword = Cypress.env("CYPRESS_ADMIN_PASSWORD")
   const errorResponse = {
     statusCode: 401,
     body: {

@@ -17,7 +17,7 @@ export const mockGetMembersByEvent = [
   },
   {
     id: "4ec7af50-3ced-45a9-9c1c-0e1038404778",
-    display_name: "Old",
+    display_name: "Admin",
     attending: "undecided",
   },
   {

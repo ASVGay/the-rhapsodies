@@ -6,8 +6,8 @@ const emailInCorrectFormat = "test@test.nl"
 const unusedEmail = "nosuchemail123455678@email.com"
 const wrongCredentials = "Invalid login credentials"
 const passwordIsMissing = "Password is required"
-const oldUserEmail = Cypress.env("CYPRESS_OLD_EMAIL")
-const oldUserPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
+const adminUserEmail = Cypress.env("CYPRESS_ADMIN_EMAIL")
+const adminUserPassword = Cypress.env("CYPRESS_ADMIN_PASSWORD")
 const newUserEmail = Cypress.env("CYPRESS_NEW_EMAIL")
 const newUserPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 
@@ -20,8 +20,8 @@ describe("Sign-in", () => {
 
   context("on successful login", () => {
     it("Should navigate to home when not first time user", () => {
-      cy.data(emailTextField).type(oldUserEmail)
-      cy.data(passwordTextField).type(oldUserPassword)
+      cy.data(emailTextField).type(adminUserEmail)
+      cy.data(passwordTextField).type(adminUserPassword)
       cy.data(signInSubmitBtn).click()
       cy.location("pathname").should("equal", "/")
     })
@@ -37,7 +37,7 @@ describe("Sign-in", () => {
   context("Error handling sign-in", () => {
     it(`Should return "Invalid login credentials." when signing in with non existing email`, () => {
       cy.data(emailTextField).type(unusedEmail)
-      cy.data(passwordTextField).type(oldUserPassword)
+      cy.data(passwordTextField).type(adminUserPassword)
       cy.data(signInSubmitBtn).click()
       cy.data(errorPopupTxt).contains(wrongCredentials)
     })
