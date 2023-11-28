@@ -1,4 +1,5 @@
 import { mount } from "cypress/react18"
+import { User } from "./user.enum"
 
 declare global {
   namespace Cypress {
@@ -16,20 +17,20 @@ declare global {
 
       /**
        * Custom command to log in through Supabase
-       * @param useNewUser whether to use a new user for logging in or not
+       * @param user The user to log in as, defaults to User.ADMIN
        */
-      login(useNewUser?: boolean)
+      login(user?: User): void
 
       /**
        * Custom command to log out through Supabase
        */
-      logout()
+      logout(): void
 
       /**
        * Custom command to delete the new user from the member database
        *
        */
-      deleteNewUser()
+      deleteNewUser(): void
     }
   }
 }

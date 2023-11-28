@@ -37,6 +37,7 @@
 // }
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { User } from "./user.enum"
 
 export const getSbToken = () =>
   `sb-${Cypress.env("NEXT_PUBLIC_SUPABASE_URL").match(/(\w+)\./)[1]}-auth-token`
@@ -45,9 +46,7 @@ Cypress.Commands.add("data", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
 
-Cypress.Commands.add("login", (useNewUser: boolean = false) => {
-  let user = "ADMIN"
-  if (useNewUser) user = "NEW"
+Cypress.Commands.add("login", (user: User = User.ADMIN) => {
   cy.task("getUserSession", {
     email: Cypress.env(`CYPRESS_${user}_EMAIL`),
     password: Cypress.env(`CYPRESS_${user}_PASSWORD`),
