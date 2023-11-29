@@ -25,9 +25,7 @@ describe("the settings page", () => {
   })
 
   it("should somewhere contain a link to Icons  8", () => {
-    cy.get("a[href]").each(($el) => {
-      cy.wrap($el.attr("href")).should("include", icons8Link)
-    })
+    cy.data("link-icons-8").should("have.attr", "href", icons8Link)
   })
 
   accountSettingsPages.forEach((page) => {

@@ -30,7 +30,7 @@ export default function Settings({ termsContent, privacyContent }: SettingsProps
       <TermsAndPoliciesSettings termsContent={termsContent} privacyContent={privacyContent} />
       <p className={"bottom-0 pt-6 text-center italic text-zinc-300"}>
         Icons by{" "}
-        <a href={"https://icons8.com"} className={"underline"}>
+        <a href={"https://icons8.com"} className={"underline"} data-cy={"link-icons-8"}>
           Icons8
         </a>
       </p>
