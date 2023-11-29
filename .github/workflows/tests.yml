@@ -24,15 +24,18 @@ env:
   NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID: ${{secrets.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID}}
   NEXT_PUBLIC_DISABLE_ONESIGNAL: "true"
   CYPRESS_ENV: ${{secrets.CYPRESS_ENV}}
-  CYPRESS_OLD_ID: ${{secrets.CYPRESS_OLD_ID}}
-  CYPRESS_OLD_EMAIL: ${{secrets.CYPRESS_OLD_EMAIL}}
-  CYPRESS_OLD_PASSWORD: ${{secrets.CYPRESS_OLD_PASSWORD}}
-  CYPRESS_OLD_DISPLAY_NAME: ${{secrets.CYPRESS_OLD_DISPLAY_NAME}}
+  CYPRESS_ADMIN_ID: ${{secrets.CYPRESS_ADMIN_ID}}
+  CYPRESS_ADMIN_EMAIL: ${{secrets.CYPRESS_ADMIN_EMAIL}}
+  CYPRESS_ADMIN_PASSWORD: ${{secrets.CYPRESS_ADMIN_PASSWORD}}
+  CYPRESS_ADMIN_DISPLAY_NAME: ${{secrets.CYPRESS_ADMIN_DISPLAY_NAME}}
+  CYPRESS_USER_ID: ${{secrets.CYPRESS_USER_ID}}
+  CYPRESS_USER_EMAIL: ${{secrets.CYPRESS_USER_EMAIL}}
+  CYPRESS_USER_PASSWORD: ${{secrets.CYPRESS_USER_PASSWORD}}
+  CYPRESS_USER_DISPLAY_NAME: ${{secrets.CYPRESS_USER_DISPLAY_NAME}}
   CYPRESS_NEW_ID: ${{secrets.CYPRESS_NEW_ID}}
   CYPRESS_NEW_EMAIL: ${{secrets.CYPRESS_NEW_EMAIL}}
   CYPRESS_NEW_PASSWORD: ${{secrets.CYPRESS_NEW_PASSWORD}}
   CYPRESS_SUGGESTION_ID: ${{secrets.CYPRESS_SUGGESTION_ID}}
-  CYPRESS_USERNAME_OLD: ${{secrets.CYPRESS_USERNAME_OLD}}
   CYPRESS_SONG_ID: ${{secrets.CYPRESS_SONG_ID}}
   CYPRESS_MANUAL_SONG: ${{secrets.CYPRESS_MANUAL_SONG}}
   CYPRESS_SPOTIFY_SONG: ${{secrets.CYPRESS_SPOTIFY_SONG}}
@@ -61,7 +64,7 @@ jobs:
       - name: Push local migrations to hosted Supabase
         run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.GA_NODE_VERSION }}
       - name: Setup cache
@@ -106,7 +109,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.GA_NODE_VERSION }}
       - name: Download the build files

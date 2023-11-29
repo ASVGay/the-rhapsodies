@@ -5,7 +5,7 @@ describe("on the reset password page", () => {
   const inputPassword = "input-password"
   const inputConfirmationPasswordError = "input-confirmation-password-error"
   const inputConfirmationPassword = "input-confirmation-password"
-  const password = Cypress.env("CYPRESS_OLD_PASSWORD")
+  const password = Cypress.env("CYPRESS_ADMIN_PASSWORD")
 
   const enterAndSubmitPassword = () => {
     cy.data(inputPassword).type(password)

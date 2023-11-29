@@ -1,4 +1,5 @@
 import { testErrorHandlingChangePassword } from "../helpers/change-password.helper"
+import { User } from "../../support/user.enum"
 
 const displayName = "New"
 const environment = Cypress.env("CYPRESS_ENV")
@@ -21,7 +22,7 @@ describe("Change password", () => {
     //this ensures the user is logged in when visiting the change password page
     cy.logout()
     cy.deleteNewUser()
-    cy.login(true)
+    cy.login(User.NEW)
     cy.visit("/change-password")
   })
 

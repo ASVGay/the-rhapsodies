@@ -3,128 +3,133 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    -webkit-tap-highlight-color: transparent;
-    min-height: calc(100% + env(safe-area-inset-top));
-  }
+    html {
+        -webkit-tap-highlight-color: transparent;
+        min-height: calc(100% + env(safe-area-inset-top));
+    }
 }
 
 @layer utilities {
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
 
-  .pt-safe {
-    padding-top: env(safe-area-inset-top);
-  }
+    .pt-safe {
+        padding-top: env(safe-area-inset-top);
+    }
 
-  .p-safe {
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-      env(safe-area-inset-left);
-  }
+    .p-safe {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .filter-in-division {
+        /* Source: https://isotropic.co/tool/hex-color-to-css-filter/ */
+        /* Color: #0ea5e9 (tw-sky-500) */
+        filter: invert(64%) sepia(45%) saturate(5713%) hue-rotate(166deg) brightness(95%) contrast(91%);
+    }
 }
 
 @layer components {
-  .full-bg-moon-50 {
-    @apply flex h-screen w-screen items-center justify-center bg-moon-50;
-  }
+    .full-bg-moon-50 {
+        @apply flex h-screen w-screen items-center justify-center bg-moon-50;
+    }
 
-  .auth-container {
-    @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-sm;
-  }
+    .auth-container {
+        @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-sm;
+    }
 
-  .settings-wrapper p {
-    @apply py-2 text-base;
-  }
+    .settings-wrapper p {
+        @apply py-2 text-base;
+    }
 
-  .settings-wrapper {
-    @apply pb-8;
-  }
+    .settings-wrapper {
+        @apply pb-8;
+    }
 
-  .btn {
-    @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
-  }
+    .btn {
+        @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
+    }
 
-  .btn.secondary {
-    @apply bg-zinc-500 hover:bg-gray-400 disabled:bg-gray-700 disabled:text-white;
-  }
+    .btn.secondary {
+        @apply bg-zinc-500 hover:bg-gray-400 disabled:bg-gray-700 disabled:text-white;
+    }
 
-  .btn.error {
-    @apply bg-red-700 hover:bg-red-400 disabled:bg-red-600 disabled:text-white;
-  }
+    .btn.error {
+        @apply bg-red-700 hover:bg-red-400 disabled:bg-red-600 disabled:text-white;
+    }
 
-  .page-wrapper {
-    @apply mx-auto px-4 pt-6;
-  }
+    .page-wrapper {
+        @apply mx-auto px-4 pt-6;
+    }
 
-  .page-header {
-    @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
-  }
+    .page-header {
+        @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
+    }
 
-  .progress-bar-icon {
-    @apply relative flex cursor-pointer hover:text-moon-500;
-  }
+    .progress-bar-icon {
+        @apply relative flex cursor-pointer hover:text-moon-500;
+    }
 
-  .area-header {
-    @apply pt-2 pb-6 text-xl text-moon-500;
-  }
+    .area-header {
+        @apply pt-2 pb-6 text-xl text-moon-500;
+    }
 
-  .input-container {
-    @apply mb-6 text-left;
-  }
+    .input-container {
+        @apply mb-6 text-left;
+    }
 
-  .input {
-    @apply relative mt-1;
-  }
+    .input {
+        @apply relative mt-1;
+    }
 
-  .input input {
-    @apply w-full rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
-  }
+    .input input {
+        @apply w-full rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
+    }
 
-  .input select {
-    @apply w-full bg-white appearance-none rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
-  }
+    .input select {
+        @apply w-full bg-white appearance-none rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
+    }
 
-  .input input.error {
-    @apply outline-red-400;
-  }
+    .input input.error {
+        @apply outline-red-400;
+    }
 
-  .input span {
-    @apply absolute inset-y-0 end-0 grid place-content-center px-4;
-  }
+    .input span {
+        @apply absolute inset-y-0 end-0 grid place-content-center px-4;
+    }
 
-  .input svg {
-    @apply h-6 w-6 text-gray-400;
-  }
+    .input svg {
+        @apply h-6 w-6 text-gray-400;
+    }
 
-  .btn.songInformation {
-    @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300;
-  }
+    .btn.songInformation {
+        @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300;
+    }
 
-  .btn.toRepertoire {
-    @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
-  }
+    .btn.toRepertoire {
+        @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
+    }
 
-  .btn.submit {
-    @apply flex w-full justify-center gap-2 rounded-lg p-2.5;
-  }
+    .btn.submit {
+        @apply flex w-full justify-center gap-2 rounded-lg p-2.5;
+    }
 
-  .info-item {
-    @apply flex items-center gap-2;
-  }
+    .info-item {
+        @apply flex items-center gap-2;
+    }
 
-  .info-item > svg {
-    @apply text-moon h-5;
-  }
+    .info-item > svg {
+        @apply text-moon h-5;
+    }
 
-  .attendanceButtonItem {
-    @apply inline-flex w-full cursor-pointer items-center justify-center
+    .attendanceButtonItem {
+        @apply inline-flex w-full cursor-pointer items-center justify-center
         bg-zinc-100 p-2 text-sm text-zinc-500
         peer-checked:font-medium peer-checked:text-zinc-700 peer-checked:bg-zinc-300
         hover:bg-zinc-300 hover:text-gray-600;
-  }
+    }
 
-  .attendanceButtonItem svg {
-    @apply mx-auto;
-  }
+    .attendanceButtonItem svg {
+        @apply mx-auto;
+    }
 }

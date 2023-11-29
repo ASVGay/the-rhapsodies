@@ -13,8 +13,8 @@ describe("the change display name page", () => {
   const errorCurrentPassword = "input-current-password-error"
   const inputNewDisplayName = "input-new-display-name"
   const errorNewDisplayName = "input-new-display-name-error"
-  const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
-  const displayName = Cypress.env("CYPRESS_OLD_DISPLAY_NAME")
+  const currentPassword = Cypress.env("CYPRESS_ADMIN_PASSWORD")
+  const displayName = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 
   const submitCorrectData = () => {
     cy.data(inputNewDisplayName).type(displayName)

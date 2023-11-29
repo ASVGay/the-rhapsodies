@@ -1,5 +1,5 @@
 const songId = Cypress.env("CYPRESS_SONG_ID")
-const usernameOld = Cypress.env("CYPRESS_USERNAME_OLD")
+const usernameAdmin = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 
 describe("song detail page", () => {
   context("song exists", () => {
@@ -16,13 +16,13 @@ describe("song detail page", () => {
       cy.data("division")
         .first()
         .then((division) => {
-          const criteria = division.text().includes(usernameOld)
+          const criteria = division.text().includes(usernameAdmin)
           cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
           cy.data("instrument").first().click().wait("@updateSuggestion")
 
-          criteria && division.text().replace(usernameOld, "").length > 0
-            ? cy.data("division").first().should(`not.contain.text`, usernameOld)
-            : cy.data("division").first().should(`contain.text`, usernameOld)
+          criteria && division.text().replace(usernameAdmin, "").length > 0
+            ? cy.data("division").first().should(`not.contain.text`, usernameAdmin)
+            : cy.data("division").first().should(`contain.text`, usernameAdmin)
         })
     })
 
