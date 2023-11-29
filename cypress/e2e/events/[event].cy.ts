@@ -142,10 +142,10 @@ describe("on the specific event page", () => {
             cy.get("li").each(($child, index) => {
               switch (index) {
                 case 0:
-                  cy.wrap($child).should("have.text", "Marcel")
+                  cy.wrap($child).should("have.text", "Admin").should("have.class", "text-moon")
                   break
                 case 1:
-                  cy.wrap($child).should("have.text", "Admin").should("have.class", "text-moon")
+                  cy.wrap($child).should("have.text", "Marcel")
                   break
                 case 2:
                   cy.wrap($child).should("have.text", "Rens")
