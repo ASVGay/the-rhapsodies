@@ -1,3 +1,5 @@
+import { User } from "../support/user.enum"
+
 describe("Home Page", () => {
   context("Auth redirect situations", () => {
     it("should redirect to sign in if logged out", () => {
@@ -13,7 +15,7 @@ describe("Home Page", () => {
     })
 
     it("should go to /change-password if logged in as new", () => {
-      cy.login(true)
+      cy.login(User.NEW)
       cy.visit("/")
       cy.location("pathname").should("equal", "/change-password")
     })

@@ -21,8 +21,8 @@ describe("on the change email page", () => {
   const errorNewEmail = "input-new-email-error"
   const changeEmailConfirmation = "change-email-confirmation"
   const changeEmailForm = "change-email-form"
-  const currentPassword = Cypress.env("CYPRESS_OLD_PASSWORD")
-  const emailAddress = Cypress.env("CYPRESS_OLD_EMAIL")
+  const currentPassword = Cypress.env("CYPRESS_ADMIN_PASSWORD")
+  const emailAddress = Cypress.env("CYPRESS_ADMIN_EMAIL")
 
   const submitCorrectData = () => {
     cy.data(inputNewEmail).type(emailAddress)
