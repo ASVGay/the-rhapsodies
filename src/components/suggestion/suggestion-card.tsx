@@ -4,8 +4,12 @@ import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import React from "react"
 import { SongCardProps } from "@/interfaces/song-card-props"
 import SongImage from "@/components/images/song-image"
+import { isUserInDivision } from "@/helpers/song.helper"
+import { useUser } from "@supabase/auth-helpers-react"
 
 const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
+  const user = useUser()
+
   return (
     <div
       onClick={async () => {
@@ -37,6 +41,11 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
           <div className={"flex justify-around"}>
             {song.song_instruments?.map((suggestion_instrument) => {
               const { instrument, division } = suggestion_instrument
+
+              const getColorForImage = () => {
+                return isUserInDivision(division, user?.id || "") ? "filter-in-division" : ""
+              }
+
               return (
                 <Image
                   key={suggestion_instrument.id}
@@ -44,7 +53,7 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
                   alt={instrument.instrument_name}
                   width={24}
                   height={24}
-                  className={division.length == 0 ? "opacity-30" : ""}
+                  className={division.length == 0 ? "opacity-30" : getColorForImage()}
                 />
               )
             })}
