@@ -86,7 +86,7 @@ jobs:
           runTests: false
           build: npm run build
       - name: Save build files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           if-no-files-found: error
