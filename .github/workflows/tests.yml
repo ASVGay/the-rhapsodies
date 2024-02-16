@@ -113,7 +113,7 @@ jobs:
         with:
           node-version: ${{ env.GA_NODE_VERSION }}
       - name: Download the build files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
       - name: Cypress run
