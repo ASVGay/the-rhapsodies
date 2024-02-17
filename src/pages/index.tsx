@@ -47,34 +47,30 @@ export default function Home() {
           <Spinner size={10} />
         </div>
       ) : (
-        <>
-          <div className={"page-wrapper"}>
-            <div className={"page-header"}>
-              Welcome{displayName && <span className={"text-moon-400"}> {displayName}</span>}
-              <span className={`${displayName.length > 0 ? "text-moon-400" : "text-black"}`}>
-                !
-              </span>
-            </div>
-            <div className={"flex flex-col items-center justify-center gap-2 text-center"}>
-              <p>Check out the next event or start browsing the app.</p>
-              {upcomingEvent && (
-                <EventCard
-                  key={upcomingEvent.id}
-                  event={upcomingEvent}
-                  setShowSpinner={setShowSpinner}
-                />
-              )}
-              {showEventError && (
-                <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}>
-                  <div>
-                    <ExclamationTriangleIcon className={"h-[50px] w-[50px]"} />
-                  </div>
-                  <p>No upcoming events..</p>
-                </div>
-              )}
-            </div>
+        <div className={"page-wrapper"}>
+          <div className={"page-header"}>
+            Welcome{displayName && <span className={"text-moon-400"}> {displayName}</span>}
+            <span className={`${displayName.length > 0 ? "text-moon-400" : "text-black"}`}>!</span>
           </div>
-        </>
+          <div className={"flex flex-col items-center justify-center gap-2 text-center"}>
+            <p>Check out the next event or start browsing the app.</p>
+            {upcomingEvent && (
+              <EventCard
+                key={upcomingEvent.id}
+                event={upcomingEvent}
+                setShowSpinner={setShowSpinner}
+              />
+            )}
+            {showEventError && (
+              <div className={"max-w-m flex items-center justify-center gap-4 text-zinc-400"}>
+                <div>
+                  <ExclamationTriangleIcon className={"h-[50px] w-[50px]"} />
+                </div>
+                <p>No upcoming events..</p>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </>
   )
