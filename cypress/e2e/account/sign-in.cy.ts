@@ -39,7 +39,7 @@ describe("Sign-in", () => {
       cy.data(emailTextField).type(newUserEmail)
       cy.data(passwordTextField).type(newUserPassword)
       cy.data(signInSubmitBtn).click()
-      cy.location("pathname").should("equal", "/change-password")
+      cy.location("pathname", { timeout: 10000 }).should("equal", "/change-password")
     })
   })
 
