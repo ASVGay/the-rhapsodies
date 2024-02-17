@@ -35,6 +35,9 @@ describe("when the user wants to edit a suggestion", () => {
         cy.visit(`suggestions/edit/${userSuggestion}`)
         // Wait so content can render properly and set up submit events
         cy.wait(500)
+        cy.intercept("DELETE", "/rest/v1/song_instrument*", { statusCode: 204 }).as(
+          "deleteInstrument",
+        )
       })
 
       it("should maintain changes to the song information when revisiting ", () => {
