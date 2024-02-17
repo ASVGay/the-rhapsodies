@@ -49,11 +49,11 @@ describe("suggestions page", () => {
       cy.data("suggestion-card")
         .first()
         .then(($el) => {
-          cy.get($el)
+          cy.wrap($el)
             .should("be.visible")
             .invoke("attr", "data-id")
             .then((id) => {
-              cy.get($el).click()
+              cy.wrap($el).click()
               cy.location().should((loc) => expect(loc.href).to.contains(id))
             })
         })
