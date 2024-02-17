@@ -1,5 +1,5 @@
-import { interceptIndefinitely } from "./helpers/interception.helper.ts"
-import { testSearchSongs } from "./helpers/search-songs.helpers.ts"
+import { interceptIndefinitely } from "./helpers/interception.helper"
+import { testSearchSongs } from "./helpers/search-songs.helpers"
 
 const songArtist = "Nirvana"
 const songTitle = "Jessie's Girl"
@@ -49,11 +49,11 @@ describe("suggestions page", () => {
       cy.data("suggestion-card")
         .first()
         .then(($el) => {
-          cy.get($el)
+          cy.wrap($el)
             .should("be.visible")
             .invoke("attr", "data-id")
             .then((id) => {
-              cy.get($el).click()
+              cy.wrap($el).click()
               cy.location().should((loc) => expect(loc.href).to.contains(id))
             })
         })
