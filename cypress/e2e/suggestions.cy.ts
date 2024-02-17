@@ -72,7 +72,7 @@ describe("suggestions page", () => {
     })
 
     it("should display get suggestions error", () => {
-      cy.intercept({ method: "GET", url: "/rest/v1/song*" }, { forceNetworkError: true })
+      cy.intercept({ method: "GET", url: "/rest/v1/song*" }, { statusCode: 500 })
       cy.data("failed-fetching-suggestions").should("be.visible")
     })
   })
