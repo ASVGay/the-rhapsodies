@@ -70,8 +70,13 @@ describe("the forgot password page", () => {
 
   context("on submit", () => {
     beforeEach("submit email", () => {
+      cy.intercept("POST", "/auth/v1/recover*", {
+        statusCode: 200,
+        body: {},
+      }).as("link-request")
       cy.data(inputEmail).type(testEmail)
       cy.data(buttonSubmit).click()
+      cy.wait("@link-request")
     })
 
     it("should render check your email area", () => {
