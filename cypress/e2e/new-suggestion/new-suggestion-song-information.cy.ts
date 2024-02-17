@@ -142,9 +142,9 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("trigger error handling on failed Spotify call", () => {
-      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true })
+      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).as("mockedSearch")
       cy.data(inputTitle).type("A")
-      cy.data("search-error").should("be.visible")
+      cy.wait("@mockedSearch").data("search-error").should("be.visible")
     })
   })
 
