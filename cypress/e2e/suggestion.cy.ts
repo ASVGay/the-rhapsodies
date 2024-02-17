@@ -26,13 +26,9 @@ describe("suggestion detail page", () => {
     })
 
     it("should error when failing to fetch suggestions after updating division", () => {
-      cy.data("division")
-        .first()
-        .then(() => {
-          cy.intercept("GET", "/rest/v1/song*", { forceNetworkError: true }).as("updateSuggestion")
-          cy.data("instrument").first().click().wait("@updateSuggestion")
-          cy.data("suggestion-error").should("be.visible")
-        })
+      cy.intercept("GET", "/rest/v1/song*", { statusCode: 500 })
+      cy.wait(500).data("instrument").first().click()
+      cy.data("suggestion-error").should("be.visible")
     })
 
     it("should error when failing to update division", () => {

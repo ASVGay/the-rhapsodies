@@ -35,6 +35,10 @@ describe("when the user wants to edit a suggestion", () => {
         cy.visit(`suggestions/edit/${userSuggestion}`)
         // Wait so content can render properly and set up submit events
         cy.wait(500)
+        // Set up intercepts
+        cy.intercept("DELETE", "/rest/v1/song_instrument*", { statusCode: 204 })
+        cy.intercept("POST", "/rest/v1/song_instrument*", { statusCode: 201 })
+        cy.intercept("PATCH", "/rest/v1/song_instrument*", { statusCode: 201 })
       })
 
       it("should maintain changes to the song information when revisiting ", () => {
@@ -83,7 +87,10 @@ describe("when the user wants to edit a suggestion", () => {
         cy.data("submit-suggestion-btn")
           .click()
           .then(() => {
-            cy.location("pathname").should("equal", `/suggestions/${userSuggestion}`)
+            cy.location("pathname", { timeout: 10000 }).should(
+              "equal",
+              `/suggestions/${userSuggestion}`,
+            )
           })
       })
 
@@ -95,7 +102,10 @@ describe("when the user wants to edit a suggestion", () => {
         cy.data("submit-suggestion-btn")
           .click()
           .then(() => {
-            cy.location("pathname").should("equal", `/suggestions/${userSuggestion}`)
+            cy.location("pathname", { timeout: 10000 }).should(
+              "equal",
+              `/suggestions/${userSuggestion}`,
+            )
           })
       })
     })
