@@ -6,7 +6,7 @@ import {
   shouldGoToReviewArea,
 } from "./helpers/new-suggestion.helper"
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
-import { mockInstruments } from "../../fixtures/mock-instruments.ts"
+import { mockInstruments } from "../../fixtures/mock-instruments"
 
 describe("when creating a new suggestion, adding instruments", () => {
   const toReviewButton = "to-review-button"
