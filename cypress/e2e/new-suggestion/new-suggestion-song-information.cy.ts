@@ -1,8 +1,8 @@
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
-  shouldGoToInstrumentsArea,
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState,
+  shouldGoToInstrumentsArea,
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -142,10 +142,9 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("trigger error handling on failed Spotify call", () => {
-      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).then(() => {
-        cy.data(inputTitle).type("A")
-        cy.data("search-error").should("be.visible")
-      })
+      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true })
+      cy.data(inputTitle).type("A")
+      cy.data("search-error").should("be.visible")
     })
   })
 
