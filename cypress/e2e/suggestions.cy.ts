@@ -1,5 +1,5 @@
-import { interceptIndefinitely } from "./helpers/interception.helper.ts"
-import { testSearchSongs } from "./helpers/search-songs.helpers.ts"
+import { interceptIndefinitely } from "./helpers/interception.helper"
+import { testSearchSongs } from "./helpers/search-songs.helpers"
 
 const songArtist = "Nirvana"
 const songTitle = "Jessie's Girl"
