@@ -2,6 +2,8 @@ describe("Create events page", () => {
   beforeEach(() => {
     cy.login()
     cy.visit("events/new")
+    cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
+    cy.wait("@manifest")
   })
 
   it("Should throw error when eventtype is empty", () => {
@@ -20,7 +22,6 @@ describe("Create events page", () => {
   })
 
   it("Should throw error when enddate is earlier than startdate", () => {
-    cy.wait(500)
     cy.data("start-time-select").select("12:00")
     cy.data("end-time-select").select("11:00")
     cy.data("button-add-event").click()
@@ -34,7 +35,6 @@ describe("Create events page", () => {
 
   context("When making a request", () => {
     beforeEach(() => {
-      cy.wait(500)
       cy.data("input-event-date").click()
       cy.get(".react-datepicker__day--today").click()
       cy.get("body").click()
