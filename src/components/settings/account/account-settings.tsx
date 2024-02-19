@@ -28,6 +28,12 @@ const AccountSettings = () => {
         text={"Change password"}
         dataCy={"change-password-button"}
       />
+      <SettingsButton
+        disabled={false}
+        onClick={async () => await router.push("/settings/away-mode")}
+        text={"Toggle Away Mode"}
+        dataCy={"away-mode-button"}
+      />
       <SignOut />
     </SettingsWrapper>
   )
