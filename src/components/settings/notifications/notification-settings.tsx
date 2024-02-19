@@ -73,6 +73,7 @@ const NotificationSettings = () => {
         className={"block text-sm italic text-zinc-300 underline cursor-pointer"}
         data-cy={"info-notifications-not-supported"}
         onClick={() => router.reload()}
+        suppressHydrationWarning
       >
         {hasNotificationPermission &&
           !hasSubscriptionId &&
