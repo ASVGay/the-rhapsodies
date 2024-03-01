@@ -43,7 +43,14 @@ const AwayModeEnabled = () => {
             style={{ width: "100%" }}
           />
           <span>
-            Hi{displayName && <span className={"text-moon-400 font-bold"}> {displayName}</span>},
+            Hi
+            {displayName && (
+              <span className={"text-moon-400 font-bold"} data-cy={"display-name"}>
+                {" "}
+                {displayName}
+              </span>
+            )}
+            ,
           </span>
           <p className={"text-center"}>
             Away Mode is now active on your account. This means you are currently invisible in the
