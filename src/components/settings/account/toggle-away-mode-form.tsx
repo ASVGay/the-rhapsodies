@@ -49,6 +49,7 @@ const ToggleAwayModeForm = () => {
         width={0}
         height={0}
         style={{ width: "50%" }}
+        priority
       />
       <br />
       <Toggle

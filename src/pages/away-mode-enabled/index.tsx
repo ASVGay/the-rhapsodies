@@ -41,6 +41,7 @@ const AwayModeEnabled = () => {
             width={0}
             height={0}
             style={{ width: "100%" }}
+            priority
           />
           <span>
             Hi
