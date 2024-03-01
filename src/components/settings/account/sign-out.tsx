@@ -6,7 +6,14 @@ import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
 import OneSignal from "react-onesignal"
 
-const SignOut = () => {
+type SignOutButtonStyle = "default" | "link"
+
+interface SignOutProps {
+  style?: SignOutButtonStyle
+  text?: string
+}
+
+const SignOut = ({ style = "default", text = "Sign out" }: SignOutProps = {}) => {
   const supabase = useSupabaseClient<Database>()
   const router = useRouter()
 
@@ -36,8 +43,16 @@ const SignOut = () => {
       } else await signOutSupabase()
     })()
   }
-  return (
-    <SettingsButton dataCy={"logout-btn"} disabled={false} onClick={signOut} text={"Sign out"} />
+  return style === "default" ? (
+    <SettingsButton dataCy={"logout-btn"} disabled={false} onClick={signOut} text={text} />
+  ) : (
+    <button
+      onClick={signOut}
+      className={"text-center text-sm text-gray-400"}
+      data-cy={"logout-btn"}
+    >
+      {text}
+    </button>
   )
 }
 

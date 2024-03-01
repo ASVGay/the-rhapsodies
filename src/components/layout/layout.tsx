@@ -16,6 +16,7 @@ export default function Layout({ children }: LayoutProps) {
     pathname === "/change-password" ||
     pathname === "/sign-in" ||
     pathname === "/forgot-password/reset" ||
+    pathname === "/away-mode-enabled" ||
     !user
   ) {
     return <>{children}</>
