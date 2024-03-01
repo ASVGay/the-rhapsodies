@@ -1,11 +1,38 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import Toggle from "@/components/settings/controls/toggle"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+import { toast } from "react-toastify"
+import { Database } from "@/types/database"
+import { hideUser } from "@/services/authentication.service"
+import { useRouter } from "next/router"
 
-interface ToggleAwayModeFormProps {}
-
-const ToggleAwayModeForm = (props: ToggleAwayModeFormProps) => {
+const ToggleAwayModeForm = () => {
+  const userId = useUser()?.id
+  const supabase = useSupabaseClient<Database>()
+  const router = useRouter()
   const [enabled, setEnabled] = useState<boolean>(false)
+  const errorToast = () => {
+    toast.error("Failed to enable Away Mode. Try logging in again if the problem persists.", {
+      toastId: "away-mode-error",
+    })
+  }
+
+  const enableAwayMode = async () => {
+    if (!userId) return errorToast()
+
+    hideUser(supabase, userId).then(({ error }) => {
+      if (error) return errorToast()
+
+      setEnabled(true)
+      router.push("/away-mode-enabled").then(() => {
+        toast.success("Away Mode enabled. You are now invisible in the app.", {
+          toastId: "away-mode-enabled",
+        })
+      })
+    })
+  }
+
   return (
     <div className={"flex flex-col gap-4 items-center"}>
       <p className={"lg:text-center"}>
@@ -26,9 +53,7 @@ const ToggleAwayModeForm = (props: ToggleAwayModeFormProps) => {
       <br />
       <Toggle
         text={"Enable Away Mode"}
-        handleChange={() => {
-          setEnabled(!enabled)
-        }}
+        handleChange={() => enableAwayMode()}
         checked={enabled}
         dataCy={"away-mode-toggle"}
         disabled={false}

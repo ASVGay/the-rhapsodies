@@ -59,3 +59,7 @@ export const sendChangeEmailRequest = async (supabase: SupabaseClient, email: st
     return true
   }
 }
+
+export const hideUser = async (supabaseClient: SupabaseClient<Database>, id: string) => {
+  return supabaseClient.from("member").update({ hidden: true }).eq("id", id)
+}
