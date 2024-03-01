@@ -1,4 +1,4 @@
-export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
   graphql_public: {
@@ -51,12 +51,14 @@ export interface Database {
           {
             foreignKeyName: "attendee_event_id_fkey"
             columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "event"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "attendee_member_id_fkey"
             columns: ["member_id"]
+            isOneToOne: false
             referencedRelation: "member"
             referencedColumns: ["id"]
           },
@@ -79,12 +81,14 @@ export interface Database {
           {
             foreignKeyName: "division_musician_fkey"
             columns: ["musician"]
+            isOneToOne: false
             referencedRelation: "member"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "division_song_instrument_id_fkey"
             columns: ["song_instrument_id"]
+            isOneToOne: false
             referencedRelation: "song_instrument"
             referencedColumns: ["id"]
           },
@@ -135,20 +139,24 @@ export interface Database {
       member: {
         Row: {
           display_name: string
+          hidden: boolean
           id: string
         }
         Insert: {
           display_name: string
+          hidden?: boolean
           id: string
         }
         Update: {
           display_name?: string
+          hidden?: boolean
           id?: string
         }
         Relationships: [
           {
             foreignKeyName: "member_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -160,21 +168,23 @@ export interface Database {
           author: string
           created_at: string
           id: string
+          image: string | null
           inRepertoire: boolean
           link: string | null
           motivation: string
-          title: string
-          image: string | null
           previewUrl: string | null
+          title: string
         }
         Insert: {
           artist: string[]
           author: string
           created_at?: string
           id?: string
+          image?: string | null
           inRepertoire?: boolean
           link?: string | null
           motivation: string
+          previewUrl?: string | null
           title: string
         }
         Update: {
@@ -182,15 +192,18 @@ export interface Database {
           author?: string
           created_at?: string
           id?: string
+          image?: string | null
           inRepertoire?: boolean
           link?: string | null
           motivation?: string
+          previewUrl?: string | null
           title?: string
         }
         Relationships: [
           {
             foreignKeyName: "song_author_fkey"
             columns: ["author"]
+            isOneToOne: false
             referencedRelation: "member"
             referencedColumns: ["id"]
           },
@@ -219,12 +232,14 @@ export interface Database {
           {
             foreignKeyName: "song_instrument_instrument_id_fkey"
             columns: ["instrument_id"]
+            isOneToOne: false
             referencedRelation: "instrument"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "song_instrument_song_id_fkey"
             columns: ["song_id"]
+            isOneToOne: false
             referencedRelation: "song"
             referencedColumns: ["id"]
           },
@@ -327,6 +342,7 @@ export interface Database {
           id: string
           name: string
           owner: string | null
+          owner_id: string | null
           public: boolean | null
           updated_at: string | null
         }
@@ -338,6 +354,7 @@ export interface Database {
           id: string
           name: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
@@ -349,17 +366,11 @@ export interface Database {
           id?: string
           name?: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "buckets_owner_fkey"
-            columns: ["owner"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       migrations: {
         Row: {
@@ -391,6 +402,7 @@ export interface Database {
           metadata: Json | null
           name: string | null
           owner: string | null
+          owner_id: string | null
           path_tokens: string[] | null
           updated_at: string | null
           version: string | null
@@ -403,6 +415,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
@@ -415,6 +428,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
@@ -423,13 +437,8 @@ export interface Database {
           {
             foreignKeyName: "objects_bucketId_fkey"
             columns: ["bucket_id"]
+            isOneToOne: false
             referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "objects_owner_fkey"
-            columns: ["owner"]
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -502,3 +511,77 @@ export interface Database {
     }
   }
 }
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
+        Database["public"]["Views"])
+    ? (Database["public"]["Tables"] &
+        Database["public"]["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends keyof Database["public"]["Tables"] | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends keyof Database["public"]["Tables"] | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  PublicEnumNameOrOptions extends keyof Database["public"]["Enums"] | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
+    : never
