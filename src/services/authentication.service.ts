@@ -11,7 +11,7 @@ export const setName = async (
 }
 
 export const isInMemberDatabase = (supabaseClient: SupabaseClient<Database>, id: string) => {
-  return supabaseClient.from("member").select("id", { count: "exact", head: true }).eq("id", id)
+  return supabaseClient.from("member").select("hidden", { count: "exact" }).eq("id", id)
 }
 
 export const resetPasswordForEmail = async (supabase: SupabaseClient, email: string) => {

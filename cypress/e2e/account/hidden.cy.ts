@@ -5,6 +5,20 @@ describe("A hidden user", () => {
   const logoutBtn = "logout-btn"
   const displayName = "display-name"
 
+  describe("when navigating", () => {
+    it("should go to the away mode enabled page if going to the away mode enabled page", () => {
+      cy.login(User.HIDDEN)
+      cy.visit(path)
+      cy.location("pathname").should("equal", path)
+    })
+
+    it("should go to the away mode enabled page if going to the home page", () => {
+      cy.login(User.HIDDEN)
+      cy.visit("/")
+      cy.location("pathname").should("equal", path)
+    })
+  })
+
   describe("on the away mode enabled page", () => {
     beforeEach(() => {
       cy.login(User.HIDDEN)

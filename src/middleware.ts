@@ -27,8 +27,11 @@ async function handleRoutesWhenLoggedIn(
 ) {
   // Try to fetch the user first login status
   let count
+  let hidden = false
   try {
-    count = (await isInMemberDatabase(supabase, session.user.id)).count
+    const memberInfo = await isInMemberDatabase(supabase, session.user.id)
+    count = memberInfo.count ?? 0
+    hidden = memberInfo.data?.at(0)?.hidden ?? false
   } catch (error) {
     return goToPath("/500", req)
   }
@@ -39,6 +42,12 @@ async function handleRoutesWhenLoggedIn(
     else return goToPath("/change-password", req)
     // If not and trying to go to change-password, send to home
   } else if (req.nextUrl.pathname.startsWith("/change-password")) return goToPath("/", req)
+
+  // If user is hidden, go to away mode enabled page
+  if (hidden) {
+    if (req.nextUrl.pathname.startsWith("/away-mode-enabled")) return res
+    else return goToPath("/away-mode-enabled", req)
+  }
 
   // If trying to reset password, let them
   if (req.nextUrl.pathname.startsWith("/forgot-password/reset")) return res
