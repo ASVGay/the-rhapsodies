@@ -55,5 +55,30 @@ describe("A hidden user", () => {
         .should("have.text", "Something went wrong while retrieving your account data.")
       cy.data(displayName).should("not.exist")
     })
+
+    it("should show a toast when failed to disable away mode", () => {
+      cy.intercept("/rest/v1/member*", { forceNetworkError: true }).as("interceptedRequest")
+      cy.data("button-disable-away-mode").click()
+
+      cy.get(".Toastify")
+        .get("#away-mode-error")
+        .get(".Toastify__toast-body")
+        .should(
+          "contain.text",
+          "Failed to disable Away Mode. Try logging in again if the problem persists.",
+        )
+    })
+
+    it("should disable away mode when clicking the disable away mode button", () => {
+      cy.intercept("/rest/v1/member?id=eq*", { statusCode: 204 }).as("interceptedRequest")
+      cy.data("button-disable-away-mode").click()
+      cy.wait("@interceptedRequest")
+      cy.get(".Toastify")
+        .get("#away-mode-disabled")
+        .get(".Toastify__toast-body")
+        .should("have.text", "Away Mode disabled. You are now visible in the app.")
+      // After this it should redirect to the away mode page, but since this is done in the middleware
+      // we can't test it here (we can't change server state from the client)
+    })
   })
 })

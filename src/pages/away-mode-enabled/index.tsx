@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { getDisplayName } from "@/services/authentication.service"
+import { getDisplayName, showUser } from "@/services/authentication.service"
 import { toast } from "react-toastify"
 import SignOut from "@/components/settings/account/sign-out"
+import { useRouter } from "next/router"
 
 const AwayModeEnabled = () => {
   const [displayName, setDisplayName] = useState<string>("")
-
   const supabase = useSupabaseClient<Database>()
+  const router = useRouter()
   const uid = useUser()?.id
 
   useEffect(() => {
@@ -28,6 +29,30 @@ const AwayModeEnabled = () => {
       toast.error("Something went wrong while retrieving data.", { toastId: "fetch-error" }),
     )
   }, [supabase, uid])
+
+  const toastErrorAwayMode = () => {
+    toast.error("Failed to disable Away Mode. Try logging in again if the problem persists.", {
+      toastId: "away-mode-error",
+    })
+  }
+
+  const handleDisableAwayMode = async () => {
+    if (uid) {
+      showUser(supabase, uid).then(({ error }) => {
+        if (error) {
+          toastErrorAwayMode()
+        } else {
+          router.push("/settings/away-mode").then(() => {
+            toast.success("Away Mode disabled. You are now visible in the app.", {
+              toastId: "away-mode-disabled",
+            })
+          })
+        }
+      })
+    } else {
+      toastErrorAwayMode()
+    }
+  }
 
   return (
     <div className={"full-bg-moon-50"}>
@@ -58,7 +83,11 @@ const AwayModeEnabled = () => {
             song suggestions, repertoire, and event attendance lists. If you are coming back to the
             Rhapsodies and want to start using the app again, simply disable Away Mode.
           </p>
-          <button data-cy={"button-disable-away-mode"} className={"btn submit"}>
+          <button
+            data-cy={"button-disable-away-mode"}
+            className={"btn submit"}
+            onClick={() => handleDisableAwayMode()}
+          >
             Disable Away Mode
           </button>
           <SignOut style={"link"} text={"Or sign out"} />
