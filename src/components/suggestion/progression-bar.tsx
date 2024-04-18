@@ -16,6 +16,8 @@ const ProgressionBar = ({ suggestionInstruments }: ProgressionBarProps) => {
     return amountFilled > 0 ? (amountFilled / suggestionInstruments.length) * 100 + "%" : 0
   }
 
+  const allRolesFilled = rolesFilled() === suggestionInstruments.length
+
   return (
     <div className={"flex items-center justify-between"}>
       <div className={"h-2 w-full rounded-md bg-green-200"}>
@@ -24,7 +26,11 @@ const ProgressionBar = ({ suggestionInstruments }: ProgressionBarProps) => {
           style={{ width: progressionBarWidth(), transition: "width 1s" }}
         />
       </div>
-      <p className={"ml-4 text-sm font-light text-gray-400"}>{progressionFraction()}</p>
+      <p
+        className={`ml-4 text-sm ${allRolesFilled ? "text-green-500" : "font-light text-gray-400"}`}
+      >
+        {progressionFraction()}
+      </p>
     </div>
   )
 }
