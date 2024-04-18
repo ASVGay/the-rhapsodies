@@ -39,7 +39,9 @@ const ProgressionBar = ({ suggestionInstruments, songType }: ProgressionBarProps
           style={{ width: progressionBarWidth(), transition: "width 1s" }}
         />
       </div>
-      <p className={`ml-4 text-sm ${fractionStyle()}`}>{progressionFraction()}</p>
+      <p data-cy={"progression-fraction"} className={`ml-4 text-sm ${fractionStyle()}`}>
+        {progressionFraction()}
+      </p>
     </div>
   )
 }
