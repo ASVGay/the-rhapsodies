@@ -2,10 +2,17 @@ import Image from "next/image"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { getInstrumentImage } from "@/helpers/cloudinary.helper"
 import React from "react"
-import { SongCardProps } from "@/interfaces/song-card-props"
 import SongImage from "@/components/images/song-image"
 import { isUserInDivision } from "@/helpers/song.helper"
 import { useUser } from "@supabase/auth-helpers-react"
+import { Song } from "@/types/database-types"
+import { NextRouter } from "next/router"
+
+interface SongCardProps {
+  song: Song
+  setShowSpinner: React.Dispatch<React.SetStateAction<boolean>>
+  router: NextRouter
+}
 
 const SongCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   const user = useUser()
