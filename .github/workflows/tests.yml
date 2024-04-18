@@ -68,7 +68,7 @@ jobs:
         with:
           node-version: ${{ env.GA_NODE_VERSION }}
       - name: Setup cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
           path: |
@@ -86,7 +86,7 @@ jobs:
           runTests: false
           build: npm run build
       - name: Save build files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           if-no-files-found: error
@@ -113,7 +113,7 @@ jobs:
         with:
           node-version: ${{ env.GA_NODE_VERSION }}
       - name: Download the build files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
       - name: Cypress run

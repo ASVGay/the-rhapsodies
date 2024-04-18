@@ -1,5 +1,5 @@
-import { interceptIndefinitely } from "./helpers/interception.helper.ts"
-import { testSearchSongs } from "./helpers/search-songs.helpers.ts"
+import { interceptIndefinitely } from "./helpers/interception.helper"
+import { testSearchSongs } from "./helpers/search-songs.helpers"
 
 const songArtist = "Nirvana"
 const songTitle = "Jessie's Girl"
@@ -29,6 +29,16 @@ describe("suggestions page", () => {
       interception.sendResponse()
       cy.data("song-list-spinner").should("not.exist")
     })
+
+    it("should contain green fraction text for songs with complete divisions", () => {
+      cy.data("progression-fraction").each(($el) => {
+        const text = $el.text()
+        const [numerator, denominator] = text.split("/").map(Number)
+        if (numerator === denominator) {
+          cy.wrap($el).should("have.class", "text-green-500")
+        }
+      })
+    })
   })
 
   context("select specific suggestion", () => {
@@ -49,11 +59,11 @@ describe("suggestions page", () => {
       cy.data("suggestion-card")
         .first()
         .then(($el) => {
-          cy.get($el)
+          cy.wrap($el)
             .should("be.visible")
             .invoke("attr", "data-id")
             .then((id) => {
-              cy.get($el).click()
+              cy.wrap($el).click()
               cy.location().should((loc) => expect(loc.href).to.contains(id))
             })
         })
@@ -72,7 +82,7 @@ describe("suggestions page", () => {
     })
 
     it("should display get suggestions error", () => {
-      cy.intercept({ method: "GET", url: "/rest/v1/song*" }, { forceNetworkError: true })
+      cy.intercept({ method: "GET", url: "/rest/v1/song*" }, { statusCode: 500 })
       cy.data("failed-fetching-suggestions").should("be.visible")
     })
   })

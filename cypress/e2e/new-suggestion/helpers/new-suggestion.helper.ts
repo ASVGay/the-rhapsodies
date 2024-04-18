@@ -1,5 +1,5 @@
 import { Area } from "@/constants/area"
-import { ISuggestionInstrument, ISuggestion } from "@/interfaces/suggestion"
+import { ISuggestion, ISuggestionInstrument } from "@/interfaces/suggestion"
 
 const buttonAddInstruments = "button-add-instruments"
 const areaSongInformation = "area-song-information"
@@ -21,6 +21,8 @@ export const newSuggestionEmpty: ISuggestion = {
   motivation: "",
   title: "",
   instruments: [],
+  image: null,
+  previewUrl: null,
 }
 
 export const filledInInstrument: ISuggestionInstrument = {
@@ -39,6 +41,8 @@ export const newSuggestionFilledSongInformation: ISuggestion = {
     "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
   title: "Let It Be",
   instruments: [],
+  image: null,
+  previewUrl: null,
 }
 
 export const newSuggestionFilledInInstruments: ISuggestion = {
@@ -48,6 +52,8 @@ export const newSuggestionFilledInInstruments: ISuggestion = {
     "We have already sung it once while just playing randomly and it was pretty fun so thought it would be nice to add it to the repertoire.",
   title: "Let It Be",
   instruments: [filledInInstrument],
+  image: null,
+  previewUrl: null,
 }
 
 export const shouldGoToInstrumentsArea = () => {

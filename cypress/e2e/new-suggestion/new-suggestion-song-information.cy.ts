@@ -1,8 +1,8 @@
 import { updateNewSuggestion } from "@/redux/slices/new-suggestion.slice"
 import {
-  shouldGoToInstrumentsArea,
   newSuggestionFilledSongInformation,
   shouldContainJSONSongInformationInState,
+  shouldGoToInstrumentsArea,
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -106,7 +106,7 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("should display results when searching a song", () => {
-      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
+      cy.intercept("GET", "api/spotify/search?q=A", { fixture: "mock-search-result.json" }).as(
         "mockedSearch",
       )
       cy.data(inputTitle)
@@ -118,7 +118,7 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("should auto-fill song info", () => {
-      cy.intercept("GET", "api/spotify/search*", { fixture: "mock-search-result.json" }).as(
+      cy.intercept("GET", "api/spotify/search?q=A", { fixture: "mock-search-result.json" }).as(
         "mockedSearch",
       )
       cy.data(inputTitle)
@@ -142,10 +142,11 @@ describe("when creating a new suggestion, adding song information", () => {
     })
 
     it("trigger error handling on failed Spotify call", () => {
-      cy.intercept({ url: "/api/spotify/search*" }, { forceNetworkError: true }).then(() => {
-        cy.data(inputTitle).type("A")
-        cy.data("search-error").should("be.visible")
-      })
+      cy.intercept({ url: "/api/spotify/search?q=B" }, { forceNetworkError: true }).as(
+        "errorSearch",
+      )
+      cy.data(inputTitle).type("B")
+      cy.wait("@errorSearch").data("search-error").should("be.visible")
     })
   })
 
