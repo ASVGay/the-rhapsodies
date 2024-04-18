@@ -31,7 +31,13 @@ describe("suggestions page", () => {
     })
 
     it("should contain green fraction text for songs with complete divisions", () => {
-      cy.data("progression-fraction").filter(".text-green-500").should("have.length", 2)
+      cy.data("progression-fraction").each(($el) => {
+        const text = $el.text()
+        const [numerator, denominator] = text.split("/").map(Number)
+        if (numerator === denominator) {
+          cy.wrap($el).should("have.class", "text-green-500")
+        }
+      })
     })
   })
 

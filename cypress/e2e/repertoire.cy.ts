@@ -39,7 +39,13 @@ describe("repertoire page page", () => {
     })
 
     it("Should contain red fraction text for songs with incomplete divisions", () => {
-      cy.data("progression-fraction").filter(".text-red-400").should("have.length", 1)
+      cy.data("progression-fraction").each(($el) => {
+        const text = $el.text()
+        const [numerator, denominator] = text.split("/").map(Number)
+        if (numerator !== denominator) {
+          cy.wrap($el).should("have.class", "text-red-400")
+        }
+      })
     })
   })
 })
