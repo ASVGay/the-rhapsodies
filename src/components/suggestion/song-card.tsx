@@ -8,6 +8,7 @@ import { useUser } from "@supabase/auth-helpers-react"
 import { Song } from "@/types/database-types"
 import { NextRouter } from "next/router"
 import { SongType } from "@/components/wrapper/song-list-wrapper"
+import Link from "next/link"
 
 interface SongCardProps {
   song: Song
@@ -23,12 +24,16 @@ const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
   const isRepertoireSong = type === SongType.Repertoire
 
   return (
-    <div
+    <Link
+      href=""
       onClick={async () => {
         setShowSpinner(true)
-        await router.push({ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } })
+        await router.push({
+          pathname: `/${isRepertoireSong ? "repertoire" : "suggestions"}/[song]`,
+          query: { song: song.id },
+        })
       }}
-      className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
+      className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg hover:cursor-pointer"}
       data-cy="suggestion-card"
       data-id={song.id}
     >
@@ -74,7 +79,7 @@ const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
