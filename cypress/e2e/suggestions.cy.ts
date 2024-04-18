@@ -29,6 +29,10 @@ describe("suggestions page", () => {
       interception.sendResponse()
       cy.data("song-list-spinner").should("not.exist")
     })
+
+    it("should contain green fraction text for songs with complete divisions", () => {
+      cy.data("progression-fraction").filter(".text-green-500").should("have.length", 2)
+    })
   })
 
   context("select specific suggestion", () => {

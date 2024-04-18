@@ -38,8 +38,8 @@ describe("repertoire page page", () => {
       testSearchSongs(songArtist, songTitle, songNotFoundText)
     })
 
-    it("Should contain exclamation mark for songs with incomplete divisions", () => {
-      cy.data("exclamation-circle").its("length").should("equal", 1)
+    it("Should contain red fraction text for songs with incomplete divisions", () => {
+      cy.data("progression-fraction").filter(".text-red-400").should("have.length", 1)
     })
   })
 })
