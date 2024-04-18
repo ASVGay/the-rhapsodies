@@ -19,6 +19,9 @@ interface SongCardProps {
 const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
   const user = useUser()
 
+  const isSuggestion = type === SongType.Suggestion
+  const isRepertoireSong = type === SongType.Repertoire
+
   return (
     <div
       onClick={async () => {
@@ -31,17 +34,19 @@ const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
     >
       <div className={"flex items-start p-3"} key={song.id}>
         <SongImage url={song.image} />
-        <span className={"pl-3"}>
+        <span className={`pl-3 ${isRepertoireSong && "my-auto"}`}>
           <p className={"line-clamp-1 font-bold"}>{song.title}</p>
           <p className={"line-clamp-1"}>{song.artist?.join(", ")}</p>
           {/*The max width is the width of the card minus the width of the image and padding */}
-          <p
-            className={
-              "max-w-[calc(22rem-64px-calc(0.75rem*3))] line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"
-            }
-          >
-            {song.motivation}
-          </p>
+          {isSuggestion && (
+            <p
+              className={
+                "max-w-[calc(22rem-64px-calc(0.75rem*3))] line-clamp-3 h-12 text-sm font-medium leading-4 text-gray-400"
+              }
+            >
+              {song.motivation}
+            </p>
+          )}
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
