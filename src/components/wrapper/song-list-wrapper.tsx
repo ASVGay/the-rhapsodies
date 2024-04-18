@@ -98,7 +98,13 @@ const SongListWrapper = ({ songType }: SongListWrapperProps) => {
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
         {searchedSongs.map((song: Song) => (
-          <SongCard key={song.id} song={song} setShowSpinner={setShowSpinner} router={router} />
+          <SongCard
+            key={song.id}
+            song={song}
+            setShowSpinner={setShowSpinner}
+            router={router}
+            type={songType}
+          />
         ))}
       </div>
     )

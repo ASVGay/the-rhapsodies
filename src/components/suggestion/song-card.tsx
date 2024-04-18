@@ -7,14 +7,16 @@ import { isUserInDivision } from "@/helpers/song.helper"
 import { useUser } from "@supabase/auth-helpers-react"
 import { Song } from "@/types/database-types"
 import { NextRouter } from "next/router"
+import { SongType } from "@/components/wrapper/song-list-wrapper"
 
 interface SongCardProps {
   song: Song
   setShowSpinner: React.Dispatch<React.SetStateAction<boolean>>
   router: NextRouter
+  type: SongType
 }
 
-const SongCard = ({ song, router, setShowSpinner }: SongCardProps) => {
+const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
   const user = useUser()
 
   return (
