@@ -7,7 +7,7 @@ import SongImage from "@/components/images/song-image"
 import { isUserInDivision } from "@/helpers/song.helper"
 import { useUser } from "@supabase/auth-helpers-react"
 
-const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
+const SongCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   const user = useUser()
 
   return (
@@ -64,4 +64,4 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   )
 }
 
-export default SuggestionCard
+export default SongCard

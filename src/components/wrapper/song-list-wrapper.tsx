@@ -9,8 +9,7 @@ import ErrorPopup from "@/components/popups/error-popup"
 import { useRouter } from "next/router"
 import SearchBar from "@/components/suggestion/search-bar"
 import { getRepertoireSongs, getSuggestions } from "@/services/suggestion.service"
-import SuggestionCard from "@/components/suggestion/suggestion-card"
-import RepertoireCard from "@/components/repertoire/repertoire-card"
+import SongCard from "@/components/suggestion/song-card"
 
 interface SongListWrapperProps {
   songType: SongType
@@ -98,23 +97,9 @@ const SongListWrapper = ({ songType }: SongListWrapperProps) => {
     const searchedSongs = showSearchBar ? searchedSong : songs
     return (
       <div className={"flex flex-wrap justify-center gap-6"} data-cy="suggestions-list">
-        {searchedSongs.map((song: Song) =>
-          songType == SongType.Suggestion ? (
-            <SuggestionCard
-              key={song.id}
-              song={song}
-              setShowSpinner={setShowSpinner}
-              router={router}
-            />
-          ) : (
-            <RepertoireCard
-              key={song.id}
-              song={song}
-              setShowSpinner={setShowSpinner}
-              router={router}
-            />
-          ),
-        )}
+        {searchedSongs.map((song: Song) => (
+          <SongCard key={song.id} song={song} setShowSpinner={setShowSpinner} router={router} />
+        ))}
       </div>
     )
   }
