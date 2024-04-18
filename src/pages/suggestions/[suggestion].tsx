@@ -18,6 +18,7 @@ import SongPreviewImage from "@/components/images/song-preview-image"
 import { toast } from "react-toastify"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import DeleteSuggestionOverlay from "@/components/overlays/delete-suggestion.overlay"
+import { SongType } from "@/components/wrapper/song-list-wrapper"
 
 interface SuggestionPageProps {
   suggestionFromNext: Song
@@ -150,7 +151,10 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
           <div className={"flex-col items-center md:flex"}>
             <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
             <div className={"m-4 md:w-2/3 lg:w-1/3"}>
-              <ProgressionBar suggestionInstruments={suggestion.song_instruments} />
+              <ProgressionBar
+                suggestionInstruments={suggestion.song_instruments}
+                songType={SongType.Suggestion}
+              />
             </div>
 
             <div className={"grid gap-6"}>

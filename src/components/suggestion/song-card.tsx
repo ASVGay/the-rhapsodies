@@ -55,7 +55,9 @@ const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
         </span>
       </div>
       <div className={"rounded-md bg-neutral-100 p-3"}>
-        {song.song_instruments && <ProgressionBar suggestionInstruments={song.song_instruments} />}
+        {song.song_instruments && (
+          <ProgressionBar suggestionInstruments={song.song_instruments} songType={type} />
+        )}
         <div className={"ml-auto mr-auto pl-8 pr-8"}>
           <div className={"flex justify-around"}>
             {song.song_instruments?.map((suggestion_instrument) => {
