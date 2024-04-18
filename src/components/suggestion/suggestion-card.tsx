@@ -6,9 +6,14 @@ import { SongCardProps } from "@/interfaces/song-card-props"
 import SongImage from "@/components/images/song-image"
 import { isUserInDivision } from "@/helpers/song.helper"
 import { useUser } from "@supabase/auth-helpers-react"
+import css from "./suggestion-card.module.css"
 
 const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
   const user = useUser()
+
+  const hasAllInstrumentsFilled = song.song_instruments?.every((suggestion_instrument) => {
+    return suggestion_instrument.division.length > 0
+  })
 
   return (
     <div
@@ -16,7 +21,7 @@ const SuggestionCard = ({ song, router, setShowSpinner }: SongCardProps) => {
         setShowSpinner(true)
         await router.push({ pathname: "/suggestions/[suggestion]", query: { suggestion: song.id } })
       }}
-      className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg"}
+      className={`w-[22rem] rounded-md bg-neutral-50 relative block  ${hasAllInstrumentsFilled ? css.shine : "drop-shadow-lg"}`}
       data-cy="suggestion-card"
       data-id={song.id}
     >
