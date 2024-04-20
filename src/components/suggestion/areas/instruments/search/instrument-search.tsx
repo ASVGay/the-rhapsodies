@@ -51,7 +51,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
     // Use setTimeout to allow time for a click event on the list item to be registered
     setTimeout(() => {
       setIsSearchFocused(false)
-    }, 100)
+    }, 300)
   }
 
   const clearSearch = () => {
