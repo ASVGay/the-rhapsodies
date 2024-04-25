@@ -31,6 +31,11 @@ declare global {
        *
        */
       deleteNewUser(): void
+
+      /**
+       * Custom command to click on an element when it is clickable
+       */
+      clickWhenClickable(): void
     }
   }
 }

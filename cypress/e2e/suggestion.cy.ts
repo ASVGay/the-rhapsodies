@@ -4,8 +4,10 @@ const username = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 describe("suggestion detail page", () => {
   context("suggestion exists", () => {
     beforeEach(() => {
+      cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
       cy.login()
       cy.visit(`/suggestions/${suggestionId}`)
+      cy.wait("@manifest")
     })
 
     it("should contain a suggestion", () => {
@@ -17,8 +19,10 @@ describe("suggestion detail page", () => {
         .first()
         .then((division) => {
           const criteria = division.text().includes(username)
-          cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
-          cy.data("instrument").first().click().wait("@updateSuggestion")
+          cy.intercept("/rest/v1/song*").as("updateSuggestion")
+          // Click on the first instrument
+          cy.data("instrument-0").clickWhenClickable()
+          cy.wait("@updateSuggestion")
           criteria
             ? cy.data("division").first().should(`not.contain.text`, username)
             : cy.data("division").first().should(`contain.text`, username)
@@ -27,7 +31,7 @@ describe("suggestion detail page", () => {
 
     it("should error when failing to fetch suggestions after updating division", () => {
       cy.intercept("GET", "/rest/v1/song*", { statusCode: 500 })
-      cy.wait(500).data("instrument").first().click()
+      cy.data("instrument-0").clickWhenClickable()
       cy.data("suggestion-error").should("be.visible")
     })
 
@@ -38,7 +42,8 @@ describe("suggestion detail page", () => {
       cy.data("division")
         .first()
         .then(() => {
-          cy.data("instrument").first().click().wait("@changeDivision")
+          cy.data("instrument-0").clickWhenClickable()
+          cy.wait("@changeDivision")
 
           cy.get(".Toastify").get("#1").should("be.visible")
         })

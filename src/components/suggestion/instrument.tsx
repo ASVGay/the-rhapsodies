@@ -13,6 +13,7 @@ interface InstrumentProps {
   onClick?: () => void
   toggleOpacity?: boolean
   loading?: boolean
+  index?: number
 }
 
 const Instrument = ({
@@ -24,6 +25,7 @@ const Instrument = ({
   onClick,
   toggleOpacity = true,
   loading,
+  index,
 }: InstrumentProps) => {
   const formatUsernames = (divisions: Division[]) => {
     return divisions.map(({ musician }, index) => (
@@ -38,7 +40,7 @@ const Instrument = ({
     <div
       className={`flex ${onClick && !loading && "cursor-pointer"} select-none`}
       onClick={() => onClick?.()}
-      data-cy="instrument"
+      data-cy={`instrument-${index}`}
     >
       <div className={`flex ${loading && "opacity-30"}`}>
         <Image
