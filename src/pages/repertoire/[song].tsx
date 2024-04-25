@@ -122,10 +122,11 @@ const SongPage = (props: SongProps) => {
               <div className={"mt-2 flex-col items-center md:flex"}>
                 <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
                 <div className={"grid gap-6"}>
-                  {song.song_instruments.map((instrument) => {
+                  {song.song_instruments.map((instrument, index) => {
                     return (
                       <Instrument
                         key={instrument.id}
+                        index={index}
                         imageURL={instrument.instrument.image_source}
                         name={instrument.instrument.instrument_name}
                         division={instrument.division}

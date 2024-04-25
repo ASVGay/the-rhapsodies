@@ -15,7 +15,6 @@ describe("suggestion detail page", () => {
     })
 
     it("should add or remove username from division", () => {
-      cy.intercept("*")
       cy.data("division")
         .first()
         .then((division) => {
@@ -32,7 +31,7 @@ describe("suggestion detail page", () => {
 
     it("should error when failing to fetch suggestions after updating division", () => {
       cy.intercept("GET", "/rest/v1/song*", { statusCode: 500 })
-      cy.wait(500).data("instrument").first().click()
+      cy.data("instrument-0").clickWhenClickable()
       cy.data("suggestion-error").should("be.visible")
     })
 
@@ -43,7 +42,8 @@ describe("suggestion detail page", () => {
       cy.data("division")
         .first()
         .then(() => {
-          cy.data("instrument").first().click().wait("@changeDivision")
+          cy.data("instrument-0").clickWhenClickable()
+          cy.wait("@changeDivision")
 
           cy.get(".Toastify").get("#1").should("be.visible")
         })

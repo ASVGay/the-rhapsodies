@@ -4,8 +4,10 @@ const usernameAdmin = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 describe("song detail page", () => {
   context("song exists", () => {
     beforeEach(() => {
+      cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
       cy.login()
       cy.visit(`/repertoire/${songId}`)
+      cy.wait("@manifest")
     })
 
     it("should contain a song", () => {
@@ -17,8 +19,10 @@ describe("song detail page", () => {
         .first()
         .then((division) => {
           const criteria = division.text().includes(usernameAdmin)
-          cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
-          cy.data("instrument").first().click().wait("@updateSuggestion")
+          cy.intercept("/rest/v1/song*").as("updateSuggestion")
+          // Click on the first instrument
+          cy.data("instrument-0").clickWhenClickable()
+          cy.wait("@updateSuggestion")
 
           criteria && division.text().replace(usernameAdmin, "").length > 0
             ? cy.data("division").first().should(`not.contain.text`, usernameAdmin)
