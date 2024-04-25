@@ -61,8 +61,8 @@ jobs:
           version: latest
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
-      - name: Push local migrations to hosted Supabase
-        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
+      - name: Push local migrations to hosted Supabase (with y/N prompt)
+        run: yes | supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
