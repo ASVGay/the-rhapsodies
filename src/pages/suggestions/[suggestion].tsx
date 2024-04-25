@@ -158,7 +158,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
             </div>
 
             <div className={"grid gap-6"}>
-              {suggestion.song_instruments.map((instrument) => {
+              {suggestion.song_instruments.map((instrument, index) => {
                 return (
                   <Instrument
                     key={instrument.id}
@@ -169,6 +169,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
                     uid={uid}
                     onClick={async () => selectInstrument(instrument)}
                     loading={instrumentsInUpdate.includes(instrument)}
+                    index={index}
                   />
                 )
               })}

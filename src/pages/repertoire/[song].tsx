@@ -15,7 +15,6 @@ import Spinner from "@/components/utils/spinner"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { PostgrestError } from "@supabase/supabase-js"
 import SongPreviewImage from "@/components/images/song-preview-image"
-import { toast } from "react-toastify"
 
 interface SongProps {
   song: Song
@@ -51,16 +50,8 @@ const SongPage = (props: SongProps) => {
   const updateOrDeleteDivision = async (
     exists: boolean,
     divisionOperation: DivisionDatabaseOperation,
-    divisionLength: number,
   ) => {
-    if (exists && divisionLength == 1) {
-      toast.error(
-        "Failed to remove you from the instrument. Please contact an administrator to remove you.",
-        {
-          toastId: "failed-to-remove-you",
-        },
-      )
-    } else if (exists) {
+    if (exists) {
       deleteDivision(supabase, divisionOperation).then(({ error }) => {
         handleDivisionOperation(error, "Failed to remove user from the instrument.")
       })
@@ -82,7 +73,7 @@ const SongPage = (props: SongProps) => {
     }
 
     const exists = songInstrument.division.some(({ musician }) => musician.id === uid)
-    updateOrDeleteDivision(exists, division, songInstrument.division.length)
+    updateOrDeleteDivision(exists, division)
       .catch(() => setShowUpdateError("Failed to update the instrument division."))
       .finally(() => setShowSpinner(false))
   }
@@ -131,10 +122,11 @@ const SongPage = (props: SongProps) => {
               <div className={"mt-2 flex-col items-center md:flex"}>
                 <p className={"text-center text-xl font-medium text-moon-500"}>Instruments</p>
                 <div className={"grid gap-6"}>
-                  {song.song_instruments.map((instrument) => {
+                  {song.song_instruments.map((instrument, index) => {
                     return (
                       <Instrument
                         key={instrument.id}
+                        index={index}
                         imageURL={instrument.instrument.image_source}
                         name={instrument.instrument.instrument_name}
                         division={instrument.division}
