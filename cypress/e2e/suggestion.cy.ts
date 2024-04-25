@@ -4,8 +4,10 @@ const username = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 describe("suggestion detail page", () => {
   context("suggestion exists", () => {
     beforeEach(() => {
+      cy.intercept("GET", "/_next/**/**/**.json").as("manifest")
       cy.login()
       cy.visit(`/suggestions/${suggestionId}`)
+      cy.wait("@manifest")
     })
 
     it("should contain a suggestion", () => {
@@ -13,12 +15,15 @@ describe("suggestion detail page", () => {
     })
 
     it("should add or remove username from division", () => {
+      cy.intercept("*")
       cy.data("division")
         .first()
         .then((division) => {
           const criteria = division.text().includes(username)
-          cy.intercept("GET", "/rest/v1/song*").as("updateSuggestion")
-          cy.data("instrument").first().click().wait("@updateSuggestion")
+          cy.intercept("/rest/v1/song*").as("updateSuggestion")
+          // Click on the first instrument
+          cy.data("instrument-0").clickWhenClickable()
+          cy.wait("@updateSuggestion")
           criteria
             ? cy.data("division").first().should(`not.contain.text`, username)
             : cy.data("division").first().should(`contain.text`, username)

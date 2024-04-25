@@ -38,6 +38,7 @@
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { User } from "./user.enum"
+import "cypress-cdp"
 
 export const getSbToken = () =>
   `sb-${Cypress.env("NEXT_PUBLIC_SUPABASE_URL").match(/(\w+)\./)[1]}-auth-token`
@@ -70,4 +71,11 @@ const executeTask = (taskName: string) => {
 
 Cypress.Commands.add("deleteNewUser", () => {
   return executeTask("deleteNewUser")
+})
+
+Cypress.Commands.add("clickWhenClickable", { prevSubject: true }, (subject) => {
+  const selector = subject.selector
+  cy.hasEventListeners(selector, { log: undefined, type: "click" }).then(() => {
+    cy.get(selector).click()
+  })
 })
