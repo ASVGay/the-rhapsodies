@@ -85,6 +85,8 @@ jobs:
         with:
           name: build
           if-no-files-found: error
+          # Include the hidden .next folder
+          include-hidden-files: true
           path: |
             .next
             public
