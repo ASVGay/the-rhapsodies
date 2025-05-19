@@ -38,7 +38,7 @@
     "react-hook-form": "^7.43.9",
     "react-onesignal": "^3.0.1",
     "react-redux": "^9.0.0",
-    "react-toastify": "^10.0.0",
+    "react-toastify": "^11.0.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.0",
     "tailwindcss": "3.4.17",
