@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.22.15
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase (with y/N prompt)
