@@ -7,11 +7,6 @@ on:
   pull_request:
     branches: [ "dev" ]
   workflow_dispatch:
-    inputs:
-      dbResetOptions:
-        description: "Options to add to supabase db reset"
-        required: false
-        type: string
 
 env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
