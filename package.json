@@ -51,7 +51,7 @@
     "@types/react-datepicker": "^6.0.0",
     "cypress": "^13.0.0",
     "cypress-cdp": "^1.4.19",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
     "husky": "^9.0.0",
     "jest": "^29.5.0",
     "lint-staged": "^15.0.0",
