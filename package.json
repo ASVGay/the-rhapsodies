@@ -57,7 +57,7 @@
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "supabase": "^1.75.2",
-    "tailwindcss-animated": "^1.0.1",
+    "tailwindcss-animated": "^2.0.0",
     "ts-jest": "^29.1.0"
   }
 }
