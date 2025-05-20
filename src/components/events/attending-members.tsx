@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Attending, AttendingMembers } from "@/types/database-types"
+import { Attending, type AttendingMembers } from "@/types/database-types"
 import { createAttendeeChannel, getAttendingMembersForEvent } from "@/services/event.service"
 import { toast } from "react-toastify"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
