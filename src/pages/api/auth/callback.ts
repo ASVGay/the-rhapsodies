@@ -1,6 +1,6 @@
 import { NextApiHandler } from "next"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { isAuthApiError } from "@supabase/gotrue-js"
+import { isAuthApiError } from "@supabase/auth-js"
 
 const handler: NextApiHandler = async (req, res) => {
   const next = req.query.next
