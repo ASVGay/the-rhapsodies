@@ -11,7 +11,7 @@
     "test:jest": "node ./node_modules/jest/bin/jest.js --passWithNoTests",
     "cy:open": "cypress open",
     "cy:run": "cypress run --config video=false",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
