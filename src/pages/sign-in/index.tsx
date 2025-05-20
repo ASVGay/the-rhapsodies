@@ -4,12 +4,12 @@ import SignInTextField from "@/components/text-fields/sign-in-text-field"
 import { useRouter } from "next/router"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { AuthResponse } from "@supabase/gotrue-js"
 import ErrorMessage from "@/components/error/error-message"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FormDataItem } from "@/interfaces/form-data-item"
 import Link from "next/link"
 import { toast } from "react-toastify"
+import { AuthResponse } from "@supabase/supabase-js"
 
 const Index = () => {
   const [errorPopupText, setErrorPopupText] = useState<string>("")
