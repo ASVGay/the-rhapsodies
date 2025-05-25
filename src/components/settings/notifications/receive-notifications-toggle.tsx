@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import OneSignal from "react-onesignal"
 import { toast } from "react-toastify"
 import { useUser } from "@supabase/auth-helpers-react"
 import Toggle from "@/components/settings/controls/toggle"
 import { OneSignalContext } from "@/pages/_app"
+import { loadOneSignal } from "@/lib/onesignal"
 
 interface ReceiveNotificationsToggleProps {
   isSubscribed: boolean
@@ -20,22 +20,27 @@ const ReceiveNotificationsToggle = ({
   const [renderContent, setRenderContent] = useState<boolean>(false)
   const userId = useUser()?.id
 
-  const getSubscriptionStatus = useCallback(() => {
+  const getSubscriptionStatus = useCallback(async () => {
+    const OneSignal = await loadOneSignal()
     setIsSubscribed(OneSignal.User.PushSubscription.optedIn === true)
   }, [setIsSubscribed])
 
   useEffect(() => {
-    if (userId && oneSignalInitialized) {
-      console.log("Logging in to OneSignal")
-      OneSignal.login(userId)
-        .then(() => getSubscriptionStatus())
-        .catch(() => console.error("Error logging in to OneSignal"))
-    } else {
-      console.log("Logging out of OneSignal")
-      OneSignal.logout()
-        .then(() => getSubscriptionStatus())
-        .catch(() => console.error("Error logging out of OneSignal"))
+    const manageSubscription = async () => {
+      const OneSignal = await loadOneSignal()
+      if (userId && oneSignalInitialized) {
+        console.log("Logging in to OneSignal")
+        OneSignal.login(userId)
+          .then(() => getSubscriptionStatus())
+          .catch(() => console.error("Error logging in to OneSignal"))
+      } else {
+        console.log("Logging out of OneSignal")
+        OneSignal.logout()
+          .then(() => getSubscriptionStatus())
+          .catch(() => console.error("Error logging out of OneSignal"))
+      }
     }
+    manageSubscription()
   }, [getSubscriptionStatus, oneSignalInitialized, userId])
 
   const handleSubscribingError = () => {
@@ -43,7 +48,8 @@ const ReceiveNotificationsToggle = ({
     getSubscriptionStatus()
   }
 
-  const changeSubscription = () => {
+  const changeSubscription = async () => {
+    const OneSignal = await loadOneSignal()
     if (isSubscribed) {
       OneSignal.User.PushSubscription.optOut().then(() => {
         toast.success(

@@ -6,7 +6,7 @@ import { notificationsAreSupported } from "@/helpers/pwa.helper"
 import TestNotificationButton from "@/components/settings/notifications/test-notification-button"
 import ReceiveNotificationsToggle from "@/components/settings/notifications/receive-notifications-toggle"
 import { useRouter } from "next/router"
-import OneSignal from "react-onesignal"
+import { loadOneSignal } from "@/lib/onesignal"
 
 const NotificationSettings = () => {
   const router = useRouter()
@@ -27,7 +27,8 @@ const NotificationSettings = () => {
     }
   }, [])
 
-  const checkForAdblock = () => {
+  const checkForAdblock = async () => {
+    const OneSignal = await loadOneSignal()
     setTimeout(function () {
       fetch(
         `https://onesignal.com/api/v1/sync/${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}/web?callback=__jp0`,

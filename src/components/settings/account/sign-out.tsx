@@ -4,7 +4,7 @@ import { Database } from "@/types/database"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
-import OneSignal from "react-onesignal"
+import { loadOneSignal } from "@/lib/onesignal"
 
 const SignOut = () => {
   const supabase = useSupabaseClient<Database>()
@@ -25,6 +25,7 @@ const SignOut = () => {
       if (!confirmed) return
 
       if (process.env.NEXT_PUBLIC_DISABLE_ONESIGNAL !== "true") {
+        const OneSignal = await loadOneSignal()
         // Log out of OneSignal
         OneSignal.User.PushSubscription.optOut()
           .then(async () => {

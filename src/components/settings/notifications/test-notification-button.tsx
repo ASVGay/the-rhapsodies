@@ -1,14 +1,16 @@
 import React from "react"
 import { toast } from "react-toastify"
 import SettingsButton from "@/components/settings/controls/settings-button"
-import OneSignal from "react-onesignal"
+import { loadOneSignal } from "@/lib/onesignal"
 
 interface TestNotificationButtonProps {
   isSubscribed: boolean
 }
 
 const TestNotificationButton = ({ isSubscribed }: TestNotificationButtonProps) => {
-  const sendTestNotification = () => {
+  const sendTestNotification = async () => {
+    const OneSignal = await loadOneSignal()
+
     fetch(`https://onesignal.com/api/v1/notifications`, {
       method: "POST",
       headers: {
