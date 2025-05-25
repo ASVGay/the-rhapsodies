@@ -77,7 +77,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
           onFocus={() => setIsSearchFocused(true)}
           onBlur={handleSearchBlur}
           ref={searchRef}
-          className="flex w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
+          className="flex w-full rounded-lg px-4 py-2 pr-10 outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
         />
         {searchTerm ? (
           <XMarkIcon
@@ -90,7 +90,7 @@ const InstrumentSearch = ({ instruments, onInstrumentSelected }: InstrumentSearc
         )}
       </div>
       {isSearchFocused && searchTerm.length !== 0 && searchResults.length > 0 && (
-        <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
+        <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline-solid outline-1 outline-gray-300">
           <ul ref={listRef} data-cy="instrument-search-list">
             {searchResults.map((instrumentItem: Instrument) => {
               return (

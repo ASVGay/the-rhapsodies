@@ -18,7 +18,7 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
           src={getEventImage(event.event_type)}
           alt={`Background image ${title}`}
           fill={true}
-          className={"rounded-lg object-cover brightness-[30%] filter"}
+          className={"rounded-lg object-cover brightness-30 filter"}
           placeholder={"blur"}
           blurDataURL={
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMT0+uBwAEIAGyKWedwwAAAABJRU5ErkJggg=="

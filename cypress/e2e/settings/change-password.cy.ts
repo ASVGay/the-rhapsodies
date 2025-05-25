@@ -1,4 +1,5 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
+import { COLORS } from "../../support/colors"
 
 describe("the change password page", () => {
   const environment = Cypress.env("CYPRESS_ENV")
@@ -54,7 +55,7 @@ describe("the change password page", () => {
       const inputs = [inputCurrentPassword, inputNewPassword, inputConfirmationPassword]
 
       inputs.forEach((input) => {
-        cy.data(input).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(input).should("have.css", "outline-color", COLORS.red[400])
       })
 
       cy.data(errorCurrentPassword).should("contain.text", "Please provide your current password")
@@ -65,7 +66,7 @@ describe("the change password page", () => {
     it("should show error if new password is too short", () => {
       cy.data(inputNewPassword).type("12")
       cy.data(buttonSubmitNewPassword).click()
-      cy.data(inputNewPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputNewPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorNewPassword).should("contain.text", "six characters")
     })
 
@@ -73,7 +74,7 @@ describe("the change password page", () => {
       cy.data(inputNewPassword).type("12")
       cy.data(inputConfirmationPassword).type("1")
       cy.data(buttonSubmitNewPassword).click()
-      cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputConfirmationPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorConfirmationPassword).should("contain.text", "not match")
     })
 
@@ -82,7 +83,7 @@ describe("the change password page", () => {
       cy.data(inputNewPassword).type(currentPassword)
       cy.data(inputConfirmationPassword).type(currentPassword)
       cy.data(buttonSubmitNewPassword).click()
-      cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputCurrentPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
       cy.get(".Toastify")
         .get("#incorrect-password")

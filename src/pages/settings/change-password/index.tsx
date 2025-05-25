@@ -112,7 +112,7 @@ const Index = () => {
           )}
           <div className="input">
             <input
-              className={`!p-2.5 !pe-12 ${errors.newPassword && "error"}`}
+              className={`p-2.5! pe-12! ${errors.newPassword && "error"}`}
               data-cy={"input-new-password"}
               type="password"
               placeholder="New password"
@@ -140,7 +140,7 @@ const Index = () => {
           )}
           <div className="input">
             <input
-              className={`!p-2.5 !pe-12 ${errors.confirmationPassword && "error"}`}
+              className={`p-2.5! pe-12! ${errors.confirmationPassword && "error"}`}
               data-cy={"input-confirmation-password"}
               type="password"
               placeholder="Confirm your new password"

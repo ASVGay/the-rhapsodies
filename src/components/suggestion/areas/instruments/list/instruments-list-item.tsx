@@ -42,7 +42,7 @@ const InstrumentsListItem = ({
         <div className="flex w-full flex-col items-start">
           <p className="pl-2 font-bold">{instrumentItem.instrument.instrument_name}</p>
           <textarea
-            className="w-full resize-none rounded p-1 pl-2 leading-tight text-gray-500 hover:outline-moon-300 focus:outline-moon-300"
+            className="w-full resize-none rounded-sm p-1 pl-2 leading-tight text-gray-500 hover:outline-moon-300 focus:outline-moon-300"
             placeholder={"Add note"}
             data-cy="description-input"
             rows={3}

@@ -53,7 +53,7 @@ export const ForgotPasswordForm = ({ setEmailIsSent }: ForgotPasswordFormProps) 
           )}
           <div className="input">
             <input
-              className={`bg-zinc-50 !p-2.5 ${errors.email && "error"}`}
+              className={`bg-zinc-50 p-2.5! ${errors.email && "error"}`}
               data-cy={"input-email"}
               type="email"
               placeholder="Email"

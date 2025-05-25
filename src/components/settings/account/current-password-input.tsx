@@ -22,7 +22,7 @@ const CurrentPasswordInput = ({ errors, register, disabled }: CurrentPasswordInp
     )}
     <div className="input">
       <input
-        className={`!p-2.5 !pe-12 ${errors.currentPassword && "error"}`}
+        className={`p-2.5! pe-12! ${errors.currentPassword && "error"}`}
         data-cy={"input-current-password"}
         type="password"
         placeholder="Current password"

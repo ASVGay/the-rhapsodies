@@ -88,7 +88,7 @@ const ChangeEmailForm = ({ setEmailIsSent }: ChangeEmailFormProps) => {
         )}
         <div className="input">
           <input
-            className={`!p-2.5 !pe-12 ${errors.newEmailAddress && "error"}`}
+            className={`p-2.5! pe-12! ${errors.newEmailAddress && "error"}`}
             data-cy={"input-new-email"}
             type="email"
             placeholder="New email address"

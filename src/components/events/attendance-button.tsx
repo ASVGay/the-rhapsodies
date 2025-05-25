@@ -70,7 +70,7 @@ const AttendanceButton = ({ eventId }: AttendanceButtonProps) => {
         <div
           data-cy={"loading"}
           className={`loading duration-2000 opacity-1 absolute z-50 flex h-14 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-600 bg-opacity-70 lg:w-[calc(60%-2rem)] 
-          ${!isLoading && "!h-0 opacity-0"}`}
+          ${!isLoading && "h-0! opacity-0"}`}
         >
           <SpinnerStripes />
         </div>
