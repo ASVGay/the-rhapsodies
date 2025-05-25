@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { notificationsAreSupported } from "@/helpers/pwa.helper"
 import Toggle from "@/components/settings/controls/toggle"
 import { AlertText } from "@/constants/notifications"
-import OneSignal from "react-onesignal"
+import { loadOneSignal } from "@/lib/onesignal"
 
 const showPermissionInstructions = (result: NotificationPermission) => {
   if (result === "denied") {
@@ -22,11 +22,11 @@ const EnableNotificationsToggle = ({
   setHasNotificationPermission,
 }: EnableNotificationsToggleProps) => {
   const [renderContent, setRenderContent] = useState<boolean>(false)
-  const [permission, setPermission] = useState<NotificationPermission>(
-    notificationsAreSupported() ? OneSignal.Notifications.permissionNative : "default",
-  )
+  const [permission, setPermission] = useState<NotificationPermission>("default")
 
-  const changeNotificationSetting = () => {
+  const changeNotificationSetting = async () => {
+    const OneSignal = await loadOneSignal()
+
     OneSignal.Notifications.requestPermission()
       .then(() => {
         const result = OneSignal.Notifications.permissionNative
@@ -34,7 +34,7 @@ const EnableNotificationsToggle = ({
         if (result === permission) showPermissionInstructions(result)
         setHasNotificationPermission(result === "granted")
       })
-      .catch((error) => alert(error))
+      .catch((error: Error) => alert(error))
       .finally(() => {
         setPermission(OneSignal.Notifications.permissionNative)
       })
