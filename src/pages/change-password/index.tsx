@@ -45,12 +45,14 @@ const ChangePassword = ({ termsContent, privacyContent }: ChangePasswordProps) =
     setValue,
   } = useForm()
 
-  useEffect(() => {
-    watch(() => setErrorMessage(""))
-  }, [watch])
-
   const password = watch("password")
   const isChecked = watch("terms")
+  const confirmPassword = watch("confirmPassword")
+
+  // Reset error message when password or confirmPassword changes
+  useEffect(() => {
+    setErrorMessage("")
+  }, [password, confirmPassword])
 
   const changePasswordFormData: FormDataItem[] = [
     {
