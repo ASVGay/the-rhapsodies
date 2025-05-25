@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    /* Font is defined in _app.tsx (Next.js Google Font) */
+    --font-lexend: 'Lexend', sans-serif;
+    --toastify-font-family: var(--font-lexend);
+}
+
 @layer base {
     html {
         -webkit-tap-highlight-color: transparent;

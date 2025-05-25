@@ -84,7 +84,6 @@ describe("on the change email page", () => {
         .get("#incorrect-password")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Please fill in your current password correctly")
     })
   })
@@ -98,7 +97,6 @@ describe("on the change email page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Error")
     })
 
@@ -142,7 +140,6 @@ describe("on the change email page", () => {
         cy.data("resend-email").click()
         cy.get(".Toastify")
           .get("#1")
-          .get(".Toastify__toast-body")
           .should(
             "have.text",
             "An email has been sent. Check your spam folder if you cannot find it.",
@@ -182,7 +179,6 @@ describe("on change email page with hash params", () => {
       cy.visit(`/settings/change-email#refresh_token=${refreshToken}`)
       cy.get(".Toastify")
         .get("#update-success")
-        .get(".Toastify__toast-body")
         .should("have.text", "Your email has successfully been updated!")
     })
   })
@@ -194,7 +190,6 @@ describe("on change email page with hash params", () => {
     cy.location("pathname").should("eq", "/sign-in")
     cy.get(".Toastify")
       .get("#error_description")
-      .get(".Toastify__toast-body")
       .should("have.text", "Email link is invalid or has expired")
   })
 })

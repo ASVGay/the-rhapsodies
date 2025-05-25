@@ -38,7 +38,6 @@ describe("suggestion detail page", () => {
     it("should error when failing to update division", () => {
       cy.intercept("DELETE", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
       cy.intercept("POST", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
-
       cy.data("division")
         .first()
         .then(() => {
@@ -108,7 +107,6 @@ describe("suggestion detail page", () => {
       cy.on("window:confirm", () => true)
       cy.get(".Toastify")
         .get("#1")
-        .get(".Toastify__toast-body")
         .should("have.text", "We couldn't delete the suggestion, try again later.")
     })
   })

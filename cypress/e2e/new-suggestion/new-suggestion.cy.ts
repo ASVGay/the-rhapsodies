@@ -1,10 +1,10 @@
 import { Area } from "@/constants/area"
 import {
-  shouldBeEmptyState,
-  fillSongInformationSuccessfully,
   areaInStateShouldBe,
-  shouldContainJSONSongInformationInState,
   fillInstrumentsSuccessfully,
+  fillSongInformationSuccessfully,
+  shouldBeEmptyState,
+  shouldContainJSONSongInformationInState,
 } from "./helpers/new-suggestion.helper"
 
 const path = "/suggestions/new"
@@ -74,7 +74,6 @@ describe("when creating a new suggestion", () => {
               cy.data(progressBarItem).click()
               cy.get(".Toastify")
                 .get("#1")
-                .get(".Toastify__toast-body")
                 .should(
                   "have.text",
                   "You need to fill in all the required fields before continuing",

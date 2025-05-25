@@ -168,7 +168,6 @@ describe("on the specific event page", () => {
         cy.intercept("/rest/v1/rpc/get_members_by_event", { statusCode: 400 })
         cy.get(".Toastify")
           .get("#toast-attending-members")
-          .get(".Toastify__toast-body")
           .should("contain.text", "Something went wrong")
 
         const failedAttendingMembers = "failed-attending-members"
@@ -334,7 +333,6 @@ describe("on the specific event page", () => {
       cy.on("window:confirm", () => true)
       cy.get(".Toastify")
         .get("#1")
-        .get(".Toastify__toast-body")
         .should("have.text", "We couldn't delete your event, try again later.")
     })
   })

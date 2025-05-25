@@ -99,7 +99,6 @@ describe("on the reset password page", () => {
             .get("#1")
             .should("be.visible")
             .should("have.class", "Toastify__toast--success")
-            .get(".Toastify__toast-body")
             .should("have.text", "Password successfully updated!")
         })
 
