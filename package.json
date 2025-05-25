@@ -56,7 +56,7 @@
     "lint-staged": "^16.0.0",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
-    "supabase": "^1.75.2",
+    "supabase": "^2.0.0",
     "tailwindcss-animated": "^2.0.0",
     "ts-jest": "^29.1.0"
   }
