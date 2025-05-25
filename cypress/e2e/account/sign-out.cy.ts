@@ -18,7 +18,6 @@ describe("Sign-out", () => {
     cy.data("logout-btn").click()
     cy.get(".Toastify")
       .get("#1")
-      .get(".Toastify__toast-body")
       .should("have.text", "Something went wrong while logging out. Please try again.")
   })
 })

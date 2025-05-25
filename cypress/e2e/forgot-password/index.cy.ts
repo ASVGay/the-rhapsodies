@@ -59,7 +59,7 @@ describe("the forgot password page", () => {
     cy.data(inputEmail).type(testEmail)
     cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword)
     cy.data(buttonSubmit).click()
-    cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+    cy.get(".Toastify").get("#1").should(
       "have.text",
       {
         code: 429,
@@ -103,14 +103,14 @@ describe("the forgot password page", () => {
     it("should show toast on succes of try again", () => {
       cy.data(tryAgain).click()
       cy.wait("@link-request")
-      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should("have.text", successMessage)
+      cy.get(".Toastify").get("#1").should("have.text", successMessage)
     })
 
     it("should show toast on error of try again", () => {
       cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword).as("link-request")
       cy.data(tryAgain).click()
       cy.wait("@link-request")
-      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+      cy.get(".Toastify").get("#1").should(
         "have.text",
         {
           code: 429,

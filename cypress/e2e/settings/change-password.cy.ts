@@ -88,7 +88,6 @@ describe("the change password page", () => {
         .get("#incorrect-password")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Please fill in your current password correctly")
     })
   })
@@ -103,7 +102,6 @@ describe("the change password page", () => {
           .get("#1")
           .should("be.visible")
           .should("have.class", "Toastify__toast--success")
-          .get(".Toastify__toast-body")
           .should("have.text", "Password successfully changed!")
         cy.location("pathname").should("eq", "/settings")
       } else {
@@ -113,7 +111,6 @@ describe("the change password page", () => {
           .get("#1")
           .should("be.visible")
           .should("have.class", "Toastify__toast--error")
-          .get(".Toastify__toast-body")
           .should("contain.text", "must be different")
       }
     })
@@ -126,7 +123,6 @@ describe("the change password page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Something went wrong")
     })
 

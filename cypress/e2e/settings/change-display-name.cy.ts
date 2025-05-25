@@ -69,7 +69,6 @@ describe("the change display name page", () => {
         .get("#incorrect-password")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Please fill in your current password correctly")
     })
   })
@@ -82,7 +81,6 @@ describe("the change display name page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--success")
-        .get(".Toastify__toast-body")
         .should("have.text", `Display name successfully changed to ${displayName}!`)
       cy.location("pathname").should("eq", "/settings")
     })
@@ -95,7 +93,6 @@ describe("the change display name page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Something went wrong")
     })
 

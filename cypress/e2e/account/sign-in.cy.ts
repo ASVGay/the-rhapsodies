@@ -72,7 +72,6 @@ describe("forgot password", () => {
     )
     cy.get(".Toastify")
       .get("#error_description")
-      .get(".Toastify__toast-body")
       .should("have.text", "Email link is invalid or has expired")
   })
 })
