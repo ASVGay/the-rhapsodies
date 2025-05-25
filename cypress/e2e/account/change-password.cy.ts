@@ -2,7 +2,6 @@ import { testErrorHandlingChangePassword } from "../helpers/change-password.help
 import { User } from "../../support/user.enum"
 
 const displayName = "New"
-const environment = Cypress.env("CYPRESS_ENV")
 const newPassword = Cypress.env("CYPRESS_NEW_PASSWORD")
 const displayNameTextField = "set-name-text-field"
 const passwordTextField = "change-password-text-field"
@@ -27,23 +26,21 @@ describe("Change password", () => {
   })
 
   it("should login or give error when changing password", () => {
+    cy.intercept("PUT", "/auth/v1/user").as("changePassword")
+
     cy.data(displayNameTextField).type(displayName)
     cy.data(passwordTextField).type(newPassword)
     cy.data(confirmPasswordTextField).type(newPassword)
     cy.data(termsConditionsCheckbox).click()
     cy.data(submitPasswordBtn).click()
-    // When running locally, the user is redirected to the home page
-    if (environment === "local") {
-      cy.location("pathname").should("equal", "/")
-    } else {
-      // When running in GitHub Actions, the user gets error 422
-      // since we cannot change the password to the same as the current one
-      cy.data(submitPasswordErr).should("exist")
-      cy.data(submitPasswordErr).should(
-        "contain.text",
-        "New password should be different from the old password",
-      )
-    }
+    // The user should get error 422
+    // since we cannot change the password to the same as the current one
+    cy.wait("@changePassword").its("response.statusCode").should("eq", 422)
+    cy.data(submitPasswordErr).should("exist")
+    cy.data(submitPasswordErr).should(
+      "contain.text",
+      "New password should be different from the old password",
+    )
   })
 
   it("should show terms and conditions when clicking on the link", () => {
