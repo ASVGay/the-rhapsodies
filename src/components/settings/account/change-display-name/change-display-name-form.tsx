@@ -82,7 +82,7 @@ const ChangeDisplayNameForm = () => {
         )}
         <div className="input">
           <input
-            className={`!p-2.5 !pe-12 ${errors.newDisplayName && "error"}`}
+            className={`p-2.5! pe-12! ${errors.newDisplayName && "error"}`}
             data-cy={"input-new-display-name"}
             type="text"
             placeholder="New display name"

@@ -105,7 +105,7 @@ const DeleteEventOverlay = ({ onClose, event }: DeleteEventOverlayProps) => {
             <div className={"w-[280px] text-left"}>
               <div className={"input"}>
                 <input
-                  className="h-8 w-full shadow-sm"
+                  className="h-8 w-full shadow-xs"
                   data-cy={"input-delete-event"}
                   onChange={(e) => handleChange(e.target.value)}
                 />

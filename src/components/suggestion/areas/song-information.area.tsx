@@ -141,7 +141,7 @@ const SongInformationArea = ({
             />
             <span>{fetchingSongs ? <Spinner size={2} /> : <DocumentTextIcon />}</span>
             {isSearchFocused && getValues().title.length !== 0 && searchResults.length > 0 && (
-              <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline outline-1 outline-gray-300">
+              <div className="absolute z-10 w-full rounded-md bg-white shadow-md outline-solid outline-1 outline-gray-300">
                 <ul data-cy="song-information-dropdown">
                   {searchResults.map((item: SearchItem) => {
                     return (
@@ -225,7 +225,7 @@ const SongInformationArea = ({
           <div className={"mt-1"}>
             <textarea
               data-cy={"input-motivation"}
-              className={`w-full rounded-lg p-3 shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
+              className={`w-full rounded-lg p-3 shadow-xs outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
                 errors.motivation && "outline-red-400"
               }`}
               rows={4}

@@ -20,7 +20,7 @@ const SearchBar = ({ handleSearch, inputRef, showSearchBar, setShowSearchBar }: 
           type="text"
           placeholder="Enter a song..."
           data-cy="search-suggestion-input"
-          className="w-full rounded-lg px-4 py-2 pr-10 outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
+          className="w-full rounded-lg px-4 py-2 pr-10 outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300"
         />
         <MagnifyingGlassIcon
           viewBox={"-1.25 -1.25 23.25 23.25"}

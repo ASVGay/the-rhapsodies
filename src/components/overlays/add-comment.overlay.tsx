@@ -102,7 +102,7 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: AddCommentOverlay
 
             <textarea
               data-cy={"input-comment"}
-              className={`w-full rounded-lg p-3 shadow-sm outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
+              className={`w-full rounded-lg p-3 shadow-xs outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
                 errors.comment && "outline-red-400"
               }`}
               rows={4}

@@ -1,3 +1,5 @@
+import { COLORS } from "../../support/colors"
+
 describe("the forgot password page", () => {
   // -------------------------------------------------------------- Variables
   const inputEmail = "input-email"
@@ -52,7 +54,7 @@ describe("the forgot password page", () => {
     cy.data(error).should("not.exist")
     cy.data(buttonSubmit).click()
     cy.data(error).should("be.visible")
-    cy.data(inputEmail).should("have.css", "outline-color", "rgb(248, 113, 113)")
+    cy.data(inputEmail).should("have.css", "outline-color", COLORS.red[400])
   })
 
   it("should show error toast on error of request", () => {

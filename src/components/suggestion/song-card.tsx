@@ -33,7 +33,7 @@ const SongCard = ({ song, router, setShowSpinner, type }: SongCardProps) => {
           query: { song: song.id },
         })
       }}
-      className={"w-[22rem] rounded-md bg-neutral-50 drop-shadow-lg hover:cursor-pointer"}
+      className={"w-88 rounded-md bg-neutral-50 drop-shadow-lg hover:cursor-pointer"}
       data-cy="suggestion-card"
       data-id={song.id}
     >

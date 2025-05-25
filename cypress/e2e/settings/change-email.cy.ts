@@ -1,5 +1,6 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
 import { getSbToken } from "../../support/commands"
+import { COLORS } from "../../support/colors"
 
 const errorResponseChangeEmail = {
   statusCode: 401,
@@ -60,7 +61,7 @@ describe("on the change email page", () => {
       const inputs = [inputCurrentPassword, inputNewEmail]
 
       inputs.forEach((input) => {
-        cy.data(input).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(input).should("not.have.css", "outline-color", COLORS.red[400])
       })
 
       cy.data(errorNewEmail).should("not.exist")
@@ -70,7 +71,7 @@ describe("on the change email page", () => {
     it("should show errors if no entered password", () => {
       cy.data(inputNewEmail).type("ex@mple")
       cy.data(buttonSubmitNewEmail).click()
-      cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputCurrentPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorCurrentPassword).should("contain.text", "Please provide your current password")
     })
 
@@ -78,7 +79,7 @@ describe("on the change email page", () => {
       cy.data(inputNewEmail).type(emailAddress)
       cy.data(inputCurrentPassword).type("incorrect")
       cy.data(buttonSubmitNewEmail).click()
-      cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputCurrentPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
       cy.get(".Toastify")
         .get("#incorrect-password")

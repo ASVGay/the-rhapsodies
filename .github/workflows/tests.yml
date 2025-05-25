@@ -96,7 +96,8 @@ jobs:
 
   cypress-run:
     runs-on: ubuntu-24.04
-    container: cypress/browsers:node18.12.0-chrome103-ff107
+    container:
+      image: cypress/browsers:22.15.0
     environment: dev
     needs: install
     strategy:

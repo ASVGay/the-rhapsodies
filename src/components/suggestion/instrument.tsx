@@ -53,7 +53,7 @@ const Instrument = ({
         />
         <div>
           <p>{name}</p>
-          <p className={"leading-5 text-zinc-400 md:max-w-[12rem]"}>{description}</p>
+          <p className={"leading-5 text-zinc-400 md:max-w-48"}>{description}</p>
           <div className={`font-bold`} data-cy="division">
             {division && formatUsernames(division)}
           </div>
