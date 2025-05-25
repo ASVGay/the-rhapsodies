@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
 
 interface SearchBarProps {
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void
-  inputRef: RefObject<HTMLInputElement>
+  inputRef: RefObject<HTMLInputElement | null>
   showSearchBar: boolean
   setShowSearchBar: (show: boolean) => void
 }
