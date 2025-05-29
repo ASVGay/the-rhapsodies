@@ -100,17 +100,17 @@ const AddCommentOverlay = ({ onClose, eventId, commentValue }: AddCommentOverlay
               Type to add a comment to your attendance
             </label>
 
-            <textarea
-              data-cy={"input-comment"}
-              className={`w-full rounded-lg p-3 shadow-xs outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
-                errors.comment && "outline-red-400"
-              }`}
-              rows={4}
-              placeholder="Type to add a comment to your attendance"
-              {...register("comment", {
-                validate: (value) => !!value.trim(),
-              })}
-            />
+            <div className="input">
+              <textarea
+                data-cy={"input-comment"}
+                className={`${errors.comment && "error"}`}
+                rows={4}
+                placeholder="Type to add a comment to your attendance"
+                {...register("comment", {
+                  validate: (value) => !!value.trim(),
+                })}
+              />
+            </div>
           </div>
           <div className="flex justify-end gap-2">
             <button

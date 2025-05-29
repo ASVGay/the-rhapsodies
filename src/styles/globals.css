@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @config '../../tailwind.config.js';
 
@@ -29,15 +29,14 @@
 }
 
 @utility p-safe {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 @utility filter-in-division {
   /* Source: https://isotropic.co/tool/hex-color-to-css-filter/ */
   /* Color: #0ea5e9 (tw-sky-500) */
-  filter: invert(64%) sepia(45%) saturate(5713%) hue-rotate(166deg)
-    brightness(95%) contrast(91%);
+  filter: invert(64%) sepia(45%) saturate(5713%) hue-rotate(166deg) brightness(95%) contrast(91%);
 }
 
 @utility full-bg-moon-50 {
@@ -119,14 +118,19 @@
   @apply relative mt-1;
 
   & input {
-    @apply w-full rounded-lg outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-xs;
+    @apply w-full rounded-lg outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-xs placeholder-gray-300;
+  }
+
+  & textarea {
+    @apply w-full rounded-lg p-3 shadow-xs outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 placeholder-gray-300;
   }
 
   & select {
     @apply w-full bg-white appearance-none rounded-lg outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-xs;
   }
 
-  & input.error {
+  & input.error,
+  & textarea.error {
     @apply outline-red-400;
   }
 
@@ -176,17 +180,15 @@
   }
 }
 
-@layer utilities {
-  :root {
-    /* Font is defined in _app.tsx (Next.js Google Font) */
-    --font-lexend: 'Lexend', sans-serif;
-    --toastify-font-family: var(--font-lexend);
-  }
+:root {
+  /* Font is defined in _app.tsx (Next.js Google Font) */
+  --font-lexend: "Lexend", sans-serif;
+  --toastify-font-family: var(--font-lexend);
 }
 
 @layer base {
-    html {
-        -webkit-tap-highlight-color: transparent;
-        min-height: calc(100% + env(safe-area-inset-top));
-    }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    min-height: calc(100% + env(safe-area-inset-top));
+  }
 }

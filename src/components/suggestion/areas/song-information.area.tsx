@@ -222,12 +222,10 @@ const SongInformationArea = ({
             Explain why you would like to play this song with The Rhapsodies
           </label>
 
-          <div className={"mt-1"}>
+          <div className={"mt-1 input"}>
             <textarea
               data-cy={"input-motivation"}
-              className={`w-full rounded-lg p-3 shadow-xs outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 ${
-                errors.motivation && "outline-red-400"
-              }`}
+              className={`input ${errors.motivation && "error"}`}
               rows={4}
               placeholder="Explain why you would like to play this song with The Rhapsodies"
               {...register("motivation", {
