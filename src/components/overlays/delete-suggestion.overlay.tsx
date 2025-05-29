@@ -48,8 +48,8 @@ const HoldToDeleteButton = ({ onHoldComplete }: HoldToDeleteButtonProps) => {
       const pct = Math.min(elapsed / APP_SETTINGS.holdToDeleteDuration, 1)
       setProgress(pct * 100)
 
-      if (pct >= 1) {
-        clearInterval(holdRef.current!)
+      if (pct >= 1 && holdRef.current) {
+        clearInterval(holdRef.current)
         setHolding(false)
         setProgress(0)
         onHoldComplete()
