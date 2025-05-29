@@ -105,8 +105,6 @@ describe("suggestion detail page", () => {
       cy.data("suggestion-delete-icon").click({ force: true })
       cy.data("delete-suggestion-button").trigger("mousedown")
       cy.wait(APP_SETTINGS.holdToDeleteDuration)
-      cy.data("delete-suggestion-button").trigger("mouseup")
-      cy.on("window:confirm", () => true)
       cy.wait("@deleteSuggestion").then((interception) => {
         expect(interception.response.statusCode).to.equal(204)
       })
