@@ -20,7 +20,7 @@
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.25.0",
     "@tailwindcss/postcss": "^4.1.7",
-    "@types/node": "22.15.24",
+    "@types/node": "22.15.26",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
     "date-fns": "^4.0.0",
