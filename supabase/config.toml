@@ -24,6 +24,12 @@ shadow_port = 54320
 # server_version;` on the remote database to check.
 major_version = 15
 
+[db.seed]
+# Enable seeding of the database with initial data.
+enabled = true
+# Path to the SQL file that contains the seed data. This file will be executed after the database is resetted.
+sql_paths = ["./seed.sql", "./generated.sql"]
+
 [db.pooler]
 enabled = false
 # Port to use for the local connection pooler.

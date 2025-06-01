@@ -2,6 +2,8 @@ import {
   addInstrumentItem,
   shouldGoToReviewArea,
 } from "../new-suggestion/helpers/new-suggestion.helper"
+import { User } from "../../support/user.enum"
+import { TESTING } from "../../support/constants"
 
 const userSuggestion = "ca20ae76-f6b3-4224-99af-cac14643a967"
 const userSecondSuggestion = "e743664e-b85b-4164-8163-24c9957f5ffd"
@@ -24,6 +26,17 @@ describe("when the user wants to edit a suggestion", () => {
       it("the edit button brings the user to the edit page", () => {
         cy.data("suggestion-edit-icon").click()
         cy.location("pathname").should("eq", `/suggestions/edit/${userSuggestion}`)
+      })
+    })
+
+    context("while user is not authorized to edit", () => {
+      beforeEach(() => {
+        cy.login(User.USER)
+        cy.visit(`suggestions/${TESTING.idSongNoAuthor}`)
+      })
+
+      it("should not show the edit button", () => {
+        cy.data("suggestion-edit-icon").should("not.exist")
       })
     })
   })
@@ -107,6 +120,17 @@ describe("when the user wants to edit a suggestion", () => {
               `/suggestions/${userSuggestion}`,
             )
           })
+      })
+    })
+
+    context("while user is not authorized to edit", () => {
+      beforeEach(() => {
+        cy.login(User.USER)
+        cy.visit(`suggestions/edit/${notOfUserSuggestion}`)
+      })
+
+      it("should redirect to the forbidden page", () => {
+        cy.location("pathname").should("eq", `/403`)
       })
     })
   })
