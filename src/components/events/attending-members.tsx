@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Attending, AttendingMembers } from "@/types/database-types"
+import { Attending, type AttendingMembers } from "@/types/database-types"
 import { createAttendeeChannel, getAttendingMembersForEvent } from "@/services/event.service"
 import { toast } from "react-toastify"
 import SpinnerStripes from "@/components/utils/spinner-stripes"
@@ -96,12 +96,12 @@ const AttendingMembers = ({ eventId }: AttendingListProps) => {
   }
 
   return (
-    <div className={"rounded-lg shadow"}>
+    <div className={"rounded-lg shadow-sm"}>
       <form>
         <div
           data-cy={"loading-attending-members"}
           className={`loading duration-2000 opacity-1 absolute z-50 flex h-32 w-[calc(100%-2rem)] items-center justify-center rounded-lg bg-zinc-300 lg:w-[calc(60%-2rem)] 
-          ${!isLoading && "!h-0 opacity-0"}`}
+          ${!isLoading && "h-0! opacity-0"}`}
         >
           <SpinnerStripes />
         </div>

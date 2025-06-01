@@ -1,31 +1,111 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import OverlayContainer from "./overlay-container"
 import { getOverlay } from "@/helpers/overlay.helper"
 import { MusicalNoteIcon, UserCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Member, Song } from "@/types/database-types"
+import { Song } from "@/types/database-types"
 import { CalendarIcon } from "@heroicons/react/24/solid"
 import { deleteSuggestion } from "@/services/suggestion.service"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { getNumberOfMusicians, getSongLine } from "@/helpers/song.helper"
 import { formatDistanceToNow } from "date-fns"
-import SpinnerStripes from "@/components/utils/spinner-stripes"
+import { APP_SETTINGS } from "@/constants/app-settings"
 
+/**
+ * Props for the HoldToDeleteButton component.
+ * @property onHoldComplete - Callback invoked when the hold duration is completed.
+ */
+type HoldToDeleteButtonProps = {
+  onHoldComplete: () => void
+}
+
+/**
+ * HoldToDeleteButton component
+ *
+ * A button that requires the user to hold it for a specified duration to confirm a destructive action.
+ * Shows a progress bar and countdown while holding. Calls `onHoldComplete` when the hold is completed.
+ *
+ * @param {HoldToDeleteButtonProps} props
+ * @param {() => void} props.onHoldComplete - Callback invoked when the hold duration is completed.
+ */
+const HoldToDeleteButton = ({ onHoldComplete }: HoldToDeleteButtonProps) => {
+  const [holding, setHolding] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const holdRef = useRef<NodeJS.Timeout | null>(null)
+
+  /**
+   * Starts the hold action, updating progress until the hold duration is met.
+   * Calls onHoldComplete when finished.
+   */
+  const startHold = () => {
+    setHolding(true)
+    const startTime = Date.now()
+
+    holdRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime
+      const pct = Math.min(elapsed / APP_SETTINGS.holdToDeleteDuration, 1)
+      setProgress(pct * 100)
+
+      if (pct >= 1 && holdRef.current) {
+        clearInterval(holdRef.current)
+        setHolding(false)
+        setProgress(0)
+        onHoldComplete()
+      }
+    }, 16)
+  }
+
+  /**
+   * Cancels the hold action and resets progress.
+   */
+  const cancelHold = () => {
+    if (holdRef.current) clearInterval(holdRef.current)
+    setHolding(false)
+    setProgress(0)
+  }
+
+  return (
+    <button
+      className="relative btn error w-[280px] select-none"
+      onMouseDown={startHold}
+      onMouseUp={cancelHold}
+      onMouseLeave={cancelHold}
+      onTouchStart={startHold}
+      onTouchEnd={cancelHold}
+      data-cy="delete-suggestion-button"
+    >
+      {holding && (
+        <div
+          className="absolute left-0 top-0 h-full bg-red-500 transition-all ease-linear rounded-sm"
+          style={{ width: `${progress}%`, zIndex: 0 }}
+        />
+      )}
+      <span className="relative z-10 text-white">
+        {holding
+          ? `Deleting suggestion in ${Math.ceil((APP_SETTINGS.holdToDeleteDuration - progress * 20) / 1000)}...`
+          : "Hold to confirm deletion"}
+      </span>
+    </button>
+  )
+}
+
+/**
+ * Props for the DeleteSuggestionOverlay component.
+ * @property onClose - Callback to close the overlay, receives a boolean indicating if the overlay should remain open.
+ * @property suggestion - The suggestion (song) to be deleted.
+ */
 interface DeleteSuggestionOverlayProps {
   onClose: (showOverlay: boolean) => void
   suggestion: Song
+  author?: string
 }
 
-const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverlayProps) => {
+const DeleteSuggestionOverlay = ({ onClose, suggestion, author }: DeleteSuggestionOverlayProps) => {
   const supabase = useSupabaseClient<Database>()
   const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
-  const [showInput, setShowInput] = useState(false)
-  const [deleteButtonIsActive, setDeleteButtonIsActive] = useState(false)
   const router = useRouter()
-  const author = (suggestion.author as Member).display_name
-  const [isDeleting, setIsDeleting] = useState<boolean>(false)
   useEffect(() => setOverlayIsOpen(true), [])
 
   const waitForTransition = (isOpen: boolean) => {
@@ -33,23 +113,16 @@ const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverla
     setTimeout(() => onClose(isOpen), 300)
   }
 
-  const handleChange = (value: string) => {
-    value == author ? setDeleteButtonIsActive(true) : setDeleteButtonIsActive(false)
-  }
-
   const removeSuggestion = () => {
-    setIsDeleting(true)
-    deleteSuggestion(supabase, suggestion.id)
-      .then(({ error }) => {
-        if (error) {
-          toast.error("We couldn't delete the suggestion, try again later.")
-        } else {
-          router.push("/suggestions").then(() => {
-            toast.success("Suggestion successfully deleted.")
-          })
-        }
-      })
-      .finally(() => setIsDeleting(false))
+    deleteSuggestion(supabase, suggestion.id).then(({ error }) => {
+      if (error) {
+        toast.error("We couldn't delete the suggestion, try again later.")
+      } else {
+        router.push("/suggestions").then(() => {
+          toast.success("Suggestion successfully deleted.")
+        })
+      }
+    })
   }
 
   return getOverlay(
@@ -72,12 +145,14 @@ const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverla
               {getSongLine(suggestion.title, suggestion.artist)}
             </span>
             <div className="flex flex-col">
-              <div className="flex flex-row gap-2">
-                <UserCircleIcon height={20} width={20} color="#EEC73F" />
-                <span className="text-base text-neutral-700 font-normal leading-5">
-                  By {author}
-                </span>
-              </div>
+              {author && (
+                <div className="flex flex-row gap-2" data-cy={"delete-suggestion-author"}>
+                  <UserCircleIcon height={20} width={20} color="#EEC73F" />
+                  <span className="text-base text-neutral-700 font-normal leading-5">
+                    By {author}
+                  </span>
+                </div>
+              )}{" "}
               <div className="flex flex-row gap-2">
                 <CalendarIcon height={20} width={20} color="#EEC73F" />
                 <span className="text-base text-neutral-700 font-normal leading-5">
@@ -94,50 +169,9 @@ const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverla
           </div>
         </div>
         <hr className="w-full" />
-        {!showInput ? (
-          <div className={"flex justify-center"}>
-            <button
-              className="btn error m-4 w-[280px]"
-              data-cy={"delete-suggestion-continue-button"}
-              onClick={() => setShowInput(true)}
-            >
-              I want to delete this suggestion
-            </button>
-          </div>
-        ) : (
-          <div className={"flex w-full flex-col items-center justify-center gap-2 pt-2"}>
-            <span className={"text-sm font-normal leading-5"}>
-              To confirm, type {author} below.
-            </span>
-            <div className={"w-[280px] text-left"}>
-              <div className={"input"}>
-                <input
-                  className="h-8 w-full shadow-sm"
-                  data-cy={"input-delete-suggestion"}
-                  onChange={(e) => handleChange(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className={"flex justify-center"}>
-              <button
-                className="btn error m-4 mt-1 w-[280px] flex justify-center"
-                data-cy={"delete-suggestion-final-button"}
-                disabled={!deleteButtonIsActive}
-                onClick={() => removeSuggestion()}
-              >
-                {isDeleting ? (
-                  <SpinnerStripes
-                    dataCy={"delete-suggestion-button-loader"}
-                    size={5}
-                    className={"stroke-white"}
-                  />
-                ) : (
-                  <>Delete this suggestion</>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
+        <div className="flex justify-center p-4">
+          <HoldToDeleteButton onHoldComplete={removeSuggestion} />
+        </div>
       </div>
     </OverlayContainer>,
   )

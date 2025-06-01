@@ -1,3 +1,5 @@
+import { COLORS } from "../../support/colors"
+
 describe("the forgot password page", () => {
   // -------------------------------------------------------------- Variables
   const inputEmail = "input-email"
@@ -52,14 +54,14 @@ describe("the forgot password page", () => {
     cy.data(error).should("not.exist")
     cy.data(buttonSubmit).click()
     cy.data(error).should("be.visible")
-    cy.data(inputEmail).should("have.css", "outline-color", "rgb(248, 113, 113)")
+    cy.data(inputEmail).should("have.css", "outline-color", COLORS.red[400])
   })
 
   it("should show error toast on error of request", () => {
     cy.data(inputEmail).type(testEmail)
     cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword)
     cy.data(buttonSubmit).click()
-    cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+    cy.get(".Toastify").get("#1").should(
       "have.text",
       {
         code: 429,
@@ -103,14 +105,14 @@ describe("the forgot password page", () => {
     it("should show toast on succes of try again", () => {
       cy.data(tryAgain).click()
       cy.wait("@link-request")
-      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should("have.text", successMessage)
+      cy.get(".Toastify").get("#1").should("have.text", successMessage)
     })
 
     it("should show toast on error of try again", () => {
       cy.intercept("POST", "/auth/v1/recover*", errorBodyForgotPassword).as("link-request")
       cy.data(tryAgain).click()
       cy.wait("@link-request")
-      cy.get(".Toastify").get("#1").get(".Toastify__toast-body").should(
+      cy.get(".Toastify").get("#1").should(
         "have.text",
         {
           code: 429,

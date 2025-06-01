@@ -11,7 +11,7 @@ const AttendanceCard = ({ present, absent, undecided }: AttendanceCardProps) => 
   return (
     <div
       className={
-        "color flex w-[141px] max-w-[141px] flex-row items-center justify-between rounded bg-zinc-100 pl-2 pr-2"
+        "color flex w-[141px] max-w-[141px] flex-row items-center justify-between rounded-sm bg-zinc-100 pl-2 pr-2"
       }
     >
       <CheckCircleIcon height={20} width={20} color={"#4ADE80"} />

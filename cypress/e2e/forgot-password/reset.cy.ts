@@ -1,3 +1,5 @@
+import { COLORS } from "../../support/colors"
+
 describe("on the reset password page", () => {
   // -------------------------------------------------------------- Variables
   const buttonSubmitNewPassword = "button-submit-new-password"
@@ -38,14 +40,14 @@ describe("on the reset password page", () => {
       it("should show error if no password value", () => {
         cy.data(buttonSubmitNewPassword).click()
         cy.data(inputPasswordError).should("contain.text", "Please provide a password")
-        cy.data(inputPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(inputPassword).should("have.css", "outline-color", COLORS.red[400])
       })
 
       it("should show error if too short password value", () => {
         cy.data(inputPassword).type("1234")
         cy.data(buttonSubmitNewPassword).click()
         cy.data(inputPasswordError).should("contain.text", "six characters")
-        cy.data(inputPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(inputPassword).should("have.css", "outline-color", COLORS.red[400])
       })
 
       it("should show error with no confirmation password value", () => {
@@ -54,7 +56,7 @@ describe("on the reset password page", () => {
           "contain.text",
           "Please provide your password",
         )
-        cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(inputConfirmationPassword).should("have.css", "outline-color", COLORS.red[400])
       })
 
       it("should show error with not equal confirmation password value", () => {
@@ -62,7 +64,7 @@ describe("on the reset password page", () => {
         cy.data(inputConfirmationPassword).type("1234567")
         cy.data(buttonSubmitNewPassword).click()
         cy.data(inputConfirmationPasswordError).should("contain.text", "do not match")
-        cy.data(inputConfirmationPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(inputConfirmationPassword).should("have.css", "outline-color", COLORS.red[400])
       })
 
       it("should update password with correct values", () => {
@@ -99,7 +101,6 @@ describe("on the reset password page", () => {
             .get("#1")
             .should("be.visible")
             .should("have.class", "Toastify__toast--success")
-            .get(".Toastify__toast-body")
             .should("have.text", "Password successfully updated!")
         })
 

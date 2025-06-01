@@ -2,7 +2,7 @@ name: Deploy to Production
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets._SUPABASE_ACCESS_TOKEN }}
   SUPABASE_DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
   GA_NODE_VERSION: ${{ secrets.GA_NODE_VERSION }}
 
@@ -14,7 +14,7 @@ on:
 
 jobs:
   deploy-migrations-production:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment: prod
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         with:
           version: latest
       - name: Link to hosted Supabase
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: supabase link --project-ref ${{ secrets._SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase
         run: supabase db push
       - name: Push local functions to hosted Supabase

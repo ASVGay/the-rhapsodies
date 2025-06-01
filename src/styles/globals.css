@@ -1,135 +1,194 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@config '../../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
 @layer base {
-    html {
-        -webkit-tap-highlight-color: transparent;
-        min-height: calc(100% + env(safe-area-inset-top));
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-@layer utilities {
-    .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .pt-safe {
-        padding-top: env(safe-area-inset-top);
-    }
-
-    .p-safe {
-        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    }
-
-    .filter-in-division {
-        /* Source: https://isotropic.co/tool/hex-color-to-css-filter/ */
-        /* Color: #0ea5e9 (tw-sky-500) */
-        filter: invert(64%) sepia(45%) saturate(5713%) hue-rotate(166deg) brightness(95%) contrast(91%);
-    }
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-@layer components {
-    .full-bg-moon-50 {
-        @apply flex h-screen w-screen items-center justify-center bg-moon-50;
-    }
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
 
-    .auth-container {
-        @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-sm;
-    }
+@utility p-safe {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
 
-    .settings-wrapper p {
-        @apply py-2 text-base;
-    }
+@utility filter-in-division {
+  /* Source: https://isotropic.co/tool/hex-color-to-css-filter/ */
+  /* Color: #0ea5e9 (tw-sky-500) */
+  filter: invert(64%) sepia(45%) saturate(5713%) hue-rotate(166deg) brightness(95%) contrast(91%);
+}
 
-    .settings-wrapper {
-        @apply pb-8;
-    }
+@utility full-bg-moon-50 {
+  @apply flex h-screen w-screen items-center justify-center bg-moon-50;
+}
 
-    .btn {
-        @apply rounded bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
-    }
+@utility auth-container {
+  @apply flex h-fit w-80 flex-col justify-between gap-6 rounded-lg bg-zinc-50 p-4 bg-blend-hard-light shadow-xs;
+}
 
-    .btn.secondary {
-        @apply bg-zinc-500 hover:bg-gray-400 disabled:bg-gray-700 disabled:text-white;
-    }
+@utility settings-wrapper {
+  & p {
+    @apply py-2 text-base;
+  }
+  @apply pb-8;
+}
 
-    .btn.error {
-        @apply bg-red-700 hover:bg-red-400 disabled:bg-red-600 disabled:text-white;
-    }
+@utility btn {
+  @apply rounded-sm bg-moon-500 px-4 py-2 font-bold text-white hover:bg-moon-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
 
-    .page-wrapper {
-        @apply mx-auto px-4 pt-6;
-    }
+  &.secondary {
+    @apply bg-zinc-500 hover:bg-gray-400 disabled:bg-gray-700 disabled:text-white;
+  }
 
-    .page-header {
-        @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
-    }
+  &.error {
+    @apply bg-red-700 hover:bg-red-400 disabled:bg-red-600 disabled:text-white;
+  }
 
-    .progress-bar-icon {
-        @apply relative flex cursor-pointer hover:text-moon-500;
-    }
+  &.songInformation {
+    @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-hidden active:ring-3 active:ring-moon-300;
+  }
 
-    .area-header {
-        @apply pt-2 pb-6 text-xl text-moon-500;
-    }
+  &.toRepertoire {
+    @apply rounded-sm bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
+  }
 
-    .input-container {
-        @apply mb-6 text-left;
-    }
+  &.submit {
+    @apply flex w-full justify-center gap-2 rounded-lg p-2.5;
+  }
+}
 
-    .input {
-        @apply relative mt-1;
-    }
+@utility secondary {
+  &.btn {
+    @apply bg-zinc-500 hover:bg-gray-400 disabled:bg-gray-700 disabled:text-white;
+  }
+}
 
-    .input input {
-        @apply w-full rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
-    }
+@utility error {
+  &.btn {
+    @apply bg-red-700 hover:bg-red-400 disabled:bg-red-600 disabled:text-white;
+  }
 
-    .input select {
-        @apply w-full bg-white appearance-none rounded-lg outline outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-sm;
-    }
+  .input &input {
+    @apply outline-red-400;
+  }
+}
 
-    .input input.error {
-        @apply outline-red-400;
-    }
+@utility page-wrapper {
+  @apply mx-auto px-4 pt-6;
+}
 
-    .input span {
-        @apply absolute inset-y-0 end-0 grid place-content-center px-4;
-    }
+@utility page-header {
+  @apply pb-4 text-2xl font-semibold sm:text-3xl lg:text-4xl;
+}
 
-    .input svg {
-        @apply h-6 w-6 text-gray-400;
-    }
+@utility progress-bar-icon {
+  @apply relative flex cursor-pointer hover:text-moon-500;
+}
 
-    .btn.songInformation {
-        @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-none active:ring active:ring-moon-300;
-    }
+@utility area-header {
+  @apply pt-2 pb-6 text-xl text-moon-500;
+}
 
-    .btn.toRepertoire {
-        @apply rounded bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
-    }
+@utility input-container {
+  @apply mb-6 text-left;
+}
 
-    .btn.submit {
-        @apply flex w-full justify-center gap-2 rounded-lg p-2.5;
-    }
+@utility input {
+  @apply relative mt-1;
 
-    .info-item {
-        @apply flex items-center gap-2;
-    }
+  & input {
+    @apply w-full rounded-lg outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-xs placeholder-gray-300;
+  }
 
-    .info-item > svg {
-        @apply text-moon h-5;
-    }
+  & textarea {
+    @apply w-full rounded-lg p-3 shadow-xs outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 placeholder-gray-300;
+  }
 
-    .attendanceButtonItem {
-        @apply inline-flex w-full cursor-pointer items-center justify-center
+  & select {
+    @apply w-full bg-white appearance-none rounded-lg outline-solid outline-2 outline-gray-300 hover:outline-moon-300 focus:outline-moon-300 p-4 pe-12 text-base shadow-xs;
+  }
+
+  & input.error,
+  & textarea.error {
+    @apply outline-red-400;
+  }
+
+  & span {
+    @apply absolute inset-y-0 end-0 grid place-content-center px-4;
+  }
+
+  & svg {
+    @apply h-6 w-6 text-gray-400;
+  }
+}
+
+@utility songInformation {
+  &.btn {
+    @apply block w-full rounded-lg bg-moon-500 px-5 py-3 font-medium text-white  hover:font-semibold active:outline-hidden active:ring-3 active:ring-moon-300;
+  }
+}
+
+@utility toRepertoire {
+  &.btn {
+    @apply rounded-sm bg-green-500 px-12 py-2 font-bold text-white hover:bg-green-300 disabled:opacity-25 disabled:bg-gray-500 disabled:text-black;
+  }
+}
+
+@utility submit {
+  &.btn {
+    @apply flex w-full justify-center gap-2 rounded-lg p-2.5;
+  }
+}
+
+@utility info-item {
+  @apply flex items-center gap-2;
+
+  & > svg {
+    @apply text-moon h-5;
+  }
+}
+
+@utility attendanceButtonItem {
+  @apply inline-flex w-full cursor-pointer items-center justify-center
         bg-zinc-100 p-2 text-sm text-zinc-500
         peer-checked:font-medium peer-checked:text-zinc-700 peer-checked:bg-zinc-300
         hover:bg-zinc-300 hover:text-gray-600;
-    }
 
-    .attendanceButtonItem svg {
-        @apply mx-auto;
-    }
+  & svg {
+    @apply mx-auto;
+  }
+}
+
+:root {
+  /* Font is defined in _app.tsx (Next.js Google Font) */
+  --font-lexend: "Lexend", sans-serif;
+  --toastify-font-family: var(--font-lexend);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    min-height: calc(100% + env(safe-area-inset-top));
+  }
 }

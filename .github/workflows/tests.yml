@@ -7,11 +7,9 @@ on:
   pull_request:
     branches: [ "dev" ]
   workflow_dispatch:
-    inputs:
-      dbResetOptions:
-        description: "Options to add to supabase db reset"
-        required: false
-        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
@@ -51,18 +49,18 @@ env:
 
 jobs:
   install:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.22.15
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets.HOSTED_SUPABASE_PROJECT_ID }}
       - name: Push local migrations to hosted Supabase (with y/N prompt)
-        run: yes | supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} {{ inputs.dbResetOptions }}
+        run: supabase db reset --db-url ${{ secrets.HOSTED_SUPABASE_DB_URL }} <<< 'y'
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -80,7 +78,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Cypress install
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           # Disable running of tests within install job
           runTests: false
@@ -90,13 +88,16 @@ jobs:
         with:
           name: build
           if-no-files-found: error
+          # Include the hidden .next folder
+          include-hidden-files: true
           path: |
             .next
             public
 
   cypress-run:
-    runs-on: ubuntu-22.04
-    container: cypress/browsers:node18.12.0-chrome103-ff107
+    runs-on: ubuntu-24.04
+    container:
+      image: cypress/browsers:24.0.0
     environment: dev
     needs: install
     strategy:
@@ -117,7 +118,7 @@ jobs:
         with:
           name: build
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           working-directory: ./
           record: true

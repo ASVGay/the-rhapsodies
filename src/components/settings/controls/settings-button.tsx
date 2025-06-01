@@ -4,7 +4,7 @@ import React from "react"
 interface SettingsButtonProps {
   dataCy?: string
   disabled: boolean
-  onClick: () => void | Promise<boolean>
+  onClick: () => void | Promise<boolean> | Promise<void>
   text: string
 }
 

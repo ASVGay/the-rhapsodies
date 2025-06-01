@@ -45,7 +45,7 @@ const Index = () => {
             )}
             <div className="input">
               <input
-                className={`bg-zinc-50 !p-2.5 !pe-12 ${errors.password && "error"}`}
+                className={`bg-zinc-50 p-2.5! pe-12! ${errors.password && "error"}`}
                 data-cy={"input-password"}
                 type="password"
                 placeholder="New password"
@@ -72,7 +72,7 @@ const Index = () => {
             )}
             <div className="input">
               <input
-                className={`bg-zinc-50 !p-2.5 !pe-12 ${errors.confirmationPassword && "error"}`}
+                className={`bg-zinc-50 p-2.5! pe-12! ${errors.confirmationPassword && "error"}`}
                 data-cy={"input-confirmation-password"}
                 type="password"
                 placeholder="Confirm your new password"

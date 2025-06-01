@@ -45,7 +45,7 @@ const AddCommentButton = ({ eventId }: AddCommentButtonProps) => {
         data-cy={"add-comment-button"}
         type={"button"}
         onClick={() => setShowOverlay(true)}
-        className={`inline-flex w-40 min-w-[10rem] items-center justify-center gap-2 
+        className={`inline-flex w-40 min-w-40 items-center justify-center gap-2 
           rounded-lg border border-sky-500 px-2 py-1 text-sky-500 
           hover:bg-sky-500 hover:text-white focus:ring-2 focus:ring-sky-500`}
         disabled={isLoading}

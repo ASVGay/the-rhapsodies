@@ -1,4 +1,5 @@
 import { interceptIndefinitely } from "../helpers/interception.helper"
+import { COLORS } from "../../support/colors"
 
 const errorResponseChangeDisplayName = {
   statusCode: 401,
@@ -52,7 +53,7 @@ describe("the change display name page", () => {
       const inputs = [inputCurrentPassword, inputNewDisplayName]
 
       inputs.forEach((input) => {
-        cy.data(input).should("have.css", "outline-color", "rgb(248, 113, 113)")
+        cy.data(input).should("have.css", "outline-color", COLORS.red[400])
       })
 
       cy.data(errorNewDisplayName).should("contain.text", "Please provide a display name")
@@ -63,13 +64,12 @@ describe("the change display name page", () => {
       cy.data(inputNewDisplayName).type(displayName)
       cy.data(inputCurrentPassword).type("incorrect")
       cy.data(buttonSubmitNewDisplayName).click()
-      cy.data(inputCurrentPassword).should("have.css", "outline-color", "rgb(248, 113, 113)")
+      cy.data(inputCurrentPassword).should("have.css", "outline-color", COLORS.red[400])
       cy.data(errorCurrentPassword).should("contain.text", "Incorrect password")
       cy.get(".Toastify")
         .get("#incorrect-password")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Please fill in your current password correctly")
     })
   })
@@ -82,7 +82,6 @@ describe("the change display name page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--success")
-        .get(".Toastify__toast-body")
         .should("have.text", `Display name successfully changed to ${displayName}!`)
       cy.location("pathname").should("eq", "/settings")
     })
@@ -95,7 +94,6 @@ describe("the change display name page", () => {
         .get("#1")
         .should("be.visible")
         .should("have.class", "Toastify__toast--error")
-        .get(".Toastify__toast-body")
         .should("contain.text", "Something went wrong")
     })
 

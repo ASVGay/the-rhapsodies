@@ -13,7 +13,7 @@ interface SignInTextFieldProps {
 const SignInTextField = (props: SignInTextFieldProps) => {
   return (
     <input
-      className="w-full rounded border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-moon-500 focus:bg-white focus:outline-none"
+      className="w-full rounded-sm border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-moon-500 focus:bg-white focus:outline-hidden"
       data-cy={props.dataCy}
       {...props.register(props.tag, props.validationOptions)}
       type={props.type}

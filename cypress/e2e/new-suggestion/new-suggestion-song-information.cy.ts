@@ -4,6 +4,7 @@ import {
   shouldContainJSONSongInformationInState,
   shouldGoToInstrumentsArea,
 } from "./helpers/new-suggestion.helper"
+import { COLORS } from "../../support/colors"
 
 const path = "/suggestions/new"
 const buttonAddInstruments = "button-add-instruments"
@@ -62,7 +63,7 @@ describe("when creating a new suggestion, adding song information", () => {
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
             cy.data(error).should("be.visible")
-            cy.data(inputField).should("have.css", "outline-color", "rgb(248, 113, 113)")
+            cy.data(inputField).should("have.css", "outline-color", COLORS.red[400])
           })
 
           it(`should show no error if submitting with ${name}`, () => {
@@ -70,7 +71,7 @@ describe("when creating a new suggestion, adding song information", () => {
             cy.data(error).should("not.exist")
             cy.data(buttonAddInstruments).click()
             cy.data(error).should("not.exist")
-            cy.data(inputField).should("not.have.css", "outline-color", "rgb(248, 113, 113)")
+            cy.data(inputField).should("not.have.css", "outline-color", COLORS.red[400])
           })
         })
 

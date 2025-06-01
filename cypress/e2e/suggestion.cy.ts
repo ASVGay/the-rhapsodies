@@ -1,3 +1,6 @@
+import { APP_SETTINGS } from "@/constants/app-settings"
+import { TESTING } from "../support/constants"
+
 const suggestionId = Cypress.env("CYPRESS_SUGGESTION_ID")
 const username = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
 
@@ -38,7 +41,6 @@ describe("suggestion detail page", () => {
     it("should error when failing to update division", () => {
       cy.intercept("DELETE", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
       cy.intercept("POST", "/rest/v1/division*", { forceNetworkError: true }).as("changeDivision")
-
       cy.data("division")
         .first()
         .then(() => {
@@ -55,6 +57,28 @@ describe("suggestion detail page", () => {
         .then(() => {
           cy.location("pathname").should("equal", "/suggestions")
         })
+    })
+
+    it("should show author when suggestion has an author", () => {
+      cy.data("suggestion-author")
+        .invoke("text")
+        .should("match", /by\s+.+/i)
+
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-author")
+        .should("exist")
+        .invoke("text")
+        .should("match", /By\s+.+/i)
+    })
+
+    it("should show no author when suggestion has no author", () => {
+      cy.visit(`/suggestions/${TESTING.idSongNoAuthor}`)
+      cy.data("suggestion-author")
+        .invoke("text")
+        .should("not.match", /by\s+.+/i)
+
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-author").should("not.exist")
     })
   })
 
@@ -82,33 +106,49 @@ describe("suggestion detail page", () => {
       cy.data("move-to-repertoire").should("exist")
     })
 
-    it("should not disable button if text is correct", () => {
+    it("should not delete song if delete button not held for full duration", () => {
+      cy.intercept("/rest/v1/song*").as("deleteSuggestion")
       cy.data("suggestion-delete-icon").click({ force: true })
-      cy.data("delete-suggestion-continue-button").click()
-      cy.data("input-delete-suggestion").type("Rens")
-      cy.data("delete-suggestion-final-button").should("not.be.disabled")
+      // Hold the button for less than the required duration
+      cy.data("delete-suggestion-button").trigger("mousedown")
+      cy.wait(APP_SETTINGS.holdToDeleteDuration / 2) // Wait for half the duration
+      cy.data("delete-suggestion-button").trigger("mouseup")
+      // Verify that the suggestion is not deleted
+      cy.request({
+        url: `/suggestions/${suggestionId}`,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.body.length).to.be.greaterThan(0) // Suggestion should still exist
+      })
     })
 
-    it("should disable button when text is incorrect", () => {
+    it("should show success toast if delete button held for full duration", () => {
+      cy.intercept("/rest/v1/song*", { statusCode: 204 }).as("deleteSuggestion")
       cy.data("suggestion-delete-icon").click({ force: true })
-      cy.data("delete-suggestion-continue-button").click()
-      cy.data("input-delete-suggestion").type("Wrong text")
-      cy.data("delete-suggestion-final-button").should("be.disabled")
+      cy.data("delete-suggestion-button").trigger("mousedown")
+      cy.wait(APP_SETTINGS.holdToDeleteDuration)
+      cy.wait("@deleteSuggestion").then((interception) => {
+        expect(interception.response.statusCode).to.equal(204)
+      })
+
+      // Verify that the suggestion is deleted
+      cy.get(".Toastify").get("#1").should("have.text", "Suggestion successfully deleted.")
+      cy.data("delete-suggestion-button").should("not.exist")
     })
 
-    it("should show toast when failing to delete", () => {
+    it("should show error toast when failing to delete", () => {
       cy.data("suggestion-delete-icon").click({ force: true })
       cy.intercept("/rest/v1/song*", {
         statusCode: 500,
         body: { error: "error" },
       })
-      cy.data("delete-suggestion-continue-button").click()
-      cy.data("input-delete-suggestion").type("Rens")
-      cy.data("delete-suggestion-final-button").click()
+      cy.data("delete-suggestion-button").trigger("mousedown")
+      cy.wait(APP_SETTINGS.holdToDeleteDuration)
+      cy.data("delete-suggestion-button").trigger("mouseup")
       cy.on("window:confirm", () => true)
       cy.get(".Toastify")
         .get("#1")
-        .get(".Toastify__toast-body")
         .should("have.text", "We couldn't delete the suggestion, try again later.")
     })
   })
