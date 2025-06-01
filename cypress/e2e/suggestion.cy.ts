@@ -1,4 +1,5 @@
 import { APP_SETTINGS } from "@/constants/app-settings"
+import { TESTING } from "../support/constants"
 
 const suggestionId = Cypress.env("CYPRESS_SUGGESTION_ID")
 const username = Cypress.env("CYPRESS_ADMIN_DISPLAY_NAME")
@@ -56,6 +57,28 @@ describe("suggestion detail page", () => {
         .then(() => {
           cy.location("pathname").should("equal", "/suggestions")
         })
+    })
+
+    it("should show author when suggestion has an author", () => {
+      cy.data("suggestion-author")
+        .invoke("text")
+        .should("match", /by\s+.+/i)
+
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-author")
+        .should("exist")
+        .invoke("text")
+        .should("match", /By\s+.+/i)
+    })
+
+    it("should show no author when suggestion has no author", () => {
+      cy.visit(`/suggestions/${TESTING.idSongNoAuthor}`)
+      cy.data("suggestion-author")
+        .invoke("text")
+        .should("not.match", /by\s+.+/i)
+
+      cy.data("suggestion-delete-icon").click({ force: true })
+      cy.data("delete-suggestion-author").should("not.exist")
     })
   })
 

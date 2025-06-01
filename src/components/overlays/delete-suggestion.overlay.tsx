@@ -4,7 +4,7 @@ import { getOverlay } from "@/helpers/overlay.helper"
 import { MusicalNoteIcon, UserCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
-import { Member, Song } from "@/types/database-types"
+import { Song } from "@/types/database-types"
 import { CalendarIcon } from "@heroicons/react/24/solid"
 import { deleteSuggestion } from "@/services/suggestion.service"
 import { useRouter } from "next/router"
@@ -99,13 +99,13 @@ const HoldToDeleteButton = ({ onHoldComplete }: HoldToDeleteButtonProps) => {
 interface DeleteSuggestionOverlayProps {
   onClose: (showOverlay: boolean) => void
   suggestion: Song
+  author?: string
 }
 
-const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverlayProps) => {
+const DeleteSuggestionOverlay = ({ onClose, suggestion, author }: DeleteSuggestionOverlayProps) => {
   const supabase = useSupabaseClient<Database>()
   const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
   const router = useRouter()
-  const author = (suggestion.author as Member).display_name
   useEffect(() => setOverlayIsOpen(true), [])
 
   const waitForTransition = (isOpen: boolean) => {
@@ -145,12 +145,14 @@ const DeleteSuggestionOverlay = ({ onClose, suggestion }: DeleteSuggestionOverla
               {getSongLine(suggestion.title, suggestion.artist)}
             </span>
             <div className="flex flex-col">
-              <div className="flex flex-row gap-2">
-                <UserCircleIcon height={20} width={20} color="#EEC73F" />
-                <span className="text-base text-neutral-700 font-normal leading-5">
-                  By {author}
-                </span>
-              </div>
+              {author && (
+                <div className="flex flex-row gap-2" data-cy={"delete-suggestion-author"}>
+                  <UserCircleIcon height={20} width={20} color="#EEC73F" />
+                  <span className="text-base text-neutral-700 font-normal leading-5">
+                    By {author}
+                  </span>
+                </div>
+              )}{" "}
               <div className="flex flex-row gap-2">
                 <CalendarIcon height={20} width={20} color="#EEC73F" />
                 <span className="text-base text-neutral-700 font-normal leading-5">

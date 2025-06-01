@@ -1,7 +1,7 @@
 import { Database } from "@/types/database"
 
 export type DisplayName = { display_name: string }
-export type Member = { display_name: string; id: string }
+export type Member = Database["public"]["Tables"]["member"]["Row"]
 
 export type Instrument = Database["public"]["Tables"]["instrument"]["Row"]
 
@@ -24,7 +24,6 @@ export type SongInstrument = Database["public"]["Tables"]["song_instrument"]["Ro
 
 export type Song = Database["public"]["Tables"]["song"]["Row"] & {
   song_instruments: SongInstrument[]
-  author: string | DisplayName | Member
 }
 
 export type Events = Database["public"]["Functions"]["get_events_with_attendance"]["Returns"]

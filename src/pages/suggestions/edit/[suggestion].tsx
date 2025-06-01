@@ -43,8 +43,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
 
-    // If the user does not match with the author of the suggestion and is not an admin, redirect to 403
-    if (session?.user.id !== data?.author.id && session?.user?.app_metadata.claims_admin !== true)
+    const isAuthor = data.author?.id === session?.user.id
+    const isAdmin = session?.user?.app_metadata.claims_admin === true
+    if (!isAuthor && !isAdmin)
       return {
         redirect: {
           destination: "/403",
