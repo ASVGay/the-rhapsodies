@@ -154,7 +154,7 @@ export type Database = {
       song: {
         Row: {
           artist: string[]
-          author: string
+          author: string | null
           created_at: string
           id: string
           image: string | null
@@ -166,7 +166,7 @@ export type Database = {
         }
         Insert: {
           artist: string[]
-          author: string
+          author?: string | null
           created_at?: string
           id?: string
           image?: string | null
@@ -178,7 +178,7 @@ export type Database = {
         }
         Update: {
           artist?: string[]
-          author?: string
+          author?: string | null
           created_at?: string
           id?: string
           image?: string | null
