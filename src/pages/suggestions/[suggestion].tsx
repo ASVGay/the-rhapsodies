@@ -2,10 +2,15 @@ import React, { FC, useState } from "react"
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import ProgressionBar from "@/components/suggestion/progression-bar"
 import { GetServerSideProps } from "next"
-import { deleteDivision, getSuggestion, insertDivision } from "@/services/suggestion.service"
+import {
+  deleteDivision,
+  getSuggestion,
+  insertDivision,
+  Suggestion,
+} from "@/services/suggestion.service"
 import { formatDistanceToNow } from "date-fns"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { DivisionDatabaseOperation, Song, SongInstrument } from "@/types/database-types"
+import { DivisionDatabaseOperation, SongInstrument } from "@/types/database-types"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { Database } from "@/types/database"
 import ErrorPopup from "@/components/popups/error-popup"
@@ -21,15 +26,15 @@ import DeleteSuggestionOverlay from "@/components/overlays/delete-suggestion.ove
 import { SongType } from "@/components/wrapper/song-list-wrapper"
 
 interface SuggestionPageProps {
-  suggestionFromNext: Song
+  suggestionData: Suggestion
   isEditable: boolean
 }
 
 const SuggestionPage: FC<SuggestionPageProps> = ({
-  suggestionFromNext,
+  suggestionData,
   isEditable,
 }: SuggestionPageProps) => {
-  const [suggestion, setSuggestion] = useState<Song>(suggestionFromNext)
+  const [suggestion, setSuggestion] = useState<Suggestion>(suggestionData)
   const [showSuggestionError, setShowSuggestionError] = useState<boolean>(false)
   const [showSongError, setShowSongError] = useState<boolean>(false)
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
@@ -45,7 +50,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
   const updateSuggestion = async () => {
     await getSuggestion(supabase, suggestion.id)
       .then((response) => {
-        response.data ? setSuggestion(response.data as Song) : setShowSuggestionError(true)
+        response.data ? setSuggestion(response.data as Suggestion) : setShowSuggestionError(true)
       })
       .catch(() => setShowSuggestionError(true))
   }
@@ -101,8 +106,9 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
         <div className={"m-4 flex flex-col pt-2"} data-cy="suggestion">
           <div className={"flex"}>
             <div className={"w-full"}>
-              <p className={"text-2xl leading-8"}>
-                <b>Suggestion</b> by {(suggestion.author as { display_name: string }).display_name}
+              <p className={"text-2xl leading-8"} data-cy={"suggestion-author"}>
+                <b>Suggestion</b>{" "}
+                {suggestion.author?.display_name && `by ${suggestion.author.display_name}`}
               </p>
               <p className={"text-sm font-medium leading-4 text-zinc-200"}>
                 Posted {formatDistanceToNow(new Date(suggestion.created_at))} ago
@@ -208,6 +214,7 @@ const SuggestionPage: FC<SuggestionPageProps> = ({
             <DeleteSuggestionOverlay
               onClose={() => setShowDeleteOverlay(false)}
               suggestion={suggestion}
+              author={suggestion.author?.display_name}
             />
           )}
         </div>
@@ -225,15 +232,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     let { data } = await getSuggestion(supabase, params?.suggestion as string)
     if (data == null) return { notFound: true }
+
+    const isAuthor = data.author?.id === session?.user.id
+    const isAdmin = session?.user?.app_metadata.claims_admin === true
+
     return {
       props: {
-        suggestionFromNext: data,
-        isEditable:
-          (
-            data.author as {
-              id: string
-            }
-          ).id === session?.user.id || session?.user?.app_metadata.claims_admin === true,
+        suggestionData: data,
+        isEditable: isAuthor || isAdmin,
       },
     }
   } catch {

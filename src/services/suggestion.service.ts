@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js"
+import { QueryData, SupabaseClient } from "@supabase/supabase-js"
 import { Database } from "@/types/database"
 import { DivisionDatabaseOperation, SongInstrumentDatabaseOperation } from "@/types/database-types"
 import { ISuggestion } from "@/interfaces/suggestion"
@@ -46,6 +46,8 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
         song_instruments:song_instrument (
           id,
           description,
+          instrument_id,
+          song_id,
           instrument (*),
           division (
             *,
@@ -58,6 +60,8 @@ export const getSuggestion = async (supabase: SupabaseClient<Database>, id: stri
     .limit(1)
     .single()
 }
+
+export type Suggestion = QueryData<ReturnType<typeof getSuggestion>>
 
 export const insertDivision = async (
   supabaseClient: SupabaseClient<Database>,
