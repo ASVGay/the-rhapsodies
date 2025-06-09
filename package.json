@@ -24,7 +24,7 @@
     "@supabase/supabase-js": "^2.25.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "22.15.30",
-    "@types/react": "19.1.6",
+    "@types/react": "19.1.7",
     "@types/react-dom": "19.1.6",
     "date-fns": "^4.0.0",
     "debounce": "^2.0.0",
