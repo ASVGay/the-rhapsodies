@@ -1,20 +1,15 @@
 name: Deploy to Staging
 
 env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   SUPABASE_ACCESS_TOKEN: ${{ secrets._SUPABASE_ACCESS_TOKEN }}
   SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
   GA_NODE_VERSION: ${{ secrets.GA_NODE_VERSION }}
+  IMAGE_NAME: ghcr.io/asvgay/the-rhapsodies
 
 on:
   push:
     branches:
-      - dev
-  pull_request:
-    branches:
-      - dev
-      - main
+      - staging
   workflow_dispatch:
 
 concurrency:
@@ -26,40 +21,54 @@ jobs:
     environment: staging
     steps:
       - uses: actions/checkout@v4
+
       - uses: supabase/setup-cli@v1
         with:
           version: latest
+
       - name: Link to hosted Supabase
         run: supabase link --project-ref ${{ secrets._SUPABASE_PROJECT_ID }}
+
       - name: Push local migrations to hosted Supabase
         run: supabase db push
+
       - name: Push local functions to hosted Supabase
         run: supabase functions deploy
-  deploy-vercel-staging:
+
+  build-and-push-staging-image:
     needs: deploy-migrations-staging
     runs-on: ubuntu-latest
     environment: staging
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.GA_NODE_VERSION }}
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        run: echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> $GITHUB_OUTPUT
-        id: deploy
-      - name: Comment Preview URL Preview URL
-        if: github.event_name == 'pull_request' && !failure()
-        uses: thollander/actions-comment-pull-request@v3.0.1
-        with:
-          message: Preview can be found at ${{ steps.deploy.outputs.url }}
-          comment_tag: execution
-          mode: recreate
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract Docker metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=staging
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
